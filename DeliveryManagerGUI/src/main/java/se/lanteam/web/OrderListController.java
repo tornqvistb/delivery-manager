@@ -10,8 +10,7 @@ public class OrderListController {
 	public String showStartPage() {
 		return "redirect:order-list";
 	}
-	
-	
+		
 	@RequestMapping("order-list")
 	public String showOrderList() {
 		return "order-list";
