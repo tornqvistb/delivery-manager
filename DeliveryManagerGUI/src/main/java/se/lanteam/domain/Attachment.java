@@ -10,6 +10,8 @@ public class Attachment {
 	private String fileName;
 	private Long fileSize;
 	private byte[] fileContent;
+	private OrderHeader orderHeader;
+	
 	@Id
 	@GeneratedValue
 	public Long getId() {
@@ -37,7 +39,11 @@ public class Attachment {
 	public void setFileContent(byte[] fileContent) {
 		this.fileContent = fileContent;
 	}
-	
-	
+	public OrderHeader getOrderHeader() {
+		return orderHeader;
+	}
+	public void setOrderHeader(OrderHeader orderHeader) {
+		this.orderHeader = orderHeader;
+	}		
 	
 }
