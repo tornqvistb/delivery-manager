@@ -2,16 +2,20 @@ package se.lanteam.domain;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
+@Entity
 public class OrderComment {
 
 	private Long id;
 	private String message;
 	private Date creationDate;
 	private Boolean archived;
+	private OrderHeader orderHeader;
 	
 	@Id
 	@GeneratedValue
@@ -39,6 +43,13 @@ public class OrderComment {
 	}
 	public void setArchived(Boolean archived) {
 		this.archived = archived;
+	}
+	@ManyToOne()
+	public OrderHeader getOrderHeader() {
+		return orderHeader;
+	}
+	public void setOrderHeader(OrderHeader orderHeader) {
+		this.orderHeader = orderHeader;
 	}
 
 	

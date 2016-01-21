@@ -1,9 +1,12 @@
 package se.lanteam.domain;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 
+@Entity
 public class Attachment {
 
 	private Long id;
@@ -39,6 +42,7 @@ public class Attachment {
 	public void setFileContent(byte[] fileContent) {
 		this.fileContent = fileContent;
 	}
+	@OneToOne
 	public OrderHeader getOrderHeader() {
 		return orderHeader;
 	}

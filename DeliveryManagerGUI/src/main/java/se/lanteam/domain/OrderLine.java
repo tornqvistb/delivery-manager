@@ -22,7 +22,7 @@ public class OrderLine {
 	private Integer total;
 	private Integer registered;
 	private Integer remaining;
-	private OrderHeader header;
+	private OrderHeader orderHeader;
 	private Set<Equipment> equipments = new HashSet<Equipment>();
 	
 	@Id
@@ -75,19 +75,19 @@ public class OrderLine {
 	public void setRemaining(Integer remaining) {
 		this.remaining = remaining;
 	}
-	@ManyToOne()
-	public OrderHeader getHeader() {
-		return header;
-	}
-	public void setHeader(OrderHeader header) {
-		this.header = header;
-	}
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderLine")
 	public Set<Equipment> getEquipments() {
 		return equipments;
 	}
 	public void setEquipments(Set<Equipment> equipments) {
 		this.equipments = equipments;
+	}
+	@ManyToOne()
+	public OrderHeader getOrderHeader() {
+		return orderHeader;
+	}
+	public void setOrderHeader(OrderHeader orderHeader) {
+		this.orderHeader = orderHeader;
 	}
 	
 }

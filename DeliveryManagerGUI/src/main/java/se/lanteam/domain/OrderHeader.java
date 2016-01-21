@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class OrderHeader {
@@ -25,6 +26,7 @@ public class OrderHeader {
 	private Set<OrderLine> orderLines = new HashSet<OrderLine>();
 	private Set<OrderComment> orderComments = new HashSet<OrderComment>();
 	private Attachment attachment;
+	private String transmitErrorMessage;
 	
 	@Id
 	@GeneratedValue
@@ -85,11 +87,18 @@ public class OrderHeader {
 	public void setOrderComments(Set<OrderComment> orderComments) {
 		this.orderComments = orderComments;
 	}
+	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
 	public Attachment getAttachment() {
 		return attachment;
 	}
 	public void setAttachment(Attachment attachment) {
 		this.attachment = attachment;
+	}
+	public String getTransmitErrorMessage() {
+		return transmitErrorMessage;
+	}
+	public void setTransmitErrorMessage(String transmitErrorMessage) {
+		this.transmitErrorMessage = transmitErrorMessage;
 	}
 
 }

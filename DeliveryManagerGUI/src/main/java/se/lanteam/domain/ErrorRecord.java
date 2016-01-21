@@ -2,10 +2,12 @@ package se.lanteam.domain;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Entity
 public class ErrorRecord {
 	private Long id;
 	private Date creationDate;
