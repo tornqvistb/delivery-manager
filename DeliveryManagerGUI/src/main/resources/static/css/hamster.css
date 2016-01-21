@@ -1,0 +1,271 @@
+/*version=0.0.1-SNAPSHOT - developer=bjotor1216 - timestamp=20151211-1120*/.hamster:before {
+	content:"";
+	display:block;
+	position:absolute;
+	right:25px;
+	margin-top:-90px;
+	width:75px;
+	height:75px;
+}
+
+@media screen and (min-width: 1050px) {
+	.hamster:before {
+		right:calc(50% - 500px);
+	}
+}
+
+/* E-tjänsteplattform-modifieringar */
+.hamster .form-section > table:first-child {
+	margin-top:0;
+}
+.hamster .form-section > table:first-child:before {
+	content:"";
+	clear:both;
+	display:table;
+	margin-bottom:20px;
+}
+.hamster .form-step .submit-area input {
+	float:none;
+	display:block;
+	margin:0 auto;
+}
+.hamster fieldset .checkbox.alt,
+.hamster fieldset .radio.alt {
+	display:inline-block;
+}
+.hamster table thead th,
+.hamster table tbody td {
+	text-align:left;
+}
+.hamster table td.divider,
+.hamster table .divider td {
+	text-align:center;
+}
+.hamster table .divider.header td {
+	padding-top:1em;
+	border-bottom:1px solid #ccc;
+	font-weight:bold;
+}
+.hamster table td.numeric {
+	text-align:right;
+	padding-right:12px;
+}
+/* Fullscreen */
+.hamster.expandable .btn-fullscreen {
+	float:right;
+	margin-top:1px;
+	padding:3px 9px;
+	border:1px solid #047;
+	border-radius:4px;
+	background:#025da9;
+	color:#fff;
+	text-shadow:0 -1px 2px #025;
+}
+.hamster .fullscreen.form-step {
+	margin:0 10px;
+	padding:0;
+	border:none;
+	background:#fff;
+}
+.hamster .fullscreen .form-section:first-of-type {
+	padding-top:40px;
+}
+.hamster .fullscreen .form-section {
+	border-right:1px solid #e0d8c1;
+	border-left:1px solid #e0d8c1;
+}
+.hamster .fullscreen .form-section:last-of-type {
+	padding-bottom:40px;
+}
+.hamster .fullscreen .btn-fullscreen {
+	position:fixed;
+	z-index:12;
+	top:0px;
+	right:30px;
+}
+.hamster .fullscreen .btn-fullscreen + h3 {
+	position:fixed;
+	top:0px;
+	left:11px;
+	right:11px;
+	z-index:11;
+	margin:0 -1px;
+	border-right:1px solid #e0d8c1;
+	border-left:1px solid #e0d8c1;
+}
+.hamster .fullscreen {
+	position:absolute;
+	z-index:12;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+	margin:0;
+	padding:10px;
+	box-sizing:border-box;
+}
+.hamster .fullscreen tr:hover td {
+	background:#ffd;
+}
+.hamster .fullscreen th:last-child,
+.hamster .fullscreen td:last-child {
+	white-space:nowrap;
+}
+.hamster .fullscreen th:last-child label,
+.hamster .fullscreen td:last-child label {
+	display:inline-block;
+	padding:2px 4px;
+}
+.hamster .checkbox > label,
+.hamster .radio > label {
+	display:inline;
+	padding:0;
+	margin-left:0;
+}
+.hamster .submit-area {
+	background:#efeadf;
+}
+.hamster .fullscreen .submit-area {
+	position:fixed;
+	left:11px;
+	right:11px;
+	bottom:0;
+}
+.hamster .submit-table-action {
+	padding:6px 16px;
+	border:1px solid #047;
+	border-radius:4px;
+	background:#025da9;
+	color:#fff;
+	text-shadow:0 -1px 2px #025;
+}
+
+.hamster input[type="submit"] {
+	transition:0.1s padding-right ease-in-out;
+}
+
+.hamster.loading input[type="submit"] {
+	padding-right:36px;
+	color:#999;
+	background:url(../img/ajax-loader.gif) no-repeat 90% 50% / auto 50%;
+	pointer-events:none;
+}
+
+@media only screen and (max-width:780px) {
+	#service-portal .m-form {
+		float:none;
+		padding:0;
+		width:auto;
+	}
+}
+
+/* Reset from serviceportal.css */
+#service-portal #nav-sub a span,
+#service-portal #nav-sub a.selected span {
+	margin-left:0;
+	padding:0;
+	border-radius:0;
+	background:none;
+	color:inherit;
+	font:inherit;
+}
+
+/* Generic (inline) search component */
+#service-portal .search-wide input {
+	padding:6px 8px;
+	vertical-align:middle;
+}
+#service-portal .search-wide .keywords {
+	width:74%;
+}
+#service-portal .search-wide .btn-search {
+	padding:6px 16px;
+	border:1px solid #047;
+	border-radius:0 4px 4px 0;
+	background:#025da9;
+	color:#fff;
+	text-shadow:0 -1px 2px #025;
+}
+
+/* IT utrustning
+----------------------------------------------------------------------------- */
+/* 2 columns*/
+#service-portal .hamster .cols-2 .col {
+	width:50%;
+	min-width:200px;
+}
+
+/* 4 columns */
+#service-portal .hamster .cols-4 .col {
+	width:25%;
+	min-width:160px;
+}
+
+#service-portal .hamster .row .col select,
+#service-portal .hamster .row .col .select,
+#service-portal .hamster .row .col .text,
+#service-portal .hamster .row .col textarea,
+#service-portal .hamster .row .col input[type="text"] {
+	width:100% !important;
+	box-sizing:border-box;
+}
+
+dl.it-list {
+	margin-bottom:20px;
+	display:block;
+	overflow:auto;
+}
+dl.it-list dd,
+dl.it-list dt {
+	display:block;
+	float:left;
+}
+dl.it-list dt {
+	clear:left;
+}
+
+dl.it-list dd {
+	margin-left:4px;
+}
+
+dl.it-list dt:after {
+	content:":";
+}
+
+.small-table tbody th {
+	width:30%;
+}.jqplot-target{position:relative;color:#666;font-family:"Trebuchet MS",Arial,Helvetica,sans-serif;font-size:1em}.jqplot-axis{font-size:.75em}.jqplot-xaxis{margin-top:10px}.jqplot-x2axis{margin-bottom:10px}.jqplot-yaxis{margin-right:10px}.jqplot-y2axis,.jqplot-y3axis,.jqplot-y4axis,.jqplot-y5axis,.jqplot-y6axis,.jqplot-y7axis,.jqplot-y8axis,.jqplot-y9axis,.jqplot-yMidAxis{margin-left:10px;margin-right:10px}.jqplot-axis-tick,.jqplot-xaxis-tick,.jqplot-yaxis-tick,.jqplot-x2axis-tick,.jqplot-y2axis-tick,.jqplot-y3axis-tick,.jqplot-y4axis-tick,.jqplot-y5axis-tick,.jqplot-y6axis-tick,.jqplot-y7axis-tick,.jqplot-y8axis-tick,.jqplot-y9axis-tick,.jqplot-yMidAxis-tick{position:absolute;white-space:pre}.jqplot-xaxis-tick{top:0;left:15px;vertical-align:top}.jqplot-x2axis-tick{bottom:0;left:15px;vertical-align:bottom}.jqplot-yaxis-tick{right:0;top:15px;text-align:right}.jqplot-yaxis-tick.jqplot-breakTick{right:-20px;margin-right:0;padding:1px 5px 1px 5px;z-index:2;font-size:1.5em}.jqplot-y2axis-tick,.jqplot-y3axis-tick,.jqplot-y4axis-tick,.jqplot-y5axis-tick,.jqplot-y6axis-tick,.jqplot-y7axis-tick,.jqplot-y8axis-tick,.jqplot-y9axis-tick{left:0;top:15px;text-align:left}.jqplot-yMidAxis-tick{text-align:center;white-space:nowrap}.jqplot-xaxis-label{margin-top:10px;font-size:11pt;position:absolute}.jqplot-x2axis-label{margin-bottom:10px;font-size:11pt;position:absolute}.jqplot-yaxis-label{margin-right:10px;font-size:11pt;position:absolute}.jqplot-yMidAxis-label{font-size:11pt;position:absolute}.jqplot-y2axis-label,.jqplot-y3axis-label,.jqplot-y4axis-label,.jqplot-y5axis-label,.jqplot-y6axis-label,.jqplot-y7axis-label,.jqplot-y8axis-label,.jqplot-y9axis-label{font-size:11pt;margin-left:10px;position:absolute}.jqplot-meterGauge-tick{font-size:.75em;color:#999}.jqplot-meterGauge-label{font-size:1em;color:#999}table.jqplot-table-legend{margin-top:12px;margin-bottom:12px;margin-left:12px;margin-right:12px}table.jqplot-table-legend,table.jqplot-cursor-legend{background-color:rgba(255,255,255,0.6);border:1px solid #ccc;position:absolute;font-size:.75em}td.jqplot-table-legend{vertical-align:middle}td.jqplot-seriesToggle:hover,td.jqplot-seriesToggle:active{cursor:pointer}.jqplot-table-legend .jqplot-series-hidden{text-decoration:line-through}div.jqplot-table-legend-swatch-outline{border:1px solid #ccc;padding:1px}div.jqplot-table-legend-swatch{width:0;height:0;border-top-width:5px;border-bottom-width:5px;border-left-width:6px;border-right-width:6px;border-top-style:solid;border-bottom-style:solid;border-left-style:solid;border-right-style:solid}.jqplot-title{top:0;left:0;padding-bottom:.5em;font-size:1.2em}table.jqplot-cursor-tooltip{border:1px solid #ccc;font-size:.75em}.jqplot-cursor-tooltip{border:1px solid #ccc;font-size:.75em;white-space:nowrap;background:rgba(208,208,208,0.5);padding:1px}.jqplot-highlighter-tooltip,.jqplot-canvasOverlay-tooltip{border:1px solid #ccc;font-size:.75em;white-space:nowrap;background:rgba(208,208,208,0.5);padding:1px}.jqplot-point-label{font-size:.75em;z-index:2}td.jqplot-cursor-legend-swatch{vertical-align:middle;text-align:center}div.jqplot-cursor-legend-swatch{width:1.2em;height:.7em}.jqplot-error{text-align:center}.jqplot-error-message{position:relative;top:46%;display:inline-block}div.jqplot-bubble-label{font-size:.8em;padding-left:2px;padding-right:2px;color:rgb(20%,20%,20%)}div.jqplot-bubble-label.jqplot-bubble-label-highlight{background:rgba(90%,90%,90%,0.7)}div.jqplot-noData-container{text-align:center;background-color:rgba(96%,96%,96%,0.3)}.Utility {
+		color: black;
+}	
+.NodeName {
+	font-weight:bold;
+	color: #800080;	
+}
+.AttributeName 
+{
+	font-weight:bold;
+	color: black;
+}
+.AttributeValue
+{
+	color:blue;
+}
+.NodeValue
+{
+	color: black;
+}
+.Element {
+	border-left-color:lightgrey;
+	border-left-width:thin;
+	border-left-style:solid;
+	padding-top:0px;
+	/*margin-top:10px;*/
+}
+.Clickable {	
+	font-weight:900;
+	/*font-size:large;*/
+	color: #800080;	
+	cursor:pointer;
+
+	vertical-align:middle;
+}

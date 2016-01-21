@@ -1,0 +1,2102 @@
+/*version=2.25-SNAPSHOT - developer=x1andlev - timestamp=20151210-1600*/
+.e-tjansteplattform {
+	margin:0 0 30px;
+	padding:10px 0 0;
+}
+.e-tjansteplattform .form-general {
+	background:none;
+}
+.e-tjansteplattform .form-step .form-general {
+	margin:0;
+}
+.e-tjansteplattform .input-cover {
+	position:fixed;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+}
+.e-tjansteplattform h1 {
+	padding:0 10px 10px;
+	border:none;
+}
+
+legend {
+	display:table; 
+	color:#333;
+	white-space:normal; 
+}
+.e-tjansteplattform .service-intro h1 {
+	padding:0;
+}
+.e-tjansteplattform .loading-message {
+	position:fixed;
+	top:200px;
+	left:50%;
+	z-index:999;
+	width:250px;
+	margin-left:-100px;
+	padding:20px 0;
+	border:1px solid #999;
+	border-radius:12px;
+	box-shadow:0 0 8px #555;
+	background:#fff;
+}
+.e-tjansteplattform .loading-message strong {
+	display:block;
+	padding-top:20px;
+	background:url(../img/ajax-loader.gif) no-repeat 50% 0;
+	background-size:24px 24px;
+	font-size:18px;
+	text-align:center;
+}
+.e-tjansteplattform .loading-message span {
+	display:block;
+	padding:2px 10px;
+	text-align:center;
+}
+
+.e-tjansteplattform .admin-view .loading {
+	min-height:15em;
+	background:url(data:image/gif;base64,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) no-repeat 50% 0;
+}
+
+.layout-4 .e-tjansteplattform {
+	padding-top:20px;
+}
+.e-tjansteplattform h1 {
+	float:left;
+	margin-bottom:15px;
+}
+.e-tjansteplattform .service-intro-form .submit-area {
+	padding:10px;
+	border:none;
+}
+.e-tjansteplattform .service-intro,
+.e-tjansteplattform .verification-intro {
+	clear:both;
+	width:75%;
+	padding:0 10px;
+	border:none;
+}
+.e-tjansteplattform .service-intro img.right {
+	margin-left:20px;
+}
+.e-tjansteplattform .service-intro img {
+	display:block;
+	box-sizing:border-box;
+	max-width:100%;
+	padding:5px;
+	border:1px solid #ede8da;
+	border-bottom:1px solid #dbd1b6;
+	border-radius:3px;
+	background:#fff;
+}
+.e-tjansteplattform .confirm-mail {
+	width:75%;
+}
+.e-tjansteplattform .confirm-mail .submit-area {
+	padding:0 20px;
+	border:none;
+	background:none;
+}
+.e-tjansteplattform .service-intro h1 {
+	float:none;
+}
+.e-tjansteplattform .service-intro li {
+	margin-bottom:5px;
+}
+.e-tjansteplattform .form-general {
+	padding:0;
+	border:none;
+	border-radius:3px;
+}
+.e-tjansteplattform h2 {
+	font-weight:bold;
+}
+.e-tjansteplattform p,
+.e-tjansteplattform h2 {
+	margin:0 0 20px;
+}
+.e-tjansteplattform h3 {
+	margin:30px 0 0;
+}
+.e-tjansteplattform h4 {
+	margin-top:10px;
+	border-bottom:1px solid #d8cda8;
+}
+.e-tjansteplattform .button {
+	margin:15px 0 20px;
+}
+.e-tjansteplattform a.cancel {
+	margin:0 0 0 10px;
+	padding:0 0 0 10px;
+	border-left:1px solid #e0d8c1;
+}
+.e-tjansteplattform .alt {
+	display:block;
+}
+.e-tjansteplattform fieldset,
+.e-tjansteplattform .fieldset {
+	margin-bottom:20px;
+	padding-bottom:15px;
+}
+.e-tjansteplattform fieldset p,
+.e-tjansteplattform .fieldset p {
+	width:75%;
+	margin:6px 16px;
+}
+.e-tjansteplattform .text,
+.e-tjansteplattform .select {
+	display:table;
+	padding-bottom:16px;
+}
+.e-tjansteplattform .recursive-select-group select {
+	margin-right:5px;
+}
+.e-tjansteplattform .recursive-select-group .loading {
+	display:inline-block;
+	width:30px;
+	height:16px;
+	background:url(../img/ajax-loader.gif) no-repeat 0 50%;
+	background-size:16px 16px;
+	text-indent:-9999px;
+}
+.lb-serviceadmin .text,
+.lb-serviceadmin .select {
+	padding-bottom:6px;
+}
+.e-tjansteplattform .text input {
+	margin-right:6px;
+}
+.e-tjansteplattform .row .text input,
+.e-tjansteplattform .row textarea,
+.e-tjansteplattform .row .val-message {
+	box-sizing:content-box;
+	width:185px;
+}
+.e-tjansteplattform .submit-area {
+	position:relative;
+	margin-top:10px;
+	padding:8px 18px;
+	border:1px solid #e0d8c1;
+	border-width:1px 0;
+	background:#fff;
+	font-size:1.2em;
+	vertical-align:middle;
+}
+.e-tjansteplattform .cases .update-thread {
+	background:#f6f6f6;
+}
+.e-tjansteplattform .cases .update-thread textarea {
+	width:98%;
+}
+.e-tjansteplattform .cases td .submit-area,
+.e-tjansteplattform .service-intro .submit-area {
+	margin:0;
+	padding:0 0 10px;
+	border:none;
+	background:none;
+}
+.e-tjansteplattform .submit-area input {
+	font-size:1.2em;
+}
+
+.e-tjansteplattform .submit-area input.cancel,
+.e-tjansteplattform .submit-area input.save-draft,
+.e-tjansteplattform .submit-area input.save-template,
+.e-tjansteplattform .submit-area input.back,
+.e-tjansteplattform .login-actions input.back {
+	padding:1px 8px;
+	border:none;
+	background:#fff;
+	color:#1b3b94;
+	font-size:1em;
+	font-family:Arial, Helvetica, sans-serif;
+	text-decoration:underline;
+	cursor:pointer;
+}
+.e-tjansteplattform .login-actions input.back {
+	background:none;
+}
+.e-tjansteplattform .submit-area input.back,
+.e-tjansteplattform .login-actions input.back {
+	margin-left:15px;
+	padding-left:15px;
+	border-left:1px solid #e0d8c1;
+}
+.e-tjansteplattform .submit-area input.back {
+	margin-top:-3px;
+}
+.e-tjansteplattform .form-step .submit-area input {
+	float:left;
+}
+.e-tjansteplattform .form-step .submit-area a.print-link,
+.e-tjansteplattform .submit-area input.cancel,
+.e-tjansteplattform .submit-area input.save-template,
+.e-tjansteplattform .submit-area input.save-draft {
+	float:right;
+	line-height:1;
+}
+.e-tjansteplattform .form-step .submit-area a.print-link {
+	float:left;
+	margin-left:20px;
+	
+}
+
+.e-tjansteplattform .control-group {
+	padding:0 15px;
+}
+.e-tjansteplattform fieldset .checkbox,
+.e-tjansteplattform fieldset .text,
+.e-tjansteplattform fieldset .radio,
+.e-tjansteplattform fieldset .select,
+.e-tjansteplattform fieldset .row,
+.e-tjansteplattform fieldset .information-text,
+.e-tjansteplattform .fieldset .checkbox,
+.e-tjansteplattform .fieldset .text,
+.e-tjansteplattform .fieldset .radio,
+.e-tjansteplattform .fieldset .select,
+.e-tjansteplattform .fieldset .row,
+.e-tjansteplattform .fieldset .information-text {
+	padding-left:10px;
+	white-space:normal;
+}
+.e-tjansteplattform .checkbox,
+.e-tjansteplattform .radio {
+	padding:8px 0 5px 0;
+}
+.e-tjansteplattform .checkbox.inline,
+.e-tjansteplattform .radio.inline {
+	display:inline-block;
+	padding-right:10px;
+}
+
+.e-tjansteplattform .checkbox > label,
+.e-tjansteplattform .radio > label {
+	display:inline-block;
+	max-width:95%;
+}
+
+.e-tjansteplattform .checkbox p,
+.e-tjansteplattform .radio p {
+	white-space:normal;
+}
+
+.e-tjansteplattform .checkbox div label,
+.e-tjansteplattform .radio div label {
+	display:block;
+	font-weight:normal;
+}
+.e-tjansteplattform .toggled .checkbox label,
+.e-tjansteplattform .toggled .radio label {
+	display:inline;
+	margin-left:4px;
+}
+.e-tjansteplattform .control-group .checkbox,
+.e-tjansteplattform .control-group .radio {
+	padding:2px 0;
+}
+.e-tjansteplattform .radio,
+.e-tjansteplattform .checkbox {
+	margin-bottom:6px;
+}
+.e-tjansteplattform fieldset .checkbox,
+.e-tjansteplattform fieldset .radio {
+	padding:8px 0 5px 10px;
+}
+.e-tjansteplattform fieldset .checkbox,
+.e-tjansteplattform fieldset .radio {
+	padding:8px 0 5px 10px;
+}
+.e-tjansteplattform fieldset legend {
+	font-weight:normal;
+}
+.e-tjansteplattform .form-section input,
+.e-tjansteplattform .form-section select,
+.e-tjansteplattform .form-section textarea {
+	font-size:1.15em;
+}
+.e-tjansteplattform .toggled {
+	border-radius:3px;
+	background:#fff3c6;
+}
+.e-tjansteplattform .toggle-target label {
+	margin:0;
+}
+.e-tjansteplattform h3 {
+	margin:30px -10px 0.5 -10px;
+	padding:2px 10px;
+	background:#efeadf;
+}
+.lb-serviceadmin h3 {
+	margin-top:10px;
+}
+.e-tjansteplattform table {
+	margin:10px 0 20px;
+}
+.e-tjansteplattform table thead th,
+.e-tjansteplattform table tbody td {
+	text-align:center;
+}
+.e-tjansteplattform dl {
+	width:30em;
+}
+.e-tjansteplattform dt {
+	float:left;
+	width:14em;
+	margin:0;
+	padding:5px 0;
+}
+.e-tjansteplattform dd {
+	float:left;
+	width:14em;
+	margin:0;
+	padding:5px 0;
+}
+.e-tjansteplattform h3 .edit {
+	margin-left:30px;
+	font-size:0.94;
+}
+
+.e-tjansteplattform .help-tip {
+	padding:2px 20px 2px 0;
+	background:url(../img/icn-help.gif) no-repeat 100% 50%;
+}
+
+.e-tjansteplattform .btns {
+	padding-top:20px;
+}
+.e-tjansteplattform .btns a {
+	display:block;
+	float:left;
+	margin:0 10px 0 0;
+	padding:6px 8px;
+	font-size:1.3em;
+}
+.e-tjansteplattform .btns .primary {
+	border:1px solid #e0d8c1;
+	background:#f6f3ec;
+	font-weight:bold;
+}
+.e-tjansteplattform .form-info {
+	padding-top:10px;
+}
+
+.e-tjansteplattform .form-table thead {
+	border:1px solid #d8cda8;
+	border-width:1px 0;
+	background:#efeadf;
+}
+.e-tjansteplattform .form-table thead th {
+	padding:3px 0;
+	text-align:left;
+}
+.e-tjansteplattform .form-table tbody th,
+.e-tjansteplattform .form-table tbody td {
+	padding:8px 5px 8px 0;
+	border-bottom:1px solid #d8cda8;
+	text-align:left;
+}
+.e-tjansteplattform .form-table .select {
+	margin:0;
+}
+.e-tjansteplattform .form-table .select select {
+	width:auto;
+}
+
+.e-tjansteplattform .n-a {
+	color:#686868;
+}
+
+.e-tjansteplattform .system-info {
+	padding:10px 10px 5px;
+}
+.e-tjansteplattform .system-info p {
+	margin:0 0 5px;
+}
+.e-tjansteplattform .system-info h2,
+.e-tjansteplattform .system-info h3,
+.e-tjansteplattform .system-info h4,
+.e-tjansteplattform .system-info h5 {
+	margin:0 0 5px;
+	padding:0;
+	background:none;
+	color:#222;
+	font-weight:bold;
+}
+
+
+.e-tjansteplattform label strong {
+	display:inline;
+}
+
+.e-tjansteplattform .caption,
+.e-tjansteplattform .caption em {
+	display:block;
+}
+.e-tjansteplattform .caption em {
+	font-size:0.916;
+}
+.e-tjansteplattform .caption p,
+.e-tjansteplattform .caption em {
+	margin-bottom:0;
+}
+.e-tjansteplattform .caption sup {
+	bottom:3px;
+}
+
+.e-tjansteplattform .success {
+	padding-left:35px;
+	border-color:#bdddb1;
+	background:#f1f6ef url(../img/icn-success.png) no-repeat 10px 12px;
+}
+.e-tjansteplattform .error-message {
+	padding-left:35px;
+	background:#fff url(../img/icn-error.gif) no-repeat 10px 10px;
+}
+.e-tjansteplattform .warning-message {
+	padding-left:35px;
+}
+
+.e-tjansteplattform .print-link {
+	padding:1px 0 4px 20px;
+	background:url(../img/icn-print.png) no-repeat 0 0;
+}
+
+.e-tjansteplattform .form-section {
+	margin:0;
+	padding:0 20px 10px;
+	background:#fff;
+}
+.e-tjansteplattform .form-section h3 {
+	margin:0 -20px 20px;
+	padding:2px 20px;
+	border-top:1px solid #e0d8c1;
+	background:#efeadf;
+}
+.e-tjansteplattform .form-section .form-intro {
+	max-width:500px;
+	margin:10px 0;
+}
+
+
+
+.e-tjansteplattform .exclusive-choice {
+	margin-top:20px;
+}
+.e-tjansteplattform .exclusive-choice .choices {
+	padding:0 10px;
+	background:url(../img/bg-formtab-shade.png) repeat-x 0 100%;
+}
+.e-tjansteplattform .exclusive-choice .choices fieldset {
+	margin:0;
+	padding:10px 10px 0;
+	border:none;
+}
+.e-tjansteplattform .exclusive-choice .choices legend {
+	font-size:1.3em;
+}
+.e-tjansteplattform .exclusive-choice .choices .radio {
+	float:left;
+	margin:0 10px 0 0;
+	padding:8px 10px;
+}
+.e-tjansteplattform .exclusive-choice .choices .sel {
+	border:1px solid #e0d8c1;
+	border-width:1px 1px 0;
+	background:#fff;
+}
+.e-tjansteplattform .exclusive-choice .form-section {
+	border-top:none;
+}
+
+
+input[type=text][readonly] {
+	background:#eee;
+	color:#666;
+}
+
+
+.e-tjansteplattform .text input {
+	width:200px;
+}
+
+.e-tjansteplattform .small input,
+.e-tjansteplattform .small select,
+.e-tjansteplattform .small textarea,
+.e-tjansteplattform .row .small input,
+.e-tjansteplattform .row .small select,
+.e-tjansteplattform .row .small textarea {
+	width:85px;
+}
+.e-tjansteplattform .medium input,
+.e-tjansteplattform .medium select,
+.e-tjansteplattform .medium textarea,
+.e-tjansteplattform .row .medium input,
+.e-tjansteplattform .row .medium select,
+.e-tjansteplattform .row .medium textarea {
+	width:200px;
+}
+.e-tjansteplattform .large input:not([type=checkbox]),
+.e-tjansteplattform .large select,
+.e-tjansteplattform .large textarea,
+.e-tjansteplattform .row .large input:not([type=checkbox]),
+.e-tjansteplattform .row .large select,
+.e-tjansteplattform .row .large textarea {
+	width:400px !important;
+}
+
+
+
+.e-tjansteplattform .row {
+	padding:0;
+}
+.e-tjansteplattform .row .col {
+	float:left;
+}
+.e-tjansteplattform .row .col input,
+.e-tjansteplattform .row .col select,
+.e-tjansteplattform .row .col textarea {
+	margin-right:10px;
+}
+
+.e-tjansteplattform .row .col,
+.e-tjansteplattform .row .small,
+.e-tjansteplattform .row .medium,
+.e-tjansteplattform .row .large {
+	width:auto;
+}
+
+.e-tjansteplattform .form-step {
+	clear:both;
+	margin:0 0 1px;
+	border:1px solid #e0d8c1;
+	border-radius:3px;
+}
+.e-tjansteplattform .form-step-header {
+	padding:10px;
+}
+.e-tjansteplattform .form-step-header h2 {
+	margin:0;
+	color:#777;
+	font-weight:normal;
+}
+.e-tjansteplattform .form-step-header input {
+	float:right;
+	margin-top:5px;
+	margin-right:30px;
+}
+
+.e-tjansteplattform .form-step-header .stepnum,
+.e-tjansteplattform .form-step-header .status,
+.e-tjansteplattform .cases .status {
+	float:left;
+	margin-right:10px;
+	padding:2px 8px;
+	border-radius:10px;
+	background:#0065ca;
+	color:#fff;
+	text-shadow:none;
+}
+.e-tjansteplattform .form-step-header .stepnum,
+.e-tjansteplattform .form-step-header .status {
+	margin-top:3px;
+}
+.e-tjansteplattform .cases .status-1 {
+	background:#b34;
+}
+.e-tjansteplattform .cases .status-2 {
+	background:#299819;
+}
+.e-tjansteplattform .cases .status-3 {
+	background:#76317f;
+}
+.e-tjansteplattform .cases .status-4 {
+	background:#964c00;
+}
+.e-tjansteplattform .cases .status-5 {
+	background:#0057b1;
+}
+.e-tjansteplattform .cases .status-6 {
+	background:#666;
+}
+
+.e-tjansteplattform .cases .status {
+	float:none;
+}
+.e-tjansteplattform .form-step-header .status {
+	float:right;
+}
+.e-tjansteplattform .form-step-header .done {
+	background:#4b3;
+}
+.e-tjansteplattform .form-step-header .incomplete,
+.e-tjansteplattform .cases .incomplete {
+	background:#b34;
+}
+.e-tjansteplattform .form-step-header .stepnum {
+	background:#f6f3ec;
+	color:#333;
+}
+.e-tjansteplattform .cases-counter {
+	float:right;
+	margin-right:20px;
+}
+.e-tjansteplattform .current-step .form-step-header .stepnum {
+	background:#fff;
+}
+.e-tjansteplattform .current-step {
+	padding-bottom:10px;
+	box-shadow:0 1px 10px #ccc;
+	background:#f6f3ec;
+}
+.e-tjansteplattform .current-step .form-step-header h2 {
+	color:#222;
+	font-weight:bold;
+}
+
+.e-tjansteplattform .form-step-header .status input {
+	display:inline;
+	margin:0;
+	padding:0;
+	border:none;
+	background:none;
+	color:#fff;
+	font-size:1em;
+	font-family:Arial, Helvetica, sans-serif;
+	cursor:pointer;
+}
+.e-tjansteplattform .form-step-header.togglable {
+	cursor:pointer;
+}
+
+
+
+.service-progress {
+	float:right;
+	margin-right:10px;
+}
+.service-progress .progress {
+	width:200px;
+	padding:1px;
+	border:1px solid #e0d8c1;
+	border-radius:3px;
+}
+.service-progress .progress div {
+	height:12px;
+	background:#4b3;
+}
+.service-progress p {
+	margin:5px 0 10px;
+}
+
+
+.e-tjansteplattform .success-summary,
+.e-tjansteplattform .error-summary {
+	margin:10px;
+	border:2px solid #b34;
+	border-radius:3px;
+	background:#fff;
+}
+.e-tjansteplattform .success-summary {
+	border-color:#4b3;
+}
+.e-tjansteplattform .success-summary h3,
+.e-tjansteplattform .error-summary h3 {
+	margin:0 0 1em;
+	padding:5px 10px;
+	background:#b34;
+	color:#fff;
+}
+.e-tjansteplattform .success-summary h3 {
+	background:#4b3;
+}
+.e-tjansteplattform .error-summary h3:focus {
+	outline:0;
+	border-bottom:1px dotted #999;
+}
+.e-tjansteplattform .success-summary-description,
+.e-tjansteplattform .error-summary-description {
+	margin:10px;
+}
+.e-tjansteplattform em.mandatory {
+	margin-left:5px;
+	padding:2px 3px;
+	border-radius:3px;
+	background:#fff3c6;
+	font-weight:normal;
+	font-style:normal;
+	font-size:0.9;
+}
+.e-tjansteplattform .val-message {
+	margin-top:2px;
+	padding-top:6px;
+	background:url(../img/formmsg-tip.png) no-repeat 7px 0;
+}
+.e-tjansteplattform .row .small .val-message {
+	width:110px;
+}
+.e-tjansteplattform .hint,
+.e-tjansteplattform .val-message .hint,
+.e-tjansteplattform .val-message label {
+	display:block;
+	margin:0;
+	padding:4px 7px;
+	border-radius:3px;
+	background:#ddeafd;
+	font-weight:normal;
+}
+.e-tjansteplattform .val-error-message {
+	background:url(../img/valmsg-tip.png) no-repeat 7px 0 !important;
+}
+
+.e-tjansteplattform fieldset .val-message {
+	width:90%;
+	
+	
+}
+
+
+.e-tjansteplattform fieldset .val-message p {
+	width:auto;
+}
+
+
+.e-tjansteplattform .val-error em.mandatory,
+.e-tjansteplattform .val-error-message label {
+	background:#b34;
+	color:#fff;
+}
+
+.e-tjansteplattform .info-box {
+	margin-bottom:20px;
+	padding:10px 10px 10px 30px;
+	border-radius:3px;
+	background:#fff3c6 url(../img/icn-info.gif) no-repeat 10px 12px;
+}
+.e-tjansteplattform .info-box p {
+	margin:0;
+}
+
+
+
+.e-tjansteplattform .service-error {
+	margin:10px 120px;
+	padding:20px 20px 30px;
+	border:1px solid #e0d8c1;
+	border-radius:5px;
+	box-shadow:0 1px 10px #ccc;
+	background:#f6f3ec;
+	text-align:center;
+}
+.e-tjansteplattform .service-error h2 {
+	margin:0 0 10px;
+	color:#b34;
+	font-weight:normal;
+	font-size:20px;
+}
+.e-tjansteplattform .service-error h2 strong {
+	color:#333;
+}
+.e-tjansteplattform .service-error p {
+	text-align:justify;
+}
+.e-tjansteplattform .service-error ul {
+	margin:30px 0 0;
+	list-style:none;
+}
+.e-tjansteplattform .service-error li {
+	display:inline;
+	margin:0 10px;
+}
+
+
+.e-tjansteplattform .btn-helptoggle {
+	display:inline-block;
+	width:28px;
+	height:28px;
+	overflow:hidden;
+	border-radius:5px;
+	background:url(../img/btn-helptoggle.png) no-repeat;
+	vertical-align:middle;
+	text-indent:100%;
+	white-space:nowrap;
+}
+
+.e-tjansteplattform fieldset > .btn-helptoggle {
+	float:right;
+}
+.e-tjansteplattform fieldset > .btn-helptoggle:after {
+	display:table;
+	clear:both;
+	content:"";
+}
+.e-tjansteplattform .btn-helptoggle:focus {
+	outline:none;
+	background-color:#dbe3ee;
+}
+.e-tjansteplattform .btn-helptoggle:active,
+.e-tjansteplattform .btn-helptoggle.toggled {
+	background:url(../img/btn-helptoggle.png) no-repeat 0 100%;
+}
+
+
+.e-tjansteplattform .preview-table {
+	width:100%;
+	border:none;
+	font-size:1.15em;
+	margin: 0;
+}
+.e-tjansteplattform .preview-table th {
+	width:32%;
+}
+.e-tjansteplattform .preview-table > tbody > tr > th,
+.e-tjansteplattform .preview-table > tbody > tr > td {
+	padding:0 6px 10px 0;
+	border:none;
+}
+.e-tjansteplattform .preview-table th,
+.e-tjansteplattform .preview-table td,
+.e-tjansteplattform .preview-table tr {
+	vertical-align:top;
+	text-align:left;
+}
+.e-tjansteplattform .preview-table td {
+	word-break:break-word;
+}
+.e-tjansteplattform .preview-table table {
+	margin:0;
+}
+.e-tjansteplattform .preview-table td td,
+.e-tjansteplattform .preview-table td th {
+	width:auto;
+	font-size:13px;
+	word-break:normal;
+}
+.e-tjansteplattform .preview-table td caption {
+	padding-bottom:10px;
+	font-weight:bold;
+	font-style:normal;
+}
+.e-tjansteplattform .preview-table td.edit {
+	width:12%;
+	text-align:right;
+}
+.e-tjansteplattform .preview-table .checked,
+.e-tjansteplattform .confirm {
+	display:block;
+	margin-bottom:5px;
+	padding-left:24px;
+	background:url(.../img/formcheck.png) no-repeat 0 3px;
+}
+.e-tjansteplattform .preview-table .empty-value {
+	color: #888;
+	font-style: italic;
+}
+.e-tjansteplattform .verification {
+	clear:both;
+}
+.e-tjansteplattform .verification .form-step {
+	margin-bottom:10px;
+}
+.e-tjansteplattform .verification-intro {
+	width:auto;
+	padding:15px 25% 10px 15px;
+	border-radius:5px;
+}
+.e-tjansteplattform .success-msg {
+	margin-bottom:10px;
+	border:3px solid #4a3;
+	background:#f5fff3;
+}
+.e-tjansteplattform .error-msg {
+	margin-bottom:10px;
+	border:3px solid #b34;
+	background:#fff5f3;
+}
+.e-tjansteplattform .tips {
+	padding:15px;
+}
+.e-tjansteplattform .tips h3 {
+	background:none;
+}
+.e-tjansteplattform .tips ul {
+	margin:0;
+	list-style:none;
+}
+.e-tjansteplattform .tips li {
+	margin:15px 0 0;
+	padding:0 0 0 16px;
+	background:url(../img/arrow-blue.gif) no-repeat 0 7px;
+}
+.e-tjansteplattform .tips li p {
+	margin:5px 0 0;
+}
+.e-tjansteplattform .tips li a {
+	display:block;
+	font-size:1.2em;
+}
+.e-tjansteplattform .tip-panel {
+	width:74%;
+}
+.e-tjansteplattform .tip-panel h3 {
+	padding:0;
+	background:none;
+}
+.e-tjansteplattform .tip-panel a.action {
+	font-weight:normal;
+	font-size:1.3em;
+}
+
+
+
+
+
+
+
+.e-tjansteplattform .login-prompt {
+	clear:both;
+	width:75%;
+	margin:0 0 20px;
+	padding:20px;
+	border:1px solid #e0d8c1;
+	border-radius:3px;
+	box-shadow:0 1px 10px #ccc;
+	background:#f6f3ec;
+}
+.e-tjansteplattform .login-prompt .btn {
+	width:10em;
+	margin-right:10px;
+	padding:0;
+	border:1px solid #16335f;
+	border-radius:5px;
+	background:#284878 url(../img/bg-navmain.gif) repeat-x;
+	font-size:1.2em;
+}
+.e-tjansteplattform .login-prompt .btn a {
+	display:block;
+	padding:8px 20px;
+	color:#fff;
+	text-decoration:none;
+}
+.e-tjansteplattform .login-prompt .btn-login a {
+	padding:8px 20px 8px 40px;
+	background:url(../img/icn-key.png) no-repeat 18px 50%;
+}
+.e-tjansteplattform .login-prompt .btn a:hover {
+	text-decoration:underline;
+}
+.e-tjansteplattform .login-prompt .btn a:focus,
+.e-tjansteplattform .login-prompt .btn a:active {
+	background-color:#284878;
+}
+.e-tjansteplattform .login-prompt .login-actions .btn {
+	float:left;
+	width:auto;
+}
+.e-tjansteplattform .login-prompt .login-actions form {
+	float:left;
+	padding:5px 5px 0;
+	font-size:1.2em;
+}
+
+.e-tjansteplattform .login-prompt-js {
+	position:absolute;
+	top:300px;
+	left:50%;
+	z-index:100;
+	width:500px;
+	margin-left:-250px;
+}
+
+.e-tjansteplattform .login-chooser .radio {
+	width:75%;
+	white-space:normal;
+}
+.e-tjansteplattform .login-chooser .radio label {
+	font-weight:bold;
+}
+.e-tjansteplattform .login-chooser .radio p {
+	margin:10px 0 0;
+}
+.e-tjansteplattform .login-chooser h3 {
+	margin-bottom:5px;
+}
+.e-tjansteplattform .intro-step {
+	padding-top:10px;
+}
+.e-tjansteplattform .intro-step .form-section {
+	margin:0;
+	border-bottom:none;
+}
+.e-tjansteplattform .intro-step .submit-area {
+	margin:0;
+	padding:0 20px 15px;
+	border-top:none;
+}
+
+
+.e-tjansteplattform a.btn {
+	padding:6px 12px;
+	border:1px solid #cfc1ac;
+	border-radius:5px;
+	background:#e0dccd url(../img/bg-btn2.png) repeat-x 0 0;
+	color:#333;
+	font-size:1.08em;
+	text-decoration:none;
+	text-shadow:0 1px 0 #fff;
+	white-space:nowrap;
+}
+.e-tjansteplattform a.btn:hover,
+.e-tjansteplattform a.btn:focus {
+	box-shadow:0 0 4px #999;
+	color:#000;
+}
+.e-tjansteplattform a.btn:active {
+	box-shadow:none;
+	background:#bbb;
+}
+.e-tjansteplattform .case-supp .panel {
+	padding:10px;
+}
+.e-tjansteplattform .case-supp .case-visibility {
+	padding:0 10px;
+}
+.e-tjansteplattform .case-supp .panel h3 {
+	margin-top:0;
+}
+.e-tjansteplattform .case-supp .case-visibility .checkbox {
+	margin:0;
+	padding:0 0 10px;
+	font-weight:bold;
+	white-space:normal;
+}
+.e-tjansteplattform .case-supp .case-visibility .checkbox input,
+.e-tjansteplattform .case-supp .case-visibility .checkbox label {
+	float:left;
+}
+.e-tjansteplattform .case-supp .case-visibility .checkbox label {
+	width:80%;
+	margin:0;
+}
+
+
+#service-my-pages .m-contactcard {
+	padding:20px 10px;
+}
+.e-tjansteplattform .m-contactcard .m-h,
+.e-tjansteplattform .m-contact .m-contactcard .m-h {
+	padding:37px 20px 10px 0 !important;
+}
+.e-tjansteplattform .m-contactcard .m-c {
+	margin:0;
+	padding:0 0 20px;
+	background:none;
+}
+.e-tjansteplattform .m-contactcard .vcard {
+	margin:0;
+	padding:0;
+}
+.e-tjansteplattform .m-contactcard .adr,
+.e-tjansteplattform .m-contactcard .tel,
+.e-tjansteplattform .m-contactcard .email {
+	padding-bottom:20px;
+}
+.e-tjansteplattform .m-contactcard .vcard strong,
+.e-tjansteplattform .m-contactcard .adr .street-address {
+	display:block;
+}
+.e-tjansteplattform .m-contactcard .finc-select {
+	padding:20px;
+}
+.e-tjansteplattform .m-contactcard .finc-select label {
+	display:block;
+	font-size:1.3em;
+}
+.e-tjansteplattform .m-contactcard .finc-select .select {
+	padding:0 0 20px;
+}
+.e-tjansteplattform .m-contactcard .finc-select .select select {
+	width:70%;
+	margin:0;
+	font-size:1.2em;
+}
+.e-tjansteplattform .m-contactcard .finc-select .select a {
+	display:block;
+	margin-top:10px;
+}
+.e-tjansteplattform .m-contactcard .finc-select input.btn {
+	padding:2px 12px;
+}
+
+
+.e-tjansteplattform .case-filter {
+	padding-top:90px;
+}
+.e-tjansteplattform .case-filter strong {
+	display:block;
+	padding-bottom:10px;
+}
+.e-tjansteplattform .case-filter .panel {
+	padding:10px;
+}
+.e-tjansteplattform .case-filter h3 {
+	margin-top:0;
+}
+.e-tjansteplattform .case-filter ul {
+	margin:0 0 15px;
+	list-style:none;
+}
+.e-tjansteplattform .case-filter .all {
+	font-weight:bold;
+}
+
+
+
+
+.e-tjansteplattform #cases-filter,
+.e-tjansteplattform #cases-statistics-filter {
+	padding:20px 20px 0;
+	border-bottom:1px solid #e2ddcf;
+}
+.e-tjansteplattform #cases-filter .select,
+.e-tjansteplattform #cases-statistics-filter .select {
+	float:left;
+	margin-right:15px;
+}
+.e-tjansteplattform #cases-filter .text,
+.e-tjansteplattform #cases-statistics-filter .text {
+	float:left;
+	margin-right:15px;
+}
+.e-tjansteplattform #cases-filter .select.forvaltning,
+.e-tjansteplattform #cases-statistics-filter .select.forvaltning {
+	float:right;
+	margin-right:0;
+}
+.e-tjansteplattform #cases-filter label,
+.e-tjansteplattform #cases-statistics-filter label {
+	display:block;
+	font-weight:bold;
+}
+
+.js .e-tjansteplattform #cases-filter input[type=submit] {
+	display:none;
+}
+
+
+
+.e-tjansteplattform .admin-form {
+	margin-top:15px;
+	padding:10px;
+}
+.e-tjansteplattform .admin-form h3 {
+	margin-top:0;
+}
+.e-tjansteplattform .admin-form .submit-area {
+	margin:10px -10px 0;
+	padding:8px 10px;
+}
+
+
+
+
+.lb-wrap .admin-form .text,
+.lb-wrap .admin-form .select,
+.lb-wrap .admin-form .checkbox,
+.lb-wrap .admin-form .submit-area {
+	padding-top:10px;
+}
+.lb-wrap .admin-form .file {
+	padding:10px 0;
+}
+.lb-wrap .admin-form .large input,
+.lb-wrap .admin-form .large textarea {
+	width:97%;
+}
+.lb-wrap .admin-form .submit-btn {
+	width:auto !important;
+}
+.lb-wrap .admin-form a.cancel {
+	margin-left:20px;
+}
+.lb-wrap .admin-form .submit-area {
+	margin:10px -10px 0;
+	padding:10px;
+	background:#efeadf;
+}
+.lb-blackout {
+	position:absolute;
+	top:0;
+	right:0;
+	left:0;
+	background:#000;
+}
+.lb-blackout-fixed {
+	position:fixed;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	z-index:99;
+}
+.lb-panel,
+.lb-panel-big {
+	position:absolute;
+	top:100px;
+	left:50%;
+	max-width:930px;
+	width:70%;
+	margin-left:-35% !important;
+	padding:10px;
+	padding-top:40px !important;
+	border:5px solid #f5f3ef;
+	border-radius:5px;
+	box-shadow:0 5px 20px #000;
+	background:#fff;
+}
+.lb-panel-small {
+	max-width:475px;
+	width:36%;
+	margin-left:-18% !important;
+}
+.lb-panel .btn-close,
+.login-prompt .btn-close {
+	display:block;
+	position:absolute;
+	top:6px;
+	right:6px;
+	width:34px;
+	height:34px;
+	overflow:hidden;
+	border-radius:5px;
+	background:url(../img/btn-close.png) no-repeat;
+	text-indent:100%;
+	white-space:nowrap;
+}
+.lb-panel .btn-close:focus,
+.login-prompt .btn-close:focus {
+	outline:none;
+	background-color:#dbe3ee;
+}
+.lb-panel .btn-close:active,
+.login-prompt .btn-close:active {
+	background:url(../img/btn-close.png) no-repeat 0 100%;
+}
+.lb-wrap .admin-form input {
+	width:auto !important;
+}
+.lb-wrap .admin-form textarea {
+	width:100% !important;
+}
+
+
+
+
+
+.e-tjansteplattform .object-list-editor {
+	position:relative;
+	margin-bottom:40px;
+	padding:12px;
+	border:4px dashed #ddd;
+	border-radius:9px;
+}
+.e-tjansteplattform .object-listing td {
+	padding:7px 5px;
+}
+.e-tjansteplattform .object-list-editor thead th,
+.e-tjansteplattform .object-list-editor tbody td {
+	text-align:left;
+}
+.e-tjansteplattform .object-list-editor .tools {
+	width:134px;
+}
+.e-tjansteplattform .object-list-editor .tools a.remove {
+	margin-left:2px;
+}
+
+.e-tjansteplattform .object-list-editor {
+	position:relative;
+	padding-bottom:40px;
+}
+.e-tjansteplattform  .object-list-editor p.hint:first-child {
+	margin:0 0 20px;
+}
+.e-tjansteplattform h4.object-list-editor-title {
+	margin-bottom:5px;
+	padding-top:10px;
+	border-bottom:none;
+	font-weight:bold;
+	font-size:1em;
+}
+.e-tjansteplattform .object-form {
+	margin:10px 0 -50px;
+	margin-bottom:10px;
+	margin-left:20px;
+	padding:15px;
+	border:4px solid #ddd;
+	border-radius:9px;
+	background:#fff;
+}
+.e-tjansteplattform .object-listing .editing {
+	border:1px solid #aaa;
+	background:#eee;
+}
+.e-tjansteplattform .object-form.editing a.cancel {
+	display:inline;
+}
+.e-tjansteplattform .form-container {
+	display:none;
+}
+.e-tjansteplattform .object-form h4 {
+	margin-bottom:10px;
+	font-size:1.4em;
+}
+.e-tjansteplattform .object-list-editor .empty-list td {
+	text-align:center!important;
+}
+.e-tjansteplattform button.add {
+	display:block;
+	position:absolute;
+	bottom:-30px;
+	left:10px;
+	margin:10px auto;
+	padding:10px 10px 10px 35px;
+	border:4px solid #ddd;
+	border-radius:9px;
+	background:url(../img/icn-add.png) no-repeat 5px 50%,
+	url(../img/grey-grad-1.png) repeat-x 0 100% #fff;
+}
+.e-tjansteplattform button.add:focus {
+	text-decoration:underline dotted #666;
+}
+.e-tjansteplattform .object-form input[type="submit"] {
+	padding-left:35px;
+	background:url(../img/icn-add.png) no-repeat 5px 50%,
+	url(../img/grey-grad-1.png) repeat-x 0 100% #fff;
+	font-weight:normal;
+}
+.e-tjansteplattform .object-form input[type="submit"]:focus {
+	text-decoration:underline dotted #666;
+}
+
+
+.ghost {
+	position:absolute;
+	border:1px solid #aaa;
+	background:#fff;
+}
+.e-tjansteplattform .object-listing .btn {
+	display:inline;
+	margin:0;
+	padding:3px 9px;
+	font-size:13px;
+	white-space:nowrap;
+}
+
+
+.e-tjansteplattform input[type="radio"]:focus + label {
+	text-decoration:underline dotted #666;
+}
+
+
+
+.e-tjansteplattform .object-list-editor dl {
+	width:100%;
+}
+.e-tjansteplattform .object-list-editor dt {
+	clear:both;
+	width:31%;
+	min-height:20px;
+	padding:10px 2%;
+}
+.e-tjansteplattform .object-list-editor dt:nth-of-type(odd) {
+	background:#ededed;
+}
+.e-tjansteplattform .object-list-editor dd {;
+	float:left;
+	width:61%;
+	padding:10px 2%;
+	min-height:20px;
+}
+.e-tjansteplattform .object-list-editor dd:nth-of-type(odd) {
+	background:#ededed;
+}
+.e-tjansteplattform .object-list-editor dt,
+.e-tjansteplattform .object-list-editor dt + dd {
+	padding-top:15px;
+}
+
+.e-tjansteplattform .object-list-editor .tools {
+	clear:both;
+	padding-left:20px;
+}
+.e-tjansteplattform .object-list-editor li {
+	padding:1em 0;
+	border:1px solid #efefef;
+	background:#f9f9f9;
+}
+.e-tjansteplattform .object-list-editor .sum-area dl {
+	width:100%;
+	overflow:auto;
+	border-bottom:1px solid #666;
+}
+.e-tjansteplattform .object-list-editor .sum-area dd,
+.e-tjansteplattform .object-list-editor .sum-area dt {
+	display:inline;
+	float:none;
+}
+
+.e-tjansteplattform .object-list-editor .sum-area {
+	float:right;
+	width:50%;
+	padding:1em 1em 0 1em;
+	border:1px solid #efefef;
+	background:#fafafa;
+}
+
+
+
+.e-tjansteplattform #service-my-pages .preview-table tbody tr td {
+	padding:0
+}
+.e-tjansteplattform #service-my-pages .preview-table .object-listing li {
+	padding:1em 0;
+	border:1px solid #efefef;
+	background:#f9f9f9;
+	font-size:13px;
+}
+.e-tjansteplattform #service-my-pages .preview-table .object-listing li:not(:last-of-type) {
+	margin-bottom:20px;
+}
+.e-tjansteplattform #service-my-pages .preview-table .object-listing li dl {
+		width:100%;
+		margin:0;
+}
+.e-tjansteplattform #service-my-pages .preview-table .object-listing li dl dt {
+		float:left;
+		clear:left;
+		width:31%;
+		padding:10px 2%;
+}
+.e-tjansteplattform #service-my-pages .preview-table .object-listing li dl dt:after {
+	content:"";
+}
+.e-tjansteplattform #service-my-pages .preview-table .object-listing li dl dt:nth-of-type(odd) {
+	background:#ededed;
+}
+.e-tjansteplattform #service-my-pages .preview-table .object-listing li dl dd {
+		float:left;
+		width:61%;
+		padding:10px 2%;
+}
+.e-tjansteplattform #service-my-pages .preview-table .object-listing li dl dd:nth-of-type(odd) {
+	background:#ededed;
+}
+
+
+
+.m-form .verification table.preview-table tbody tr td {
+	padding:0
+}
+.m-form .verification table.preview-table label {
+	margin:10px 0;
+}
+.m-form .verification table.preview-table li {
+	padding:1em 0;
+	border:1px solid #efefef;
+	background:#f9f9f9;
+	font-size:13px;
+}
+.m-form .verification table.preview-table li:not(:last-of-type) {
+	margin-bottom:20px;
+}
+.m-form .verification table.preview-table li dl {
+		width:100%;
+		margin:0 !important;
+}
+.m-form .verification table.preview-table li dl dt {
+		float:left;
+		clear:left;
+		width:31%;
+		min-height:20px;
+		padding:10px 2%;
+}
+.m-form .verification table.preview-table li dl dt:after {
+	content:"";
+}
+.m-form .verification table.preview-table li dl dt:nth-of-type(odd) {
+	background:#ededed;
+}
+.m-form .verification table.preview-table li dl dd {
+		float:left;
+		width:61%;
+		padding:10px 2%;
+		min-height:20px;
+}
+.m-form .verification table.preview-table li dl dd:nth-of-type(odd) {
+	background:#ededed;
+}
+
+
+
+
+
+.e-tjansteplattform .multi-applicant-list .item-no,
+.e-tjansteplattform .multi-applicant-list .mailbox-no {
+	display:block;
+	min-width:40px;
+	min-height:35px;
+	margin-right:10px;
+	padding-top:5px;
+	color:#fff;
+	font-weight:normal;
+	font-size:13px;
+	line-height:1;
+	text-align:center;
+}
+.e-tjansteplattform .multi-applicant-list .item-no {
+	background:url(../img/icon-user-big.png) no-repeat 50% 0;
+}
+.e-tjansteplattform .multi-applicant-list .mailbox-no {
+	background:url(../img/icon-mailbox-big.png) no-repeat 50% 4px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant-edit-form .item-no,
+.e-tjansteplattform .multi-applicant-list .new-applicant .item-no,
+.e-tjansteplattform .multi-applicant-list .applicant-edit-form .mailbox-no,
+.e-tjansteplattform .multi-applicant-list .new-applicant .mailbox-no {
+	margin-top:14px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant,
+.e-tjansteplattform .address-lookup .address {
+	position:relative;
+	padding:10px;
+	border:3px solid #c9dbf6;
+	border-radius:5px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant a.delete,
+.e-tjansteplattform .address-lookup .address a.delete {
+	position:absolute;
+	top:10px;
+	right:10px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data,
+.e-tjansteplattform .address-lookup .address .address-data {
+	line-height:1.4;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data strong.name,
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data strong.street,
+.e-tjansteplattform .address-lookup .address .address-data strong.name,
+.e-tjansteplattform .address-lookup .address .address-data strong.street {
+	display:block;
+	font-size:16px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data span,
+.e-tjansteplattform .address-lookup .address .address-data span {
+	color:#585858;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data span span,
+.e-tjansteplattform .address-lookup .address .address-data span span {
+	display:block;
+	color:#444;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data span.postalcode,
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data span.city,
+.e-tjansteplattform .address-lookup .address .address-data span.postalcode,
+.e-tjansteplattform .address-lookup .address .address-data span.city {
+	display:inline;
+}
+.e-tjansteplattform .multi-applicant-list .new-applicant .applicant-data {
+	margin-left:70px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .group,
+.e-tjansteplattform .address-lookup .address .extra-fields {
+	padding-top:10px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .group > span,
+.e-tjansteplattform .address-lookup .address .group > span {
+	float:left;
+	width:24.6%;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .group > span.col-2,
+.e-tjansteplattform .address-lookup .address .group > span.col-2 {
+	float:left;
+	width:49.2%;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .group > span.col-3,
+.e-tjansteplattform .address-lookup .address .group > span.col-3 {
+	float:left;
+	width:73.8%;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .group input {
+	width:85% !important;
+	font:13px/1 Arial, sans-serif;
+}
+
+.e-tjansteplattform .multi-applicant-list .applicant-edit-form,
+.e-tjansteplattform .address-lookup .address-edit-form {
+	padding:10px 10px 20px;
+	border:3px dashed #eee;
+	border-radius:5px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant-edit-form h4,
+.e-tjansteplattform .address-lookup .address-edit-form h4 {
+	margin:0 0 10px;
+	font-weight:bold;
+}
+.e-tjansteplattform .multi-applicant-list .applicant-search,
+.e-tjansteplattform .address-lookup .address-search {
+	
+	display:none;
+	margin:0;
+	padding:0;
+}
+.e-tjansteplattform .checkbox .multi-applicant-list .applicant-edit-form,
+.e-tjansteplattform .checkbox .address-lookup .address-edit-form {
+	margin-right:10px;
+}
+.e-tjansteplattform .checkbox .multi-applicant-list input {
+	width:340px;
+}
+
+.e-tjansteplattform .employee-field-choice-header {
+	margin-bottom: 10px;
+}
+.e-tjansteplattform .multi-applicant-list .employee-field-choice {
+	display: inline-block;
+	width: 90%;
+	margin-left: 16px;
+}
+
+.e-tjansteplattform div.file {
+	padding:12px 0;
+}
+.e-tjansteplattform label + .cloneable,
+.e-tjansteplattform label + .uploaded {
+	border-top-left-radius:9px;
+	border-top-right-radius:9px;
+}
+.e-tjansteplattform .uploaded.multi,
+.e-tjansteplattform .cloneable {
+	position:relative;
+	margin-top:10px;
+	padding:10px 12px 5px;
+	border:4px dashed #ddd;
+	border-bottom-width:0;
+	line-height:1.7;
+}
+.e-tjansteplattform .cloneable > input[type="file"] {
+	margin-top:2px;
+	font-size:1em;
+}
+.e-tjansteplattform .cloneable:last-child > input[type="file"] {
+	width:15.5em;
+	margin-left:30px;
+	line-height:1.7;
+}
+.e-tjansteplattform .cloneable:last-child:before {
+	display:block;
+	position:absolute;
+	top:3px;
+	left:6px;
+	z-index:1;
+	width:30px;
+	height:38px;
+	background:url(../img/icn-add.png) no-repeat 3px 50%;
+	content:"";
+	pointer-events:none;
+}
+.e-tjansteplattform .cloneable + .cloneable {
+	margin-top:-3px;
+	border-top:none;
+}
+.e-tjansteplattform .uploaded + .cloneable {
+	margin-top:-20px;
+	border-top:none;
+	background-color:#fff;
+}
+.e-tjansteplattform .uploaded.multi,
+.e-tjansteplattform .cloneable:last-child {
+	margin-bottom:10px;
+	border-bottom-width:4px;
+	border-bottom-right-radius:9px;
+	border-bottom-left-radius:9px;
+	background-color:#f9f9f9;
+}
+.e-tjansteplattform .uploaded > div + div {
+	padding-top:5px;
+}
+.e-tjansteplattform .uploaded span.file {
+	display:inline-block;
+	width:14em;
+	padding:0 0 0 20px;
+	background:url(../img/attach.png) no-repeat 0 50%;
+	font-size:1.1em;
+}
+.e-tjansteplattform .uploaded .delete-file {
+	padding:5px 0 5px 20px;
+}
+.e-tjansteplattform .uploaded .delete-file:active {
+	background-color:transparent;
+}
+.e-tjansteplattform .cloneable .delete-file {
+	border:none;
+	background:none;
+	color:#1275b8;
+	font-size:1em;
+}
+.e-tjansteplattform .cloneable .delete-file:hover {
+	color:#026;
+	text-decoration:underline;
+}
+
+
+.js-autocomplete {
+	z-index:999;
+	max-height:350px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	border:1px solid #ccc;
+	box-shadow:0 0 7px #ccc;
+	background:#fff;
+}
+.js-autocomplete a {
+	display:block;
+	padding:5px 7px;
+	color:#da291c;
+	text-decoration:none;
+}
+.js-autocomplete a.sel,
+.js-autocomplete a:focus,
+.js-autocomplete a.addempty.sel,
+.js-autocomplete a.addempty:focus {
+	background-color:#1e79c4;
+	color:#fff;
+}
+.js-autocomplete h2 {
+	margin:0;
+	padding:2px 7px;
+	border-top:1px solid #ccc;
+	background:#eee;
+	font-weight:bold;
+	font-size:1em;
+}
+.js-autocomplete ul {
+	margin:0;
+	list-style:none;
+}
+.js-autocomplete li {
+	margin:0;
+	border-top:1px solid #ccc;
+}
+.js-autocomplete li strong,
+.js-autocomplete li span {
+	display:block;
+	min-height:20px; 
+	color:#333;
+}
+.js-autocomplete li span {
+	color:#777;
+}
+.js-autocomplete li a.sel span,
+.js-autocomplete li a:focus span,
+.js-autocomplete li a.sel strong,
+.js-autocomplete li a:focus strong {
+	color:#fff;
+}
+.js-autocomplete .disabled a {
+	cursor:default;
+}
+.js-autocomplete .disabled a strong {
+	color:#777;
+}
+.js-autocomplete .disabled a:hover,
+.js-autocomplete .disabled a:focus,
+.js-autocomplete .disabled a.sel {
+	background:#ddd;
+}
+.js-autocomplete .disabled a.sel span,
+.js-autocomplete .disabled a:hover span,
+.js-autocomplete .disabled a:focus span,
+.js-autocomplete .disabled a.sel strong,
+.js-autocomplete .disabled a:hover strong,
+.js-autocomplete .disabled a:focus strong {
+	color:#777;
+}
+.js-autocomplete.loading {
+	padding-top:27px;
+	background:#fff url(../img/ajax-loader.gif) no-repeat 50% 8px;
+	background-size:16px 16px;
+}
+
+.js-autocomplete a.addempty {
+	padding-left:34px;
+	background-color:#eee;
+	background-image:url(../img/icn-add.png);
+	background-position:6px 50%;
+	background-repeat:no-repeat;
+	line-height:300%;
+}
+.js-autocomplete strong.noresults {
+	padding-left:34px;
+	background-color:#eee;
+	background-image:url(../img/icn-info-w.png);
+	background-position:6px 50%;
+	background-repeat:no-repeat;
+	line-height:300%;
+}
+.js-autocomplete p.addempty {
+	margin-bottom:0;
+}
+
+.js-autocomplete a span.person-id,
+.js-autocomplete a span.unit-code {
+	float:right;
+}
+
+
+.e-tjansteplattform .file-list li {
+	background-position:0 50%;
+	background-repeat:no-repeat;
+}
+
+.e-tjansteplattform .file-list li.file {
+	display:block;
+	padding:7px 0 7px 40px;
+	background-image:url(../img/suffix/icon-generic.gif);
+	background-position:0 50%;
+	background-repeat:no-repeat;
+}
+
+.e-tjansteplattform .file-list li.folder {
+	background-image:url(../img/suffix/small/icon-folder.png);
+}
+
+.e-tjansteplattform .file-list li.bmp,
+.e-tjansteplattform .file-list li.gif,
+.e-tjansteplattform .file-list li.jpg,
+.e-tjansteplattform .file-list li.jpeg,
+.e-tjansteplattform .file-list li.png,
+.e-tjansteplattform .file-list li.psd {
+	background-image:url(../img/suffix/icon-jpeg.gif);
+}
+
+.e-tjansteplattform .file-list li.ai,
+.e-tjansteplattform .file-list li.eps {
+	background-image:url(../img/suffix/icon-eps.gif);
+}
+
+.e-tjansteplattform .file-list li.asp,
+.e-tjansteplattform .file-list li.chm,
+.e-tjansteplattform .file-list li.config,
+.e-tjansteplattform .file-list li.css,
+.e-tjansteplattform .file-list li.db,
+.e-tjansteplattform .file-list li.htm,
+.e-tjansteplattform .file-list li.html,
+.e-tjansteplattform .file-list li.js,
+.e-tjansteplattform .file-list li.txt,
+.e-tjansteplattform .file-list li.xml {
+	background-image:url(../img/suffix/icon-txt.gif);
+}
+
+.e-tjansteplattform .file-list li.doc,
+.e-tjansteplattform .file-list li.docx {
+	background-image:url(../img/suffix/icon-doc.gif);
+}
+
+.e-tjansteplattform .file-list li.rtf {
+	background-image:url(../img/suffix/icon-rtf.gif);
+}
+
+.e-tjansteplattform .file-list li.ppt,
+.e-tjansteplattform .file-list li.pptx {
+	background-image:url(../img/suffix/icon-ppt.gif);
+}
+
+.e-tjansteplattform .file-list li.fla,
+.e-tjansteplattform .file-list li.swf {
+	background-image:url(../img/suffix/icon-fla.gif);
+}
+
+.e-tjansteplattform .file-list li.mov,
+.e-tjansteplattform .file-list li.wmv {
+	background-image:url(../img/suffix/icon-wmv.gif);
+}
+
+.e-tjansteplattform .file-list li.pdf {
+	background-image:url(../img/suffix/icon-pdf.gif);
+}
+
+.e-tjansteplattform .file-list li.xls,
+.e-tjansteplattform .file-list li.xlsx {
+	background-image:url(../img/suffix/icon-xls.gif);
+}
+
+.e-tjansteplattform .file-list li.zip {
+	background-image:url(../img/suffix/icon-zip.gif);
+}
+
+
+.warning-panel {
+	width:425px;
+	padding:20px 60px 25px 70px !important;
+	background:#fff url(../img/label-alert.png) no-repeat 18px 20px;
+}
+.warning-panel a.cancel {
+	margin-left:20px;
+}
+
+
+
+@media print {
+	.e-tjansteplattform 	.submit-area,
+	.e-tjansteplattform 	.service-progress,
+	.e-tjansteplattform 	.preview-table td.edit {
+		display:none;
+	}
+	.e-tjansteplattform 	.form-step,
+	.e-tjansteplattform 	.form-section {
+		border:none;
+		box-shadow:none;
+	}
+}
+
+@media print {
+  * {
+    color: #000 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+  img {
+    max-width: 100% !important;
+  }
+  @page  {
+    margin: 0.5cm;
+  }
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+  h1 {
+    padding: 0;
+  }
+  h1,h2,h3,h4,h5,h6 {
+    float: none !important;
+    font-family: serif !important;
+    font-weight: normal !important;
+    margin-bottom: 24px !important;
+    margin-top: 0 !important;
+  }
+  #logo {
+    float: none !important;
+  }
+  input[type=submit],
+  .nav,
+  .fastsearch,
+  #service-my-pages a.up,
+  #service-my-pages .cases .panelreturn,
+  #service-my-pages .service-header ul.nav,
+  .service-platform .case-c .admin-form-btns,
+  #userbar,
+  #page-links,
+  .main-heading {
+    display: none !important;
+  }
+  .case-supp,
+  .service-header,
+  .service-platform,
+  #service-my-pages .m,
+  #service-my-pages .panel,
+  .service-platform .verification-intro,
+  #service-my-pages .cases .case-h .id, #service-my-pages .cases .case-h .datetime,
+  .service-platform .m-contactcard .m-h,
+  .service-platform .m-contact .m-contactcard .m-h,
+  .service-platform .admin-form {
+    float: none !important;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  #service-my-pages .cases .case-h .id,
+  #service-my-pages .cases .case-h .datetime {
+    margin-bottom: 18px !important;
+  }
+   .service-platform h1,
+  #service-my-pages .service-header h1,
+  #service-my-pages h2,
+  .service-platform p,
+  .service-platform h2,
+  .service-platform h4 {
+    border: 0 !important;
+    float: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  #service-my-pages .case-meta li {
+    float: none !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  #service-my-pages .cases td, #service-my-pages .cases th {
+    padding: 10px !important;
+  }
+  .service-platform table {
+    margin: 0 !important;
+  }
+  .service-platform .current-step,
+  .service-platform .form-section {
+    padding: 0 !important;
+  }
+  .service-platform .form-section h3 {
+    border: 0 !important;
+    margin: 0 0 16px!important;
+    padding: 10px !important;
+  }
+  .service-platform .current-step {
+    background: 0 !important;
+  }
+  .service-platform .form-step-header,
+  .service-platform .intro-step,
+  #service-my-pages .cases .m-h,
+  .service-platform #cases-filter {
+    padding: 0 !important;
+  }
+  
+    .service-platform .submit-area,
+    .service-platform .service-progress,
+    .service-platform .preview-table td.edit {
+        display:none;
+    }
+    .service-platform .form-step,
+    .service-platform .form-section {
+        -webkit-box-shadow:none;
+        -moz-box-shadow:none;
+        box-shadow:none;
+        border:none;
+    }
+}

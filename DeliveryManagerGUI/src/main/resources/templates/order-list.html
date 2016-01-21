@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+<!-- <head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta charset="utf-8"/>
+	<meta name="robots" content="noindex, nofollow"/>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
+	<link href="css/basic.css" th:href="@{/css/basic.css}" rel="stylesheet" type="text/css" />
+	<link href="css/global.css" th:href="@{/css/global.css}" rel="stylesheet" type="text/css" />
+	<link href="css/servicePlatform.css" th:href="@{/css/servicePlatform.css}" rel="stylesheet" type="text/css" />
+	<link href="css/serviceportal.css" th:href="@{/css/serviceportal.css}" rel="stylesheet" type="text/css" />
+	<link href="css/hamster.css" th:href="@{/css/hamster.css}" rel="stylesheet" type="text/css" />
+	<link href="css/im.css" th:href="@{/css/im.css}" rel="stylesheet" type="text/css" />
+	<script src="js/jquery-1.12.0.js"></script>
+	<script src="js/im.js"></script>
+	<title>Leveranssystem - LanTeam</title>
+</head> -->
+<meta charset="utf-8"/>
+<head th:include="head" th:remove="tag" />
+
+<body class="layout-2">
+	<div id="body">
+		<!-- <div class="include" data-include="header"></div> -->
+		<div th:include="header" th:remove="tag"></div>
+		<div id="main" class="cf">
+			<div id="content">
+				<div th:include="sub-header" th:remove="tag"></div>
+				<!-- <div class="include" data-include="sub-header"></div> -->
+				<div id="service-portal" class="sp-layout-4">
+					<div class="content-1">
+						<div class="m m-1 m-page cf">
+							<div class="m-h main-header cf">
+								<div class="page-heading">
+									<h2>Hantera leveranser</h2>
+								</div>
+							</div>
+							<!-- Här kan man lägga på en vänster meny -->
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div class="form-step">
+										<!-- Här kan man lägga på ett tack meddelande -->
+										<form class="form-general" method="get" action="index.jsp">
+											<div class="form-section">
+												<h3 class="expandtrigger">Filtrera och visa</h3>
+												<div class="row cols-2 cf">
+													<div class="select">
+														<label for="status">Välj status</label> <select
+															id="status" name="status">
+															<option value="all">Aktiva</option>
+															<option value="undelivered">&nbsp;&nbsp;- Ny</option>
+															<option value="delivered">&nbsp;&nbsp;- Påbörjad</option>
+															<option value="delivered">&nbsp;&nbsp;- Klar att
+																skicka</option>
+															<option value="delivered">&nbsp;&nbsp;- Ej
+																accepterad</option>
+															<option value="all">Ej aktiva</option>
+															<option value="delivered">&nbsp;&nbsp;- Skickad</option>
+															<option value="delivered">&nbsp;&nbsp;- Överförd
+																till Intraservice</option>
+
+														</select>
+													</div>
+												</div>
+												<input class="btn" type="submit" value="Visa" />
+											</div>
+										</form>
+										<form>
+											<div class="form-section" id="search-results">
+												<h3>Sökresultat</h3>
+												<table>
+													<colgroup>
+														<col style="width: 15%" />
+														<col style="width: 25%" />
+														<col style="width: 15%" />
+														<col style="width: 20%" />
+														<col style="width: 10%" />
+														<col style="width: 15%" />
+													</colgroup>
+													<thead>
+														<tr>
+															<th scope="col">Ordernummer</th>
+															<th scope="col">Benämning</th>
+															<th scope="col">Referensnummer</th>
+															<th scope="col">Kund</th>
+															<th scope="col">Skapad</th>
+															<th scope="col">Status</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td><a href="orderdetails-new.jsp">LT100199</a></td>
+															<td>Datorer till bibliotek</td>
+															<td>REQ100094</td>
+															<td>Lundby</td>
+															<td>2016-02-02</td>
+															<td>Ny</td>
+														</tr>
+														<tr>
+															<td><a href="orderdetails-started.jsp">LT100200</a></td>
+															<td>Datorer till Dalaskolan</td>
+															<td>REQ100002</td>
+															<td>Västra Göteborg</td>
+															<td>2016-01-25</td>
+															<td>Påbörjad</td>
+														</tr>
+														<tr>
+															<td><a href="orderdetails-not-accepted.jsp">LT100201</a></td>
+															<td>Ipads till personalen</td>
+															<td>REQ100042</td>
+															<td>Gatukontoret</td>
+															<td>2016-01-22</td>
+															<td>Ej accepterad</td>
+														</tr>
+														<tr>
+															<td><a href="orderdetails-reg-completed.jsp">LT100202</a></td>
+															<td>Utrustning till kontor</td>
+															<td>REQ100004</td>
+															<td>Västra Hisingen</td>
+															<td>2016-01-15</td>
+															<td>Registrering klar</td>
+														</tr>
+														<tr>
+															<td><a href="orderdetails-sent.jsp">LT100222</a></td>
+															<td>Utrustning till rektorer</td>
+															<td>REQ100084</td>
+															<td>Västra Hisingen</td>
+															<td>2016-01-10</td>
+															<td>Skickad</td>
+														</tr>
+														<tr>
+															<td><a href="orderdetails-delivered.jsp">LT100203</a></td>
+															<td>HP datorer till skola</td>
+															<td>REQ100044</td>
+															<td>Södra skärgården</td>
+															<td>2016-01-05</td>
+															<td>Överförd till Intraservice</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:include="footer" th:remove="tag"></div>
+	</div>
+</body>
+</html>

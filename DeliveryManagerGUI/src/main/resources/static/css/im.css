@@ -1,0 +1,41 @@
+/*
+ * File: im.css
+ *
+ * Used on IM pages
+ *
+ */
+
+
+
+/* =============================================================================
+ * Layout
+ *
+ * Common layout and specific layouts based on body layout classes
+============================================================================= */
+#service-portal .m-form {
+    float: left;
+    width: 100%;
+    /*padding: 14px 40px 14px 0;*/
+	padding: 0;
+}
+#service-portal .order-details {
+    padding: 0px 20px 0px 20px;
+}
+#service-portal .inner-table {
+    background-color: #efeadf;
+}
+#service-portal .action-area {
+    padding-bottom : 15px;
+}
+.strong-title {
+    font-weight: bold;
+}
+.delete-file {
+    border: none;
+    background: none;
+    color: #1275b8;
+    font-size: 1em;
+}
+#service-portal .attachment-area {
+    margin-bottom : 15px;
+}
