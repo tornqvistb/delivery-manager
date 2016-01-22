@@ -76,7 +76,7 @@
 													</thead>
 													<tbody>
 														<tr th:each="order : ${orders}">
-															<td><a th:text="${order.orderId}" th:href="${'order-list/view/' + {order.id}}">LT100199</a></td>
+															<td><a th:text="${order.orderId}" th:href="${'/order-list/view/' + {order.id}}">LT100199</a></td>
 															<td th:text="${order.description}">Datorer till bibliotek</td>
 															<td th:text="${order.referenceId}">REQ100094</td>
 															<td th:text="${order.customer}">Lundby</td>

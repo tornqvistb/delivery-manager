@@ -28,14 +28,12 @@ public class OrderListController {
 		model.put("orders", orders);
 		return "order-list";
 	}
-/*
 	@RequestMapping(value="order-list/view/{orderId}", method=RequestMethod.GET)
 	public String showOrderView(@PathVariable Long orderId, ModelMap model) {
 		OrderHeader order = orderRepo.findOne(orderId);
 		model.put("order", order);
 		return "order-details";
 	}
-*/
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;

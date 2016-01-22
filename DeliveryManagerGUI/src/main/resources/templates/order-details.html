@@ -2,12 +2,11 @@
 
 <html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
 
-<meta charset="utf-8"/>
+<meta charset="utf-8" />
 <head th:include="head" th:remove="tag" />
 
 <body class="layout-2">
 	<div id="body">
-		<!-- <div class="include" data-include="header"></div> -->
 		<div th:include="header" th:remove="tag"></div>
 		<div id="main" class="cf">
 			<div id="content">
@@ -18,10 +17,201 @@
 						<div class="m m-1 m-page cf">
 							<div class="m-h main-header cf">
 								<div class="page-heading">
-									<h2>Hantera leverans</h2>
+									<h2
+										th:text="${'Hantera leverans för order ' + {order.orderId}}"></h2>
 								</div>
 							</div>
 							<!-- Här kan man lägga på en vänster meny -->
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div class="order-details">
+										<div class="back-link">
+											<a href="/order-list" rel="nofollow">Tillbaka</a>
+										</div>
+										<div class="information-text system-info help-message">
+											<p>Registreringen av utrustning är ej komplett för denna
+												leverans.</p>
+											<p>Leveransdokument ej bifogat.</p>
+										</div>
+										<div class="form-step current-step">
+											<div class="form-step-header cf">
+												<h2>Hantering av beställing LT100199</h2>
+											</div>
+											<div class="form-section">
+												<h3>Registrera utrustning</h3>
+												<form action="">
+													<table class="small-table">
+														<colgroup>
+															<col style="width: 30%" />
+															<col style="width: 70%" />
+														</colgroup>
+														<tbody>
+															<tr>
+																<th scope="row">Orderrad</th>
+																<td><select id="orderrad" name="orderrad">
+																		<option
+																			th:each="orderLine : ${order.unCompletedOrderLines}"
+																			th:value="${orderLine.id}"
+																			th:text="${orderLine.lineId}"
+																			th:attr="data-art-type=${orderLine.optionClass}" />
+																</select></td>
+															</tr>
+														</tbody>
+													</table>
+													<table id="with-serial-no">
+														<colgroup>
+															<col style="width: 30%" />
+															<col style="width: 70%" />
+														</colgroup>
+														<tbody>
+															<tr>
+																<th scope="row">Serienummer</th>
+																<td><input type="text" id="serienr" name="serienr"
+																	value="" /></td>
+															</tr>
+															<tr>
+																<th scope="row">Stöld-ID</th>
+																<td><input type="text" id="stealingid"
+																	name="stealingid" value="" /></td>
+															</tr>
+														</tbody>
+													</table>
+													<table id="no-serial-no" class="small-table"
+														style="display: none;">
+														<colgroup>
+															<col style="width: 30%" />
+															<col style="width: 70%" />
+														</colgroup>
+														<tbody>
+															<tr>
+																<th scope="row">Antal</th>
+																<td><input type="text" id="antal" name="antal"
+																	value="" /></td>
+															</tr>
+														</tbody>
+													</table>
+													<div class="row cf action-area">
+														<input class="backend-operation" type="submit"
+															value="Spara" name="storeequipment" id="storeequipment" />
+													</div>
+												</form>
+												<h3>Orderrader</h3>
+												<table class="small-table">
+													<thead>
+														<tr>
+															<th>Orderrad</th>
+															<th>Modell</th>
+															<th>Serienummerbärande</th>
+															<th>Pris</th>
+															<th>Antal</th>
+															<th>Registrerade</th>
+															<th>Återstående</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="orderLine : ${order.orderLines}">
+															<td th:text="${orderLine.lineId}">1</td>
+															<td th:text="${orderLine.model}">HP elitebook</td>
+															<td th:text="${orderLine.hasSerialNoLabel}">Ja</td>
+															<td th:text="${orderLine.price}">7500</td>
+															<td th:text="${orderLine.total}">5</td>
+															<td th:text="${orderLine.registered}">0</td>
+															<td th:text="${orderLine.remaining}">5</td>
+														</tr>
+													</tbody>
+												</table>
+												<h3>Övrig orderinformation</h3>
+												<table class="small-table">
+													<tbody>
+														<tr>
+															<th scope="row">Ordernummer</th>
+															<td th:text="${order.orderId}">LT100199</td>
+														</tr>
+														<tr>
+															<th scope="row">Benämning</th>
+															<td th:text="${order.description}">Datorer till
+																bibliotek</td>
+														</tr>
+														<tr>
+															<th scope="row">Referensnummer</th>
+															<td th:text="${order.referenceId}">REQ100094</td>
+														</tr>
+														<tr>
+															<th scope="row">Kund</th>
+															<td th:text="${order.customer}">Lundby</td>
+														</tr>
+														<tr>
+															<th scope="row">Skapad</th>
+															<td th:text="${order.creationDateAsString}">2016-02-02</td>
+														</tr>
+														<tr>
+															<th scope="row">Status</th>
+															<td th:text="${order.status}">Ny</td>
+														</tr>
+													</tbody>
+												</table>
+												<label class="strong-title" for="bifogad_fil">Leveransdokument</label>
+												<form action="">
+													<div class="attachment-area">
+														<div class="cloneable">
+															<input type="file" name="bifogad_fil_1"
+																data-maxsize="52428800" data-multiselection="true"
+																class="filesize" id="bifogad_fil" />
+															<button>Bifoga</button>
+														</div>
+													</div>
+												</form>
+												<h3>Statusmeddelanden</h3>
+												<form action="">
+													<table class="small-table">
+														<tbody>
+															<tr>
+																<th scope="row">Orderrad</th>
+																<td><select id="orderrad" name="orderrad">
+																		<option value="Generellt">Generellt</option>
+																		<option th:each="orderLine : ${order.orderLines}"
+																			th:value="${orderLine.id}"
+																			th:text="${orderLine.lineId}" />
+																</select></td>
+															</tr>
+															<tr>
+																<th scope="row">Meddelande</th>
+																<td><textarea rows="5" cols="75" id="serienr"
+																		name="serienr"
+																		placeholder="Skriv ditt statusmeddelande här"></textarea>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+
+													<div class="row cf action-area">
+														<input class="backend-operation" rows="5" cols="20"
+															type="submit" value="Skicka" name="storeequipment"
+															id="storeequipment" />
+													</div>
+												</form>
+												<h4>Skickade statusmeddelanden</h4>
+												<table class="small-table">
+													<thead>
+														<tr>
+															<th>Orderrad</th>
+															<th>Meddelande</th>
+															<th>Tidpunkt</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="comment : ${order.orderComments}">
+															<td th:text="${comment.orderLine}">1</td>
+															<td th:text="${comment.message}">HP elitebook</td>
+															<td th:text="${comment.creationDate}">Ja</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

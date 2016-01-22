@@ -1,7 +1,9 @@
 package se.lanteam.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 @Entity
@@ -75,6 +78,7 @@ public class OrderHeader {
 		this.status = status;
 	}
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
+	@OrderBy("lineId")
 	public Set<OrderLine> getOrderLines() {
 		return orderLines;
 	}
@@ -82,6 +86,7 @@ public class OrderHeader {
 		this.orderLines = orderLines;
 	}
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
+	@OrderBy("creationDate desc")
 	public Set<OrderComment> getOrderComments() {
 		return orderComments;
 	}
@@ -104,5 +109,15 @@ public class OrderHeader {
 	@Transient
 	public String getCreationDateAsString() {
 		return String.valueOf(creationDate).substring(0, 10);
+	}
+	@Transient
+	public List<OrderLine> getUnCompletedOrderLines() {
+		List<OrderLine> result = new ArrayList<OrderLine>();
+		for (OrderLine ol : this.orderLines) {
+			if (ol.getRemaining() > 0) {
+				result.add(ol);
+			}
+		}
+		return result;
 	}
 }

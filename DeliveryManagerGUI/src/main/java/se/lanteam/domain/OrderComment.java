@@ -12,9 +12,9 @@ import javax.persistence.ManyToOne;
 public class OrderComment {
 
 	private Long id;
+	private String orderLine;
 	private String message;
 	private Date creationDate;
-	private Boolean archived;
 	private OrderHeader orderHeader;
 	
 	@Id
@@ -38,18 +38,18 @@ public class OrderComment {
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
-	public Boolean getArchived() {
-		return archived;
-	}
-	public void setArchived(Boolean archived) {
-		this.archived = archived;
-	}
 	@ManyToOne()
 	public OrderHeader getOrderHeader() {
 		return orderHeader;
 	}
 	public void setOrderHeader(OrderHeader orderHeader) {
 		this.orderHeader = orderHeader;
+	}
+	public String getOrderLine() {
+		return orderLine;
+	}
+	public void setOrderLine(String orderLine) {
+		this.orderLine = orderLine;
 	}
 
 	

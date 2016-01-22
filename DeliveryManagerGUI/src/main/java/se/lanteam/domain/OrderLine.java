@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Transient;
 
 @Entity
 public class OrderLine {
@@ -76,6 +78,7 @@ public class OrderLine {
 		this.remaining = remaining;
 	}
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderLine")
+	@OrderBy("creationDate")
 	public Set<Equipment> getEquipments() {
 		return equipments;
 	}
@@ -88,6 +91,22 @@ public class OrderLine {
 	}
 	public void setOrderHeader(OrderHeader orderHeader) {
 		this.orderHeader = orderHeader;
+	}
+	@Transient
+	public String getOptionClass() {
+		String result = "with-serial-no";
+		if (!this.hasSerialNo) {
+			result = "no-serial-no";
+		}
+		return result;
+	}
+	@Transient
+	public String getHasSerialNoLabel() {
+		String result = "Ja";
+		if (!this.hasSerialNo) {
+			result = "Nej";
+		}
+		return result;
 	}
 	
 }
