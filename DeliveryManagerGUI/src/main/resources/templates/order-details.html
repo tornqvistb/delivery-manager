@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="utf-8"/>
+<head th:include="head" th:remove="tag" />
+
+<body class="layout-2">
+	<div id="body">
+		<!-- <div class="include" data-include="header"></div> -->
+		<div th:include="header" th:remove="tag"></div>
+		<div id="main" class="cf">
+			<div id="content">
+				<div th:include="sub-header" th:remove="tag"></div>
+				<!-- <div class="include" data-include="sub-header"></div> -->
+				<div id="service-portal" class="sp-layout-4">
+					<div class="content-1">
+						<div class="m m-1 m-page cf">
+							<div class="m-h main-header cf">
+								<div class="page-heading">
+									<h2>Hantera leverans</h2>
+								</div>
+							</div>
+							<!-- Här kan man lägga på en vänster meny -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:include="footer" th:remove="tag"></div>
+	</div>
+</body>
+</html>

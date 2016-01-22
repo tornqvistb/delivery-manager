@@ -1,22 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
-<!-- <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta charset="utf-8"/>
-	<meta name="robots" content="noindex, nofollow"/>
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
-	<link href="css/basic.css" th:href="@{/css/basic.css}" rel="stylesheet" type="text/css" />
-	<link href="css/global.css" th:href="@{/css/global.css}" rel="stylesheet" type="text/css" />
-	<link href="css/servicePlatform.css" th:href="@{/css/servicePlatform.css}" rel="stylesheet" type="text/css" />
-	<link href="css/serviceportal.css" th:href="@{/css/serviceportal.css}" rel="stylesheet" type="text/css" />
-	<link href="css/hamster.css" th:href="@{/css/hamster.css}" rel="stylesheet" type="text/css" />
-	<link href="css/im.css" th:href="@{/css/im.css}" rel="stylesheet" type="text/css" />
-	<script src="js/jquery-1.12.0.js"></script>
-	<script src="js/im.js"></script>
-	<title>Leveranssystem - LanTeam</title>
-</head> -->
+
 <meta charset="utf-8"/>
 <head th:include="head" th:remove="tag" />
 
@@ -46,7 +31,8 @@
 												<h3 class="expandtrigger">Filtrera och visa</h3>
 												<div class="row cols-2 cf">
 													<div class="select">
-														<label for="status">Välj status</label> <select
+														<label for="status">Välj status</label> 
+														<select
 															id="status" name="status">
 															<option value="all">Aktiva</option>
 															<option value="undelivered">&nbsp;&nbsp;- Ny</option>
@@ -89,53 +75,13 @@
 														</tr>
 													</thead>
 													<tbody>
-														<tr>
-															<td><a href="orderdetails-new.jsp">LT100199</a></td>
-															<td>Datorer till bibliotek</td>
-															<td>REQ100094</td>
-															<td>Lundby</td>
-															<td>2016-02-02</td>
-															<td>Ny</td>
-														</tr>
-														<tr>
-															<td><a href="orderdetails-started.jsp">LT100200</a></td>
-															<td>Datorer till Dalaskolan</td>
-															<td>REQ100002</td>
-															<td>Västra Göteborg</td>
-															<td>2016-01-25</td>
-															<td>Påbörjad</td>
-														</tr>
-														<tr>
-															<td><a href="orderdetails-not-accepted.jsp">LT100201</a></td>
-															<td>Ipads till personalen</td>
-															<td>REQ100042</td>
-															<td>Gatukontoret</td>
-															<td>2016-01-22</td>
-															<td>Ej accepterad</td>
-														</tr>
-														<tr>
-															<td><a href="orderdetails-reg-completed.jsp">LT100202</a></td>
-															<td>Utrustning till kontor</td>
-															<td>REQ100004</td>
-															<td>Västra Hisingen</td>
-															<td>2016-01-15</td>
-															<td>Registrering klar</td>
-														</tr>
-														<tr>
-															<td><a href="orderdetails-sent.jsp">LT100222</a></td>
-															<td>Utrustning till rektorer</td>
-															<td>REQ100084</td>
-															<td>Västra Hisingen</td>
-															<td>2016-01-10</td>
-															<td>Skickad</td>
-														</tr>
-														<tr>
-															<td><a href="orderdetails-delivered.jsp">LT100203</a></td>
-															<td>HP datorer till skola</td>
-															<td>REQ100044</td>
-															<td>Södra skärgården</td>
-															<td>2016-01-05</td>
-															<td>Överförd till Intraservice</td>
+														<tr th:each="order : ${orders}">
+															<td><a th:text="${order.orderId}" th:href="${'order-list/view/' + {order.id}}">LT100199</a></td>
+															<td th:text="${order.description}">Datorer till bibliotek</td>
+															<td th:text="${order.referenceId}">REQ100094</td>
+															<td th:text="${order.customer}">Lundby</td>
+															<td th:text="${order.creationDateAsString}">2016-02-02</td>
+															<td th:text="${order.status}">Ny</td>															
 														</tr>
 													</tbody>
 												</table>

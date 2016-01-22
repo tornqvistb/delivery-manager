@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 @Entity
 public class OrderHeader {
@@ -100,5 +101,8 @@ public class OrderHeader {
 	public void setTransmitErrorMessage(String transmitErrorMessage) {
 		this.transmitErrorMessage = transmitErrorMessage;
 	}
-
+	@Transient
+	public String getCreationDateAsString() {
+		return String.valueOf(creationDate).substring(0, 10);
+	}
 }
