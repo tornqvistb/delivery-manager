@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.repository.OrderRepository;
 
@@ -32,6 +33,9 @@ public class OrderListController {
 	public String showOrderView(@PathVariable Long orderId, ModelMap model) {
 		OrderHeader order = orderRepo.findOne(orderId);
 		model.put("order", order);
+		Equipment equipment = new Equipment();
+		model.put("equipment", equipment);
+		model.put("orderLineId", 0);
 		return "order-details";
 	}
 	@Autowired

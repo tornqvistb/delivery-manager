@@ -11,7 +11,6 @@
 		<div id="main" class="cf">
 			<div id="content">
 				<div th:include="sub-header" th:remove="tag"></div>
-				<!-- <div class="include" data-include="sub-header"></div> -->
 				<div id="service-portal" class="sp-layout-4">
 					<div class="content-1">
 						<div class="m m-1 m-page cf">
@@ -33,13 +32,13 @@
 												leverans.</p>
 											<p>Leveransdokument ej bifogat.</p>
 										</div>
-										<div class="form-step current-step">
+										<div class="form-step current-step" id="registration-area">
 											<div class="form-step-header cf">
 												<h2>Hantering av beställing LT100199</h2>
 											</div>
 											<div class="form-section">
 												<h3>Registrera utrustning</h3>
-												<form action="">
+												<form th:action="${'/registerEquipment/' + {order.id}} + '#registration-area'" th:object="${equipment}" method="post">
 													<table class="small-table">
 														<colgroup>
 															<col style="width: 30%" />
@@ -48,7 +47,7 @@
 														<tbody>
 															<tr>
 																<th scope="row">Orderrad</th>
-																<td><select id="orderrad" name="orderrad">
+																<td><select th:field="${equipment.orderLineId}" id="orderLineId" name="orderLineId">
 																		<option
 																			th:each="orderLine : ${order.unCompletedOrderLines}"
 																			th:value="${orderLine.id}"
@@ -66,12 +65,12 @@
 														<tbody>
 															<tr>
 																<th scope="row">Serienummer</th>
-																<td><input type="text" id="serienr" name="serienr"
+																<td><input th:field="${equipment.serialNo}" type="text" id="serienr"
 																	value="" /></td>
 															</tr>
 															<tr>
 																<th scope="row">Stöld-ID</th>
-																<td><input type="text" id="stealingid"
+																<td><input th:field="${equipment.stealingTag}" type="text" id="stealingid"
 																	name="stealingid" value="" /></td>
 															</tr>
 														</tbody>
@@ -109,15 +108,39 @@
 														</tr>
 													</thead>
 													<tbody>
-														<tr th:each="orderLine : ${order.orderLines}">
-															<td th:text="${orderLine.lineId}">1</td>
-															<td th:text="${orderLine.model}">HP elitebook</td>
-															<td th:text="${orderLine.hasSerialNoLabel}">Ja</td>
-															<td th:text="${orderLine.price}">7500</td>
-															<td th:text="${orderLine.total}">5</td>
-															<td th:text="${orderLine.registered}">0</td>
-															<td th:text="${orderLine.remaining}">5</td>
-														</tr>
+														<div th:each="orderLine : ${order.orderLines}"
+															th:remove="tag">
+															<tr>
+																<td th:text="${orderLine.lineId}">1</td>
+																<td th:text="${orderLine.model}">HP elitebook</td>
+																<td th:text="${orderLine.hasSerialNoLabel}">Ja</td>
+																<td th:text="${orderLine.price}">7500</td>
+																<td th:text="${orderLine.total}">5</td>
+																<td th:text="${orderLine.registered}">0</td>
+																<td th:text="${orderLine.remaining}">5</td>
+															</tr>
+														<tr th:if="${not #lists.isEmpty(orderLine.equipments)}">
+																<td></td>
+																<td colspan="2">
+																	<table class="small-table inner-table">
+																		<thead>
+																			<tr>
+																				<th>Serienummer</th>
+																				<th>Stöld-ID</th>
+																				<th>Ta bort</th>
+																			</tr>
+																		</thead>
+																		<tbody>
+																			<tr th:each="equipment : ${orderLine.equipments}">
+																				<td th:text="${equipment.serialNo}">5</td>
+																				<td th:text="${equipment.stealingTag}">5</td>
+																				<td><a href="#">Ta bort</a></td>
+																			</tr>
+																		</tbody>
+																	</table>
+																</td>
+															</tr>
+														</div>
 													</tbody>
 												</table>
 												<h3>Övrig orderinformation</h3>
@@ -148,19 +171,25 @@
 															<th scope="row">Status</th>
 															<td th:text="${order.status}">Ny</td>
 														</tr>
+														<tr th:if="${order.attachment != null}">
+															<th scope="row">Leveransdokument</th>
+															<td th:text="${order.attachment.fileName}">filnamn.jpg</td>
+														</tr>
 													</tbody>
 												</table>
-												<label class="strong-title" for="bifogad_fil">Leveransdokument</label>
-												<form action="">
-													<div class="attachment-area">
-														<div class="cloneable">
-															<input type="file" name="bifogad_fil_1"
-																data-maxsize="52428800" data-multiselection="true"
-																class="filesize" id="bifogad_fil" />
-															<button>Bifoga</button>
+												<div th:if="${order.attachment == null}">
+													<label class="strong-title" for="bifogad_fil">Leveransdokument</label>
+													<form action="">
+														<div class="attachment-area">
+															<div class="cloneable">
+																<input type="file" name="bifogad_fil_1"
+																	data-maxsize="52428800" data-multiselection="true"
+																	class="filesize" id="bifogad_fil" />
+																<button>Bifoga</button>
+															</div>
 														</div>
-													</div>
-												</form>
+													</form>
+												</div>
 												<h3>Statusmeddelanden</h3>
 												<form action="">
 													<table class="small-table">

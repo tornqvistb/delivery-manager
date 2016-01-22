@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity
 public class Equipment {
@@ -16,6 +17,8 @@ public class Equipment {
 	private String serialNo;
 	private String stealingTag;
 	private Date creationDate;
+	@Transient
+	private Long orderLineId;
 	
 	@Id
 	@GeneratedValue
@@ -51,5 +54,13 @@ public class Equipment {
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
+	@Transient
+	public Long getOrderLineId(){
+		return orderLineId;
+	}
+	public void setOrderLineId(Long orderLineId){
+		this.orderLineId = orderLineId;
+	}
+	
 	
 }
