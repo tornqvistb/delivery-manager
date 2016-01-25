@@ -33,9 +33,8 @@ public class OrderListController {
 	public String showOrderView(@PathVariable Long orderId, ModelMap model) {
 		OrderHeader order = orderRepo.findOne(orderId);
 		model.put("order", order);
-		Equipment equipment = new Equipment();
-		model.put("equipment", equipment);
-		model.put("orderLineId", 0);
+		RequestAttributes reqAttr = new RequestAttributes();
+		model.put("reqAttr", reqAttr);
 		return "order-details";
 	}
 	@Autowired

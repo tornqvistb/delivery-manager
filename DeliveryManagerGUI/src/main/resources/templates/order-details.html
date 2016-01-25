@@ -38,7 +38,7 @@
 											</div>
 											<div class="form-section">
 												<h3>Registrera utrustning</h3>
-												<form th:action="${'/registerEquipment/' + {order.id}} + '#registration-area'" th:object="${equipment}" method="post">
+												<form th:action="${'/order-list/view/registerEquipment/' + {order.id}} + '#registration-area'" th:object="${reqAttr}" method="post">
 													<table class="small-table">
 														<colgroup>
 															<col style="width: 30%" />
@@ -47,13 +47,15 @@
 														<tbody>
 															<tr>
 																<th scope="row">Orderrad</th>
-																<td><select th:field="${equipment.orderLineId}" id="orderLineId" name="orderLineId">
+																<td>
+																	<select th:field="${reqAttr.orderLineId}" id="orderLineId" name="orderLineId">
 																		<option
 																			th:each="orderLine : ${order.unCompletedOrderLines}"
 																			th:value="${orderLine.id}"
 																			th:text="${orderLine.lineId}"
 																			th:attr="data-art-type=${orderLine.optionClass}" />
-																</select></td>
+																	</select>
+																</td>
 															</tr>
 														</tbody>
 													</table>
@@ -65,12 +67,12 @@
 														<tbody>
 															<tr>
 																<th scope="row">Serienummer</th>
-																<td><input th:field="${equipment.serialNo}" type="text" id="serienr"
+																<td><input th:field="${reqAttr.serialNo}" type="text" id="serienr"
 																	value="" /></td>
 															</tr>
 															<tr>
 																<th scope="row">Stöld-ID</th>
-																<td><input th:field="${equipment.stealingTag}" type="text" id="stealingid"
+																<td><input th:field="${reqAttr.stealingTag}" type="text" id="stealingid"
 																	name="stealingid" value="" /></td>
 															</tr>
 														</tbody>
@@ -84,7 +86,7 @@
 														<tbody>
 															<tr>
 																<th scope="row">Antal</th>
-																<td><input type="text" id="antal" name="antal"
+																<td><input th:field="${reqAttr.total}" type="text" id="total" name="total"
 																	value="" /></td>
 															</tr>
 														</tbody>
@@ -134,7 +136,7 @@
 																			<tr th:each="equipment : ${orderLine.equipments}">
 																				<td th:text="${equipment.serialNo}">5</td>
 																				<td th:text="${equipment.stealingTag}">5</td>
-																				<td><a href="#">Ta bort</a></td>
+																				<td><a th:href="${'/order-list/view/deleq/' + {order.id} + '/' + {orderLine.id} + '/' + {equipment.id} + '#registration-area'}">Ta bort</a></td>
 																			</tr>
 																		</tbody>
 																	</table>
@@ -205,8 +207,8 @@
 															</tr>
 															<tr>
 																<th scope="row">Meddelande</th>
-																<td><textarea rows="5" cols="75" id="serienr"
-																		name="serienr"
+																<td><textarea rows="5" cols="75" id="message"
+																		name="message"
 																		placeholder="Skriv ditt statusmeddelande här"></textarea>
 																</td>
 															</tr>
