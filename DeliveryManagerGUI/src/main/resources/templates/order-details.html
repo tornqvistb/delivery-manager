@@ -37,65 +37,76 @@
 												<h2>Hantering av beställing LT100199</h2>
 											</div>
 											<div class="form-section">
-												<h3>Registrera utrustning</h3>
-												<form th:action="${'/order-list/view/registerEquipment/' + {order.id}} + '#registration-area'" th:object="${reqAttr}" method="post">
-													<table class="small-table">
-														<colgroup>
-															<col style="width: 30%" />
-															<col style="width: 70%" />
-														</colgroup>
-														<tbody>
-															<tr>
-																<th scope="row">Orderrad</th>
-																<td>
-																	<select th:field="${reqAttr.orderLineId}" id="orderLineId" name="orderLineId">
-																		<option
-																			th:each="orderLine : ${order.unCompletedOrderLines}"
-																			th:value="${orderLine.id}"
-																			th:text="${orderLine.lineId}"
-																			th:attr="data-art-type=${orderLine.optionClass}" />
-																	</select>
-																</td>
-															</tr>
-														</tbody>
-													</table>
-													<table id="with-serial-no">
-														<colgroup>
-															<col style="width: 30%" />
-															<col style="width: 70%" />
-														</colgroup>
-														<tbody>
-															<tr>
-																<th scope="row">Serienummer</th>
-																<td><input th:field="${reqAttr.serialNo}" type="text" id="serienr"
-																	value="" /></td>
-															</tr>
-															<tr>
-																<th scope="row">Stöld-ID</th>
-																<td><input th:field="${reqAttr.stealingTag}" type="text" id="stealingid"
-																	name="stealingid" value="" /></td>
-															</tr>
-														</tbody>
-													</table>
-													<table id="no-serial-no" class="small-table"
-														style="display: none;">
-														<colgroup>
-															<col style="width: 30%" />
-															<col style="width: 70%" />
-														</colgroup>
-														<tbody>
-															<tr>
-																<th scope="row">Antal</th>
-																<td><input th:field="${reqAttr.total}" type="text" id="total" name="total"
-																	value="" /></td>
-															</tr>
-														</tbody>
-													</table>
-													<div class="row cf action-area">
-														<input class="backend-operation" type="submit"
-															value="Spara" name="storeequipment" id="storeequipment" />
+												<!-- Show registration section only if there are things left to register -->
+												<div
+													th:if="${not #lists.isEmpty(order.unCompletedOrderLines)}"
+													th:remove="tag">
+													<h3>Registrera utrustning</h3>
+													<div th:if="${not #strings.isEmpty(reqAttr.regEquipmentResult)}"
+														class="system-info error-message">
+														<span th:text="${reqAttr.regEquipmentResult}">Felmeddelande efter registrering</span>
 													</div>
-												</form>
+													
+													<form
+														th:action="${'/order-list/view/registerEquipment/' + {order.id}} + '#registration-area'"
+														th:object="${reqAttr}" method="post">
+														<table class="small-table">
+															<colgroup>
+																<col style="width: 30%" />
+																<col style="width: 70%" />
+															</colgroup>
+															<tbody>
+																<tr>
+																	<th scope="row">Orderrad</th>
+																	<td><select th:field="${reqAttr.orderLineId}"
+																		id="orderLineId" name="orderLineId">
+																			<option
+																				th:each="orderLine : ${order.unCompletedOrderLines}"
+																				th:value="${orderLine.id}"
+																				th:text="${orderLine.lineId}"
+																				th:attr="data-art-type=${orderLine.optionClass}" />
+																	</select></td>
+																</tr>
+															</tbody>
+														</table>
+														<table id="with-serial-no">
+															<colgroup>
+																<col style="width: 30%" />
+																<col style="width: 70%" />
+															</colgroup>
+															<tbody>
+																<tr>
+																	<th scope="row">Serienummer</th>
+																	<td><input th:field="${reqAttr.serialNo}"
+																		type="text" id="serienr" value="" /></td>
+																</tr>
+																<tr>
+																	<th scope="row">Stöld-ID</th>
+																	<td><input th:field="${reqAttr.stealingTag}"
+																		type="text" id="stealingid" name="stealingid" value="" /></td>
+																</tr>
+															</tbody>
+														</table>
+														<table id="no-serial-no" class="small-table"
+															style="display: none;">
+															<colgroup>
+																<col style="width: 30%" />
+																<col style="width: 70%" />
+															</colgroup>
+															<tbody>
+																<tr>
+																	<th scope="row">Antal</th>
+																	<td><input th:field="${reqAttr.total}" type="text"
+																		id="total" name="total" value="" /></td>
+																</tr>
+															</tbody>
+														</table>
+														<div class="row cf action-area">
+															<input class="backend-operation" type="submit"
+																value="Spara" name="storeequipment" id="storeequipment" />
+														</div>
+													</form>
+												</div>
 												<h3>Orderrader</h3>
 												<table class="small-table">
 													<thead>
@@ -121,7 +132,7 @@
 																<td th:text="${orderLine.registered}">0</td>
 																<td th:text="${orderLine.remaining}">5</td>
 															</tr>
-														<tr th:if="${not #lists.isEmpty(orderLine.equipments)}">
+															<tr th:if="${not #lists.isEmpty(orderLine.equipments)}">
 																<td></td>
 																<td colspan="2">
 																	<table class="small-table inner-table">
@@ -136,7 +147,9 @@
 																			<tr th:each="equipment : ${orderLine.equipments}">
 																				<td th:text="${equipment.serialNo}">5</td>
 																				<td th:text="${equipment.stealingTag}">5</td>
-																				<td><a th:href="${'/order-list/view/deleq/' + {order.id} + '/' + {orderLine.id} + '/' + {equipment.id} + '#registration-area'}">Ta bort</a></td>
+																				<td><a
+																					th:href="${'/order-list/view/deleq/' + {order.id} + '/' + {orderLine.id} + '/' + {equipment.id} + '#registration-area'}">Ta
+																						bort</a></td>
 																			</tr>
 																		</tbody>
 																	</table>
@@ -145,8 +158,23 @@
 														</div>
 													</tbody>
 												</table>
-												<h3>Övrig orderinformation</h3>
+												<h3 id="additional-order-info">Övrig orderinformation</h3>
+												<!-- Success or error message for file upload -->
+												<div th:if="${reqAttr.statusAttachmentSuccess != null}"
+													class="information-text system-info thanks-message">
+													<span th:text="${reqAttr.statusAttachmentSuccess}">Fil uppladdad</span>
+												</div>
+												<div th:if="${reqAttr.statusAttachmentFailed != null}"
+													class="system-info error-message">
+													<span th:text="${reqAttr.statusAttachmentFailed}">Fil kunde ej laddas upp</span>
+												</div>
+												
 												<table class="small-table">
+													<colgroup>
+														<col style="width: 15%" />
+														<col style="width: 15%" />
+														<col style="width: 70%" />
+													</colgroup>
 													<tbody>
 														<tr>
 															<th scope="row">Ordernummer</th>
@@ -175,31 +203,45 @@
 														</tr>
 														<tr th:if="${order.attachment != null}">
 															<th scope="row">Leveransdokument</th>
-															<td th:text="${order.attachment.fileName}">filnamn.jpg</td>
+															<td><a th:href="${'/order-list/view/viewfile/' + {order.id}}" th:text="${order.attachment.fileName}">Hämta fil</a></td>
+															<td><a th:href="${'/order-list/view/delfile/' + {order.id} + '#additional-order-info'}">Ta bort</a></td>
 														</tr>
 													</tbody>
 												</table>
 												<div th:if="${order.attachment == null}">
-													<label class="strong-title" for="bifogad_fil">Leveransdokument</label>
-													<form action="">
+													<label class="strong-title" for="bifogad_fil">Bifoga leveransdokument</label>
+													 <form action="upload" th:action="${'/order-list/view/attachFile/' + {order.id}} + '#additional-order-info'" method="post" enctype="multipart/form-data">
 														<div class="attachment-area">
 															<div class="cloneable">
-																<input type="file" name="bifogad_fil_1"
-																	data-maxsize="52428800" data-multiselection="true"
-																	class="filesize" id="bifogad_fil" />
+																<input type="file" name="attachment"
+																	class="filesize" id="attachment" />
 																<button>Bifoga</button>
 															</div>
 														</div>
 													</form>
 												</div>
-												<h3>Statusmeddelanden</h3>
-												<form action="">
+												<h3 id="order-comments-header">Statusmeddelanden</h3>
+												<!-- Success or error message for order commen t creation -->
+												<div th:if="${reqAttr.statusMessageCreationSuccess != null}"
+													class="information-text system-info thanks-message">
+													<span th:text="${reqAttr.statusMessageCreationSuccess}">Kommentar
+														skapades</span>
+												</div>
+												<div th:if="${reqAttr.statusMessageCreationFailed != null}"
+													class="system-info error-message">
+													<span th:text="${reqAttr.statusMessageCreationFailed}">Kommentar
+														skapades ej</span>
+												</div>
+												<form
+													th:action="${'/order-list/view/registerComment/' + {order.id}} + '#order-comments-header'"
+													th:object="${reqAttr}" method="post">
 													<table class="small-table">
 														<tbody>
 															<tr>
 																<th scope="row">Orderrad</th>
-																<td><select id="orderrad" name="orderrad">
-																		<option value="Generellt">Generellt</option>
+																<td><select th:field="${reqAttr.orderLineId}"
+																	id="orderLineId" name="orderLineId">
+																		<option value="0">Generellt</option>
 																		<option th:each="orderLine : ${order.orderLines}"
 																			th:value="${orderLine.id}"
 																			th:text="${orderLine.lineId}" />
@@ -207,8 +249,8 @@
 															</tr>
 															<tr>
 																<th scope="row">Meddelande</th>
-																<td><textarea rows="5" cols="75" id="message"
-																		name="message"
+																<td><textarea th:field="${reqAttr.comment}"
+																		rows="5" cols="75" id="comment" name="message"
 																		placeholder="Skriv ditt statusmeddelande här"></textarea>
 																</td>
 															</tr>
@@ -216,9 +258,8 @@
 													</table>
 
 													<div class="row cf action-area">
-														<input class="backend-operation" rows="5" cols="20"
-															type="submit" value="Skicka" name="storeequipment"
-															id="storeequipment" />
+														<input class="backend-operation" type="submit"
+															value="Skicka" name="storecomment" id="storecomment" />
 													</div>
 												</form>
 												<h4>Skickade statusmeddelanden</h4>
@@ -232,9 +273,9 @@
 													</thead>
 													<tbody>
 														<tr th:each="comment : ${order.orderComments}">
-															<td th:text="${comment.orderLine}">1</td>
+															<td th:text="${comment.orderLineDisplay}">1</td>
 															<td th:text="${comment.message}">HP elitebook</td>
-															<td th:text="${comment.creationDate}">Ja</td>
+															<td th:text="${comment.creationDateDisplay}">Ja</td>
 														</tr>
 													</tbody>
 												</table>

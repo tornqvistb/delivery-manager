@@ -77,7 +77,7 @@ public class OrderLine {
 	public void setRemaining(Integer remaining) {
 		this.remaining = remaining;
 	}
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderLine")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderLine", orphanRemoval=true)
 	@OrderBy("creationDate")
 	public Set<Equipment> getEquipments() {
 		return equipments;

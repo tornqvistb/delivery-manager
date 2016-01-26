@@ -93,7 +93,7 @@ public class OrderHeader {
 	public void setOrderComments(Set<OrderComment> orderComments) {
 		this.orderComments = orderComments;
 	}
-	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
+	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader", orphanRemoval=true)
 	public Attachment getAttachment() {
 		return attachment;
 	}

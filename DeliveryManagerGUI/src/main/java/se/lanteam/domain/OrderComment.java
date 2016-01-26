@@ -1,5 +1,6 @@
 package se.lanteam.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -7,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity
 public class OrderComment {
@@ -51,6 +53,18 @@ public class OrderComment {
 	public void setOrderLine(String orderLine) {
 		this.orderLine = orderLine;
 	}
-
+	@Transient
+	public String getOrderLineDisplay() {
+		String result = String.valueOf(orderLine);
+		if ("0".equals(result)) {
+			result = "Generellt";
+		}
+		return result;		
+	}
+	@Transient
+	public String getCreationDateDisplay() {		
+		String result = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(creationDate);
+		return result;		
+	}
 	
 }
