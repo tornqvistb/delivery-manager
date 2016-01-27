@@ -54,13 +54,5 @@ public class Equipment {
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
-	@Transient
-	public Long getOrderLineId(){
-		return orderLineId;
-	}
-	public void setOrderLineId(Long orderLineId){
-		this.orderLineId = orderLineId;
-	}
-	
 	
 }

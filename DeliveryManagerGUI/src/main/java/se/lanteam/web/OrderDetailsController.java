@@ -35,6 +35,7 @@ public class OrderDetailsController {
 			comment.setMessage(reqAttr.getComment());
 			order.getOrderComments().add(comment);
 			orderRepo.save(order);
+			order = orderRepo.findOne(orderId);
 			model.put("order", order);
 			reqAttr = new RequestAttributes();
 			reqAttr.setStatusMessageCreationSuccess(STATUS_MSG_OK);

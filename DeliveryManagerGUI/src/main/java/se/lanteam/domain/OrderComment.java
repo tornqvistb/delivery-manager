@@ -33,7 +33,6 @@ public class OrderComment {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Date getCreationDate() {
 		return creationDate;
 	}

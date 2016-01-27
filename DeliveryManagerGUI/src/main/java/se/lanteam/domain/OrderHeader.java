@@ -16,6 +16,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
+import se.lanteam.constants.StatusUtil;
+
 @Entity
 public class OrderHeader {
 
@@ -196,7 +198,7 @@ public class OrderHeader {
 		this.status = status;
 	}
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
-	@OrderBy("lineId")
+	@OrderBy("rowNumber")
 	public Set<OrderLine> getOrderLines() {
 		return orderLines;
 	}
@@ -223,6 +225,10 @@ public class OrderHeader {
 	}
 	public void setTransmitErrorMessage(String transmitErrorMessage) {
 		this.transmitErrorMessage = transmitErrorMessage;
+	}
+	@Transient
+	public String getStatusDisplay() {
+		return StatusUtil.getOrderStatusDisplay(this.status);
 	}
 	@Transient
 	public String getOrderDateAsString() {

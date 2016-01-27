@@ -1,5 +1,6 @@
 package se.lanteam.web;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import se.lanteam.constants.StatusConstants;
+import se.lanteam.constants.StatusUtil;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.repository.OrderRepository;
 
@@ -24,7 +27,9 @@ public class OrderListController {
 		
 	@RequestMapping("order-list")
 	public String showOrderList(ModelMap model) {
-		List<OrderHeader> orders = orderRepo.findAll();
+		//List<OrderHeader> orders = orderRepo.findAll();
+		//System.out.println("status list" + StatusUtil.getStatusListForQuery(StatusConstants.ACTIVE_STATI));
+		List<OrderHeader> orders = orderRepo.findOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI));
 		model.put("orders", orders);
 		return "order-list";
 	}

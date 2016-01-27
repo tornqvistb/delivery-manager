@@ -102,17 +102,17 @@ public class OrderLine {
 	}
 	@Transient
 	public String getOptionClass() {
-		String result = "with-serial-no";
-		if (!getHasSerialNo()) {
-			result = "no-serial-no";
+		String result = "no-serial-no";
+		if (getHasSerialNo()) {
+			result = "with-serial-no";
 		}
 		return result;
 	}
 	@Transient
 	public String getHasSerialNoLabel() {
-		String result = "Ja";
+		String result = "Nej";
 		if (getHasSerialNo()) {
-			result = "Nej";
+			result = "Ja";
 		}
 		return result;
 	}

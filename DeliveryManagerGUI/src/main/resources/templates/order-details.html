@@ -181,7 +181,7 @@
 															<td th:text="${order.orderNumber}">LT100199</td>
 														</tr>
 														<tr>
-															<th scope="row">Referensnummer</th>
+															<th scope="row">Kundens ordernummer</th>
 															<td th:text="${order.customerOrderNumber}">REQ100094</td>
 														</tr>
 														<tr>
@@ -189,12 +189,12 @@
 															<td th:text="${order.customerName}">Lundby</td>
 														</tr>
 														<tr>
-															<th scope="row">Skapad</th>
+															<th scope="row">Orderdatum</th>
 															<td th:text="${order.orderDateAsString}">2016-02-02</td>
 														</tr>
 														<tr>
 															<th scope="row">Status</th>
-															<td th:text="${order.status}">Ny</td>
+															<td th:text="${order.statusDisplay}">Ny</td>
 														</tr>
 														<tr th:if="${order.attachment != null}">
 															<th scope="row">Leveransdokument</th>
