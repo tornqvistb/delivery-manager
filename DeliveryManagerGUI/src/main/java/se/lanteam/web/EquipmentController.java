@@ -109,7 +109,7 @@ public class EquipmentController {
 		if (equipments != null && equipments.size() > 0) {
 			Equipment equip = equipments.get(0);
 			if (equip.getOrderLine() != null && equip.getOrderLine().getOrderHeader() != null) {
-				return SERIAL_NO_ON_OTHER_ORDER + equip.getOrderLine().getOrderHeader().getOrderId() + " (" + equipment.getSerialNo() + ")";
+				return SERIAL_NO_ON_OTHER_ORDER + equip.getOrderLine().getOrderHeader().getOrderNumber() + " (" + equipment.getSerialNo() + ")";
 			}
 		}
 		
@@ -118,7 +118,7 @@ public class EquipmentController {
 		if (equipments != null && equipments.size() > 0) {
 			Equipment equip = equipments.get(0);
 			if (equip.getOrderLine() != null && equip.getOrderLine().getOrderHeader() != null) {
-				return STEALING_TAG_ON_OTHER_ORDER + equip.getOrderLine().getOrderHeader().getOrderId() + " (" + equipment.getStealingTag() + ")";
+				return STEALING_TAG_ON_OTHER_ORDER + equip.getOrderLine().getOrderHeader().getOrderNumber() + " (" + equipment.getStealingTag() + ")";
 			}
 		}
 		

@@ -80,7 +80,7 @@ public class FileController {
 	    return new ResponseEntity<byte[]>(documentBody, header, HttpStatus.CREATED);
 	}
 	*/
-	// If differnt file types in attchments, maybe use method above instead
+	// If different file types in attachments, maybe use method above instead
 	@ResponseBody
 	@RequestMapping(value="order-list/view/viewfile/{orderId}", method=RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
 	public byte[] downloadFile(

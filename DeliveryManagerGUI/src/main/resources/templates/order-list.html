@@ -59,15 +59,13 @@
 													<colgroup>
 														<col style="width: 15%" />
 														<col style="width: 25%" />
-														<col style="width: 15%" />
-														<col style="width: 20%" />
+														<col style="width: 30%" />
 														<col style="width: 10%" />
-														<col style="width: 15%" />
+														<col style="width: 20%" />
 													</colgroup>
 													<thead>
 														<tr>
 															<th scope="col">Ordernummer</th>
-															<th scope="col">Benämning</th>
 															<th scope="col">Referensnummer</th>
 															<th scope="col">Kund</th>
 															<th scope="col">Skapad</th>
@@ -76,11 +74,10 @@
 													</thead>
 													<tbody>
 														<tr th:each="order : ${orders}">
-															<td><a th:text="${order.orderId}" th:href="${'/order-list/view/' + {order.id}}">LT100199</a></td>
-															<td th:text="${order.description}">Datorer till bibliotek</td>
-															<td th:text="${order.referenceId}">REQ100094</td>
-															<td th:text="${order.customer}">Lundby</td>
-															<td th:text="${order.creationDateAsString}">2016-02-02</td>
+															<td><a th:text="${order.orderNumber}" th:href="${'/order-list/view/' + {order.id}}">LT100199</a></td>
+															<td th:text="${order.customerOrderNumber}">REQ100094</td>
+															<td th:text="${order.customerName}">Lundby</td>
+															<td th:text="${order.orderDateAsString}">2016-02-02</td>
 															<td th:text="${order.status}">Ny</td>															
 														</tr>
 													</tbody>

@@ -17,11 +17,11 @@ import javax.persistence.Transient;
 public class OrderLine {
 
 	private Long id;
-	private Integer lineId;
-	private String model;
-	private Boolean hasSerialNo;
-	private Integer price;
+	private Integer rowNumber;
+	private String articleNumber;
+	private String articleDescription;
 	private Integer total;
+	private String restrictionCode;
 	private Integer registered;
 	private Integer remaining;
 	private OrderHeader orderHeader;
@@ -35,35 +35,35 @@ public class OrderLine {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Integer getLineId() {
-		return lineId;
+	public Integer getRowNumber() {
+		return rowNumber;
 	}
-	public void setLineId(Integer lineId) {
-		this.lineId = lineId;
+	public void setRowNumber(Integer rowNumber) {
+		this.rowNumber = rowNumber;
 	}
-	public String getModel() {
-		return model;
+	public String getArticleNumber() {
+		return articleNumber;
 	}
-	public void setModel(String model) {
-		this.model = model;
+	public void setArticleNumber(String articleNumber) {
+		this.articleNumber = articleNumber;
 	}
-	public Boolean getHasSerialNo() {
-		return hasSerialNo;
+	public String getArticleDescription() {
+		return articleDescription;
 	}
-	public void setHasSerialNo(Boolean hasSerialNo) {
-		this.hasSerialNo = hasSerialNo;
-	}
-	public Integer getPrice() {
-		return price;
-	}
-	public void setPrice(Integer price) {
-		this.price = price;
+	public void setArticleDescription(String articleDescription) {
+		this.articleDescription = articleDescription;
 	}
 	public Integer getTotal() {
 		return total;
 	}
 	public void setTotal(Integer total) {
 		this.total = total;
+	}
+	public String getRestrictionCode() {
+		return restrictionCode;
+	}
+	public void setRestrictionCode(String restrictionCode) {
+		this.restrictionCode = restrictionCode;
 	}
 	public Integer getRegistered() {
 		return registered;
@@ -93,9 +93,17 @@ public class OrderLine {
 		this.orderHeader = orderHeader;
 	}
 	@Transient
+	public Boolean getHasSerialNo() {
+		Boolean result = false;
+		if (this.restrictionCode.equals("1") || this.restrictionCode.equals("3")) {
+			result = true;
+		}
+		return result;
+	}
+	@Transient
 	public String getOptionClass() {
 		String result = "with-serial-no";
-		if (!this.hasSerialNo) {
+		if (!getHasSerialNo()) {
 			result = "no-serial-no";
 		}
 		return result;
@@ -103,7 +111,7 @@ public class OrderLine {
 	@Transient
 	public String getHasSerialNoLabel() {
 		String result = "Ja";
-		if (!this.hasSerialNo) {
+		if (getHasSerialNo()) {
 			result = "Nej";
 		}
 		return result;
