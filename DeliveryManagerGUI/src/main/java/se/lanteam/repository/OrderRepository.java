@@ -14,5 +14,8 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 
 	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList")
     public List<OrderHeader> findOrdersByStatusList(@Param("statusList") List<String> statusList);
+	
+	@Query("SELECT o FROM OrderHeader o WHERE o.status = :status")
+    public List<OrderHeader> findOrdersByStatus(@Param("status") String status);
 
 }

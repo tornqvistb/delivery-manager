@@ -29,6 +29,7 @@ public class EquipmentController {
 	private static String STEALING_TAG_ON_CURRENT_ORDER = "Angivet stöld-ID finns redan registrerat på denna order";
 	private static String SERIAL_NO_ON_OTHER_ORDER = "Angivet serienummer finns redan registrerat på order ";
 	private static String STEALING_TAG_ON_OTHER_ORDER = "Angivet stöld-ID finns redan registrerat på order ";
+	private static String TOO_MANY_REGISTERED = "Du har angett ett större antal än vad som är kvar att registrera";
 
 
 	private OrderRepository orderRepo;
@@ -38,21 +39,32 @@ public class EquipmentController {
 	@RequestMapping(value = "order-list/view/registerEquipment/{orderId}", method = RequestMethod.POST)
 	public String registerEquipment(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
 			ModelMap model) {
-
+		String valResult = "";
 		OrderLine orderLine = orderLineRepo.findOne(reqAttr.getOrderLineId());
-		Equipment equipment = new Equipment();
-		equipment.setCreationDate(new Date());
-		equipment.setOrderLine(orderLine);
-		equipment.setSerialNo(reqAttr.getSerialNo());
-		equipment.setStealingTag(reqAttr.getStealingTag());
-		String valResult = validateEquipment(equipment, orderRepo.findOne(orderId));
-		if (valResult.equals(RESULT_OK)) {
-			orderLine.getEquipments().add(equipment);
-			orderLine.setRegistered(orderLine.getRegistered() + 1);
-			orderLine.setRemaining(orderLine.getRemaining() - 1);
-			orderLineRepo.save(orderLine);
-		} 
+		if (orderLine.getHasSerialNo()) {
+			Equipment equipment = new Equipment();
+			equipment.setCreationDate(new Date());
+			equipment.setOrderLine(orderLine);
+			equipment.setSerialNo(reqAttr.getSerialNo());
+			equipment.setStealingTag(reqAttr.getStealingTag());
+			valResult = validateEquipment(equipment, orderRepo.findOne(orderId));
+			if (valResult.equals(RESULT_OK)) {
+				orderLine.getEquipments().add(equipment);
+				orderLine.setRegistered(orderLine.getRegistered() + 1);
+				orderLine.setRemaining(orderLine.getRemaining() - 1);
+				orderLineRepo.save(orderLine);
+			}
+		} else {
+			valResult = validateEquipmentNoSN(reqAttr.getTotal(), orderLine);
+			if (valResult.equals(RESULT_OK)) {
+				orderLine.setRegistered(orderLine.getRegistered() + reqAttr.getTotal());
+				orderLine.setRemaining(orderLine.getRemaining() - reqAttr.getTotal());
+				orderLineRepo.save(orderLine);
+			}
+		}
 		OrderHeader order = orderRepo.findOne(orderId);
+		order.setOrderStatusByProgress();
+		orderRepo.save(order);
 		model.put("order", order);
 		long orderLineId = reqAttr.getOrderLineId();
 		reqAttr = new RequestAttributes();
@@ -79,12 +91,23 @@ public class EquipmentController {
 		}
 		orderLineRepo.save(orderLine);
 		OrderHeader order = orderRepo.findOne(orderId);
+		order.setOrderStatusByProgress();
+		orderRepo.save(order);
 		model.put("order", order);
 		model.put("reqAttr", new RequestAttributes());
 		return "order-details";
 	}
 
-	public String validateEquipment(Equipment equipment, OrderHeader order) {
+	private String validateEquipmentNoSN(Integer count, OrderLine orderLine) {
+		String result = RESULT_OK;
+		if (count > orderLine.getRemaining()) {
+			result = TOO_MANY_REGISTERED;
+		}
+		return result;
+	}
+
+	
+	private String validateEquipment(Equipment equipment, OrderHeader order) {
 		// To check:
 		// - serial number minimum 7 letters
 		if (equipment.getSerialNo() == null || equipment.getSerialNo().length() < 7) {

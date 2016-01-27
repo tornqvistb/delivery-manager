@@ -39,3 +39,7 @@
 #service-portal .attachment-area {
     margin-bottom : 15px;
 }
+
+#service-portal .completed-row {
+    background-color : lightgreen;
+}

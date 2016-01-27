@@ -116,5 +116,13 @@ public class OrderLine {
 		}
 		return result;
 	}
+	@Transient
+	public String getRowClass() {
+		String result = "";
+		if (getRemaining() == 0) {
+			result = "completed-row";
+		}
+		return result;
+	}
 	
 }

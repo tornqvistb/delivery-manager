@@ -16,8 +16,7 @@
 						<div class="m m-1 m-page cf">
 							<div class="m-h main-header cf">
 								<div class="page-heading">
-									<h2
-										th:text="${'Hantera leverans för order ' + {order.orderNumber}}"></h2>
+									<h2>Hantera leverans</h2>
 								</div>
 							</div>
 							<!-- Här kan man lägga på en vänster meny -->
@@ -34,7 +33,8 @@
 										</div>
 										<div class="form-step current-step" id="registration-area">
 											<div class="form-step-header cf">
-												<h2>Hantering av beställing LT100199</h2>
+												<h2
+													th:text="${'Hantera leverans för order ' + {order.orderNumber}}"></h2>
 											</div>
 											<div class="form-section">
 												<!-- Show registration section only if there are things left to register -->
@@ -96,7 +96,7 @@
 															<tbody>
 																<tr>
 																	<th scope="row">Antal</th>
-																	<td><input th:field="${reqAttr.total}" type="text"
+																	<td><input th:field="${reqAttr.total}" type="number"
 																		id="total" name="total" value="" /></td>
 																</tr>
 															</tbody>
@@ -121,9 +121,9 @@
 														</tr>
 													</thead>
 													<tbody>
-														<div th:each="orderLine : ${order.orderLines}"
+														<tr th:each="orderLine : ${order.orderLines}"
 															th:remove="tag">
-															<tr>
+															<tr th:class="${orderLine.rowClass}">
 																<td th:text="${orderLine.rowNumber}">1</td>
 																<td th:text="${orderLine.articleNumber}">31231312</td>
 																<td th:text="${orderLine.articleDescription}">HP elitebook</td>
@@ -140,14 +140,14 @@
 																			<tr>
 																				<th>Serienummer</th>
 																				<th>Stöld-ID</th>
-																				<th>Ta bort</th>
+																				<th th:if="${order.editable}">Ta bort</th>
 																			</tr>
 																		</thead>
 																		<tbody>
 																			<tr th:each="equipment : ${orderLine.equipments}">
 																				<td th:text="${equipment.serialNo}">5</td>
 																				<td th:text="${equipment.stealingTag}">5</td>
-																				<td><a
+																				<td th:if="${order.editable}"><a
 																					th:href="${'/order-list/view/deleq/' + {order.id} + '/' + {orderLine.id} + '/' + {equipment.id} + '#registration-area'}">Ta
 																						bort</a></td>
 																			</tr>
@@ -155,7 +155,7 @@
 																	</table>
 																</td>
 															</tr>
-														</div>
+														</tr>
 													</tbody>
 												</table>
 												<h3 id="additional-order-info">Övrig orderinformation</h3>
@@ -199,7 +199,7 @@
 														<tr th:if="${order.attachment != null}">
 															<th scope="row">Leveransdokument</th>
 															<td><a th:href="${'/order-list/view/viewfile/' + {order.id}}" th:text="${order.attachment.fileName}">Hämta fil</a></td>
-															<td><a th:href="${'/order-list/view/delfile/' + {order.id} + '#additional-order-info'}">Ta bort</a></td>
+															<td th:if="${order.editable}"><a th:href="${'/order-list/view/delfile/' + {order.id} + '#additional-order-info'}">Ta bort</a></td>
 														</tr>
 													</tbody>
 												</table>
@@ -228,6 +228,7 @@
 														skapades ej</span>
 												</div>
 												<form
+													th:if="${order.editable}"
 													th:action="${'/order-list/view/registerComment/' + {order.id}} + '#order-comments-header'"
 													th:object="${reqAttr}" method="post">
 													<table class="small-table">

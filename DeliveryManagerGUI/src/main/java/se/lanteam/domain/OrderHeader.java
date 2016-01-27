@@ -16,6 +16,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
+import org.thymeleaf.util.ArrayUtils;
+
+import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
 
 @Entity
@@ -243,5 +246,31 @@ public class OrderHeader {
 			}
 		}
 		return result;
+	}
+	@Transient
+	public void setOrderStatusByProgress() {
+		if (getUnCompletedOrderLines().size() > 0) {
+			this.status = StatusConstants.ORDER_STATUS_STARTED;
+		} else {
+			if (this.attachment == null) {
+				this.status = StatusConstants.ORDER_STATUS_REGISTRATION_DONE;
+			} else {
+				this.status = StatusConstants.ORDER_STATUS_SENT;
+			}
+		}
+	}
+	@Transient
+	public Boolean getEditable() {
+		Boolean result = false;
+		if (ArrayUtils.contains(StatusConstants.ACTIVE_STATI, status)) {
+			result = true;
+		}
+		return result;
+	}
+	@Transient
+	public String getOrderSummary() {
+		StringBuilder result = new StringBuilder();
+		
+		return result.toString();
 	}
 }

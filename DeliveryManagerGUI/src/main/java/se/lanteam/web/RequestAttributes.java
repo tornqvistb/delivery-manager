@@ -12,8 +12,17 @@ public class RequestAttributes {
 	private String statusAttachmentSuccess;
 	private String statusAttachmentFailed;
 	private String regEquipmentResult;
+	private String orderStatus;
 
 	
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
 	public Long getOrderLineId() {
 		return orderLineId;
 	}

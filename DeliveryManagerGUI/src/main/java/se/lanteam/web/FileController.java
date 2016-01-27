@@ -40,6 +40,7 @@ public class FileController {
 				attEntity.setFileName(attachment.getOriginalFilename());
 				attEntity.setFileSize(attachment.getSize());
 				order.setAttachment(attEntity);
+				order.setOrderStatusByProgress();
 				orderRepo.save(order);
 				reqAttr.setStatusAttachmentSuccess(ATTACHMENT_MSG_OK);
 			} catch (Exception e) {
@@ -58,6 +59,7 @@ public class FileController {
 	public String deleteFile(@PathVariable Long orderId, ModelMap model) {
 		OrderHeader order = orderRepo.findOne(orderId);
 		order.setAttachment(null);
+		order.setOrderStatusByProgress();
 		orderRepo.save(order);
 		order = orderRepo.findOne(orderId);
 		model.put("order", order);
