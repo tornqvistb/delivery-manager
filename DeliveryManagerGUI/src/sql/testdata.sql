@@ -2,6 +2,7 @@ ALTER TABLE attachment CHANGE file_content file_content LONGBLOB default NULL;
 delete from equipment where id > 0;
 delete from order_line where id > 0;
 delete from order_comment where id > 0;
+delete from attachment where id > 0;
 delete from order_header where id > 0;
 
 insert into order_header(id, order_date, customer_name, order_number, customer_order_number, status, transmit_error_message)

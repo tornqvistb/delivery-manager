@@ -22,7 +22,7 @@ public class OrderLine {
 	private String articleDescription;
 	private Integer total;
 	private String restrictionCode;
-	private Integer registered;
+	private Integer registered = 0;
 	private Integer remaining;
 	private OrderHeader orderHeader;
 	private Set<Equipment> equipments = new HashSet<Equipment>();
