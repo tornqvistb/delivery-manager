@@ -1,0 +1,55 @@
+{"Ordernummer":13446,
+		"Orderdatum":"\/Date(1453935600000)\/",
+		"Kundnummer":"0105",
+		"Kundnamn":null,
+		"Postadress1":"Christina Nilssons gata 1",
+		"Postadress2":"",
+		"Postnummer":"411 04",
+		"Ort":"Göteborg",
+		"Leveransadress_postadress1":"Leveransgatan 2",
+		"Leveransadress_postadress2":"Leveransadress 2",
+		"Leveransadress_postnummer":"123 45",
+		"Leveransadress_ort":"Göteborg",
+		"Leasingavtal":"Leasing 123",
+		"Intraservice_ordernummer":"YourPurchaseOrder 123",
+		"Intraservice_beställningsnummer":"YourSalesOrder 123",
+		"PartnerId":"Aria",
+		"Kontakt1_namn":"Aida Svensson",
+		"Kontakt1_epost":"aida@operan.se",
+		"Kontakt1_telefon":"0708-654987",
+		"Kontakt2_namn":"Karl Johansson",
+		"Kontakt2_epost":"kalle@operan.se",
+		"Kontakt2_telefon":"031-789456",
+		"Orderrader":[{
+			"Radnummer":1,
+			"Artikelnummer":"",
+			"Artikelbenämning":"En textrad",
+			"Antal":0,"Restriktionskod":""
+		},{	
+			"Radnummer":2,
+			"Artikelnummer":"10AU003BMX",
+			"Artikelbenämning":"Lenovo ThinkCentre E73 10AU -",
+			"Antal":2,
+			"Restriktionskod":"4"
+		},{	"Radnummer":3,
+			"Artikelnummer":"",
+			"Artikelbenämning":"Ännu en textrad",
+			"Antal":0,
+			"Restriktionskod":""
+		},{	"Radnummer":4,
+			"Artikelnummer":"00Y3337",
+			"Artikelbenämning":"QLogic 16Gb FC Single-port HBA",
+			"Antal":3,
+			"Restriktionskod":"3"
+		},{	"Radnummer":5,
+			"Artikelnummer":"",
+			"Artikelbenämning":"",
+			"Antal":0,
+			"Restriktionskod":""
+		},{	"Radnummer":6,
+			"Artikelnummer":"006R03042",
+			"Artikelbenämning":"Xerox - Magenta - tonerkassett ( ekvivalent med: Brother TN2",
+			"Antal":10,
+			"Restriktionskod":"2"
+		}]
+}
