@@ -39,7 +39,7 @@ public class OrderImportService {
 	private static final String ERROR_ROW_NUMBER_MISSING = GENERAL_FILE_ERROR + "Orderradnummer saknas på orderrad i fil: ";
 	private static final String ERROR_TOTAL_MISSING = GENERAL_FILE_ERROR + "Antal saknas på orderrad i fil: ";
 	private static final String ERROR_RESTRICTION_CODE_MISSING = GENERAL_FILE_ERROR + "Restriktionskod saknas på orderrad i fil: ";
-
+	private static final String ERROR_ORDER_NUMBER_ALREADY_EXISTS = GENERAL_FILE_ERROR + "Ordernummer finns redan, fil: ";
 	
 	private static final Logger LOG = LoggerFactory.getLogger(OrderImportService.class);
     @Value("${file-source-folder}") 
@@ -161,6 +161,11 @@ public class OrderImportService {
 					return false;					
 				}				
 			}
+		}
+		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderHeader.getOrderNumber());
+		if (orders != null && orders.size() > 0) {
+			saveError(ERROR_ORDER_NUMBER_ALREADY_EXISTS + fileName);
+			return false;								
 		}
 		return true;
 	}
