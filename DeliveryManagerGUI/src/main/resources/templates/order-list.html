@@ -26,7 +26,7 @@
 								<div class="content e-tjansteplattform hamster">
 									<div class="form-step">
 										<!-- Här kan man lägga på ett tack meddelande -->
-										<form class="form-general" th:action= "${'/order-list/search'}" th:object="${reqAttr}" method="get">
+										<form class="form-general" th:action= "@{/order-list/search}" th:object="${reqAttr}" method="get">
 											<div class="form-section">
 												<h3 class="expandtrigger">Filtrera och visa</h3>
 												<div class="row cols-2 cf">
@@ -75,7 +75,7 @@
 													</thead>
 													<tbody>
 														<tr th:each="order : ${orders}">
-															<td><a th:text="${order.orderNumber}" th:href="${'/order-list/view/' + {order.id}}">LT100199</a></td>
+															<td><a th:text="${order.orderNumber}" th:href="@{/order-list/view/} + ${order.id}">LT100199</a></td>
 															<td th:text="${order.customerOrderNumber}">REQ100094</td>
 															<td th:text="${order.customerName}">Lundby</td>
 															<td th:text="${order.orderDateAsString}">2016-02-02</td>

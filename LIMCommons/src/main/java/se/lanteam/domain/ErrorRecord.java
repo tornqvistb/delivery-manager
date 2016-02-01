@@ -14,6 +14,11 @@ public class ErrorRecord {
 	private String message;
 	private Boolean archived = false;
 	
+	public ErrorRecord(String message) {
+		super();
+		this.creationDate = new Date();
+		this.message = message;
+	}
 	@Id
 	@GeneratedValue
 	public Long getId() {
@@ -22,7 +27,6 @@ public class ErrorRecord {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Date getCreationDate() {
 		return creationDate;
 	}

@@ -16,10 +16,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import se.lanteam.constants.StatusConstants;
+import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
+import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 
 /**
@@ -28,7 +31,17 @@ import se.lanteam.repository.OrderRepository;
 @Service
 public class OrderImportService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrderImportService.class);
+	private static final String GENERAL_FILE_ERROR = "Fel vid inläsning av fil. ";
+	private static final String ERROR_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Ordernummer saknas i fil: ";
+	private static final String ERROR_CUSTOMER_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Kundens ordernummer saknas i fil: ";
+	private static final String ERROR_NO_ORDER_LINES = GENERAL_FILE_ERROR + "Kundens ordernummer saknas i fil: ";
+	private static final String ERROR_ARTICLE_ID_MISSING = GENERAL_FILE_ERROR + "Artikel-ID saknas på orderrad i fil: ";
+	private static final String ERROR_ROW_NUMBER_MISSING = GENERAL_FILE_ERROR + "Orderradnummer saknas på orderrad i fil: ";
+	private static final String ERROR_TOTAL_MISSING = GENERAL_FILE_ERROR + "Antal saknas på orderrad i fil: ";
+	private static final String ERROR_RESTRICTION_CODE_MISSING = GENERAL_FILE_ERROR + "Restriktionskod saknas på orderrad i fil: ";
+
+	
+	private static final Logger LOG = LoggerFactory.getLogger(OrderImportService.class);
     @Value("${file-source-folder}") 
     private String fileSourceFolder;    
     @Value("${file-destination-folder}")
@@ -37,6 +50,7 @@ public class OrderImportService {
     private String fileErrorFolder;
     
     private OrderRepository orderRepo;
+    private ErrorRepository errorRepo;
     
     public void hello() {
         LOG.info("Hello World!");
@@ -51,6 +65,7 @@ public class OrderImportService {
 				System.out.println("FILE : " + fileEntry.getName());
 				Path source = Paths.get(fileSourceFolder + "/" + fileEntry.getName());
 				Path target = Paths.get(fileDestFolder + "/" + fileEntry.getName());
+				Path errorTarget = Paths.get(fileErrorFolder + "/" + fileEntry.getName());
 				try {
 					StringBuilder sb = new StringBuilder();
 					List<String> rows = Files.readAllLines(source);
@@ -58,8 +73,12 @@ public class OrderImportService {
 						sb.append(row);
 					}
 					OrderHeader orderHeader = getOrderHeaderFromJson(sb.toString());
-					orderRepo.save(orderHeader);
-					Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+					if (validate(orderHeader, fileEntry.getName())) {
+						orderRepo.save(orderHeader);
+						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+					} else {
+						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -71,45 +90,83 @@ public class OrderImportService {
 	private OrderHeader getOrderHeaderFromJson(String json) {
 		OrderHeader orderHeader = new OrderHeader();
 		JSONObject jsonOrder = new JSONObject(json);
-		orderHeader.setOrderNumber(String.valueOf(jsonOrder.getInt("Ordernummer")));
-		orderHeader.setOrderDate(jsonDateToDate(jsonOrder.getString("Orderdatum")));
-		//orderHeader.setCustomerName(jsonOrder.getString("Kundnamn"));
-		orderHeader.setCustomerName("Saknas");
-		orderHeader.setCustomerNumber(jsonOrder.getString("Kundnummer"));
-		orderHeader.setPostalAddress1(jsonOrder.getString("Postadress1"));
-		orderHeader.setPostalAddress2(jsonOrder.getString("Postadress2"));
-		orderHeader.setPostalCode(jsonOrder.getString("Postnummer"));
-		orderHeader.setCity(jsonOrder.getString("Ort"));
-		orderHeader.setDeliveryPostalAddress1(jsonOrder.getString("Leveransadress_postadress1"));
-		orderHeader.setDeliveryPostalAddress2(jsonOrder.getString("Leveransadress_postadress2"));
-		orderHeader.setDeliveryPostalCode(jsonOrder.getString("Leveransadress_postnummer"));
-		orderHeader.setDeliveryCity(jsonOrder.getString("Leveransadress_ort"));
-		orderHeader.setLeasingNumber(jsonOrder.getString("Leasingavtal"));		
-		orderHeader.setCustomerOrderNumber(jsonOrder.getString("Intraservice_ordernummer"));
-		orderHeader.setCustomerSalesOrder(jsonOrder.getString("Intraservice_beställningsnummer"));
-		orderHeader.setPartnerId(jsonOrder.getString("PartnerId"));
-		orderHeader.setContact1Name(jsonOrder.getString("Kontakt1_namn"));
-		orderHeader.setContact1Email(jsonOrder.getString("Kontakt1_epost"));
-		orderHeader.setContact1Phone(jsonOrder.getString("Kontakt1_telefon"));
-		orderHeader.setContact2Name(jsonOrder.getString("Kontakt2_namn"));
-		orderHeader.setContact2Email(jsonOrder.getString("Kontakt2_epost"));
-		orderHeader.setContact2Phone(jsonOrder.getString("Kontakt2_telefon"));
+		orderHeader.setOrderNumber(String.valueOf(jsonOrder.optInt("Ordernummer")));
+		orderHeader.setOrderDate(jsonDateToDate(jsonOrder.optString("Orderdatum")));
+		orderHeader.setCustomerName(jsonOrder.optString("Kundnamn"));
+		orderHeader.setCustomerNumber(jsonOrder.optString("Kundnummer"));
+		orderHeader.setPostalAddress1(jsonOrder.optString("Postadress1"));
+		orderHeader.setPostalAddress2(jsonOrder.optString("Postadress2"));
+		orderHeader.setPostalCode(jsonOrder.optString("Postnummer"));
+		orderHeader.setCity(jsonOrder.optString("Ort"));
+		orderHeader.setDeliveryPostalAddress1(jsonOrder.optString("Leveransadress_postadress1"));
+		orderHeader.setDeliveryPostalAddress2(jsonOrder.optString("Leveransadress_postadress2"));
+		orderHeader.setDeliveryPostalCode(jsonOrder.optString("Leveransadress_postnummer"));
+		orderHeader.setDeliveryCity(jsonOrder.optString("Leveransadress_ort"));
+		orderHeader.setLeasingNumber(jsonOrder.optString("Leasingavtal"));		
+		orderHeader.setCustomerOrderNumber(jsonOrder.optString("Intraservice_ordernummer"));
+		orderHeader.setCustomerSalesOrder(jsonOrder.optString("Intraservice_beställningsnummer"));
+		orderHeader.setPartnerId(jsonOrder.optString("PartnerId"));
+		orderHeader.setContact1Name(jsonOrder.optString("Kontakt1_namn"));
+		orderHeader.setContact1Email(jsonOrder.optString("Kontakt1_epost"));
+		orderHeader.setContact1Phone(jsonOrder.optString("Kontakt1_telefon"));
+		orderHeader.setContact2Name(jsonOrder.optString("Kontakt2_namn"));
+		orderHeader.setContact2Email(jsonOrder.optString("Kontakt2_epost"));
+		orderHeader.setContact2Phone(jsonOrder.optString("Kontakt2_telefon"));
 		orderHeader.setStatus(StatusConstants.ORDER_STATUS_NEW);
 		JSONArray jsonOrderLines = jsonOrder.getJSONArray("Orderrader");
 		for (int i = 0; i < jsonOrderLines.length(); i++) {			
 			JSONObject jsonOrderLine = jsonOrderLines.getJSONObject(i);
 			OrderLine orderLine = new OrderLine();
-			orderLine.setRowNumber(jsonOrderLine.getInt("Radnummer"));
-			orderLine.setArticleNumber(jsonOrderLine.getString("Artikelnummer"));
-			orderLine.setArticleDescription(jsonOrderLine.getString("Artikelbenämning"));
-			orderLine.setTotal(jsonOrderLine.getInt("Antal"));
-			orderLine.setRemaining(jsonOrderLine.getInt("Antal"));
+			orderLine.setRowNumber(jsonOrderLine.optInt("Radnummer"));
+			orderLine.setArticleNumber(jsonOrderLine.optString("Artikelnummer"));
+			orderLine.setArticleDescription(jsonOrderLine.optString("Artikelbenämning"));
+			orderLine.setTotal(jsonOrderLine.optInt("Antal"));
+			orderLine.setRemaining(jsonOrderLine.optInt("Antal"));
 			orderLine.setRegistered(0);
-			orderLine.setRestrictionCode(jsonOrderLine.getString("Restriktionskod"));
+			orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod"));
 			orderLine.setOrderHeader(orderHeader);
 			orderHeader.getOrderLines().add(orderLine);
 		}
 		return orderHeader;
+	}
+	
+	private boolean validate(OrderHeader orderHeader, String fileName) {
+		if (orderHeader.getOrderNumber().equals("0")) {
+			saveError(ERROR_ORDER_NUMBER_MISSING + fileName);
+			return false;
+		}
+		if (StringUtils.isEmpty(orderHeader.getCustomerOrderNumber())) {
+			saveError(ERROR_CUSTOMER_ORDER_NUMBER_MISSING + fileName);
+			return false;
+		}
+		if (orderHeader.getOrderLines().isEmpty()) {
+			saveError(ERROR_NO_ORDER_LINES + fileName);
+			return false;
+		} else {
+			for (OrderLine line : orderHeader.getOrderLines()) {
+				if (StringUtils.isEmpty(line.getArticleNumber())) {
+					saveError(ERROR_ARTICLE_ID_MISSING + fileName);
+					return false;					
+				}
+				if (StringUtils.isEmpty(line.getRowNumber())) {
+					saveError(ERROR_ROW_NUMBER_MISSING + fileName);
+					return false;					
+				}
+				if (StringUtils.isEmpty(line.getTotal())) {
+					saveError(ERROR_TOTAL_MISSING + fileName);
+					return false;					
+				}
+				if (StringUtils.isEmpty(line.getRestrictionCode())) {
+					saveError(ERROR_RESTRICTION_CODE_MISSING + fileName);
+					return false;					
+				}				
+			}
+		}
+		return true;
+	}
+	
+	private void saveError(String errorText) {
+		errorRepo.save(new ErrorRecord(errorText));
 	}
 	
 	private Date jsonDateToDate(String jsonDate)
@@ -124,6 +181,10 @@ public class OrderImportService {
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
+	}
+	@Autowired
+	public void setErrorRepo(ErrorRepository errorRepo) {
+		this.errorRepo = errorRepo;
 	}
 
 	

@@ -24,7 +24,7 @@
 								<div class="content e-tjansteplattform hamster">
 									<div class="order-details">
 										<div class="back-link">
-											<a href="/order-list" rel="nofollow">Tillbaka</a>
+											<a th:href="@{/order-list}" rel="nofollow">Tillbaka</a>
 										</div>
 										<div class="information-text system-info help-message">
 											<p>Registreringen av utrustning är ej komplett för denna
@@ -48,7 +48,7 @@
 													</div>
 													
 													<form
-														th:action="${'/order-list/view/registerEquipment/' + {order.id}} + '#registration-area'"
+														th:action="@{/order-list/view/registerEquipment/} + ${order.id} + '#registration-area'"
 														th:object="${reqAttr}" method="post">
 														<table class="small-table">
 															<colgroup>
@@ -148,7 +148,7 @@
 																				<td th:text="${equipment.serialNo}">5</td>
 																				<td th:text="${equipment.stealingTag}">5</td>
 																				<td th:if="${order.editable}"><a
-																					th:href="${'/order-list/view/deleq/' + {order.id} + '/' + {orderLine.id} + '/' + {equipment.id} + '#registration-area'}">Ta
+																					th:href="@{/order-list/view/deleq/} + ${order.id} + '/' + ${orderLine.id} + '/' + ${equipment.id} + '#registration-area'">Ta
 																						bort</a></td>
 																			</tr>
 																		</tbody>
@@ -198,14 +198,14 @@
 														</tr>
 														<tr th:if="${order.attachment != null}">
 															<th scope="row">Leveransdokument</th>
-															<td><a th:href="${'/order-list/view/viewfile/' + {order.id}}" th:text="${order.attachment.fileName}">Hämta fil</a></td>
-															<td th:if="${order.editable}"><a th:href="${'/order-list/view/delfile/' + {order.id} + '#additional-order-info'}">Ta bort</a></td>
+															<td><a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a></td>
+															<td th:if="${order.editable}"><a th:href="@{/order-list/view/delfile/} + ${order.id} + '#additional-order-info'">Ta bort</a></td>
 														</tr>
 													</tbody>
 												</table>
 												<div th:if="${order.attachment == null}">
 													<label class="strong-title" for="bifogad_fil">Bifoga leveransdokument</label>
-													 <form action="upload" th:action="${'/order-list/view/attachFile/' + {order.id}} + '#additional-order-info'" method="post" enctype="multipart/form-data">
+													 <form action="upload" th:action="@{/order-list/view/attachFile/} + ${order.id} + '#additional-order-info'" method="post" enctype="multipart/form-data">
 														<div class="attachment-area">
 															<div class="cloneable">
 																<input type="file" name="attachment"
@@ -229,7 +229,7 @@
 												</div>
 												<form
 													th:if="${order.editable}"
-													th:action="${'/order-list/view/registerComment/' + {order.id}} + '#order-comments-header'"
+													th:action="@{/order-list/view/registerComment/} + ${order.id} + '#order-comments-header'"
 													th:object="${reqAttr}" method="post">
 													<table class="small-table">
 														<tbody>
