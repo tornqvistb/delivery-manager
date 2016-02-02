@@ -6,25 +6,25 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import se.lanteam.ws.gbgintraservice.GetCountryRequest;
-import se.lanteam.ws.gbgintraservice.GetCountryResponse;
+import se.lanteam.ws.gbgintraservice.ErrorResponse;
+import se.lanteam.ws.gbgintraservice.ErrorResponseResponse;
 
 @Endpoint
-public class CountryEndpoint {
+public class ErrorsEndpoint {
 	//private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
 	private static final String NAMESPACE_URI = "http://lanteam.se/ws/GbgIntraservice";
-	private CountryRepository countryRepository;
+	private ErrorsRepository errorsRepository;
 
 	@Autowired
-	public CountryEndpoint(CountryRepository countryRepository) {
-		this.countryRepository = countryRepository;
+	public ErrorsEndpoint(ErrorsRepository errorsRepository) {
+		this.errorsRepository = errorsRepository;
 	}
 
-	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "getCountryRequest")
+	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "ErrorResponse")
 	@ResponsePayload
-	public GetCountryResponse getCountry(@RequestPayload GetCountryRequest request) {
-		GetCountryResponse response = new GetCountryResponse();
-		response.setCountry(countryRepository.findCountry(request.getName()));
+	public ErrorResponseResponse getResponse(@RequestPayload ErrorResponse request) {
+		ErrorResponseResponse response = new ErrorResponseResponse();
+		response.setErrorResponseResult(errorsRepository.storeErrorReport());
 
 		return response;
 	}
