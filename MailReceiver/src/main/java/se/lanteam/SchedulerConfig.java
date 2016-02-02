@@ -44,7 +44,7 @@ public class SchedulerConfig {
 
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource, JobFactory jobFactory,
-                                                     @Qualifier("orderJobTrigger") Trigger orderJobTrigger) throws IOException {
+                                                     @Qualifier("mailJobTrigger") Trigger mailJobTrigger) throws IOException {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
         // this allows to update triggers in DB when updating settings in config file:
         factory.setOverwriteExistingJobs(true);
@@ -52,7 +52,7 @@ public class SchedulerConfig {
         factory.setJobFactory(jobFactory);
 
         factory.setQuartzProperties(quartzProperties());
-        factory.setTriggers(orderJobTrigger);
+        factory.setTriggers(mailJobTrigger);
 
         return factory;
     }
@@ -66,13 +66,13 @@ public class SchedulerConfig {
     }
 
     @Bean
-    public JobDetailFactoryBean orderJobDetail() {
+    public JobDetailFactoryBean mailJobDetail() {
         return createJobDetail(MailReceiverJob.class);
     }
 
-    @Bean(name = "orderJobTrigger")
-    public SimpleTriggerFactoryBean orderJobTrigger(@Qualifier("orderJobDetail") JobDetail jobDetail,
-                                                     @Value("${orderjob.frequency}") long frequency) {
+    @Bean(name = "mailJobTrigger")
+    public SimpleTriggerFactoryBean mailJobTrigger(@Qualifier("mailJobDetail") JobDetail jobDetail,
+                                                     @Value("${mailjob.frequency}") long frequency) {
         return createTrigger(jobDetail, frequency);
     }
 
