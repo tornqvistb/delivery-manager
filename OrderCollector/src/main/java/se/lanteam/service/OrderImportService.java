@@ -52,12 +52,8 @@ public class OrderImportService {
     private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
     
-    public void hello() {
-        LOG.info("Hello World!");
-        moveFiles();
-    }
-    
-	private void moveFiles() {
+	public void moveFiles() {
+        LOG.info("Looking for files to move!");
 		final File inputFolder = new File(fileSourceFolder);
 		File[] filesInFolder = inputFolder.listFiles();
 		if (filesInFolder != null) {

@@ -15,6 +15,6 @@ public class OrderImportJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
-        service.hello();
+        service.moveFiles();
     }
 }

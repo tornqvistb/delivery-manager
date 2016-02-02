@@ -4,17 +4,17 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.lanteam.service.MailReceiverService;
+import se.lanteam.service.OrderTransmitService;
 
 /**
  * Created by david on 2015-01-20.
  */
-public class MailReceiverJob implements Job {
+public class OrderTransmitJob implements Job {
     @Autowired
-    private MailReceiverService service;
+    private OrderTransmitService service;
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
-        service.checkMails();
+        service.transmitOrders();
     }
 }

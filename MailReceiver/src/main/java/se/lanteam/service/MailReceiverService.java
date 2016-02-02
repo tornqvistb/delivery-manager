@@ -2,7 +2,6 @@ package se.lanteam.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Properties;
@@ -37,7 +36,8 @@ import se.lanteam.repository.OrderRepository;
 public class MailReceiverService {
 
 	private static final String GENERAL_FILE_ERROR = "Fel vid läsning av mail. ";
-	private static final String ERROR_INVALID_SUBJECT = GENERAL_FILE_ERROR + "Ämnet i mailet matchar inte någon befintlig order.";
+	private static final String ERROR_INVALID_SUBJECT = GENERAL_FILE_ERROR + "Ämnet i mailet matchar inte någon befintlig order. Filnamn: ";
+	private static final String ERROR_INVALID_ORDER_STATUS = GENERAL_FILE_ERROR + "Filen kunde inte sparas på ordern, då den inte är redigerbar. Order, Filnamn: ";
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MailReceiverService.class);
     @Value("${mail.host}") 
@@ -46,25 +46,21 @@ public class MailReceiverService {
     private String mailUsername;
     @Value("${mail.password}")
     private String mailPassword;
+    @Value("${file.save.directory}")
+    private String saveDirectory;
     
     private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
-    
-    public void hello() {
-        LOG.info("Hello World!");
-        checkMails();
-    }
-    
-	private void checkMails() {
+        
+	public void checkMails() {
 		try {
-
+	        LOG.info("Going to check mails!");
 			// create properties field
 			Properties properties = new Properties();
 
 			properties.put("mail.pop3.host", mailHost);
 			properties.put("mail.pop3.port", "995");
 			properties.put("mail.pop3.starttls.enable", "true");
-			//Session emailSession = Session.getDefaultInstance(properties);
 			Session emailSession = Session.getInstance(properties, new javax.mail.Authenticator() {
 			    protected PasswordAuthentication getPasswordAuthentication() {
 			        return new PasswordAuthentication(mailUsername, mailPassword);
@@ -82,19 +78,10 @@ public class MailReceiverService {
 
 			// retrieve the messages from the folder in an array and print it
 			Message[] messages = emailFolder.getMessages();
-			System.out.println("messages.length---" + messages.length);
 
 			for (int i = 0, n = messages.length; i < n; i++) {
 				Message message = messages[i];
-				System.out.println("---------------------------------");
-				System.out.println("Email Number " + (i + 1));
-				System.out.println("Subject: " + message.getSubject());
-				System.out.println("From: " + message.getFrom()[0]);
-				System.out.println("Text: " + message.getContent().toString());
 				String contentType = message.getContentType();
-				String attachFiles = "";
-				String messageContent = "";
-				String saveDirectory = "C:/Projekt/lanteam/filedirs/images";
 				if (contentType.contains("multipart")) {
                     // content may contain attachments
                     Multipart multiPart = (Multipart) message.getContent();
@@ -104,29 +91,14 @@ public class MailReceiverService {
                         if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
                             // this part is attachment
                             String fileName = part.getFileName();
-                            attachFiles += fileName + ", ";
                             part.saveFile(saveDirectory + File.separator + fileName);
                             byte[] array = Files.readAllBytes(new File(saveDirectory + File.separator + fileName).toPath());
                             storeAttachmentOnOrder(array, message.getSubject(), fileName);
-                        } else {
-                            // this part may be the message content
-                            messageContent = part.getContent().toString();
                         }
-                    }
- 
-                    if (attachFiles.length() > 1) {
-                        attachFiles = attachFiles.substring(0, attachFiles.length() - 2);
-                    }
-                } else if (contentType.contains("text/plain")
-                        || contentType.contains("text/html")) {
-                    Object content = message.getContent();
-                    if (content != null) {
-                        messageContent = content.toString();
                     }
                 }
  
 			}
-
 			// close the store and folder objects
 			emailFolder.close(false);
 			store.close();
@@ -148,18 +120,16 @@ public class MailReceiverService {
 				Attachment attachment = new Attachment();
 				attachment.setOrderHeader(order);
 				attachment.setFileName(fileName);
-				//InputStream initialStream = fileContent.getInputStream();				
-				//attachment.setFileContent(new byte[initialStream.available()]);
 				attachment.setFileContent(fileContent);
 				attachment.setFileSize(Long.valueOf(fileContent.length));
-				//attachment.setFileSize(Long.valueOf(initialStream.toString().length()));
 				order.setAttachment(attachment);
+				order.setOrderStatusByProgress();
 				orderRepo.save(order);
 			} else {
-				// Error message
+				saveError(ERROR_INVALID_ORDER_STATUS + order.getOrderNumber() + ", " + fileName);
 			}
 		} else {
-			// Error message
+			saveError(ERROR_INVALID_SUBJECT + fileName);
 		}
 	}
 	
