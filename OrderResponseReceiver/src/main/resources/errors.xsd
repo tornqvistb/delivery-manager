@@ -18,7 +18,6 @@
 		</xs:complexType>
 	</xs:element>
 
-
 	<xs:complexType name="GBCA003A_ErrorResponse">
 		<xs:sequence>
 			<xs:element name="Line" nillable="true"
@@ -28,8 +27,6 @@
 			<xs:element name="YourSalesOrder" nillable="true" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
-	<!-- <xs:element name="GBCA003A_ErrorResponse" nillable="true"
-		type="tns:GBCA003A_ErrorResponse" />  -->
 	<xs:complexType name="ArrayOfGBCA003A_ErrorResponseLine">
 		<xs:sequence>
 			<xs:element minOccurs="0" maxOccurs="unbounded"
@@ -37,8 +34,6 @@
 				type="tns:GBCA003A_ErrorResponseLine" />
 		</xs:sequence>
 	</xs:complexType>
-	<!-- <xs:element name="ArrayOfGBCA003A_ErrorResponseLine"
-		nillable="true" type="tns:ArrayOfGBCA003A_ErrorResponseLine" />  -->
 	<xs:complexType name="GBCA003A_ErrorResponseLine">
 		<xs:sequence>
 			<xs:element name="ErrorText" nillable="true" type="xs:string" />
@@ -49,7 +44,5 @@
 			<xs:element name="Status" nillable="true" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
-	<!--  <xs:element name="GBCA003A_ErrorResponseLine" nillable="true"
-		type="tns:GBCA003A_ErrorResponseLine" />  -->
 
 </xs:schema>
