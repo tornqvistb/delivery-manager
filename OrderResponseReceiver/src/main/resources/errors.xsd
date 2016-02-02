@@ -1,0 +1,55 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://lanteam.se/ws/GbgIntraservice" targetNamespace="http://lanteam.se/ws/GbgIntraservice"
+	elementFormDefault="qualified">
+	<xs:element name="ErrorResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" name="errorResponse" nillable="true"				
+					type="tns:GBCA003A_ErrorResponse"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ErrorResponseResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" name="ErrorResponseResult"
+					nillable="true" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:complexType name="GBCA003A_ErrorResponse">
+		<xs:sequence>
+			<xs:element name="Line" nillable="true"
+				type="tns:ArrayOfGBCA003A_ErrorResponseLine" />
+			<xs:element name="NumberOfLines" nillable="true" type="xs:string" />
+			<xs:element name="YourPurchaseOrder" nillable="true" type="xs:string" />
+			<xs:element name="YourSalesOrder" nillable="true" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="GBCA003A_ErrorResponse" nillable="true"
+		type="tns:GBCA003A_ErrorResponse" />
+	<xs:complexType name="ArrayOfGBCA003A_ErrorResponseLine">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded"
+				name="GBCA003A_ErrorResponseLine" nillable="true"
+				type="tns:GBCA003A_ErrorResponseLine" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ArrayOfGBCA003A_ErrorResponseLine"
+		nillable="true" type="tns:ArrayOfGBCA003A_ErrorResponseLine" />
+	<xs:complexType name="GBCA003A_ErrorResponseLine">
+		<xs:sequence>
+			<xs:element name="ErrorText" nillable="true" type="xs:string" />
+			<xs:element name="InvNo" nillable="true" type="xs:string" />
+			<xs:element name="ItemId" nillable="true" type="xs:string" />
+			<xs:element name="LineId" nillable="true" type="xs:string" />
+			<xs:element name="SerialNo" nillable="true" type="xs:string" />
+			<xs:element name="Status" nillable="true" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="GBCA003A_ErrorResponseLine" nillable="true"
+		type="tns:GBCA003A_ErrorResponseLine" />
+
+</xs:schema>
