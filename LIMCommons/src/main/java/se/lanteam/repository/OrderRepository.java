@@ -21,4 +21,7 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 	@Query("SELECT o FROM OrderHeader o WHERE o.orderNumber = :orderNumber")
     public List<OrderHeader> findOrdersByOrderNumber(@Param("orderNumber") String orderNumber);
 
+	@Query("SELECT o FROM OrderHeader o WHERE o.customerSalesOrder = :customerSalesOrder")
+    public List<OrderHeader> findOrdersByCustomerSalesOrder(@Param("customerSalesOrder") String customerSalesOrder);
+
 }

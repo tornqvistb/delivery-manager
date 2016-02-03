@@ -271,7 +271,23 @@ public class OrderHeader {
 	@Transient
 	public String getOrderSummary() {
 		StringBuilder result = new StringBuilder();
-		
+		if (this.status.equals(StatusConstants.ORDER_STATUS_NEW)) {
+			result.append("Registrering ej påbörjad");
+		} else if (this.status.equals(StatusConstants.ORDER_STATUS_STARTED)) {
+			result.append("Registrering påbörjad.");
+			if (this.attachment == null) {
+				result.append("<br>Leveransdokument ej bifogat.");
+			} else {
+				result.append("<br>Leveransdokument bifogat.");
+			}
+		} else if (this.status.equals(StatusConstants.ORDER_STATUS_REGISTRATION_DONE)) {
+			result.append("Registrering klar.");
+			result.append("<br>Leveransdokument ej bifogat.");			
+		} else if (this.status.equals(StatusConstants.ORDER_STATUS_SENT)) {
+			result.append("Registrering klar. Leveransrapportering pågår.");			
+		} else if (this.status.equals(StatusConstants.ORDER_STATUS_TRANSFERED)) {
+			result.append("Leveransrapportering klar och överförd till kund.");			
+		}
 		return result.toString();
 	}
 }

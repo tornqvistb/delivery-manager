@@ -62,6 +62,12 @@
 			<artifactId>wsdl4j</artifactId>
 		</dependency>
 		<!-- end::springws[] -->
+		<dependency>
+			<groupId>se.lanteam</groupId>
+			<artifactId>LIMCommons</artifactId>
+			<version>1.0</version>
+		</dependency>		
+		
 	</dependencies>
 	
 	<build>

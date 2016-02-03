@@ -26,10 +26,12 @@
 										<div class="back-link">
 											<a th:href="@{/order-list}" rel="nofollow">Tillbaka</a>
 										</div>
-										<div class="information-text system-info help-message">
-											<p>Registreringen av utrustning är ej komplett för denna
-												leverans.</p>
-											<p>Leveransdokument ej bifogat.</p>
+										<div th:if="${not #strings.isEmpty(order.transmitErrorMessage)}" class="information-text system-info error-message">
+											<p th:utext="${order.transmitErrorMessage}"></p>
+										</div>
+										
+										<div th:if="${not #strings.isEmpty(order.orderSummary)}" class="information-text system-info help-message">
+											<p th:utext="${order.orderSummary}"></p>
 										</div>
 										<div class="form-step current-step" id="registration-area">
 											<div class="form-step-header cf">

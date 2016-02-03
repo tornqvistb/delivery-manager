@@ -48,13 +48,13 @@ public class OrderTransmitService {
         if (orders != null && orders.size() > 0) {
         	for (OrderHeader order : orders) {
         		// Create soap message and send to Intraservice
+        		
         		// Create message to Visma and store on disk
         		createFileToBusinessSystem(order);
             	// Update order status
         		order.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
         		orderRepo.save(order);
-        	}
-        
+        	}        
         }
 	}
 

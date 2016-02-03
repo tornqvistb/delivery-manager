@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://staden.esb.GBCA002A_LeveransStatus" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://staden.esb.GBCA002A_LeveransStatus" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+  <wsp:Policy wsu:Id="BasicHttpBinding_GBCA002A_LeveransStatus_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <http:BasicAuthentication xmlns:http="http://schemas.microsoft.com/ws/06/2004/policy/http" />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <s:schema targetNamespace="http://Staden.esb.GBCA.ExternalArtefacts.GBCA002A.GBCA002A_Ext_LeveransStatus" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="http://staden.esb.Common.header/1.0" xmlns:s0="http://Staden.esb.GBCA.ExternalArtefacts.GBCA002A.GBCA002A_Ext_LeveransStatus" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/">
+      <s:element name="GBCA002A_ext_LeveransStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" name="ArendeId" type="s:string" />
+            <s:element maxOccurs="unbounded" name="Status">
+              <s:complexType>
+                <s:sequence>
+                  <s:element minOccurs="1" name="LineId" type="s:string" />
+                  <s:element minOccurs="1" name="DeliveryDate" type="s:string" />
+                  <s:element minOccurs="0" name="Comment" type="s:string" />
+                  <s:element minOccurs="1" name="ItemId" type="s:string" />
+                  <s:element minOccurs="0" name="ItemDescription" type="s:string" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema targetNamespace="http://staden.esb.Common.header/1.0" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="http://staden.esb.Common.header/1.0" xmlns:s0="http://Staden.esb.GBCA.ExternalArtefacts.GBCA002A.GBCA002A_Ext_LeveransStatus" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/">
+      <s:element name="Header">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Typ" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="PartnerIn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="PartnerUt" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Kod" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Text" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="TestFlagga" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GBCA002A_LeveransStatusSoapIn">
+    <wsdl:part name="GBCA002A_ext_LeveransStatusRequestPart0" element="q1:GBCA002A_ext_LeveransStatus" xmlns:q1="http://Staden.esb.GBCA.ExternalArtefacts.GBCA002A.GBCA002A_Ext_LeveransStatus" />
+  </wsdl:message>
+  <wsdl:message name="GBCA002A_LeveransStatusSoapOut">
+    <wsdl:part name="HeaderRequestPart0" element="q2:Header" xmlns:q2="http://staden.esb.Common.header/1.0" />
+  </wsdl:message>
+  <wsdl:portType name="GBCA002A_LeveransStatus">
+    <wsdl:operation name="GBCA002A_LeveransStatus">
+      <wsdl:input message="tns:GBCA002A_LeveransStatusSoapIn" />
+      <wsdl:output message="tns:GBCA002A_LeveransStatusSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_GBCA002A_LeveransStatus" type="tns:GBCA002A_LeveransStatus">
+    <wsp:PolicyReference URI="#BasicHttpBinding_GBCA002A_LeveransStatus_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GBCA002A_LeveransStatus">
+      <soap:operation soapAction="GBCA002A_LeveransStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GBCA002A_LeveransStatus">
+    <wsdl:port name="BasicHttpBinding_GBCA002A_LeveransStatus" binding="tns:BasicHttpBinding_GBCA002A_LeveransStatus">
+      <soap:address location="https://esbat.goteborg.se/GBCA002A_LeveransStatus" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

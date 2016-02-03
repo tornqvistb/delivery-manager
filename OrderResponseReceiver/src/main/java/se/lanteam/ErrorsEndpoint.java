@@ -24,7 +24,7 @@ public class ErrorsEndpoint {
 	@ResponsePayload
 	public ErrorResponseResponse getResponse(@RequestPayload ErrorResponse request) {
 		ErrorResponseResponse response = new ErrorResponseResponse();
-		response.setErrorResponseResult(errorsRepository.storeErrorReport());
+		response.setErrorResponseResult(errorsRepository.storeErrorReport(request));
 
 		return response;
 	}

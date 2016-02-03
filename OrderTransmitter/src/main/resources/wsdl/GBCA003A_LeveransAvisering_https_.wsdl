@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://staden.esb.GBCA003A_LeveransAvisering" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://staden.esb.GBCA003A_LeveransAvisering" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+  <wsp:Policy wsu:Id="BasicHttpBinding_GBCA003A_LeveransAvisering_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <http:BasicAuthentication xmlns:http="http://schemas.microsoft.com/ws/06/2004/policy/http" />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <s:schema targetNamespace="http://Staden.esb.GBCA003A_ext_LeveransAvisering" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="http://staden.esb.Common.header/1.0" xmlns:s0="http://Staden.esb.GBCA003A_ext_LeveransAvisering" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/">
+      <s:element name="GBCA003A_ext_LeveransAvisering">
+        <s:complexType>
+          <s:sequence>
+            <s:element ref="s1:Header" xmlns:q1="http://staden.esb.Common.header/1.0" />
+            <s:element name="Body">
+              <s:complexType>
+                <s:sequence>
+                  <s:element name="LeveransAvisering">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element name="Head">
+                          <s:complexType>
+                            <s:sequence>
+                              <s:element minOccurs="0" name="OrderDate" type="s:string" />
+                              <s:element minOccurs="0" name="OrderNumber" type="s:string" />
+                              <s:element minOccurs="0" name="YourReference" type="s:string" />
+                              <s:element name="YourPurchaseOrder" type="s:string" />
+                              <s:element name="YourSalesOrder" type="s:string" />
+                              <s:element minOccurs="0" name="OurReference" type="s:string" />
+                              <s:element minOccurs="0" name="TermsPay" type="s:string" />
+                              <s:element minOccurs="0" name="TermsDel" type="s:string" />
+                              <s:element minOccurs="0" name="Deliverymethod" type="s:string" />
+                              <s:element minOccurs="0" name="GoodsMark" type="s:string" />
+                              <s:element minOccurs="0" name="HeadStatus" type="s:string" />
+                              <s:element minOccurs="0" maxOccurs="unbounded" name="Address">
+                                <s:complexType>
+                                  <s:sequence>
+                                    <s:element minOccurs="0" name="Name" type="s:string" />
+                                    <s:element minOccurs="0" name="Address" type="s:string" />
+                                    <s:element minOccurs="0" name="Street" type="s:string" />
+                                    <s:element minOccurs="0" name="ZipCode" type="s:string" />
+                                    <s:element minOccurs="0" name="City" type="s:string" />
+                                    <s:element minOccurs="0" name="CountryCode" type="s:string" />
+                                    <s:element minOccurs="0" name="Phone" type="s:string" />
+                                    <s:element minOccurs="0" name="Fax" type="s:string" />
+                                  </s:sequence>
+                                  <s:attribute name="AddressType" type="s:string" />
+                                </s:complexType>
+                              </s:element>
+                            </s:sequence>
+                          </s:complexType>
+                        </s:element>
+                        <s:element maxOccurs="unbounded" name="Line">
+                          <s:complexType>
+                            <s:sequence>
+                              <s:element minOccurs="0" name="LineStatus" type="s:string" />
+                              <s:element minOccurs="0" name="YourOrderLine" type="s:string" />
+                              <s:element name="ItemId" type="s:string" />
+                              <s:element name="Qty" type="s:string">
+                                <s:annotation>
+                                  <s:appinfo>
+                                    <b:fieldInfo notes="Always 1 if machine delivery" xmlns:b="http://schemas.microsoft.com/BizTalk/2003">
+                                    </b:fieldInfo>
+                                  </s:appinfo>
+                                </s:annotation>
+                              </s:element>
+                              <s:element minOccurs="0" name="Price" type="s:string" />
+                              <s:element minOccurs="0" name="Total" type="s:string" />
+                              <s:element minOccurs="0" name="Currency" type="s:string" />
+                              <s:element minOccurs="0" name="RequestedDelDate" type="s:string" />
+                              <s:element minOccurs="0" name="EstimatedDelDate" type="s:string" />
+                              <s:element minOccurs="0" name="Description" type="s:string" />
+                              <s:element minOccurs="0" name="Specification" type="s:string" />
+                              <s:element minOccurs="0" name="Description2" type="s:string">
+                                <s:annotation>
+                                  <s:appinfo>
+                                    <b:fieldInfo notes="Required if machine" xmlns:b="http://schemas.microsoft.com/BizTalk/2003">
+                                    </b:fieldInfo>
+                                  </s:appinfo>
+                                </s:annotation>
+                              </s:element>
+                              <s:element minOccurs="0" name="Specification2" type="s:string" />
+                              <s:element minOccurs="0" name="ActualDelDate" type="s:string" />
+                              <s:element minOccurs="0" name="OrderLineComment" type="s:string" />
+                              <s:element minOccurs="0" maxOccurs="unbounded" name="Info">
+                                <s:annotation>
+                                  <s:appinfo>
+                                    <b:recordInfo notes="Required if mashine order confirmation" xmlns:b="http://schemas.microsoft.com/BizTalk/2003">
+                                    </b:recordInfo>
+                                  </s:appinfo>
+                                </s:annotation>
+                                <s:complexType>
+                                  <s:sequence>
+                                    <s:element name="SerialNo" type="s:string" />
+                                    <s:element name="InvNo" type="s:string" />
+                                  </s:sequence>
+                                </s:complexType>
+                              </s:element>
+                            </s:sequence>
+                            <s:attribute name="LineId" type="s:string" use="required" />
+                          </s:complexType>
+                        </s:element>
+                      </s:sequence>
+                      <s:attribute name="TransactionId" type="s:string" />
+                      <s:attribute name="PartnerId" type="s:string" />
+                    </s:complexType>
+                  </s:element>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema targetNamespace="http://staden.esb.Common.header/1.0" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="http://staden.esb.Common.header/1.0" xmlns:s0="http://Staden.esb.GBCA003A_ext_LeveransAvisering" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/">
+      <s:element name="Header">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Typ" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="PartnerIn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="PartnerUt" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Kod" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Text" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="TestFlagga" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GBCA003A_LeveransAviseringSoapIn">
+    <wsdl:part name="GBCA003A_ext_LeveransAviseringRequestPart0" element="q1:GBCA003A_ext_LeveransAvisering" xmlns:q1="http://Staden.esb.GBCA003A_ext_LeveransAvisering" />
+  </wsdl:message>
+  <wsdl:message name="GBCA003A_LeveransAviseringSoapOut">
+    <wsdl:part name="HeaderRequestPart0" element="q2:Header" xmlns:q2="http://staden.esb.Common.header/1.0" />
+  </wsdl:message>
+  <wsdl:portType name="GBCA003A_LeveransAvisering">
+    <wsdl:operation name="GBCA003A_LeveransAvisering">
+      <wsdl:input message="tns:GBCA003A_LeveransAviseringSoapIn" />
+      <wsdl:output message="tns:GBCA003A_LeveransAviseringSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_GBCA003A_LeveransAvisering" type="tns:GBCA003A_LeveransAvisering">
+    <wsp:PolicyReference URI="#BasicHttpBinding_GBCA003A_LeveransAvisering_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GBCA003A_LeveransAvisering">
+      <soap:operation soapAction="GBCA003A_LeveransAvisering" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GBCA003A_LeveransAvisering">
+    <wsdl:port name="BasicHttpBinding_GBCA003A_LeveransAvisering" binding="tns:BasicHttpBinding_GBCA003A_LeveransAvisering">
+      <soap:address location="https://esbat.goteborg.se/GBCA003A_LeveransAvisering" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
