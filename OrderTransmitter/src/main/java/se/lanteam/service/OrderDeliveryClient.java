@@ -3,14 +3,9 @@ package se.lanteam.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
-import org.springframework.ws.soap.client.core.SoapActionCallback;
 
-import se.intraservice.orderdelivery.GBCA003AExtLeveransAvisering;
-import se.intraservice.orderdelivery.Header;
-import se.intraservice.orderdelivery.ObjectFactory;
-import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
-import se.lanteam.domain.OrderLine;
+import se.lanteam.wsclient.service.SampleService;
 
 
 public class OrderDeliveryClient extends WebServiceGatewaySupport {
@@ -18,6 +13,8 @@ public class OrderDeliveryClient extends WebServiceGatewaySupport {
 	private static final Logger log = LoggerFactory.getLogger(OrderDeliveryClient.class);
 	
 	public void sendOrderDelivery(OrderHeader orderHeader) {
+		SampleService service;
+		/*
 		ObjectFactory factory = new ObjectFactory();
 		Header header = factory.createHeader();
 		GBCA003AExtLeveransAvisering delivery = factory.createGBCA003AExtLeveransAvisering();
@@ -57,6 +54,7 @@ public class OrderDeliveryClient extends WebServiceGatewaySupport {
 				"http://esbat.goteborg.se/Wsdl/GBCA003A_LeveransAvisering_https_",
 				delivery,
 				new SoapActionCallback("http://esbat.goteborg.se/Wsdl/GBCA003A_LeveransAvisering_https_"));
+		*/
 		// body
 		//body.s
 		
