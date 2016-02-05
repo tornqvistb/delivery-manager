@@ -42,8 +42,9 @@ public class MailSenderService {
     private String mailUsername;
     @Value("${mail.password}")
     private String mailPassword;
-    @Value("${file.save.directory}")
-    private String saveDirectory;
+    @Value("${mail.smtps.host}")
+    private String smtpHost;
+    
     
     private ErrorRepository errorRepo;
     private EmailRepository emailRepo;
@@ -55,7 +56,7 @@ public class MailSenderService {
 			try {
 				LOG.info("New mail to send");
 				Properties props = System.getProperties();
-				props.put("mail.smtps.host","smtp.gmail.com");
+				props.put("mail.smtps.host",smtpHost);
 				props.put("mail.smtps.auth","true");
 				Session session = Session.getInstance(props, null);
 				Message msg = new MimeMessage(session);
@@ -68,7 +69,7 @@ public class MailSenderService {
 				msg.setSentDate(new Date());
 				SMTPTransport t =
 				    (SMTPTransport)session.getTransport("smtps");
-				t.connect("smtp.gmail.com", "lim.lanteam@gmail.com", "limlanteam");
+				t.connect("smtp.gmail.com", mailUsername, mailPassword);
 				t.sendMessage(msg, msg.getAllRecipients());
 				System.out.println("Response: " + t.getLastServerResponse());
 				t.close();
