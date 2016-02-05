@@ -8,7 +8,7 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 /**
  * Adds autowiring support to quartz jobs.
- * Created by david on 2015-01-20.
+ * Created by Björn Törnqvist, ArctiSys AB, 2016-02
  * @see https://gist.github.com/jelies/5085593
  */
 public final class AutowiringSpringBeanJobFactory extends SpringBeanJobFactory implements

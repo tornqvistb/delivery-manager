@@ -26,7 +26,7 @@ import se.lanteam.job.OrderImportJob;
 import se.lanteam.spring.AutowiringSpringBeanJobFactory;
 
 /**
- * Created by david on 2015-01-20.
+ * Created by Björn Törnqvist, ArctiSys AB, 2016-02
  */
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")

@@ -30,7 +30,7 @@ import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 
 /**
- * Created by david on 2015-01-20.
+ * Created by Björn Törnqvist, ArctiSys AB, 2016-02
  */
 @Service
 public class MailReceiverService {

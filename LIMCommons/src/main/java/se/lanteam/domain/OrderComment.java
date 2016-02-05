@@ -65,5 +65,13 @@ public class OrderComment {
 		String result = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(creationDate);
 		return result;		
 	}
+	@Transient
+	public boolean relatesToOrderLine() {
+		boolean result = true;
+		if ("0".equals(orderLine)) {
+			result = false;
+		}
+		return result;		
+	}
 	
 }

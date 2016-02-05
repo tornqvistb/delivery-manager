@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import se.lanteam.service.OrderImportService;
 
 /**
- * Created by david on 2015-01-20.
+ * Created by Björn Törnqvist, ArctiSys AB, 2016-02
  */
 public class OrderImportJob implements Job {
     @Autowired
