@@ -5,10 +5,11 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+
+import se.lanteam.constants.StatusConstants;
 
 @Entity
 public class OrderComment {
@@ -18,7 +19,15 @@ public class OrderComment {
 	private String message;
 	private Date creationDate;
 	private OrderHeader orderHeader;
+	private String status;
+
 	
+	
+	public OrderComment() {
+		super();
+		this.status = StatusConstants.ORDER_STATUS_NEW;
+		this.creationDate = new Date();
+	}
 	@Id
 	@GeneratedValue
 	public Long getId() {
@@ -51,6 +60,12 @@ public class OrderComment {
 	}
 	public void setOrderLine(String orderLine) {
 		this.orderLine = orderLine;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	@Transient
 	public String getOrderLineDisplay() {

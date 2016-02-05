@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="utf-8"/>
+<head th:include="head" th:remove="tag" />
+
+<body class="layout-2">
+	<div id="body">
+		<!-- <div class="include" data-include="header"></div> -->
+		<div th:include="header" th:remove="tag"></div>
+		<div id="main" class="cf">
+			<div id="content">
+				<div th:include="sub-header-errors" th:remove="tag"></div>
+				<!-- <div class="include" data-include="sub-header"></div> -->
+				<div id="service-portal" class="sp-layout-4">
+					<div class="content-1">
+						<div class="m m-1 m-page cf">
+							<div class="m-h main-header cf">
+								<div class="page-heading">
+									<h2>Hantera felmeddelanden</h2>
+								</div>
+							</div>
+							<!-- Här kan man lägga på en vänster meny -->
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div class="form-step">
+									
+										<form class="form-general" th:action= "@{/error-list/search}" th:object="${reqAttr}" method="get">
+											<div class="form-section">
+												<h3 class="expandtrigger">Filtrera och visa</h3>
+												<div class="row cf">
+													<!-- ########## LOGGNIVÅ ######### -->
+													<fieldset>
+														<legend>Status</legend>
+														<div class="radio alt">
+															<input th:field="${reqAttr.errorStatus}" type="radio" id="InputShowLogLevel1" name="InputShowLogLevel" value="new"/>
+															<label for="InputShowLogLevel1">Nya</label>
+														</div>
+														<div class="radio alt">
+															<input th:field="${reqAttr.errorStatus}" type="radio" id="InputShowLogLevel2" name="InputShowLogLevel" value="archived"/>
+															<label for="InputShowLogLevel2">Arkiverade</label>
+														</div>
+													</fieldset>
+																			
+												</div>
+												<div class="row cf">
+													<input type="submit" class="backend-operation" name="ActionShowLoggRecords" id="ActionShowLoggRecords" value="Visa"/>	
+												</div>
+											</div>
+										</form>
+									
+										<form>
+											<div class="form-section" id="search-results">
+												<h3>Sökresultat</h3>
+												<table>
+													<colgroup>
+														<col style="width:75%"/>
+														<col style="width:15%"/>
+														<col style="width:10%"/>
+													</colgroup>
+													<thead>
+														<tr>
+															<th scope="col">Beskrivning</th>
+															<th scope="col">Tidpunkt</th>
+															<th th:if="${reqAttr.showNewErrors}" scope="col">Arkivera</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="error : ${errors}">
+															<td th:text="${error.message}">Något gick fel</td>
+															<td th:text="${error.creationDateDisplay}">2016-01-01 15:26</td>
+															<td th:if="${reqAttr.showNewErrors}"><a th:href="@{/error-list/archive/} + ${error.id}">Arkivera</a></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:include="footer" th:remove="tag"></div>
+	</div>
+</body>
+</html>

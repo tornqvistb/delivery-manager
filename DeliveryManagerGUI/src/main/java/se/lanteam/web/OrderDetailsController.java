@@ -1,7 +1,5 @@
 package se.lanteam.web;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -30,7 +28,6 @@ public class OrderDetailsController {
 		if (StringUtils.hasText(reqAttr.getComment())) {
 			OrderComment comment = new OrderComment();
 			comment.setOrderHeader(order);
-			comment.setCreationDate(new Date());
 			comment.setOrderLine(String.valueOf(reqAttr.getOrderLineId()));
 			comment.setMessage(reqAttr.getComment());
 			order.getOrderComments().add(comment);

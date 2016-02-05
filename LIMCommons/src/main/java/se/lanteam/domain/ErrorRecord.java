@@ -1,11 +1,12 @@
 package se.lanteam.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class ErrorRecord {
@@ -14,6 +15,9 @@ public class ErrorRecord {
 	private String message;
 	private Boolean archived = false;
 	
+	public ErrorRecord() {
+		super();
+	}
 	public ErrorRecord(String message) {
 		super();
 		this.creationDate = new Date();
@@ -44,6 +48,19 @@ public class ErrorRecord {
 	}
 	public void setArchived(Boolean archived) {
 		this.archived = archived;
+	}
+	@Transient
+	public String getCreationDateDisplay() {		
+		String result = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(creationDate);
+		return result;		
+	}
+	@Transient
+	public String getArchivedDisplay() {
+		String result = "Ny";
+		if (archived) {
+			result = "Arkiverad";
+		}
+		return result;		
 	}
 	
 }

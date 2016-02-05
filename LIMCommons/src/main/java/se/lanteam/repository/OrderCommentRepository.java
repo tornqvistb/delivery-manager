@@ -7,13 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import se.lanteam.domain.ErrorRecord;
+import se.lanteam.domain.OrderComment;
 
 @Repository
-public interface ErrorRepository extends JpaRepository<ErrorRecord, Long> {
+public interface OrderCommentRepository extends JpaRepository<OrderComment, Long> {
 
-	@Query("SELECT e FROM ErrorRecord e WHERE e.archived = :archived")
-    public List<ErrorRecord> findErrorsByArchived(@Param("archived") boolean archived);
+	@Query("SELECT o FROM OrderComment o WHERE o.status = :status")
+    public List<OrderComment> findOrderCommentsByStatus(@Param("status") String status);
 
-	
 }

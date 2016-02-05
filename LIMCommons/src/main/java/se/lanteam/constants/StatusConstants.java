@@ -30,5 +30,8 @@ public class StatusConstants {
 	
 	public static final String[] ACTIVE_STATI = {ORDER_STATUS_NEW, ORDER_STATUS_STARTED, ORDER_STATUS_REGISTRATION_DONE, ORDER_STATUS_NOT_ACCEPTED};
 	public static final String[] INACTIVE_STATI = {ORDER_STATUS_SENT, ORDER_STATUS_TRANSFERED};	
+
+	public static final String ERROR_STATUS_NEW = "new";
+	public static final String ERROR_STATUS_ARCHIVED = "archived";
 	
 }

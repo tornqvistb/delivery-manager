@@ -1,5 +1,7 @@
 package se.lanteam.web;
 
+import se.lanteam.constants.StatusConstants;
+
 public class RequestAttributes {
 
 	private Long orderLineId;
@@ -13,7 +15,7 @@ public class RequestAttributes {
 	private String statusAttachmentFailed;
 	private String regEquipmentResult;
 	private String orderStatus;
-
+	private String errorStatus;
 	
 	public String getOrderStatus() {
 		return orderStatus;
@@ -105,6 +107,21 @@ public class RequestAttributes {
 
 	public void setRegEquipmentResult(String regEquipmentResult) {
 		this.regEquipmentResult = regEquipmentResult;
+	}
+
+	public String getErrorStatus() {
+		return errorStatus;
+	}
+
+	public void setErrorStatus(String errorStatus) {
+		this.errorStatus = errorStatus;
+	}
+	public boolean getShowNewErrors() {
+		boolean result = true;
+		if (StatusConstants.ERROR_STATUS_ARCHIVED.equals(this.errorStatus)) {
+			result = false;
+		}
+		return result;
 	}
 	
 	

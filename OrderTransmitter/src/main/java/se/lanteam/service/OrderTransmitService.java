@@ -17,9 +17,11 @@ import header.common.esb.staden._1.Header;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.ErrorRecord;
+import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.repository.ErrorRepository;
+import se.lanteam.repository.OrderCommentRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.visma.Order;
 import se.lanteam.visma.Orderrad;
@@ -40,8 +42,10 @@ public class OrderTransmitService {
 
 	@Value("${file-transmit-folder}")
     private String fileTransmitFolder;
-	@Value("${ws-endpoint-gbca003}")
-	private String wsEndpoint;
+	@Value("${ws-endpoint-order-delivery}")
+	private String wsEndpointOrderDelivery;
+	@Value("${ws-endpoint-order-comment}")
+	private String wsEndpointOrderComment;
 	@Value("${ws-username-gbca}")
 	private String wsUserName;
 	@Value("${ws-password-gbca}")
@@ -49,11 +53,12 @@ public class OrderTransmitService {
     
     private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
+    private OrderCommentRepository orderCommentRepo;
     
 	public void transmitOrders() {
         LOG.info("Looking for orders to transmit!");
         List<OrderHeader> orders = orderRepo.findOrdersByStatus(StatusConstants.ORDER_STATUS_SENT);
-		WSConfig config = new WSConfig(wsEndpoint, wsUserName, wsPassword);
+		WSConfig config = new WSConfig(wsEndpointOrderDelivery, wsUserName, wsPassword);
 		WSClient wsClient = new WSClient();
         if (orders != null && orders.size() > 0) {
         	for (OrderHeader order : orders) {
@@ -102,7 +107,31 @@ public class OrderTransmitService {
 			saveError(FILE_EXPORT_ERROR + order.getOrderNumber());
 		}		
 	}
-	
+		
+	public void transmitOrderComments() {
+        LOG.info("Looking for orders to transmit!");
+        List<OrderComment> orderComments = orderCommentRepo.findOrderCommentsByStatus(StatusConstants.ORDER_STATUS_NEW);
+		WSConfig config = new WSConfig(wsEndpointOrderComment, wsUserName, wsPassword);
+		WSClient wsClient = new WSClient();
+        if (orderComments != null && orderComments.size() > 0) {
+        	for (OrderComment comment : orderComments) {
+        		// Create soap message and send to Intraservice
+        		try {
+					Header header = wsClient.sendDeliveryStatus(comment, config);
+					if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
+						throw new Exception(header.getKod() + " - " + header.getText());
+					}
+					// Update order comment status
+					comment.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
+					orderCommentRepo.save(comment);
+				} catch (Exception e) {
+					saveError(WS_ERROR + e.getMessage());
+					e.printStackTrace();
+				}
+        	}        
+        }
+	}
+
 	
 	private void saveError(String errorText) {
 		errorRepo.save(new ErrorRecord(errorText));
@@ -115,6 +144,10 @@ public class OrderTransmitService {
 	@Autowired
 	public void setErrorRepo(ErrorRepository errorRepo) {
 		this.errorRepo = errorRepo;
+	}
+	@Autowired
+	public void setOrderCommentRepo(OrderCommentRepository orderCommentRepo) {
+		this.orderCommentRepo = orderCommentRepo;
 	}
 
 	

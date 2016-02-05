@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Properties;
 
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -36,7 +37,7 @@ import se.lanteam.repository.OrderRepository;
 public class MailReceiverService {
 
 	private static final String GENERAL_FILE_ERROR = "Fel vid läsning av mail. ";
-	private static final String ERROR_INVALID_SUBJECT = GENERAL_FILE_ERROR + "Ämnet i mailet matchar inte någon befintlig order. Filnamn: ";
+	private static final String ERROR_INVALID_SUBJECT = GENERAL_FILE_ERROR + "Ämnet i mailet matchar inte någon befintlig order. Ämne: ";
 	private static final String ERROR_INVALID_ORDER_STATUS = GENERAL_FILE_ERROR + "Filen kunde inte sparas på ordern, då den inte är redigerbar. Order, Filnamn: ";
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MailReceiverService.class);
@@ -54,7 +55,7 @@ public class MailReceiverService {
         
 	public void checkMails() {
 		try {
-	        LOG.info("Going to check mails!");
+	        LOG.info("Going to check mails");
 			// create properties field
 			Properties properties = new Properties();
 
@@ -74,15 +75,16 @@ public class MailReceiverService {
 
 			// create the folder object and open it
 			Folder emailFolder = store.getFolder("INBOX");
-			emailFolder.open(Folder.READ_ONLY);
+			emailFolder.open(Folder.READ_WRITE);
 
 			// retrieve the messages from the folder in an array and print it
 			Message[] messages = emailFolder.getMessages();
-
+			LOG.info("Got " + messages.length + " mails!");
 			for (int i = 0, n = messages.length; i < n; i++) {
 				Message message = messages[i];
 				String contentType = message.getContentType();
 				if (contentType.contains("multipart")) {
+					LOG.info("Got mail: " + message.getSubject());
                     // content may contain attachments
                     Multipart multiPart = (Multipart) message.getContent();
                     int numberOfParts = multiPart.getCount();
@@ -96,11 +98,12 @@ public class MailReceiverService {
                             storeAttachmentOnOrder(array, message.getSubject(), fileName);
                         }
                     }
+                } else {
+                	LOG.info("No attachment in mail: " + message.getSubject());
                 }
- 
 			}
 			// close the store and folder objects
-			emailFolder.close(false);
+			emailFolder.close(true);
 			store.close();
 
 		} catch (NoSuchProviderException e) {
@@ -129,7 +132,7 @@ public class MailReceiverService {
 				saveError(ERROR_INVALID_ORDER_STATUS + order.getOrderNumber() + ", " + fileName);
 			}
 		} else {
-			saveError(ERROR_INVALID_SUBJECT + fileName);
+			saveError(ERROR_INVALID_SUBJECT + orderNumber);
 		}
 	}
 	

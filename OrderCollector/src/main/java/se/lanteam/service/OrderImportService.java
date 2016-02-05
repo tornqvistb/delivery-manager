@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.ErrorRecord;
+import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.repository.ErrorRepository;
@@ -70,6 +71,11 @@ public class OrderImportService {
 					}
 					OrderHeader orderHeader = getOrderHeaderFromJson(sb.toString());
 					if (validate(orderHeader, fileEntry.getName())) {
+						OrderComment comment = new OrderComment();
+						comment.setMessage("Tack för din beställning!");
+						comment.setCreationDate(new Date());
+						comment.setOrderLine("0");
+						orderHeader.getOrderComments().add(comment);
 						orderRepo.save(orderHeader);
 						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
 					} else {
