@@ -80,7 +80,9 @@ public class MailSenderService {
 				saveError(GENERAL_EMAIL_ERROR + "SendFailedException");
 			} catch (MessagingException e) {
 				saveError(GENERAL_EMAIL_ERROR + "MessagingException");
-			}			
+			}
+			email.setStatus(StatusConstants.EMAIL_STATUS_SENT);
+			emailRepo.save(email);
 		}
 	}    
 	
@@ -92,5 +94,9 @@ public class MailSenderService {
 	@Autowired
 	public void setErrorRepo(ErrorRepository errorRepo) {
 		this.errorRepo = errorRepo;
+	}
+	@Autowired
+	public void setEmailRepo(EmailRepository emailRepo) {
+		this.emailRepo = emailRepo;
 	}
 }
