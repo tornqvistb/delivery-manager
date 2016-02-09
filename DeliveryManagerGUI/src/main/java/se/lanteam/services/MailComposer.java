@@ -18,15 +18,17 @@ public class MailComposer {
 			Email email = new Email();
 			StringBuffer sb = new StringBuffer();
 			sb.append("Hej!\n\n");
-			sb.append("Följande beställning har korrigerats hos leverantör:\n");
+			sb.append("Följande beställning har korrigerats hos leverantör LanTeam:\n");
 			sb.append("Order: " + mailInfo.getOrderHeader().getCustomerSalesOrder() + "\n\n");
-			sb.append("Justerad utrustning:\n\n");
+			sb.append("Lista på justerad utrustning:\n\n");
 			for (Equipment equip : mailInfo.getModifiedEquipment()) {
-				sb.append("- Före detta serienummer/söld-id: " + equip.getPreviousSerialNo() + " / " + equip.getPreviousStealingTag());
-				sb.append("- Nytt serienummer/söld-id: " + equip.getSerialNo() + " / " + equip.getStealingTag() + "\n");
+				sb.append("Utrustning:\n");
+				sb.append("Före detta serienummer/stöld-id: " + equip.getPreviousSerialNo() + " / " + equip.getPreviousStealingTag() + "\n");
+				sb.append("Nytt serienummer/stöld-id: " + equip.getSerialNo() + " / " + equip.getStealingTag() + "\n\n");
 			}
-			sb.append("\n" + "Med vänlig hälsning LanTeam");
+			sb.append("Med vänlig hälsning \nLanTeam");
 			email.setContent(sb.toString());
+			email.setSubject("Korrigerad beställning");
 			email.setSender("lim.lanteam@gmail.com");
 			email.setReceiver("tornqvistb@gmail.com");
 			emailRepo.save(email);

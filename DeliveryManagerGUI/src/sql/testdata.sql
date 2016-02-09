@@ -1,4 +1,5 @@
 ALTER TABLE attachment CHANGE file_content file_content LONGBLOB default NULL;
+ALTER TABLE email CHANGE content content VARCHAR(10000) default NULL;
 delete from equipment where id > 0;
 delete from order_line where id > 0;
 delete from order_comment where id > 0;
@@ -36,5 +37,23 @@ values (3, '2016-01-01', 'Lundby', '11113', 'REQ11113', 'registration_done', '')
 insert into order_header(id, order_date, customer_name, order_number, customer_order_number, status, transmit_error_message)
 values (4, '2016-01-01', 'Lundby', '11114', 'REQ11114', 'not_accepted', '');
 
+update order_header set customer_sales_order = customer_order_number where id > 0;
+
+insert into system_property (id, string_value, number_value) values ('mailjob-frequency', '', 10000);
+insert into system_property (id, string_value, number_value) values ('order-transmitjob-frequency', '', 10000);
+insert into system_property (id, string_value, number_value) values ('orderjob-frequency', '', 10000);
+insert into system_property (id, string_value, number_value) values ('mail-host', 'pop.gmail.com', 0);
+insert into system_property (id, string_value, number_value) values ('mail-username', 'lim.lanteam@gmail.com', 0);
+insert into system_property (id, string_value, number_value) values ('mail-password', 'limlanteam', 0);
+insert into system_property (id, string_value, number_value) values ('mail-smtps-host', 'smtp.gmail.com', 0);
+insert into system_property (id, string_value, number_value) values ('file-image-folder', 'C:/Projekt/lanteam/filedirs/images', 0);
+insert into system_property (id, string_value, number_value) values ('file-source-folder', 'C:/Projekt/lanteam/filedirs/input', 0);
+insert into system_property (id, string_value, number_value) values ('file-destination-folder', 'C:/Projekt/lanteam/filedirs/output', 0);
+insert into system_property (id, string_value, number_value) values ('file-error-folder', 'C:/Projekt/lanteam/filedirs/error', 0);
+insert into system_property (id, string_value, number_value) values ('file-transmit-folder', 'C:/Projekt/lanteam/filedirs/transmit', 0);
+insert into system_property (id, string_value, number_value) values ('ws-endpoint-order-delivery', 'http://esbat.goteborg.se/Wsdl/GBCA003A_LeveransAvisering_https_.wsdl', 0);
+insert into system_property (id, string_value, number_value) values ('ws-endpoint-order-comment', 'http://esbat.goteborg.se/Wsdl/GBCA002A_LeveransStatus_https_.wsdl', 0);
+insert into system_property (id, string_value, number_value) values ('ws-username-gbca', 'user', 0);
+insert into system_property (id, string_value, number_value) values ('ws-password-gbca', 'password', 0);
 
 commit;
