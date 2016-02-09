@@ -1,14 +1,19 @@
 package se.lanteam.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 
 public class CorrectionMailInfo {
-
+	
+	public CorrectionMailInfo(OrderHeader orderHeader) {
+		super();
+		this.orderHeader = orderHeader;
+	}
 	private OrderHeader orderHeader;
-	private List<Equipment> modifiedEquipment;
+	private List<Equipment> modifiedEquipment = new ArrayList<Equipment>();
 	public OrderHeader getOrderHeader() {
 		return orderHeader;
 	}

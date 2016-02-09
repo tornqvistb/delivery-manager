@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
+import se.lanteam.model.CorrectionMailInfo;
 import se.lanteam.model.ReqOrderLine;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.EquipmentRepository;
 import se.lanteam.repository.OrderLineRepository;
 import se.lanteam.repository.OrderRepository;
-import se.lanteam.validation.EquipmentValidator;
+import se.lanteam.services.EquipmentValidator;
+import se.lanteam.services.MailComposer;
 
 @Controller
 public class EquipmentController {
@@ -34,6 +36,7 @@ public class EquipmentController {
 	private OrderLineRepository orderLineRepo;
 	private EquipmentRepository equipmentRepo;
 	private EquipmentValidator equipmentValidator;
+	private MailComposer mailComposer;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(EquipmentController.class);
 	
@@ -108,6 +111,7 @@ public class EquipmentController {
 		String result = "";
 		String message = "";
 		String returnPage = "order-details";
+		CorrectionMailInfo mailInfo = new CorrectionMailInfo(order);
 		for (ReqOrderLine line : reqAttr.getReqOrderLines()) {			
 			for (Equipment equipReq : line.getEquipments()) {
 				LOG.info("equipment: " + equipReq.toString());
@@ -132,10 +136,12 @@ public class EquipmentController {
 						equipDb.setStealingTag(equipReq.getStealingTag());
 						equipDb.setToCorrect(false);
 						equipmentRepo.save(equipDb);
+						mailInfo.getModifiedEquipment().add(equipDb);
 					}
 				}
 			}
 			message = RESULT_CORRECTION_COMPLETED;
+			mailComposer.createMail(mailInfo);
 		} else {
 			returnPage = "correct-order";
 		}		
@@ -172,5 +178,9 @@ public class EquipmentController {
 	@Autowired
 	public void setEquipmentValidator(EquipmentValidator equipmentValidator) {
 		this.equipmentValidator = equipmentValidator;
+	}
+	@Autowired
+	public void setMailComposer(MailComposer mailComposer) {
+		this.mailComposer = mailComposer;
 	}
 }

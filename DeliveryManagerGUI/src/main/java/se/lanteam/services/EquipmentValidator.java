@@ -1,4 +1,4 @@
-package se.lanteam.validation;
+package se.lanteam.services;
 
 import java.util.List;
 
