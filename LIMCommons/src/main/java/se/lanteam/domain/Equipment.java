@@ -16,7 +16,10 @@ public class Equipment {
 	private OrderLine orderLine;
 	private String serialNo;
 	private String stealingTag;
-	private Date creationDate;
+	private boolean toCorrect = false;
+	private String previousSerialNo;
+	private String previousStealingTag;
+	private Date creationDate;	
 	@Transient
 	private Long orderLineId;
 	
@@ -53,6 +56,31 @@ public class Equipment {
 	}
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+	public boolean isToCorrect() {
+		return toCorrect;
+	}
+	public void setToCorrect(boolean toCorrect) {
+		this.toCorrect = toCorrect;
+	}
+	@Override
+	public String toString() {
+		return "Equipment [id=" + id + ", orderLine=" + orderLine + ", serialNo=" + serialNo + ", stealingTag="
+				+ stealingTag + ", toCorrect=" + toCorrect + ", previousSerialNo=" + previousSerialNo
+				+ ", previousStealingTag=" + previousStealingTag + ", creationDate=" + creationDate + ", orderLineId="
+				+ orderLineId + "]";
+	}
+	public String getPreviousSerialNo() {
+		return previousSerialNo;
+	}
+	public void setPreviousSerialNo(String previousSerialNo) {
+		this.previousSerialNo = previousSerialNo;
+	}
+	public String getPreviousStealingTag() {
+		return previousStealingTag;
+	}
+	public void setPreviousStealingTag(String previousStealingTag) {
+		this.previousStealingTag = previousStealingTag;
 	}
 	
 }

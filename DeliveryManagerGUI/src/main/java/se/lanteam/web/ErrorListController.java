@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.ErrorRecord;
+import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.ErrorRepository;
 
 @Controller

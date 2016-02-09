@@ -71,7 +71,7 @@ public class MailSenderService {
 				    (SMTPTransport)session.getTransport("smtps");
 				t.connect("smtp.gmail.com", mailUsername, mailPassword);
 				t.sendMessage(msg, msg.getAllRecipients());
-				System.out.println("Response: " + t.getLastServerResponse());
+				LOG.info("Response: " + t.getLastServerResponse());
 				t.close();
 			} catch (AddressException e) {
 				saveError(GENERAL_EMAIL_ERROR + "AddressException");

@@ -1,6 +1,12 @@
-package se.lanteam.web;
+package se.lanteam.model;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import se.lanteam.constants.StatusConstants;
+import se.lanteam.domain.Equipment;
+import se.lanteam.domain.OrderHeader;
+import se.lanteam.domain.OrderLine;
 
 public class RequestAttributes {
 
@@ -16,7 +22,30 @@ public class RequestAttributes {
 	private String regEquipmentResult;
 	private String orderStatus;
 	private String errorStatus;
+	private String thanksMessage;
+	private List<ReqOrderLine> reqOrderLines= new ArrayList<ReqOrderLine>();
 	
+	
+	
+	public RequestAttributes() {
+		super();
+	}
+
+	public RequestAttributes(OrderHeader orderHeader) {
+		super();
+		List<ReqOrderLine> orderLines = new ArrayList<ReqOrderLine>();
+		for (OrderLine line : orderHeader.getOrderLines()) {
+			ReqOrderLine reqLine = new ReqOrderLine();
+			for (Equipment equip : line.getEquipments()) {
+				equip.setPreviousSerialNo(equip.getSerialNo());
+				equip.setPreviousStealingTag(equip.getStealingTag());
+				reqLine.getEquipments().add(equip);
+			}
+			orderLines.add(reqLine);
+		}
+		this.reqOrderLines = orderLines;
+	}
+
 	public String getOrderStatus() {
 		return orderStatus;
 	}
@@ -122,6 +151,22 @@ public class RequestAttributes {
 			result = false;
 		}
 		return result;
+	}
+
+	public List<ReqOrderLine> getReqOrderLines() {
+		return reqOrderLines;
+	}
+
+	public void setReqOrderLines(List<ReqOrderLine> reqOrderLines) {
+		this.reqOrderLines = reqOrderLines;
+	}
+
+	public String getThanksMessage() {
+		return thanksMessage;
+	}
+
+	public void setThanksMessage(String thanksMessage) {
+		this.thanksMessage = thanksMessage;
 	}
 	
 	

@@ -59,7 +59,7 @@ public class OrderImportService {
 		File[] filesInFolder = inputFolder.listFiles();
 		if (filesInFolder != null) {
 			for (final File fileEntry : filesInFolder) {
-				System.out.println("FILE : " + fileEntry.getName());
+				LOG.info("FILE : " + fileEntry.getName());
 				Path source = Paths.get(fileSourceFolder + "/" + fileEntry.getName());
 				Path target = Paths.get(fileDestFolder + "/" + fileEntry.getName());
 				Path errorTarget = Paths.get(fileErrorFolder + "/" + fileEntry.getName());

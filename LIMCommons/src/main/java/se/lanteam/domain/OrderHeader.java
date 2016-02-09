@@ -199,9 +199,10 @@ public class OrderHeader {
 	}
 	public void setStatus(String status) {
 		this.status = status;
-	}
+	}	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
 	@OrderBy("rowNumber")
+	
 	public Set<OrderLine> getOrderLines() {
 		return orderLines;
 	}
@@ -289,5 +290,13 @@ public class OrderHeader {
 			result.append("Leveransrapportering klar och överförd till kund.");			
 		}
 		return result.toString();
+	}
+	@Transient
+	public Boolean getOrderCanBeCorrected() {
+		Boolean result = false;
+		if (this.status.equals(StatusConstants.ORDER_STATUS_TRANSFERED)) {
+			result = true;
+		}
+		return result;
 	}
 }

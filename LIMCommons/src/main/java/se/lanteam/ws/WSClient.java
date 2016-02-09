@@ -72,13 +72,13 @@ public class WSClient {
 			line.setPrice("");
 			line.setTotal("");
 			line.setCurrency("");
-			line.setRequestedDelDate(""); // Värde här? finns från Atea
-			line.setEstimatedDelDate(""); // Värde här? finns från Atea
+			line.setRequestedDelDate(""); // Värde här? finns från Atea - skicka tomt
+			line.setEstimatedDelDate(""); // Värde här? finns från Atea - skicka tomt
 			line.setDescription("");
 			line.setSpecification("");
 			line.setDescription2("");
 			line.setSpecification2("");
-			line.setActualDelDate(""); // Värde här? finns från Atea
+			line.setActualDelDate(""); // Värde här? finns från Atea - Datumet när detta skickas
 			line.setOrderLineComment("");			
 			
 			for (Equipment equipment : orderLine.getEquipments()) {

@@ -29,9 +29,14 @@
 										<div th:if="${not #strings.isEmpty(order.transmitErrorMessage)}" class="information-text system-info error-message">
 											<p th:utext="${order.transmitErrorMessage}"></p>
 										</div>
+										<div th:if="${not #strings.isEmpty(reqAttr.thanksMessage)}"
+											class="system-info thanks-message">
+											<span th:text="${reqAttr.thanksMessage}">Tackmeddelande</span>
+										</div>
 										
 										<div th:if="${not #strings.isEmpty(order.orderSummary)}" class="information-text system-info help-message">
 											<p th:utext="${order.orderSummary}"></p>
+											<p th:if="${order.orderCanBeCorrected}">För att korrigera serienummer eller stöld-id på denna order, klicka <a th:href="@{/order-list/correct/} + ${order.id}"><strong>HÄR =></strong></a></p>
 										</div>
 										<div class="form-step current-step" id="registration-area">
 											<div class="form-step-header cf">

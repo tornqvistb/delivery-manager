@@ -22,10 +22,10 @@ insert into order_line(id, order_header_id, row_number, restriction_code, articl
 values (4, 2, 1, '1', 'HP001002', 'HP dator A1', 0, 5, 5);
 insert into order_line(id, order_header_id, row_number, restriction_code, article_number, article_description, registered, remaining, total)
 values (5, 2, 2, '1', 'HP001003', 'HP dator A2', 2, 2, 4);
-insert into equipment(order_line_id, serial_no, stealing_tag, creation_date)
-values(5, 'SZ1111122222', '111111', '2016-01-01');
-insert into equipment(order_line_id, serial_no, stealing_tag, creation_date)
-values(5, 'SZ1111133333', '111112', '2016-01-01');
+insert into equipment(order_line_id, serial_no, stealing_tag, creation_date, to_correct)
+values(5, 'SZ1111122222', '111111', '2016-01-01', 0);
+insert into equipment(order_line_id, serial_no, stealing_tag, creation_date, to_correct)
+values(5, 'SZ1111133333', '111112', '2016-01-01', 0);
 insert into order_comment(order_header_id, order_line, message, creation_date)
 values (2, 'Generellt', 'Tack för din beställning!', '2016-01-01');
 insert into order_comment(order_header_id, order_line, message, creation_date)

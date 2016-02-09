@@ -2,8 +2,9 @@ package se.lanteam.web;
 
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,26 +16,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
+import se.lanteam.model.ReqOrderLine;
+import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.EquipmentRepository;
 import se.lanteam.repository.OrderLineRepository;
 import se.lanteam.repository.OrderRepository;
+import se.lanteam.validation.EquipmentValidator;
 
 @Controller
 public class EquipmentController {
 
 	private static String RESULT_OK = "";
-	private static String SERIAL_NO_TOO_SHORT = "Serienummer måste vara minst 7 tecken långt";
-	private static String INVALID_STEALING_TAG = "Stöld-ID måste vara 6 tecken";
-	private static String SERIAL_NO_ON_CURRENT_ORDER = "Angivet serienummer finns redan registrerat på denna order";
-	private static String STEALING_TAG_ON_CURRENT_ORDER = "Angivet stöld-ID finns redan registrerat på denna order";
-	private static String SERIAL_NO_ON_OTHER_ORDER = "Angivet serienummer finns redan registrerat på order ";
-	private static String STEALING_TAG_ON_OTHER_ORDER = "Angivet stöld-ID finns redan registrerat på order ";
 	private static String TOO_MANY_REGISTERED = "Du har angett ett större antal än vad som är kvar att registrera";
-
+	private static String RESULT_CORRECTION_COMPLETED = "Korrigering av utrustning genomförd";
 
 	private OrderRepository orderRepo;
 	private OrderLineRepository orderLineRepo;
 	private EquipmentRepository equipmentRepo;
+	private EquipmentValidator equipmentValidator;
+	
+	private static final Logger LOG = LoggerFactory.getLogger(EquipmentController.class);
 	
 	@RequestMapping(value = "order-list/view/registerEquipment/{orderId}", method = RequestMethod.POST)
 	public String registerEquipment(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
@@ -47,7 +48,7 @@ public class EquipmentController {
 			equipment.setOrderLine(orderLine);
 			equipment.setSerialNo(reqAttr.getSerialNo());
 			equipment.setStealingTag(reqAttr.getStealingTag());
-			valResult = validateEquipment(equipment, orderRepo.findOne(orderId));
+			valResult = equipmentValidator.validateEquipment(equipment, orderRepo.findOne(orderId));
 			if (valResult.equals(RESULT_OK)) {
 				orderLine.getEquipments().add(equipment);
 				orderLine.setRegistered(orderLine.getRegistered() + 1);
@@ -78,7 +79,7 @@ public class EquipmentController {
 	@RequestMapping(value = "order-list/view/deleq/{orderId}/{orderLineId}/{equipmentId}", method = RequestMethod.GET)
 	public String deleteEquipment(@PathVariable Long orderId, @PathVariable Long orderLineId,
 			@PathVariable Long equipmentId, ModelMap model) {
-		System.out.println("equipmentId: " + equipmentId + " ,orderId: " + orderId);
+		LOG.info("equipmentId: " + equipmentId + " ,orderId: " + orderId);
 		OrderLine orderLine = orderLineRepo.findOne(orderLineId);
 		for (Iterator<Equipment> iterator = orderLine.getEquipments().iterator(); iterator.hasNext();) {
 			Equipment equipment = iterator.next();
@@ -98,6 +99,56 @@ public class EquipmentController {
 		return "order-details";
 	}
 
+	@RequestMapping(value="order-list/correct/confirm/{orderId}", method=RequestMethod.POST)
+	public String confirmCorrection(@PathVariable Long orderId, ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
+		LOG.info("In confirmCorrection");		
+		OrderHeader order = orderRepo.findOne(orderId);
+		// Check every modified equipment
+		Boolean validationOk = true;
+		String result = "";
+		String message = "";
+		String returnPage = "order-details";
+		for (ReqOrderLine line : reqAttr.getReqOrderLines()) {			
+			for (Equipment equipReq : line.getEquipments()) {
+				LOG.info("equipment: " + equipReq.toString());
+				if (equipReq.getId() != null) {
+					String valResult = equipmentValidator.validateEquipmentOnCorrection(equipReq, order);
+					if (!valResult.equals(RESULT_OK)) {
+						validationOk = false;
+						result = equipReq.getSerialNo() + " / " + equipReq.getStealingTag() + " - " + valResult;
+						break;
+					}
+				}
+			}
+		}
+		if (validationOk) {
+			for (ReqOrderLine line : reqAttr.getReqOrderLines()) {
+				for (Equipment equipReq : line.getEquipments()) {
+					if (equipReq.getId() != null) {
+						Equipment equipDb = equipmentRepo.findOne(equipReq.getId());
+						equipDb.setPreviousSerialNo(equipDb.getSerialNo());
+						equipDb.setPreviousStealingTag(equipDb.getStealingTag());						
+						equipDb.setSerialNo(equipReq.getSerialNo());
+						equipDb.setStealingTag(equipReq.getStealingTag());
+						equipDb.setToCorrect(false);
+						equipmentRepo.save(equipDb);
+					}
+				}
+			}
+			message = RESULT_CORRECTION_COMPLETED;
+		} else {
+			returnPage = "correct-order";
+		}		
+		order = orderRepo.findOne(orderId);
+		model.put("order", order);
+		reqAttr = new RequestAttributes(order);
+		reqAttr.setRegEquipmentResult(result);
+		reqAttr.setThanksMessage(message);
+		model.put("reqAttr", reqAttr);
+		return returnPage;
+	}
+
+	
 	private String validateEquipmentNoSN(Integer count, OrderLine orderLine) {
 		String result = RESULT_OK;
 		if (count > orderLine.getRemaining()) {
@@ -106,60 +157,20 @@ public class EquipmentController {
 		return result;
 	}
 
-	
-	private String validateEquipment(Equipment equipment, OrderHeader order) {
-		// To check:
-		// - serial number minimum 7 letters
-		if (equipment.getSerialNo() == null || equipment.getSerialNo().length() < 7) {
-			return SERIAL_NO_TOO_SHORT;
-		}
-		// - stealing tag exact 6 letters
-		if (equipment.getStealingTag() == null || equipment.getStealingTag().length() != 6) {
-			return INVALID_STEALING_TAG;
-		}		
-		// - serial number or stealing tag not registered on current order
-		for (OrderLine line : order.getOrderLines()) {
-			for (Equipment equip : line.getEquipments()) {
-				if (equip.getSerialNo().equals(equipment.getSerialNo())) {
-					return SERIAL_NO_ON_CURRENT_ORDER + " (" + equipment.getSerialNo() + ")";
-				} else if (equip.getStealingTag().equals(equipment.getStealingTag())) {
-					return STEALING_TAG_ON_CURRENT_ORDER + " (" + equipment.getStealingTag() + ")";
-				}
-			}
-		}
-		// - serial number not registered on other order
-		List<Equipment> equipments = equipmentRepo.findBySerialNo(equipment.getSerialNo());
-		if (equipments != null && equipments.size() > 0) {
-			Equipment equip = equipments.get(0);
-			if (equip.getOrderLine() != null && equip.getOrderLine().getOrderHeader() != null) {
-				return SERIAL_NO_ON_OTHER_ORDER + equip.getOrderLine().getOrderHeader().getOrderNumber() + " (" + equipment.getSerialNo() + ")";
-			}
-		}
-		
-		// - stealing tag not registered on other order
-		equipments = equipmentRepo.findByStealingTag(equipment.getStealingTag());
-		if (equipments != null && equipments.size() > 0) {
-			Equipment equip = equipments.get(0);
-			if (equip.getOrderLine() != null && equip.getOrderLine().getOrderHeader() != null) {
-				return STEALING_TAG_ON_OTHER_ORDER + equip.getOrderLine().getOrderHeader().getOrderNumber() + " (" + equipment.getStealingTag() + ")";
-			}
-		}
-		
-		return RESULT_OK;
-	}
-
 	@Autowired
 	public void setEquipmentRepo(EquipmentRepository equipmentRepo) {
 		this.equipmentRepo = equipmentRepo;
 	}
-	
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
 	}
-
 	@Autowired
 	public void setOrderLineRepo(OrderLineRepository orderLineRepo) {
 		this.orderLineRepo = orderLineRepo;
+	}
+	@Autowired
+	public void setEquipmentValidator(EquipmentValidator equipmentValidator) {
+		this.equipmentValidator = equipmentValidator;
 	}
 }

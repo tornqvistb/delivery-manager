@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="utf-8" />
+<head th:include="head" th:remove="tag" />
+
+<body class="layout-2">
+	<div id="body">
+		<div th:include="header" th:remove="tag"></div>
+		<div id="main" class="cf">
+			<div id="content">
+				<div th:include="sub-header" th:remove="tag"></div>
+				<div id="service-portal" class="sp-layout-4">
+					<div class="content-1">
+						<div class="m m-1 m-page cf">
+							<div class="m-h main-header cf">
+								<div class="page-heading">
+									<h2>Hantera leverans</h2>
+								</div>
+							</div>
+							<!-- Här kan man lägga på en vänster meny -->
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div class="order-details">
+										<div class="back-link">
+											<a th:href="@{/order-list/view/} + ${order.id}"
+												rel="nofollow">Tillbaka</a>
+										</div>
+										<div
+											th:if="${not #strings.isEmpty(order.transmitErrorMessage)}"
+											class="information-text system-info error-message">
+											<p th:utext="${order.transmitErrorMessage}"></p>
+										</div>
+
+										<div class="form-step current-step" id="registration-area">
+											<div class="form-step-header cf">
+												<h2
+													th:text="${'Korrigera serienummer/stöld-id order ' + {order.orderNumber}}"></h2>
+											</div>
+											<div class="form-section">
+												<!-- Show registration section only if there are things left to register -->
+												<form
+													th:action="@{/order-list/correct/confirm/} + ${order.id}"
+													th:object="${reqAttr}" method="post">													
+													<h3>Orderrader</h3>
+													<div th:if="${not #strings.isEmpty(reqAttr.regEquipmentResult)}"
+														class="system-info error-message">
+														<span th:text="${reqAttr.regEquipmentResult}">Felmeddelande vid korrigering</span>
+													</div>
+													<table class="small-table">
+														<thead>
+															<tr>
+																<th>Orderrad</th>
+																<th>Artikelnummer</th>
+																<th>Beskrivning</th>
+																<th>Serienummerbärande</th>
+																<th>Antal</th>
+																<th>Registrerade</th>
+																<th>Återstående</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr th:each="orderLine, olLoop : ${order.orderLines}"
+																th:remove="tag">
+																<tr th:class="${orderLine.rowClass}">
+																	<td th:text="${orderLine.rowNumber}">1</td>
+																	<td th:text="${orderLine.articleNumber}">31231312</td>
+																	<td th:text="${orderLine.articleDescription}">HP
+																		elitebook</td>
+																	<td th:text="${orderLine.hasSerialNoLabel}">Ja</td>
+																	<td th:text="${orderLine.total}">5</td>
+																	<td th:text="${orderLine.registered}">0</td>
+																	<td th:text="${orderLine.remaining}">5</td>
+																</tr>
+																<tr th:if="${not #lists.isEmpty(orderLine.equipments)}">
+																	<td></td>
+																	<td colspan="3">
+																		<table class="small-table inner-table">
+																			<thead>
+																				<tr>
+																					<th>Serienummer</th>
+																					<th>Stöld-ID</th>
+																					<th>Korrigera</th>
+																					<th th:if="${orderLine.anyEquipmentToCorrect}">Nytt
+																						serienummer</th>
+																					<th th:if="${orderLine.anyEquipmentToCorrect}">Nytt
+																						stöld-ID</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr
+																					th:each="equipment, eLoop : ${orderLine.equipments}">
+																					<td th:text="${equipment.serialNo}">5</td>
+																					<td th:text="${equipment.stealingTag}">5</td>
+																					<td th:if="${not equipment.toCorrect}"><a
+																						th:href="@{/order-list/correct/doCorrect/} + ${order.id} + '/' + ${equipment.id} + '#registration-area'">Korrigera</a></td>
+																					<td th:if="${equipment.toCorrect}"><a
+																						th:href="@{/order-list/correct/undoCorrect/} + ${order.id} + '/' + ${equipment.id} + '#registration-area'">Avbryt</a></td>
+																					<td th:if="${equipment.toCorrect}"><input
+																						type="text" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].serialNo}" name="serialNo"/></td>
+																					<td th:if="${equipment.toCorrect}"><input
+																						type="text" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].stealingTag}" name="stealingTag"/>
+																						<input type="hidden" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].id}" name="id"/>
+																						<input type="hidden" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].previousSerialNo}" name="previousSerialNo"/>
+																						<input type="hidden" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].previousStealingTag}" name="previousStealingTag"/>
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																	</td>
+																</tr>
+															</tr>
+														</tbody>
+													</table>
+													<div class="submit-area">
+														<input class="btn" type="submit" value="Skicka" />
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:include="footer" th:remove="tag"></div>
+	</div>
+</body>
+</html>

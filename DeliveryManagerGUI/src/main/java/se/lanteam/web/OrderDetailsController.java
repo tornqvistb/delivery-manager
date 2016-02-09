@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
@@ -46,6 +47,16 @@ public class OrderDetailsController {
 		return "order-details";
 	}
 
+	@RequestMapping(value="order-list/correct/{orderId}", method=RequestMethod.GET)
+	public String showOrderCorrectionView(@PathVariable Long orderId, ModelMap model) {
+		OrderHeader order = orderRepo.findOne(orderId);
+		model.put("order", order);
+		RequestAttributes reqAttr = new RequestAttributes(order);
+		model.put("reqAttr", reqAttr);
+		return "correct-order";
+	}
+	
+	
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;

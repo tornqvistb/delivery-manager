@@ -124,5 +124,16 @@ public class OrderLine {
 		}
 		return result;
 	}
+	@Transient
+	public Boolean getAnyEquipmentToCorrect() {
+		Boolean result = false;
+		for (Equipment equip : equipments) {
+			if (equip.isToCorrect()) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
 	
 }
