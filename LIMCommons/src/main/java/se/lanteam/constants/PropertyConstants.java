@@ -18,4 +18,7 @@ public class PropertyConstants {
 	public static final String WS_ENDPOINT_ORDER_COMMENT = "ws-endpoint-order-comment"; //=http://esbat.goteborg.se/Wsdl/GBCA002A_LeveransStatus_https_.wsdl
 	public static final String WS_USERNAME_GBCA = "ws-username-gbca";
 	public static final String WS_PASSWORD_GBCA = "ws-password-gbca";
+	public static final String ORDER_CORRECTION_MAIL_SENDER = "order-correction-mail-sender"; //=lim.lanteam@gmail.com
+	public static final String ORDER_CORRECTION_MAIL_RECEIVER = "order-correction-mail-receiver"; //=lim.lanteam@gmail.com
+
 }

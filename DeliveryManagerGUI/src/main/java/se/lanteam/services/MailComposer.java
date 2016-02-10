@@ -3,6 +3,7 @@ package se.lanteam.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import se.lanteam.constants.PropertyConstants;
 import se.lanteam.domain.Email;
 import se.lanteam.domain.Equipment;
 import se.lanteam.model.CorrectionMailInfo;
@@ -12,6 +13,7 @@ import se.lanteam.repository.EmailRepository;
 public class MailComposer {
 
 	private EmailRepository emailRepo;
+	private PropertyService propService;
 		
 	public void createMail(CorrectionMailInfo mailInfo) {
 		if (mailInfo.getModifiedEquipment().size() > 0) {
@@ -29,8 +31,8 @@ public class MailComposer {
 			sb.append("Med vänlig hälsning \nLanTeam");
 			email.setContent(sb.toString());
 			email.setSubject("Korrigerad beställning");
-			email.setSender("lim.lanteam@gmail.com");
-			email.setReceiver("tornqvistb@gmail.com");
+			email.setSender(propService.getString(PropertyConstants.ORDER_CORRECTION_MAIL_SENDER));
+			email.setReceiver(propService.getString(PropertyConstants.ORDER_CORRECTION_MAIL_RECEIVER));
 			emailRepo.save(email);
 		}
 	}
@@ -38,6 +40,10 @@ public class MailComposer {
 	@Autowired
 	public void setEmailRepo(EmailRepository emailRepo) {
 		this.emailRepo = emailRepo;
+	}
+	@Autowired
+	public void setPropService(PropertyService propService) {
+		this.propService = propService;
 	}
 	
 }

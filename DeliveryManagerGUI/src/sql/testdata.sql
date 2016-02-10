@@ -55,5 +55,8 @@ insert into system_property (id, string_value, number_value) values ('ws-endpoin
 insert into system_property (id, string_value, number_value) values ('ws-endpoint-order-comment', 'http://esbat.goteborg.se/Wsdl/GBCA002A_LeveransStatus_https_.wsdl', 0);
 insert into system_property (id, string_value, number_value) values ('ws-username-gbca', 'user', 0);
 insert into system_property (id, string_value, number_value) values ('ws-password-gbca', 'password', 0);
+insert into system_property (id, string_value, number_value) values ('order-correction-mail-sender','lim.lanteam@gmail.com',0);
+insert into system_property (id, string_value, number_value) values ('order-correction-mail-receiver','tornqvistb@gmail.com',0);
+commit;
 
 commit;
