@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Properties;
 
-import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -24,11 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import se.lanteam.constants.PropertyConstants;
 import se.lanteam.domain.Attachment;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
+import se.lanteam.services.PropertyService;
 
 /**
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
@@ -41,19 +42,15 @@ public class MailReceiverService {
 	private static final String ERROR_INVALID_ORDER_STATUS = GENERAL_FILE_ERROR + "Filen kunde inte sparas på ordern, då den inte är redigerbar. Order, Filnamn: ";
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MailReceiverService.class);
-    @Value("${mail.host}") 
-    private String mailHost;    
-    @Value("${mail.username}")
-    private String mailUsername;
-    @Value("${mail.password}")
-    private String mailPassword;
-    @Value("${file.save.directory}")
-    private String saveDirectory;
-    
     private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
+    private PropertyService propService;
         
-	public void checkMails() {
+	public void checkMails() {		
+		String mailHost = propService.getString(PropertyConstants.MAIL_HOST);    
+	    String mailUsername = propService.getString(PropertyConstants.MAIL_USERNAME);
+	    String mailPassword = propService.getString(PropertyConstants.MAIL_PASSWORD);
+	    String saveDirectory = propService.getString(PropertyConstants.FILE_IMAGE_FOLDER);
 		try {
 	        LOG.info("Going to check mails");
 			// create properties field
@@ -147,5 +144,9 @@ public class MailReceiverService {
 	@Autowired
 	public void setErrorRepo(ErrorRepository errorRepo) {
 		this.errorRepo = errorRepo;
+	}
+	@Autowired
+	public void setPropService(PropertyService propService) {
+		this.propService = propService;
 	}
 }

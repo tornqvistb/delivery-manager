@@ -16,16 +16,17 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPTransport;
 
+import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Email;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.repository.EmailRepository;
 import se.lanteam.repository.ErrorRepository;
+import se.lanteam.services.PropertyService;
 
 /**
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
@@ -35,28 +36,24 @@ public class MailSenderService {
 
 	private static final String GENERAL_EMAIL_ERROR = "Fel vid skickande av mail. ";
 	
-	private static final Logger LOG = LoggerFactory.getLogger(MailSenderService.class);
-    @Value("${mail.host}") 
-    private String mailHost;    
-    @Value("${mail.username}")
-    private String mailUsername;
-    @Value("${mail.password}")
-    private String mailPassword;
-    @Value("${mail.smtps.host}")
-    private String smtpHost;
-    
+	private static final Logger LOG = LoggerFactory.getLogger(MailSenderService.class);    
     
     private ErrorRepository errorRepo;
     private EmailRepository emailRepo;
-        
+    private PropertyService propService;    
+    
 	public void checkMailsToSend() {
+		String mailSmtpHost = propService.getString(PropertyConstants.MAIL_SMTPS_HOST);    
+	    String mailUsername = propService.getString(PropertyConstants.MAIL_USERNAME);
+	    String mailPassword = propService.getString(PropertyConstants.MAIL_PASSWORD);
+
 		List<Email> emails = emailRepo.findEmailsByStatus(StatusConstants.EMAIL_STATUS_NEW);
 		LOG.info("Check for emails to send");
 		for (Email email : emails) {
 			try {
 				LOG.info("New mail to send");
 				Properties props = System.getProperties();
-				props.put("mail.smtps.host",smtpHost);
+				props.put("mail.smtps.host",mailSmtpHost);
 				props.put("mail.smtps.auth","true");
 				Session session = Session.getInstance(props, null);
 				Message msg = new MimeMessage(session);
@@ -69,7 +66,7 @@ public class MailSenderService {
 				msg.setSentDate(new Date());
 				SMTPTransport t =
 				    (SMTPTransport)session.getTransport("smtps");
-				t.connect("smtp.gmail.com", mailUsername, mailPassword);
+				t.connect(mailSmtpHost, mailUsername, mailPassword);
 				t.sendMessage(msg, msg.getAllRecipients());
 				LOG.info("Response: " + t.getLastServerResponse());
 				t.close();
@@ -99,5 +96,9 @@ public class MailSenderService {
 	@Autowired
 	public void setEmailRepo(EmailRepository emailRepo) {
 		this.emailRepo = emailRepo;
+	}
+	@Autowired
+	public void setPropService(PropertyService propService) {
+		this.propService = propService;
 	}
 }
