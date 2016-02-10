@@ -9,6 +9,7 @@ import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.spi.JobFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
@@ -22,7 +23,9 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
 import liquibase.integration.spring.SpringLiquibase;
+import se.lanteam.constants.PropertyConstants;
 import se.lanteam.job.OrderTransmitJob;
+import se.lanteam.services.PropertyService;
 import se.lanteam.spring.AutowiringSpringBeanJobFactory;
 
 /**
@@ -31,6 +34,8 @@ import se.lanteam.spring.AutowiringSpringBeanJobFactory;
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")
 public class SchedulerConfig {
+	
+	private PropertyService propService;
 
     @Bean
     public JobFactory jobFactory(ApplicationContext applicationContext,
@@ -71,9 +76,8 @@ public class SchedulerConfig {
     }
 
     @Bean(name = "orderTransmitJobTrigger")
-    public SimpleTriggerFactoryBean orderTransmitJobTrigger(@Qualifier("orderTransmitJobDetail") JobDetail jobDetail,
-                                                     @Value("${orderTransmitjob.frequency}") long frequency) {
-        return createTrigger(jobDetail, frequency);
+    public SimpleTriggerFactoryBean orderTransmitJobTrigger(@Qualifier("orderTransmitJobDetail") JobDetail jobDetail) {    	
+        return createTrigger(jobDetail, propService.getLong(PropertyConstants.ORDER_TRANSMITJOB_FREQUENCY));
     }
 
     private static JobDetailFactoryBean createJobDetail(Class jobClass) {
@@ -94,4 +98,9 @@ public class SchedulerConfig {
         factoryBean.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT);
         return factoryBean;
     }
+    
+    @Autowired
+	public void setPropService(PropertyService propService) {
+		this.propService = propService;
+	}
 }

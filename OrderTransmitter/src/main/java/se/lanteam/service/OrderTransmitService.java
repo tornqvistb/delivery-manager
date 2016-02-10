@@ -8,12 +8,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
 import header.common.esb.staden._1.Header;
+import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.ErrorRecord;
@@ -23,6 +23,7 @@ import se.lanteam.domain.OrderLine;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCommentRepository;
 import se.lanteam.repository.OrderRepository;
+import se.lanteam.services.PropertyService;
 import se.lanteam.visma.Order;
 import se.lanteam.visma.Orderrad;
 import se.lanteam.ws.WSClient;
@@ -40,22 +41,15 @@ public class OrderTransmitService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OrderTransmitService.class);
 
-	@Value("${file-transmit-folder}")
-    private String fileTransmitFolder;
-	@Value("${ws-endpoint-order-delivery}")
-	private String wsEndpointOrderDelivery;
-	@Value("${ws-endpoint-order-comment}")
-	private String wsEndpointOrderComment;
-	@Value("${ws-username-gbca}")
-	private String wsUserName;
-	@Value("${ws-password-gbca}")
-	private String wsPassword;
-    
     private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
     private OrderCommentRepository orderCommentRepo;
+    private PropertyService propService;
     
 	public void transmitOrders() {
+		String wsEndpointOrderDelivery = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_DELIVERY);
+		String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_GBCA);
+		String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_GBCA);
         LOG.info("Looking for orders to transmit!");
         List<OrderHeader> orders = orderRepo.findOrdersByStatus(StatusConstants.ORDER_STATUS_SENT);
 		WSConfig config = new WSConfig(wsEndpointOrderDelivery, wsUserName, wsPassword);
@@ -82,6 +76,7 @@ public class OrderTransmitService {
 	}
 
 	private void createFileToBusinessSystem(OrderHeader order) {
+		String fileTransmitFolder = propService.getString(PropertyConstants.FILE_TRANSMIT_FOLDER);
 		Order vismaOrder = new Order();
 		vismaOrder.setOrdernummer(Integer.parseInt(order.getOrderNumber()));
 		List<Orderrad> vismaRows = new ArrayList<Orderrad>();
@@ -110,6 +105,9 @@ public class OrderTransmitService {
 		
 	public void transmitOrderComments() {
         LOG.info("Looking for orders to transmit!");
+		String wsEndpointOrderComment = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_COMMENT);
+		String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_GBCA);
+		String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_GBCA);
         List<OrderComment> orderComments = orderCommentRepo.findOrderCommentsByStatus(StatusConstants.ORDER_STATUS_NEW);
 		WSConfig config = new WSConfig(wsEndpointOrderComment, wsUserName, wsPassword);
 		WSClient wsClient = new WSClient();
@@ -149,6 +147,9 @@ public class OrderTransmitService {
 	public void setOrderCommentRepo(OrderCommentRepository orderCommentRepo) {
 		this.orderCommentRepo = orderCommentRepo;
 	}
-
+	@Autowired
+	public void setPropService(PropertyService propService) {
+		this.propService = propService;
+	}
 	
 }

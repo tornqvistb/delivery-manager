@@ -14,10 +14,10 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderComment;
@@ -25,6 +25,7 @@ import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
+import se.lanteam.services.PropertyService;
 
 /**
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
@@ -43,17 +44,15 @@ public class OrderImportService {
 	private static final String ERROR_ORDER_NUMBER_ALREADY_EXISTS = GENERAL_FILE_ERROR + "Ordernummer finns redan, fil: ";
 	
 	private static final Logger LOG = LoggerFactory.getLogger(OrderImportService.class);
-    @Value("${file-source-folder}") 
-    private String fileSourceFolder;    
-    @Value("${file-destination-folder}")
-    private String fileDestFolder;
-    @Value("${file-error-folder}")
-    private String fileErrorFolder;
-    
+
     private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
+    private PropertyService propService;
     
 	public void moveFiles() {
+	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_SOURCE_FOLDER);	    
+	    String fileDestFolder = propService.getString(PropertyConstants.FILE_DESTINATION_FOLDER);	    
+	    String fileErrorFolder = propService.getString(PropertyConstants.FILE_ERROR_FOLDER);	    
         LOG.info("Looking for files to move!");
 		final File inputFolder = new File(fileSourceFolder);
 		File[] filesInFolder = inputFolder.listFiles();
@@ -193,6 +192,9 @@ public class OrderImportService {
 	public void setErrorRepo(ErrorRepository errorRepo) {
 		this.errorRepo = errorRepo;
 	}
-
+ 	@Autowired
+	public void setPropService(PropertyService propService) {
+		this.propService = propService;
+	}	
 	
 }
