@@ -72,8 +72,8 @@ public class OrderImportService {
 					if (validate(orderHeader, fileEntry.getName())) {
 						OrderComment comment = new OrderComment();
 						comment.setMessage("Tack för din beställning!");
-						comment.setCreationDate(new Date());
 						comment.setOrderLine("0");
+						comment.setOrderHeader(orderHeader);
 						orderHeader.getOrderComments().add(comment);
 						orderRepo.save(orderHeader);
 						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);

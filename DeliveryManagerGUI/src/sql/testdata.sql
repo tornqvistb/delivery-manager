@@ -1,5 +1,6 @@
 ALTER TABLE attachment CHANGE file_content file_content LONGBLOB default NULL;
 ALTER TABLE email CHANGE content content VARCHAR(10000) default NULL;
+ALTER TABLE error_record CHANGE message message VARCHAR(10000) default NULL;
 delete from equipment where id > 0;
 delete from order_line where id > 0;
 delete from order_comment where id > 0;

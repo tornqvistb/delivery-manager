@@ -95,7 +95,7 @@ public class WSClient {
 		//URL url = new URL("http://esbat.goteborg.se/Wsdl/GBCA003A_LeveransAvisering_https_.wsdl");
 		URL url = new URL(config.getEndPoint());
 		
-		QName qName = new QName("http://lanteam.se/", "GBCA003A_LeveransAvisering");
+		QName qName = new QName("http://staden.esb.GBCA003A_LeveransAvisering", "GBCA003A_LeveransAvisering");
 		GBCA003ALeveransAvisering_Service service = new GBCA003ALeveransAvisering_Service(url, qName);
 		GBCA003ALeveransAvisering port = service.getBasicHttpBindingGBCA003ALeveransAvisering();
 		BindingProvider prov = (BindingProvider)port;
@@ -133,7 +133,7 @@ public class WSClient {
 		//URL url = new URL("http://esbat.goteborg.se/Wsdl/GBCA002A_LeveransStatus_https_.wsdl");
 		URL url = new URL(config.getEndPoint());
 		
-		QName qName = new QName("http://lanteam.se/", "GBCA002A_LeveransStatus");
+		QName qName = new QName("http://staden.esb.GBCA002A_LeveransStatus", "GBCA002A_LeveransStatus");
 		GBCA003ALeveransAvisering_Service service = new GBCA003ALeveransAvisering_Service(url, qName);
 		GBCA003ALeveransAvisering port = service.getBasicHttpBindingGBCA003ALeveransAvisering();
 		BindingProvider prov = (BindingProvider)port;
