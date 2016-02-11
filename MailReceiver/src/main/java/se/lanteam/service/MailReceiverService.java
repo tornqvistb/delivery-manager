@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Properties;
 
+import javax.mail.Address;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -20,13 +21,14 @@ import javax.mail.internet.MimeBodyPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.domain.Attachment;
+import se.lanteam.domain.Email;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.repository.EmailRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
@@ -40,11 +42,14 @@ public class MailReceiverService {
 	private static final String GENERAL_FILE_ERROR = "Fel vid läsning av mail. ";
 	private static final String ERROR_INVALID_SUBJECT = GENERAL_FILE_ERROR + "Ämnet i mailet matchar inte någon befintlig order. Ämne: ";
 	private static final String ERROR_INVALID_ORDER_STATUS = GENERAL_FILE_ERROR + "Filen kunde inte sparas på ordern, då den inte är redigerbar. Order, Filnamn: ";
+	private static final String THANKS_MAIL_REPLY = "Tack för ditt mail. Bilden %s är nu bifogad till order %s.";
+	private static final String MAIL_SUBJECT = "Bild mottagen";
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MailReceiverService.class);
     private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
     private PropertyService propService;
+    private EmailRepository emailRepo;
         
 	public void checkMails() {		
 		String mailHost = propService.getString(PropertyConstants.MAIL_HOST);    
@@ -81,7 +86,7 @@ public class MailReceiverService {
 				Message message = messages[i];
 				String contentType = message.getContentType();
 				if (contentType.contains("multipart")) {
-					LOG.info("Got mail: " + message.getSubject());
+					LOG.info("Got mail: " + message.getSubject());					
                     // content may contain attachments
                     Multipart multiPart = (Multipart) message.getContent();
                     int numberOfParts = multiPart.getCount();
@@ -92,7 +97,7 @@ public class MailReceiverService {
                             String fileName = part.getFileName();
                             part.saveFile(saveDirectory + File.separator + fileName);
                             byte[] array = Files.readAllBytes(new File(saveDirectory + File.separator + fileName).toPath());
-                            storeAttachmentOnOrder(array, message.getSubject(), fileName);
+                            storeAttachmentOnOrder(array, message.getSubject(), fileName, message);
                         }
                     }
                 } else {
@@ -112,8 +117,9 @@ public class MailReceiverService {
 		}
 	}    
 	
-	private void storeAttachmentOnOrder(byte[] fileContent, String orderNumber, String fileName) throws IOException, MessagingException {
+	private void storeAttachmentOnOrder(byte[] fileContent, String orderNumber, String fileName, Message message) throws IOException, MessagingException {
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderNumber);
+		String resultText = "";
 		if (orders != null && orders.size() > 0) {
 			OrderHeader order = orders.get(0);
 			if (order.getEditable()) {
@@ -125,16 +131,33 @@ public class MailReceiverService {
 				order.setAttachment(attachment);
 				order.setOrderStatusByProgress();
 				orderRepo.save(order);
+				resultText = String.format(THANKS_MAIL_REPLY, fileName, orderNumber);
 			} else {
-				saveError(ERROR_INVALID_ORDER_STATUS + order.getOrderNumber() + ", " + fileName);
+				resultText = ERROR_INVALID_ORDER_STATUS + orderNumber + ", " + fileName;
+				saveError(resultText);
 			}
 		} else {
-			saveError(ERROR_INVALID_SUBJECT + orderNumber);
+			resultText = ERROR_INVALID_SUBJECT + orderNumber + ", filnamn: " + fileName;
+			saveError(resultText);
 		}
+		createMail(resultText, message);
+		
 	}
 	
 	private void saveError(String errorText) {
 		errorRepo.save(new ErrorRecord(errorText));
+	}
+	private void createMail(String content, Message message) throws MessagingException {
+		Email email = new Email();
+		email.setContent(content);
+		email.setSubject(MAIL_SUBJECT);
+		Address[] receivers = message.getAllRecipients();
+		Address[] senders = message.getFrom();
+		if (receivers != null && receivers.length > 0 && senders != null && senders.length > 0) {
+			email.setSender(receivers[0].toString());
+			email.setReceiver(senders[0].toString());
+			emailRepo.save(email);			
+		}
 	}
 	
 	@Autowired
@@ -144,6 +167,10 @@ public class MailReceiverService {
 	@Autowired
 	public void setErrorRepo(ErrorRepository errorRepo) {
 		this.errorRepo = errorRepo;
+	}
+	@Autowired
+	public void setEmailRepo(EmailRepository emailRepo) {
+		this.emailRepo = emailRepo;
 	}
 	@Autowired
 	public void setPropService(PropertyService propService) {

@@ -246,7 +246,7 @@
 																	id="orderLineId" name="orderLineId">
 																		<option value="0">Generellt</option>
 																		<option th:each="orderLine : ${order.orderLines}"
-																			th:value="${orderLine.id}"
+																			th:value="${orderLine.rowNumber}"
 																			th:text="${orderLine.rowNumber}" />
 																</select></td>
 															</tr>

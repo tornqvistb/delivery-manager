@@ -1,5 +1,6 @@
 package se.lanteam.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -42,7 +43,7 @@ public class MailSenderService {
     private EmailRepository emailRepo;
     private PropertyService propService;    
     
-	public void checkMailsToSend() {
+	public void checkMailsToSend()  {
 		String mailSmtpHost = propService.getString(PropertyConstants.MAIL_SMTPS_HOST);    
 	    String mailUsername = propService.getString(PropertyConstants.MAIL_USERNAME);
 	    String mailPassword = propService.getString(PropertyConstants.MAIL_PASSWORD);
@@ -57,9 +58,10 @@ public class MailSenderService {
 				props.put("mail.smtps.auth","true");
 				Session session = Session.getInstance(props, null);
 				Message msg = new MimeMessage(session);
-				msg.setFrom(new InternetAddress(email.getSender()));;
+				msg.setFrom(new InternetAddress(mailUsername, "LanTeam"));
+				msg.setReplyTo(InternetAddress.parse(email.getSender(), false));
 				msg.setRecipients(Message.RecipientType.TO,
-				InternetAddress.parse(email.getReceiver(), false));
+						InternetAddress.parse(email.getReceiver(), false));
 				msg.setSubject(email.getSubject());
 				msg.setText(email.getContent());
 				msg.setHeader("LIM - LanTeam", "E-post från LIM");
@@ -78,6 +80,8 @@ public class MailSenderService {
 				saveError(GENERAL_EMAIL_ERROR + "SendFailedException");
 			} catch (MessagingException e) {
 				saveError(GENERAL_EMAIL_ERROR + "MessagingException");
+			} catch (UnsupportedEncodingException e) {
+				saveError(GENERAL_EMAIL_ERROR + "UnsupportedEncodingException");
 			}
 			email.setStatus(StatusConstants.EMAIL_STATUS_SENT);
 			emailRepo.save(email);

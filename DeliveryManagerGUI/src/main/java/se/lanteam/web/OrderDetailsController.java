@@ -26,7 +26,7 @@ public class OrderDetailsController {
 	public String registerMessage(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
 			ModelMap model) {
 		OrderHeader order = orderRepo.findOne(orderId);
-		if (StringUtils.hasText(reqAttr.getComment())) {
+		if (StringUtils.hasText(reqAttr.getComment())) { 
 			OrderComment comment = new OrderComment();
 			comment.setOrderHeader(order);
 			comment.setOrderLine(String.valueOf(reqAttr.getOrderLineId()));

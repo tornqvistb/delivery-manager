@@ -59,4 +59,6 @@ insert into system_property (id, string_value, number_value) values ('ws-passwor
 insert into system_property (id, string_value, number_value) values ('order-correction-mail-sender','lim.lanteam@gmail.com',0);
 insert into system_property (id, string_value, number_value) values ('order-correction-mail-receiver','tornqvistb@gmail.com',0);
 
+//UPDATE DATABASECHANGELOGLOCK SET LOCKED=FALSE, LOCKGRANTED=null, LOCKEDBY=null where ID=1;
+
 commit;
