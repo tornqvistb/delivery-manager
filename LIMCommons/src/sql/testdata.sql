@@ -48,16 +48,15 @@ insert into system_property (id, string_value, number_value) values ('mail-usern
 insert into system_property (id, string_value, number_value) values ('mail-password', 'limlanteam', 0);
 insert into system_property (id, string_value, number_value) values ('mail-smtps-host', 'smtp.gmail.com', 0);
 insert into system_property (id, string_value, number_value) values ('file-image-folder', 'C:/Projekt/lanteam/filedirs/images', 0);
-insert into system_property (id, string_value, number_value) values ('file-source-folder', 'C:/Projekt/lanteam/filedirs/input', 0);
-insert into system_property (id, string_value, number_value) values ('file-destination-folder', 'C:/Projekt/lanteam/filedirs/output', 0);
+insert into system_property (id, string_value, number_value) values ('file-incoming-folder', 'C:/Projekt/lanteam/filedirs/incoming', 0);
+insert into system_property (id, string_value, number_value) values ('file-processed-folder', 'C:/Projekt/lanteam/filedirs/processed', 0);
 insert into system_property (id, string_value, number_value) values ('file-error-folder', 'C:/Projekt/lanteam/filedirs/error', 0);
-insert into system_property (id, string_value, number_value) values ('file-transmit-folder', 'C:/Projekt/lanteam/filedirs/transmit', 0);
+insert into system_property (id, string_value, number_value) values ('file-outgoing-folder', 'C:/Projekt/lanteam/filedirs/outgoing', 0);
 insert into system_property (id, string_value, number_value) values ('ws-endpoint-order-delivery', 'http://esbat.goteborg.se/Wsdl/GBCA003A_LeveransAvisering_https_.wsdl', 0);
 insert into system_property (id, string_value, number_value) values ('ws-endpoint-order-comment', 'http://esbat.goteborg.se/Wsdl/GBCA002A_LeveransStatus_https_.wsdl', 0);
-insert into system_property (id, string_value, number_value) values ('ws-username-gbca', 'user', 0);
-insert into system_property (id, string_value, number_value) values ('ws-password-gbca', 'password', 0);
+insert into system_property (id, string_value, number_value) values ('ws-username-gbca', 'GBCALanTeam', 0);
+insert into system_property (id, string_value, number_value) values ('ws-password-gbca', 'NoMok3', 0);
 insert into system_property (id, string_value, number_value) values ('order-correction-mail-sender','lim.lanteam@gmail.com',0);
 insert into system_property (id, string_value, number_value) values ('order-correction-mail-receiver','tornqvistb@gmail.com',0);
-commit;
 
 commit;

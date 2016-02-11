@@ -16,5 +16,6 @@ public class OrderTransmitJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
         service.transmitOrders();
+        service.transmitOrderComments();
     }
 }

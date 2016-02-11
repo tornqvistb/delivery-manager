@@ -50,8 +50,8 @@ public class OrderImportService {
     private PropertyService propService;
     
 	public void moveFiles() {
-	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_SOURCE_FOLDER);	    
-	    String fileDestFolder = propService.getString(PropertyConstants.FILE_DESTINATION_FOLDER);	    
+	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_INCOMING_FOLDER);	    
+	    String fileDestFolder = propService.getString(PropertyConstants.FILE_PROCESSED_FOLDER);	    
 	    String fileErrorFolder = propService.getString(PropertyConstants.FILE_ERROR_FOLDER);	    
         LOG.info("Looking for files to move!");
 		final File inputFolder = new File(fileSourceFolder);

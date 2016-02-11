@@ -2,6 +2,9 @@ package se.lanteam.service;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +79,7 @@ public class OrderTransmitService {
 	}
 
 	private void createFileToBusinessSystem(OrderHeader order) {
-		String fileTransmitFolder = propService.getString(PropertyConstants.FILE_TRANSMIT_FOLDER);
+		String fileTransmitFolder = propService.getString(PropertyConstants.FILE_OUTGOING_FOLDER);
 		Order vismaOrder = new Order();
 		vismaOrder.setOrdernummer(Integer.parseInt(order.getOrderNumber()));
 		List<Orderrad> vismaRows = new ArrayList<Orderrad>();
@@ -95,7 +98,9 @@ public class OrderTransmitService {
 		Gson gson = new Gson();
 		String json = gson.toJson(vismaOrder);
 		try {
-			FileWriter writer = new FileWriter(fileTransmitFolder + order.getOrderNumber() + ".json");
+			Path path = Paths.get(fileTransmitFolder + "/" + order.getOrderNumber() + ".json");
+			Files.deleteIfExists(path);
+			FileWriter writer = new FileWriter(fileTransmitFolder + "/" + order.getOrderNumber() + ".json");
 			writer.write(json);
 			writer.close();
 		} catch (IOException e) {

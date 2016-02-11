@@ -8,6 +8,8 @@ import javax.xml.ws.BindingProvider;
 
 import gbca002a_ext_leveransstatus.gbca002a.externalartefacts.gbca.esb.staden.GBCA002AExtLeveransStatus;
 import gbca002a_ext_leveransstatus.gbca002a.externalartefacts.gbca.esb.staden.GBCA002AExtLeveransStatus.Status;
+import gbca002a_leveransstatus.esb.staden.GBCA002ALeveransStatus;
+import gbca002a_leveransstatus.esb.staden.GBCA002ALeveransStatus_Service;
 import gbca003a_ext_leveransavisering.esb.staden.GBCA003AExtLeveransAvisering;
 import gbca003a_ext_leveransavisering.esb.staden.ObjectFactory;
 import gbca003a_leveransavisering.esb.staden.GBCA003ALeveransAvisering;
@@ -92,7 +94,6 @@ public class WSClient {
 		body.setLeveransAvisering(avisering);
 		delivery.setBody(body);
 		
-		//URL url = new URL("http://esbat.goteborg.se/Wsdl/GBCA003A_LeveransAvisering_https_.wsdl");
 		URL url = new URL(config.getEndPoint());
 		
 		QName qName = new QName("http://staden.esb.GBCA003A_LeveransAvisering", "GBCA003A_LeveransAvisering");
@@ -107,8 +108,6 @@ public class WSClient {
 	}
 	
 	public Header sendDeliveryStatus(OrderComment orderComment, WSConfig config) throws MalformedURLException {
-		header.common.esb.staden._1.ObjectFactory headerfactory = new header.common.esb.staden._1.ObjectFactory();
-		Header header = headerfactory.createHeader();
 		gbca002a_ext_leveransstatus.gbca002a.externalartefacts.gbca.esb.staden.ObjectFactory objectFactory = new gbca002a_ext_leveransstatus.gbca002a.externalartefacts.gbca.esb.staden.ObjectFactory();
 		GBCA002AExtLeveransStatus deliveryStatus = objectFactory.createGBCA002AExtLeveransStatus();
 		deliveryStatus.setArendeId(orderComment.getOrderHeader().getCustomerOrderNumber());
@@ -130,17 +129,16 @@ public class WSClient {
 		}
 		deliveryStatus.getStatus().add(statusRow);
 		
-		//URL url = new URL("http://esbat.goteborg.se/Wsdl/GBCA002A_LeveransStatus_https_.wsdl");
 		URL url = new URL(config.getEndPoint());
 		
 		QName qName = new QName("http://staden.esb.GBCA002A_LeveransStatus", "GBCA002A_LeveransStatus");
-		GBCA003ALeveransAvisering_Service service = new GBCA003ALeveransAvisering_Service(url, qName);
-		GBCA003ALeveransAvisering port = service.getBasicHttpBindingGBCA003ALeveransAvisering();
+		GBCA002ALeveransStatus_Service service = new GBCA002ALeveransStatus_Service(url, qName);
+		GBCA002ALeveransStatus port = service.getBasicHttpBindingGBCA002ALeveransStatus();
 		BindingProvider prov = (BindingProvider)port;
 		prov.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, config.getUserName());
 		prov.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, config.getPassword());
 		
-		return header;
+		return port.gbca002ALeveransStatus(deliveryStatus);
 	}
 	
 }
