@@ -23,12 +23,15 @@ public class RequestAttributes {
 	private String orderStatus;
 	private String errorStatus;
 	private String thanksMessage;
-	private List<ReqOrderLine> reqOrderLines= new ArrayList<ReqOrderLine>();
-	
-	
+	private List<ReqOrderLine> reqOrderLines= new ArrayList<ReqOrderLine>();	
+	private Integer newErrorMessages;
 	
 	public RequestAttributes() {
 		super();
+	}
+	public RequestAttributes(Integer newErrorMessages) {
+		super();
+		this.newErrorMessages = newErrorMessages;
 	}
 
 	public RequestAttributes(OrderHeader orderHeader) {
@@ -167,6 +170,14 @@ public class RequestAttributes {
 
 	public void setThanksMessage(String thanksMessage) {
 		this.thanksMessage = thanksMessage;
+	}
+
+	public Integer getNewErrorMessages() {
+		return newErrorMessages;
+	}
+
+	public void setNewErrorMessages(Integer newErrorMessages) {
+		this.newErrorMessages = newErrorMessages;
 	}
 	
 	

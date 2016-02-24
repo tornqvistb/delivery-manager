@@ -20,6 +20,7 @@ import se.lanteam.model.CorrectionMailInfo;
 import se.lanteam.model.ReqOrderLine;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.EquipmentRepository;
+import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderLineRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.EquipmentValidator;
@@ -37,6 +38,7 @@ public class EquipmentController {
 	private EquipmentRepository equipmentRepo;
 	private EquipmentValidator equipmentValidator;
 	private MailComposer mailComposer;
+	private ErrorRepository errorRepo;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(EquipmentController.class);
 	
@@ -71,7 +73,7 @@ public class EquipmentController {
 		orderRepo.save(order);
 		model.put("order", order);
 		long orderLineId = reqAttr.getOrderLineId();
-		reqAttr = new RequestAttributes();
+		reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
 		reqAttr.setRegEquipmentResult(valResult);
 		reqAttr.setOrderLineId(orderLineId);
 		model.put("reqAttr", reqAttr);
@@ -98,7 +100,7 @@ public class EquipmentController {
 		order.setOrderStatusByProgress();
 		orderRepo.save(order);
 		model.put("order", order);
-		model.put("reqAttr", new RequestAttributes());
+		model.put("reqAttr", new RequestAttributes(errorRepo.findErrorsByArchived(false).size()));
 		return "order-details";
 	}
 
@@ -182,5 +184,9 @@ public class EquipmentController {
 	@Autowired
 	public void setMailComposer(MailComposer mailComposer) {
 		this.mailComposer = mailComposer;
+	}
+	@Autowired
+	public void setErrorRepo(ErrorRepository errorRepo) {
+		this.errorRepo = errorRepo;
 	}
 }

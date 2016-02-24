@@ -6,8 +6,8 @@ insert into system_property (id, string_value, number_value) values ('mailjob-fr
 insert into system_property (id, string_value, number_value) values ('order-transmitjob-frequency', '', 30000);
 insert into system_property (id, string_value, number_value) values ('orderjob-frequency', '', 30000);
 insert into system_property (id, string_value, number_value) values ('mail-host', 'pop.gmail.com', 0);
-insert into system_property (id, string_value, number_value) values ('mail-username', 'lim.lanteam@gmail.com', 0);
-insert into system_property (id, string_value, number_value) values ('mail-password', 'limlanteam', 0);
+insert into system_property (id, string_value, number_value) values ('mail-username', 'limtest.lanteam@gmail.com', 0);
+insert into system_property (id, string_value, number_value) values ('mail-password', 'limtestlanteam1', 0);
 insert into system_property (id, string_value, number_value) values ('mail-smtps-host', 'smtp.gmail.com', 0);
 insert into system_property (id, string_value, number_value) values ('file-image-folder', 'D:/lim/filedirs/images', 0);
 insert into system_property (id, string_value, number_value) values ('file-incoming-folder', 'D:/lim/filedirs/incoming', 0);

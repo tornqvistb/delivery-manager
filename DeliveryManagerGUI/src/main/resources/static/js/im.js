@@ -24,5 +24,8 @@ $(function() { // Makes sure the code contained doesn't run until
 	});
 	if ($("#serienr").length) {
 		$("#serienr").focus();
+		 $('html, body').animate({
+             scrollTop: $("#registration-area").offset().top
+         }, 500);
 	}
 });

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import se.lanteam.domain.Attachment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
@@ -27,12 +28,13 @@ public class FileController {
 	private static final String ATTACHMENT_MSG_FAILED = "Det gick inte att bifoga dokumentet. ";
 
 	private OrderRepository orderRepo;
+	private ErrorRepository errorRepo;
 
 	@RequestMapping(value = "order-list/view/attachFile/{orderId}", method = RequestMethod.POST)
 	public String attachFile(@RequestParam("attachment") MultipartFile attachment, @PathVariable Long orderId,
 			ModelMap model) {
 		OrderHeader order = orderRepo.findOne(orderId);
-		RequestAttributes reqAttr = new RequestAttributes();
+		RequestAttributes reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
 		if (!attachment.isEmpty()) {
 			try {
 				Attachment attEntity = new Attachment();
@@ -64,7 +66,7 @@ public class FileController {
 		orderRepo.save(order);
 		order = orderRepo.findOne(orderId);
 		model.put("order", order);
-		RequestAttributes reqAttr = new RequestAttributes();
+		RequestAttributes reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
 		reqAttr.setStatusAttachmentSuccess(ATTACHMENT_MSG_DELETE_OK);
 		model.put("reqAttr", reqAttr);
 		return "order-details";
@@ -95,6 +97,10 @@ public class FileController {
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
+	}
+	@Autowired
+	public void setErrorRepo(ErrorRepository errorRepo) {
+		this.errorRepo = errorRepo;
 	}
 
 }

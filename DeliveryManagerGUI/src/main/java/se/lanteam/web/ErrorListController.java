@@ -24,7 +24,7 @@ public class ErrorListController {
 	public String showErrorList(ModelMap model) {
 		List<ErrorRecord> errors = errorRepo.findErrorsByArchived(false);
 		model.put("errors", errors);
-		RequestAttributes reqAttr = new RequestAttributes();
+		RequestAttributes reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
 		reqAttr.setErrorStatus(StatusConstants.ERROR_STATUS_NEW);
 		model.put("reqAttr", reqAttr);
 		return "error-list";

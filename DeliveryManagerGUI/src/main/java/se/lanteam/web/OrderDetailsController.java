@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
@@ -21,6 +22,7 @@ public class OrderDetailsController {
 	private static final String STATUS_MSG_COMMENT_MISSING = "Du måste skriva ett meddelande.";
 
 	private OrderRepository orderRepo;	
+	private ErrorRepository errorRepo;
 
 	@RequestMapping(value = "order-list/view/registerComment/{orderId}", method = RequestMethod.POST)
 	public String registerMessage(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
@@ -35,12 +37,12 @@ public class OrderDetailsController {
 			orderRepo.save(order);
 			order = orderRepo.findOne(orderId);
 			model.put("order", order);
-			reqAttr = new RequestAttributes();
+			reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
 			reqAttr.setStatusMessageCreationSuccess(STATUS_MSG_OK);
 			model.put("reqAttr", reqAttr);
 		} else {
 			model.put("order", order);
-			reqAttr = new RequestAttributes();
+			reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
 			reqAttr.setStatusMessageCreationFailed(STATUS_MSG_COMMENT_MISSING);
 			model.put("reqAttr", reqAttr);
 		}
@@ -60,5 +62,9 @@ public class OrderDetailsController {
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
+	}
+	@Autowired
+	public void setErrorRepo(ErrorRepository errorRepo) {
+		this.errorRepo = errorRepo;
 	}
 }
