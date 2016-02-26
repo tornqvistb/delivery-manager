@@ -43,3 +43,14 @@
 #service-portal .completed-row {
     background-color : #ccffcc;
 }
+#service-portal .link-padding {
+	padding-left: 10px;
+}
+
+#service-portal .large-field {
+	width: 500px;
+}
+#service-portal .side-margin {
+	margin-right: 10px;
+	margin-left: 10px;
+}

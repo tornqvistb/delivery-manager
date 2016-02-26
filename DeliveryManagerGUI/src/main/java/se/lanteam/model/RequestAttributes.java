@@ -7,6 +7,7 @@ import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
+import se.lanteam.domain.SystemProperty;
 
 public class RequestAttributes {
 
@@ -25,6 +26,7 @@ public class RequestAttributes {
 	private String thanksMessage;
 	private List<ReqOrderLine> reqOrderLines= new ArrayList<ReqOrderLine>();	
 	private Integer newErrorMessages;
+	private List<SystemProperty> systemProperties= new ArrayList<SystemProperty>();
 	
 	public RequestAttributes() {
 		super();
@@ -178,6 +180,12 @@ public class RequestAttributes {
 
 	public void setNewErrorMessages(Integer newErrorMessages) {
 		this.newErrorMessages = newErrorMessages;
+	}
+	public List<SystemProperty> getSystemProperties() {
+		return systemProperties;
+	}
+	public void setSystemProperties(List<SystemProperty> systemProperties) {
+		this.systemProperties = systemProperties;
 	}
 	
 	
