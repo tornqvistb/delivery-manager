@@ -63,9 +63,11 @@ public class ErrorsRepository {
 				orderRepo.save(order);
 			} else {
 				resultCode = "Inga rader";
+				saveError("Fel vid hantering av felrapport från Intraservice: det finns inga orderrader i meddelandet");
 			}
 		} else {
 			resultCode = "Hittade ej order " + salesOrder;
+			saveError("Fel vid hantering av felrapport från Intraservice: Hittade ej order " + salesOrder);
 		}
 		
 		JAXBElement<String> result = factory.createErrorResponseResponseErrorResponseResult(resultCode);
