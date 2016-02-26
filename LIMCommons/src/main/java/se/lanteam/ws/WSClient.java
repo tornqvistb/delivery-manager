@@ -37,6 +37,7 @@ public class WSClient {
 		GBCA003AExtLeveransAvisering.Body.LeveransAvisering.Line.Info info;
 		// header
 		header.setKod("1"); // Sätt mer header värden
+		header.setPartnerIn("LanTeam");
 		delivery.setHeader(header);
 		head.setOrderDate(orderHeader.getOrderDateAsString());
 		head.setOrderNumber(orderHeader.getOrderNumber());
