@@ -64,6 +64,8 @@ public class OrderListController {
 			orders = orderRepo.findOrdersByStatus(status);
 		}		
 		model.put("orders", orders);
+		reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
+		reqAttr.setOrderStatus(status);
 		model.put("reqAttr", reqAttr);
 		return "order-list";
 	}
