@@ -53,6 +53,8 @@ public class ErrorListController {
 			errors = errorRepo.findErrorsByArchived(false);
 		}		
 		model.put("errors", errors);
+		reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
+		reqAttr.setErrorStatus(status);
 		model.put("reqAttr", reqAttr);
 		return "error-list";
 	}

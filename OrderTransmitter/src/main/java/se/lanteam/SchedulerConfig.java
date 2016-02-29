@@ -77,7 +77,7 @@ public class SchedulerConfig {
 
     @Bean(name = "orderTransmitJobTrigger")
     public SimpleTriggerFactoryBean orderTransmitJobTrigger(@Qualifier("orderTransmitJobDetail") JobDetail jobDetail) {    	
-        return createTrigger(jobDetail, propService.getLong(PropertyConstants.ORDER_TRANSMITJOB_FREQUENCY));
+        return createTrigger(jobDetail, propService.getLongMillis(PropertyConstants.ORDER_TRANSMITJOB_FREQUENCY));
     }
 
     private static JobDetailFactoryBean createJobDetail(Class jobClass) {
