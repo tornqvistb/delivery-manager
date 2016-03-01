@@ -2,6 +2,8 @@ package se.lanteam.web;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,13 +18,12 @@ import se.lanteam.repository.PropertyRepository;
 
 @Controller
 public class SettingsController {
-	
+	private static final Logger LOG = LoggerFactory.getLogger(SettingsController.class);
 	private PropertyRepository propertyRepo;
 	private ErrorRepository errorRepo;
 			
 	@RequestMapping("settings")
 	public String showOrderList(ModelMap model) {
-
 		List<SystemProperty> properties = propertyRepo.findAll();
 		model.put("properties", properties);
 		RequestAttributes reqAttr = loadReqAttr(properties);

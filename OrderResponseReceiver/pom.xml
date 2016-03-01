@@ -93,7 +93,6 @@
 				<configuration>
 					<schemaDirectory>${project.basedir}/src/main/resources/</schemaDirectory>
 					<outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
-					<!-- <outputDirectory>${project.basedir}/src/main/java</outputDirectory> -->
 					<clearOutputDir>false</clearOutputDir>
 				</configuration>
 			</plugin>

@@ -4683,5 +4683,39 @@
         <welcome-file>index.htm</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+    <!--
+    <security-constraint>
+      <web-resource-collection>
+      <web-resource-name>DeliveryManagerGUI</web-resource-name>
+        <url-pattern>/*</url-pattern>
+      </web-resource-collection>
+      <auth-constraint>
+        <role-name>limrole</role-name>
+      </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+      <web-resource-collection>
+      <web-resource-name>DeliveryManagerGUI</web-resource-name>
+        <url-pattern>/settings</url-pattern>
+      </web-resource-collection>
+      <auth-constraint>
+        <role-name>limadmrole</role-name>
+      </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+      <web-resource-collection>
+      <web-resource-name>OrderResponseReceiver</web-resource-name>
+        <url-pattern>/*</url-pattern>
+      </web-resource-collection>
+      <auth-constraint>
+        <role-name>limwsrole</role-name>
+      </auth-constraint>
+    </security-constraint>
+    <login-config>
+      <auth-method>BASIC</auth-method>
+      <realm-name>DeliveryManagerGUI</realm-name>
+      <realm-name>OrderResponseReceiver</realm-name>
+    </login-config>
+    -->
 
 </web-app>
