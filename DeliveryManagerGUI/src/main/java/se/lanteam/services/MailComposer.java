@@ -30,7 +30,7 @@ public class MailComposer {
 			}
 			sb.append("Med vänlig hälsning \nLanTeam");
 			email.setContent(sb.toString());
-			email.setSubject("Korrigerad beställning");
+			email.setSubject("Korrigerat serie- och/eller stöldskyddsnummer i beställning");
 			email.setSender(propService.getString(PropertyConstants.ORDER_CORRECTION_MAIL_SENDER));
 			email.setReceiver(propService.getString(PropertyConstants.ORDER_CORRECTION_MAIL_RECEIVER));
 			emailRepo.save(email);
