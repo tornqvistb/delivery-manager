@@ -150,6 +150,7 @@ public class EquipmentController {
 		order = orderRepo.findOne(orderId);
 		model.put("order", order);
 		reqAttr = new RequestAttributes(order);
+		reqAttr.setNewErrorMessages(errorRepo.findErrorsByArchived(false).size());
 		reqAttr.setRegEquipmentResult(result);
 		reqAttr.setThanksMessage(message);
 		model.put("reqAttr", reqAttr);
