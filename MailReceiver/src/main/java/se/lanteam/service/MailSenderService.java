@@ -56,6 +56,7 @@ public class MailSenderService {
 				Properties props = System.getProperties();
 				props.put("mail.smtps.host",mailSmtpHost);
 				props.put("mail.smtps.auth","true");
+				//props.put("mail.smtp.port", "25");
 				Session session = Session.getInstance(props, null);
 				Message msg = new MimeMessage(session);
 				msg.setFrom(new InternetAddress(mailUsername, "LanTeam"));
@@ -80,6 +81,7 @@ public class MailSenderService {
 				saveError(GENERAL_EMAIL_ERROR + "SendFailedException");
 			} catch (MessagingException e) {
 				saveError(GENERAL_EMAIL_ERROR + "MessagingException");
+				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
 				saveError(GENERAL_EMAIL_ERROR + "UnsupportedEncodingException");
 			}
