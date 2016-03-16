@@ -28,4 +28,39 @@ $(function() { // Makes sure the code contained doesn't run until
              scrollTop: $("#registration-area").offset().top
          }, 500);
 	}
+	
+	$('input.trig-enter').keydown(function(e) {
+	    var code = e.keyCode || e.which;
+
+	    if (code === 9) {  
+	        e.preventDefault();
+	        $('form#reg-equipment').submit();
+	    }
+	});
+	
 });
+
+function PrintLabels()
+{
+     var WinPrint = window.open('', '', 'letf=100,top=100,width=600,height=600');
+     var intOrderNo = retrieve("int-order-no");
+     var extOrderNo =  retrieve("ext-order-no");
+     WinPrint.document.write("<html><head></head><body>");
+     WinPrint.document.write("<div>");
+     WinPrint.document.write("Lanteam order:<br />");
+     WinPrint.document.write("<span style='font-weight:bold;font-size:larger'>" + intOrderNo + "</span>");
+     WinPrint.document.write("<br /><br />");
+     WinPrint.document.write("Intraservice order:<br />");
+     WinPrint.document.write("<span style='font-weight:bold;font-size:larger'>" + extOrderNo + "</span>");
+     WinPrint.document.write("</div></body>");
+     WinPrint.document.close();
+     WinPrint.focus();
+     WinPrint.print();
+     //WinPrint.close()   
+}
+
+function retrieve(id) {
+	var tdElem = document.getElementById ( id );
+	var tdText = tdElem.innerText | tdElem.textContent;
+    return tdText;
+}
