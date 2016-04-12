@@ -56,7 +56,7 @@ public class MailSenderService {
 				Properties props = System.getProperties();
 				props.put("mail.smtps.host",mailSmtpHost);
 				props.put("mail.smtps.auth","true");
-				//props.put("mail.smtp.port", "25");
+				//props.put("mail.smtps.port", "465"); Exchange
 				Session session = Session.getInstance(props, null);
 				Message msg = new MimeMessage(session);
 				msg.setFrom(new InternetAddress(mailUsername, "LanTeam"));
@@ -79,6 +79,7 @@ public class MailSenderService {
 				saveError(GENERAL_EMAIL_ERROR + "NoSuchProviderException");
 			} catch (SendFailedException e) {
 				saveError(GENERAL_EMAIL_ERROR + "SendFailedException");
+				e.printStackTrace();
 			} catch (MessagingException e) {
 				saveError(GENERAL_EMAIL_ERROR + "MessagingException");
 				e.printStackTrace();

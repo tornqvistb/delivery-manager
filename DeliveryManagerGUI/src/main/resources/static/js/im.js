@@ -44,7 +44,7 @@ function PrintLabels()
 {
      var WinPrint = window.open('', '', 'letf=100,top=100,width=600,height=600');
      var intOrderNo = retrieve("int-order-no");
-     var extOrderNo =  retrieve("ext-order-no");
+     var extOrderNo =  retrieve("ext-sales-no");
      WinPrint.document.write("<html><head></head><body>");
      WinPrint.document.write("<div>");
      WinPrint.document.write("Lanteam order:<br />");
