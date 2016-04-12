@@ -44,7 +44,7 @@ function PrintLabels()
 {
      var WinPrint = window.open('', '', 'letf=100,top=100,width=600,height=600');
      var intOrderNo = retrieve("int-order-no");
-     var extOrderNo =  retrieve("ext-sales-no");
+     var extOrderNo =  retrieve("ext-sales-no");     
      WinPrint.document.write("<html><head></head><body>");
      WinPrint.document.write("<div>");
      WinPrint.document.write("Lanteam order:<br />");
@@ -56,11 +56,9 @@ function PrintLabels()
      WinPrint.document.close();
      WinPrint.focus();
      WinPrint.print();
-     //WinPrint.close()   
 }
 
 function retrieve(id) {
 	var tdElem = document.getElementById ( id );
-	var tdText = tdElem.innerText | tdElem.textContent;
-    return tdText;
+    return tdElem.textContent;
 }
