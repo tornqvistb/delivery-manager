@@ -115,18 +115,23 @@ public class OrderImportService {
 		orderHeader.setContact2Phone(jsonOrder.optString("Kontakt2_telefon"));
 		orderHeader.setStatus(StatusConstants.ORDER_STATUS_NEW);
 		JSONArray jsonOrderLines = jsonOrder.getJSONArray("Orderrader");
+		Integer cutomerLineId = 1;
 		for (int i = 0; i < jsonOrderLines.length(); i++) {			
 			JSONObject jsonOrderLine = jsonOrderLines.getJSONObject(i);
-			OrderLine orderLine = new OrderLine();
-			orderLine.setRowNumber(jsonOrderLine.optInt("Radnummer"));
-			orderLine.setArticleNumber(jsonOrderLine.optString("Artikelnummer"));
-			orderLine.setArticleDescription(jsonOrderLine.optString("Artikelbenämning"));
-			orderLine.setTotal(jsonOrderLine.optInt("Antal"));
-			orderLine.setRemaining(jsonOrderLine.optInt("Antal"));
-			orderLine.setRegistered(0);
-			orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod"));
-			orderLine.setOrderHeader(orderHeader);
-			orderHeader.getOrderLines().add(orderLine);
+			if (!StringUtils.isEmpty(jsonOrderLine.optString("Restriktionskod"))) {
+				OrderLine orderLine = new OrderLine();
+				//orderLine.setRowNumber(jsonOrderLine.optInt("Radnummer"));
+				orderLine.setRowNumber(cutomerLineId);
+				orderLine.setArticleNumber(jsonOrderLine.optString("Artikelnummer"));
+				orderLine.setArticleDescription(jsonOrderLine.optString("Artikelbenämning"));
+				orderLine.setTotal(jsonOrderLine.optInt("Antal"));
+				orderLine.setRemaining(jsonOrderLine.optInt("Antal"));
+				orderLine.setRegistered(0);
+				orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod"));
+				orderLine.setOrderHeader(orderHeader);
+				orderHeader.getOrderLines().add(orderLine);
+				cutomerLineId++;
+			}
 		}
 		return orderHeader;
 	}
