@@ -77,8 +77,8 @@ public class MailReceiverService {
 
 			// create the folder object and open it
 			Folder emailFolder = store.getFolder("INBOX");
-			emailFolder.open(Folder.READ_WRITE);			
-
+			emailFolder.open(Folder.READ_WRITE);
+			
 			// retrieve the messages from the folder in an array and print it
 			Message[] messages = emailFolder.getMessages();
 			LOG.info("Got " + messages.length + " mails!");
@@ -93,7 +93,8 @@ public class MailReceiverService {
                     int numberOfParts = multiPart.getCount();
                     for (int partCount = 0; partCount < numberOfParts; partCount++) {
                         MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(partCount);
-                        if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
+                        LOG.info("Disposition: " + part.getDisposition());
+                        if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()) || Part.INLINE.equalsIgnoreCase(part.getDisposition())) {
                             // this part is attachment
                             String fileName = part.getFileName();
                             part.saveFile(saveDirectory + File.separator + fileName);
