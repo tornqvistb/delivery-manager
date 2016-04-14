@@ -77,7 +77,7 @@ public class MailReceiverService {
 
 			// create the folder object and open it
 			Folder emailFolder = store.getFolder("INBOX");
-			emailFolder.open(Folder.READ_WRITE);
+			emailFolder.open(Folder.READ_WRITE);			
 
 			// retrieve the messages from the folder in an array and print it
 			Message[] messages = emailFolder.getMessages();
@@ -85,6 +85,7 @@ public class MailReceiverService {
 			for (int i = 0, n = messages.length; i < n; i++) {
 				Message message = messages[i];
 				String contentType = message.getContentType();
+				LOG.info("Contenttype: " + contentType);
 				if (contentType.contains("multipart")) {
 					LOG.info("Got mail: " + message.getSubject());					
                     // content may contain attachments
