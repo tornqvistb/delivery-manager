@@ -120,8 +120,11 @@ public class OrderImportService {
 			JSONObject jsonOrderLine = jsonOrderLines.getJSONObject(i);
 			if (!StringUtils.isEmpty(jsonOrderLine.optString("Restriktionskod"))) {
 				OrderLine orderLine = new OrderLine();
-				//orderLine.setRowNumber(jsonOrderLine.optInt("Radnummer"));
-				orderLine.setRowNumber(cutomerLineId);
+				if (jsonOrderLine.optInt("KundRadnummer") > 0) {
+					orderLine.setRowNumber(jsonOrderLine.optInt("KundRadnummer"));
+				} else {
+					orderLine.setRowNumber(cutomerLineId);
+				}
 				orderLine.setArticleNumber(jsonOrderLine.optString("Artikelnummer"));
 				orderLine.setArticleDescription(jsonOrderLine.optString("Artikelbenämning"));
 				orderLine.setTotal(jsonOrderLine.optInt("Antal"));
