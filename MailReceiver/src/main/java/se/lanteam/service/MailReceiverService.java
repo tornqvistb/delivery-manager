@@ -1,11 +1,22 @@
 package se.lanteam.service;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import javax.mail.Address;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -97,8 +108,12 @@ public class MailReceiverService {
                         if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()) || Part.INLINE.equalsIgnoreCase(part.getDisposition())) {
                             // this part is attachment
                             String fileName = part.getFileName();
-                            part.saveFile(saveDirectory + File.separator + fileName);
-                            byte[] array = Files.readAllBytes(new File(saveDirectory + File.separator + fileName).toPath());
+                            String fileNameWithPath = saveDirectory + File.separator + fileName;
+                            part.saveFile(fileNameWithPath);
+                            File origFile = new File(fileNameWithPath);
+                            String compressedFileNameWithPath = fileNameWithPath + ".comp.jpg";
+                            compressFile(origFile, compressedFileNameWithPath);                            
+                            byte[] array = Files.readAllBytes(new File(compressedFileNameWithPath).toPath());
                             storeAttachmentOnOrder(array, message.getSubject(), fileName, message);
                         }
                     }
@@ -118,6 +133,36 @@ public class MailReceiverService {
 			e.printStackTrace();
 		}
 	}    
+	
+	private void compressFile(File origFile, String fileName) throws IOException {
+		File compressedFile = new File(fileName);
+		InputStream is = new FileInputStream(origFile);
+        OutputStream os = new FileOutputStream(compressedFile);
+        float quality = 0.5f;
+        // create a BufferedImage as the result of decoding the supplied InputStream
+        BufferedImage image = ImageIO.read(is);
+        // get all image writers for JPG format
+        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+        if (!writers.hasNext()){
+        	os.close();
+            throw new IllegalStateException("No writers found");
+        }
+        ImageWriter writer = (ImageWriter) writers.next();
+        ImageOutputStream ios = ImageIO.createImageOutputStream(os);
+        writer.setOutput(ios);
+        ImageWriteParam param = writer.getDefaultWriteParam();
+        // compress to a given quality
+        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        param.setCompressionQuality(quality);
+        // appends a complete image stream containing a single image and
+        // associated stream and image metadata and thumbnails to the output
+        writer.write(null, new IIOImage(image, null, null), param);
+        // close all streams
+        is.close();
+        os.close();
+        ios.close();
+        writer.dispose();
+	}
 	
 	private void storeAttachmentOnOrder(byte[] fileContent, String orderNumber, String fileName, Message message) throws IOException, MessagingException {
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderNumber);
