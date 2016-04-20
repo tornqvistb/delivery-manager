@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.domain.Attachment;
@@ -105,16 +106,18 @@ public class MailReceiverService {
                     for (int partCount = 0; partCount < numberOfParts; partCount++) {
                         MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(partCount);
                         LOG.info("Disposition: " + part.getDisposition());
-                        if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()) || Part.INLINE.equalsIgnoreCase(part.getDisposition())) {
+                        if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()) || Part.INLINE.equalsIgnoreCase(part.getDisposition())) {                        	
                             // this part is attachment
                             String fileName = part.getFileName();
-                            String fileNameWithPath = saveDirectory + File.separator + fileName;
-                            part.saveFile(fileNameWithPath);
-                            File origFile = new File(fileNameWithPath);
-                            String compressedFileNameWithPath = fileNameWithPath + ".comp.jpg";
-                            compressFile(origFile, compressedFileNameWithPath);                            
-                            byte[] array = Files.readAllBytes(new File(compressedFileNameWithPath).toPath());
-                            storeAttachmentOnOrder(array, message.getSubject(), fileName, message);
+                        	if (isImage(fileName)) {
+	                            String fileNameWithPath = saveDirectory + File.separator + fileName;
+	                            part.saveFile(fileNameWithPath);
+	                            File origFile = new File(fileNameWithPath);
+	                            String compressedFileNameWithPath = fileNameWithPath + ".comp.jpg";
+	                            compressFile(origFile, compressedFileNameWithPath);                            
+	                            byte[] array = Files.readAllBytes(new File(compressedFileNameWithPath).toPath());
+	                            storeAttachmentOnOrder(array, message.getSubject(), fileName, message);
+                        	}
                         }
                     }
                 } else {
@@ -133,6 +136,18 @@ public class MailReceiverService {
 			e.printStackTrace();
 		}
 	}    
+	
+	private boolean isImage(String fileName) {
+		boolean result = false;
+		
+		if (StringUtils.hasText(fileName)) {
+			String fileNameLC = fileName.toLowerCase();
+			if (fileNameLC.endsWith("jpg") || fileNameLC.endsWith("png") || fileNameLC.endsWith("gif")) {
+				result = true;
+			}
+		}
+		return result;
+	}
 	
 	private void compressFile(File origFile, String fileName) throws IOException {
 		File compressedFile = new File(fileName);
