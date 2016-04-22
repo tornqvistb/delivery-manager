@@ -58,16 +58,18 @@
 												<h3>Sökresultat</h3>
 												<table>
 													<colgroup>
-														<col style="width: 15%" />
-														<col style="width: 25%" />
-														<col style="width: 30%" />
-														<col style="width: 10%" />
+														<col style="width: 13%" />
 														<col style="width: 20%" />
+														<col style="width: 20%" />
+														<col style="width: 25%" />														
+														<col style="width: 10%" />
+														<col style="width: 12%" />
 													</colgroup>
 													<thead>
 														<tr>
 															<th scope="col">Ordernummer</th>
-															<th scope="col">Kundens ordernummer</th>
+															<th scope="col">Ordernummer kund</th>
+															<th scope="col">Leveransnummer kund</th>
 															<th scope="col">Kund</th>
 															<th scope="col">Orderdatum</th>
 															<th scope="col">Status</th>
@@ -77,6 +79,7 @@
 														<tr th:each="order : ${orders}">
 															<td><a th:text="${order.orderNumber}" th:href="@{/order-list/view/} + ${order.id}">LT100199</a></td>
 															<td th:text="${order.customerOrderNumber}">REQ100094</td>
+															<td th:text="${order.customerSalesOrder}">REQ100094</td>
 															<td th:text="${order.customerName}">Lundby</td>
 															<td th:text="${order.orderDateAsString}">2016-02-02</td>
 															<td th:text="${order.statusDisplay}">Ny</td>															

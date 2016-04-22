@@ -216,10 +216,6 @@
 															<td><a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a></td>
 															<td th:if="${order.editable}"><a th:href="@{/order-list/view/delfile/} + ${order.id} + '#additional-order-info'">Ta bort</a></td>
 														</tr>
-														<tr>
-															<th scope="row">Status</th>
-															<td th:text="${order.statusDisplay}">Ny</td>
-														</tr>
 														
 													</tbody>
 												</table>

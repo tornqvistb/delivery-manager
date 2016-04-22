@@ -86,13 +86,16 @@ public class EquipmentController {
 			@PathVariable Long equipmentId, ModelMap model) {
 		LOG.info("equipmentId: " + equipmentId + " ,orderId: " + orderId);
 		OrderLine orderLine = orderLineRepo.findOne(orderLineId);
-		for (Iterator<Equipment> iterator = orderLine.getEquipments().iterator(); iterator.hasNext();) {
+		for (Iterator<Equipment> iterator = orderLine.getEquipments().iterator(); iterator.hasNext();) {			
 			Equipment equipment = iterator.next();
-			if (equipment.getId() == equipmentId) {
+			LOG.info("in loop, equipmentId: " + equipment.getId());
+			if (equipment.getId().equals(equipmentId)) {
+				LOG.info("in loop, going to remove equipment: " + equipment.getId());
 				equipment.setOrderLine(null);
 				iterator.remove();
 				orderLine.setRegistered(orderLine.getRegistered() - 1);
 				orderLine.setRemaining(orderLine.getRemaining() + 1);
+				LOG.info("Order line updated: " + orderLine.getId());
 			}
 		}
 		orderLineRepo.save(orderLine);
