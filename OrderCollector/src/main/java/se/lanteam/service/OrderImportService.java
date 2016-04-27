@@ -36,7 +36,7 @@ public class OrderImportService {
 	private static final String GENERAL_FILE_ERROR = "Fel vid inläsning av fil. ";
 	private static final String ERROR_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Ordernummer saknas i fil: ";
 	private static final String ERROR_CUSTOMER_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Kundens ordernummer saknas i fil: ";
-	private static final String ERROR_NO_ORDER_LINES = GENERAL_FILE_ERROR + "Inga orderrader att leveransrapportera i fil: ";
+	private static final String ERROR_NO_ORDER_LINES = GENERAL_FILE_ERROR + "Inga orderrader att leveransrapportera (kundradnummer eller restriktionskod saknas) i fil: ";
 	private static final String ERROR_ARTICLE_ID_MISSING = GENERAL_FILE_ERROR + "Artikel-ID saknas på orderrad i fil: ";
 	private static final String ERROR_ROW_NUMBER_MISSING = GENERAL_FILE_ERROR + "Orderradnummer saknas på orderrad i fil: ";
 	private static final String ERROR_TOTAL_MISSING = GENERAL_FILE_ERROR + "Antal saknas på orderrad i fil: ";
@@ -118,13 +118,9 @@ public class OrderImportService {
 		Integer cutomerLineId = 1;
 		for (int i = 0; i < jsonOrderLines.length(); i++) {			
 			JSONObject jsonOrderLine = jsonOrderLines.getJSONObject(i);
-			if (!StringUtils.isEmpty(jsonOrderLine.optString("Restriktionskod"))) {
+			if (!StringUtils.isEmpty(jsonOrderLine.optString("Restriktionskod")) && jsonOrderLine.optInt("KundRadnummer") > 0) {
 				OrderLine orderLine = new OrderLine();
-				if (jsonOrderLine.optInt("KundRadnummer") > 0) {
-					orderLine.setRowNumber(jsonOrderLine.optInt("KundRadnummer"));
-				} else {
-					orderLine.setRowNumber(cutomerLineId);
-				}
+				orderLine.setRowNumber(jsonOrderLine.optInt("KundRadnummer"));
 				orderLine.setArticleNumber(jsonOrderLine.optString("Artikelnummer"));
 				orderLine.setArticleDescription(jsonOrderLine.optString("Artikelbenämning"));
 				orderLine.setTotal(jsonOrderLine.optInt("Antal"));
