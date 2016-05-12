@@ -115,10 +115,9 @@ public class OrderImportService {
 		orderHeader.setContact2Phone(jsonOrder.optString("Kontakt2_telefon"));
 		orderHeader.setStatus(StatusConstants.ORDER_STATUS_NEW);
 		JSONArray jsonOrderLines = jsonOrder.getJSONArray("Orderrader");
-		Integer cutomerLineId = 1;
 		for (int i = 0; i < jsonOrderLines.length(); i++) {			
 			JSONObject jsonOrderLine = jsonOrderLines.getJSONObject(i);
-			if (!StringUtils.isEmpty(jsonOrderLine.optString("Restriktionskod")) && jsonOrderLine.optInt("KundRadnummer") > 0) {
+			if (jsonOrderLine.optInt("KundRadnummer") > 0) {
 				OrderLine orderLine = new OrderLine();
 				orderLine.setRowNumber(jsonOrderLine.optInt("KundRadnummer"));
 				orderLine.setArticleNumber(jsonOrderLine.optString("Artikelnummer"));
@@ -129,7 +128,6 @@ public class OrderImportService {
 				orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod"));
 				orderLine.setOrderHeader(orderHeader);
 				orderHeader.getOrderLines().add(orderLine);
-				cutomerLineId++;
 			}
 		}
 		return orderHeader;
