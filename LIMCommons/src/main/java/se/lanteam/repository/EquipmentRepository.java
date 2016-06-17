@@ -17,4 +17,8 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
 
 	@Query("SELECT e FROM Equipment e WHERE LOWER(e.stealingTag) = LOWER(:stealingTag)")
     public List<Equipment> findByStealingTag(@Param("stealingTag") String stealingTag);
+
+	@Query("SELECT e FROM Equipment e WHERE LOWER(e.stealingTag) LIKE LOWER(:query) OR LOWER(e.serialNo) LIKE LOWER(:query)")
+    public List<Equipment> findBySearchQuery(@Param("query") String query);
+	
 }

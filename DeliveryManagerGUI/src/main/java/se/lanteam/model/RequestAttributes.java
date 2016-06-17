@@ -27,6 +27,8 @@ public class RequestAttributes {
 	private List<ReqOrderLine> reqOrderLines= new ArrayList<ReqOrderLine>();	
 	private Integer newErrorMessages;
 	private List<SystemProperty> systemProperties= new ArrayList<SystemProperty>();
+	private String query;
+	private String errorMessage;
 	
 	public RequestAttributes() {
 		super();
@@ -186,6 +188,18 @@ public class RequestAttributes {
 	}
 	public void setSystemProperties(List<SystemProperty> systemProperties) {
 		this.systemProperties = systemProperties;
+	}
+	public String getQuery() {
+		return query;
+	}
+	public void setQuery(String query) {
+		this.query = query;
+	}
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 	
 	
