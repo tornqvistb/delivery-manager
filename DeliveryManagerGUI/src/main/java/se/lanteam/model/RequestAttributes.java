@@ -29,6 +29,7 @@ public class RequestAttributes {
 	private List<SystemProperty> systemProperties= new ArrayList<SystemProperty>();
 	private String query;
 	private String errorMessage;
+	private String registeredBy;
 	
 	public RequestAttributes() {
 		super();
@@ -200,6 +201,12 @@ public class RequestAttributes {
 	}
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
+	}
+	public String getRegisteredBy() {
+		return registeredBy;
+	}
+	public void setRegisteredBy(String registeredBy) {
+		this.registeredBy = registeredBy;
 	}
 	
 	

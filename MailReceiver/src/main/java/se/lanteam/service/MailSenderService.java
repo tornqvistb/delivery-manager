@@ -5,14 +5,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
 import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +30,10 @@ import com.sun.mail.smtp.SMTPTransport;
 
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
+import se.lanteam.domain.Attachment;
 import se.lanteam.domain.Email;
 import se.lanteam.domain.ErrorRecord;
+import se.lanteam.repository.AttachmentRepository;
 import se.lanteam.repository.EmailRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.services.PropertyService;
@@ -42,6 +51,7 @@ public class MailSenderService {
     private ErrorRepository errorRepo;
     private EmailRepository emailRepo;
     private PropertyService propService;    
+    private AttachmentRepository attachmentRepo;
     
 	public void checkMailsToSend()  {
 		String mailSmtpHost = propService.getString(PropertyConstants.MAIL_SMTPS_HOST);    
@@ -67,6 +77,21 @@ public class MailSenderService {
 				msg.setText(email.getContent());
 				msg.setHeader("LIM - LanTeam", "E-post från LIM");
 				msg.setSentDate(new Date());
+				if (email.getAttachmentRef() != null && email.getAttachmentRef() > 0) {
+					Attachment attachment = attachmentRepo.findOne(email.getAttachmentRef());
+					if (attachment != null) {
+						BodyPart messageBodyPart = new MimeBodyPart();
+						messageBodyPart.setText(email.getContent());
+						Multipart multipart = new MimeMultipart();
+						multipart.addBodyPart(messageBodyPart);
+						messageBodyPart = new MimeBodyPart();
+				        DataSource source = new ByteArrayDataSource(attachment.getFileContent(), "image/jpeg");
+				        messageBodyPart.setDataHandler(new DataHandler(source));
+				        messageBodyPart.setFileName(attachment.getFileName());
+				        multipart.addBodyPart(messageBodyPart);
+				        msg.setContent(multipart);
+					}
+				}
 				SMTPTransport t =
 				    (SMTPTransport)session.getTransport("smtps");
 				t.connect(mailSmtpHost, mailUsername, mailPassword);
@@ -92,6 +117,7 @@ public class MailSenderService {
 	}    
 	
 	
+	
 	private void saveError(String errorText) {
 		errorRepo.save(new ErrorRecord(errorText));
 	}
@@ -107,5 +133,9 @@ public class MailSenderService {
 	@Autowired
 	public void setPropService(PropertyService propService) {
 		this.propService = propService;
+	}
+	@Autowired
+	public void setAttachmentRepo(AttachmentRepository attachmentRepo) {
+		this.attachmentRepo = attachmentRepo;
 	}
 }

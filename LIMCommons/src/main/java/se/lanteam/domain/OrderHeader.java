@@ -1,5 +1,6 @@
 package se.lanteam.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ public class OrderHeader {
 	private String deliveryPostalAddress2;
 	private String deliveryPostalCode;
 	private String deliveryCity;
+	private Date deliveryDate;
 	private String leasingNumber;	
 	private String customerOrderNumber;
 	private String customerSalesOrder;
@@ -309,4 +311,19 @@ public class OrderHeader {
 		result = result.replaceFirst("#1", String.valueOf(count));
 		return result;
 	}
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+	@Transient
+	public String getDeliveryDateDisplay() {
+		String result = "";
+		if (this.deliveryDate != null) {
+			result = new SimpleDateFormat("yyyy-MM-dd").format(deliveryDate);
+		}
+		return result;
+	}
+	
 }

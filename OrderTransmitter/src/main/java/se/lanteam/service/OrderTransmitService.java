@@ -6,8 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.parboiled.common.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,13 @@ import com.google.gson.Gson;
 import header.common.esb.staden._1.Header;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
+import se.lanteam.domain.Email;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
+import se.lanteam.repository.EmailRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCommentRepository;
 import se.lanteam.repository.OrderRepository;
@@ -48,6 +52,7 @@ public class OrderTransmitService {
     private ErrorRepository errorRepo;
     private OrderCommentRepository orderCommentRepo;
     private PropertyService propService;
+    private EmailRepository emailRepo;
     
 	public void transmitOrders() {
 		String wsEndpointOrderDelivery = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_DELIVERY);
@@ -67,8 +72,11 @@ public class OrderTransmitService {
 					}
 					// Create message to Visma and store on disk
 					createFileToBusinessSystem(order);
+					// Create mail to contact persons
+					createMailToContactPersons(order);
 					// Update order status
 					order.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
+					order.setDeliveryDate(new Date());
 					orderRepo.save(order);
 				} catch (Exception e) {
 					saveError(WS_ERROR + e.getMessage());
@@ -78,6 +86,31 @@ public class OrderTransmitService {
         }
 	}
 
+	private void createMailToContactPersons(OrderHeader order) {
+		if (StringUtils.isNotEmpty(order.getContact1Email())) {
+			Email email1 = getOrderDeliveredMail(order);
+			email1.setReceiver(order.getContact1Email());			
+			emailRepo.save(email1);
+		}
+		if (StringUtils.isNotEmpty(order.getContact2Email())) {
+			Email email2 = getOrderDeliveredMail(order);
+			email2.setReceiver(order.getContact2Email());
+			emailRepo.save(email2);			
+		}
+	}
+	
+	private Email getOrderDeliveredMail(OrderHeader order) {
+		Email email = new Email();
+		// Check text for subject and content
+		email.setSubject("Order levererad från Lanteam");
+		email.setContent("Order " + order.getOrderNumber() + " levererad från Lanteam");
+		email.setSender(propService.getString(PropertyConstants.MAIL_USERNAME));		
+		if (order.getAttachment() != null) {
+			email.setAttachmentRef(order.getAttachment().getId());
+		}
+		return email;
+	}
+	
 	private void createFileToBusinessSystem(OrderHeader order) {
 		String fileTransmitFolder = propService.getString(PropertyConstants.FILE_OUTGOING_FOLDER);
 		Order vismaOrder = new Order();
@@ -155,6 +188,10 @@ public class OrderTransmitService {
 	@Autowired
 	public void setPropService(PropertyService propService) {
 		this.propService = propService;
+	}
+	@Autowired
+	public void setEmailRepo(EmailRepository emailRepo) {
+		this.emailRepo = emailRepo;
 	}
 	
 }

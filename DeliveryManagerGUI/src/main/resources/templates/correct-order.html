@@ -75,17 +75,19 @@
 																</tr>
 																<tr th:if="${not #lists.isEmpty(orderLine.equipments)}">
 																	<td></td>
-																	<td colspan="3">
+																	<td colspan="4">
 																		<table class="small-table inner-table">
 																			<thead>
-																				<tr>
-																					<th>Serienummer</th>
-																					<th>Stöld-ID</th>
-																					<th>Korrigera</th>
+																				<tr>																				
+																					<th style="width:17%;">Serienummer</th>
+																					<th style="width:13%;">Stöld-ID</th>
+																					<th style="width:20%;">Registrerad av</th>
+																					<th style="width:10%;">Korrigera</th>
 																					<th th:if="${orderLine.anyEquipmentToCorrect}">Nytt
 																						serienummer</th>
 																					<th th:if="${orderLine.anyEquipmentToCorrect}">Nytt
 																						stöld-ID</th>
+																					<th th:if="${orderLine.anyEquipmentToCorrect}">Ny registrerad av</th>
 																				</tr>
 																			</thead>
 																			<tbody>
@@ -93,6 +95,7 @@
 																					th:each="equipment, eLoop : ${orderLine.equipments}">
 																					<td th:text="${equipment.serialNo}">5</td>
 																					<td th:text="${equipment.stealingTag}">5</td>
+																					<td th:text="${equipment.registeredBy}">Kalle</td>
 																					<td th:if="${not equipment.toCorrect}"><a
 																						th:href="@{/order-list/correct/doCorrect/} + ${order.id} + '/' + ${equipment.id} + '#registration-area'">Korrigera</a></td>
 																					<td th:if="${equipment.toCorrect}"><a
@@ -100,11 +103,13 @@
 																					<td th:if="${equipment.toCorrect}"><input
 																						type="text" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].serialNo}" name="serialNo"/></td>
 																					<td th:if="${equipment.toCorrect}"><input
-																						type="text" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].stealingTag}" name="stealingTag"/>
+																						type="text" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].stealingTag}" name="stealingTag" class="input-steal-id"/>
 																						<input type="hidden" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].id}" name="id"/>
 																						<input type="hidden" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].previousSerialNo}" name="previousSerialNo"/>
 																						<input type="hidden" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].previousStealingTag}" name="previousStealingTag"/>
 																					</td>
+																					<td th:if="${equipment.toCorrect}"><input
+																						type="text" th:field="${reqAttr.reqOrderLines[__${olLoop.index}__].equipments[__${eLoop.index}__].registeredBy}" name="registeredBy" class="input-reg-by"/></td>
 																				</tr>
 																			</tbody>
 																		</table>
