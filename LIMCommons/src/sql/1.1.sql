@@ -1,0 +1,2 @@
+insert into system_property (id, string_value, number_value) values ('max-days-inactive-orders-search', 'Max antal dagar sedan order skapats för att den skall visas bland inakiva i sökning.', 70);
+commit;

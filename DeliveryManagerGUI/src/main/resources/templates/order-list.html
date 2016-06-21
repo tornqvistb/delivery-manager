@@ -24,6 +24,11 @@
 							<!-- Här kan man lägga på en vänster meny -->
 							<div class="m-form">
 								<div class="content e-tjansteplattform hamster">
+									<div
+										th:if="${not #strings.isEmpty(reqAttr.infoMessage)}"
+										class="information-text system-info help-message side-margin">
+										<p th:utext="${reqAttr.infoMessage}"></p>
+									</div>								
 									<div class="form-step">
 										<!-- Här kan man lägga på ett tack meddelande -->
 										<form class="form-general" th:action= "@{/order-list/search}" th:object="${reqAttr}" method="get">

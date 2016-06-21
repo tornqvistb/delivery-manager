@@ -2,6 +2,7 @@ package se.lanteam.domain;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -322,6 +323,26 @@ public class OrderHeader {
 		String result = "";
 		if (this.deliveryDate != null) {
 			result = new SimpleDateFormat("yyyy-MM-dd").format(deliveryDate);
+		}
+		return result;
+	}
+	@Transient
+	public String getDeliveryTimeDisplay() {
+		String result = "";
+		if (this.deliveryDate != null) {
+			result = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(deliveryDate);
+		}
+		return result;
+	}
+	@Transient
+	public String getGroupStatus() {
+		String result = StatusConstants.ORDER_STATUS_GROUP_ACTIVE;
+		if (this.status != null) {
+			if (Arrays.asList(StatusConstants.ORDER_STATUS_GROUP_ACTIVE).contains(status)) {
+				result = StatusConstants.ORDER_STATUS_GROUP_ACTIVE;
+			} else {
+				result = StatusConstants.ORDER_STATUS_GROUP_INACTIVE;
+			}
 		}
 		return result;
 	}

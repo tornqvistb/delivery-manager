@@ -20,5 +20,6 @@ public class PropertyConstants {
 	public static final String WS_PASSWORD_GBCA = "ws-password-gbca";
 	public static final String ORDER_CORRECTION_MAIL_SENDER = "order-correction-mail-sender";
 	public static final String ORDER_CORRECTION_MAIL_RECEIVER = "order-correction-mail-receiver";
+	public static final String MAX_DAYS_INACTIVE_ORDERS_SEARCH = "max-days-inactive-orders-search";
 
 }

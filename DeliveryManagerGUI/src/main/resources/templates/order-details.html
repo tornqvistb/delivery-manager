@@ -24,7 +24,7 @@
 								<div class="content e-tjansteplattform hamster">
 									<div class="order-details">
 										<div class="back-link">
-											<a th:href="@{/order-list/search?orderStatus=} + ${order.status}" rel="nofollow">Tillbaka</a>
+											<a th:href="@{/order-list/search?orderStatus=} + ${order.groupStatus}" rel="nofollow">Tillbaka</a>
 										</div>
 										<div th:if="${not #strings.isEmpty(order.transmitErrorMessage)}" class="information-text system-info error-message">
 											<p th:utext="${order.transmitErrorMessage}"></p>
@@ -218,7 +218,7 @@
 														</tr>
 														<tr>
 															<th scope="row">Leveransdatum</th>
-															<td th:text="${order.deliveryDateDisplay}">2016-02-02</td>
+															<td th:text="${order.deliveryTimeDisplay}">2016-02-02</td>
 														</tr>
 														<tr>
 															<th scope="row">Status</th>
