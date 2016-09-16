@@ -203,7 +203,7 @@ public class OrderHeader {
 	public void setStatus(String status) {
 		this.status = status;
 	}	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="orderHeader")
 	@OrderBy("rowNumber")
 	
 	public Set<OrderLine> getOrderLines() {
@@ -212,7 +212,7 @@ public class OrderHeader {
 	public void setOrderLines(Set<OrderLine> orderLines) {
 		this.orderLines = orderLines;
 	}
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="orderHeader")
 	@OrderBy("creationDate desc")
 	public Set<OrderComment> getOrderComments() {
 		return orderComments;
@@ -220,7 +220,7 @@ public class OrderHeader {
 	public void setOrderComments(Set<OrderComment> orderComments) {
 		this.orderComments = orderComments;
 	}
-	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader", orphanRemoval=true)
+	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="orderHeader", orphanRemoval=true)
 	public Attachment getAttachment() {
 		return attachment;
 	}
