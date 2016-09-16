@@ -53,6 +53,7 @@ public class EquipmentController {
 			equipment.setOrderLine(orderLine);
 			equipment.setSerialNo(reqAttr.getSerialNo());
 			equipment.setStealingTag(reqAttr.getStealingTag());
+			equipment.setRegisteredBy(reqAttr.getRegisteredBy());
 			valResult = equipmentValidator.validateEquipment(equipment, orderRepo.findOne(orderId));
 			if (valResult.equals(RESULT_OK)) {
 				orderLine.getEquipments().add(equipment);
@@ -139,6 +140,7 @@ public class EquipmentController {
 						equipDb.setPreviousStealingTag(equipDb.getStealingTag());						
 						equipDb.setSerialNo(equipReq.getSerialNo());
 						equipDb.setStealingTag(equipReq.getStealingTag());
+						equipDb.setRegisteredBy(equipReq.getRegisteredBy());
 						equipDb.setToCorrect(false);
 						equipmentRepo.save(equipDb);
 						mailInfo.getModifiedEquipment().add(equipDb);

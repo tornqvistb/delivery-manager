@@ -24,6 +24,11 @@
 							<!-- Här kan man lägga på en vänster meny -->
 							<div class="m-form">
 								<div class="content e-tjansteplattform hamster">
+									<div
+										th:if="${not #strings.isEmpty(reqAttr.infoMessage)}"
+										class="information-text system-info help-message side-margin">
+										<p th:utext="${reqAttr.infoMessage}"></p>
+									</div>								
 									<div class="form-step">
 										<!-- Här kan man lägga på ett tack meddelande -->
 										<form class="form-general" th:action= "@{/order-list/search}" th:object="${reqAttr}" method="get">
@@ -58,10 +63,11 @@
 												<h3>Sökresultat</h3>
 												<table>
 													<colgroup>
-														<col style="width: 13%" />
-														<col style="width: 17%" />
-														<col style="width: 20%" />
+														<col style="width: 10%" />
+														<col style="width: 15%" />
+														<col style="width: 15%" />
 														<col style="width: 25%" />														
+														<col style="width: 10%" />
 														<col style="width: 10%" />
 														<col style="width: 15%" />
 													</colgroup>
@@ -72,6 +78,7 @@
 															<th scope="col">Leveransnummer kund</th>
 															<th scope="col">Kund</th>
 															<th scope="col">Orderdatum</th>
+															<th scope="col">Leveransdatum</th>
 															<th scope="col">Status</th>
 														</tr>
 													</thead>
@@ -82,6 +89,7 @@
 															<td th:text="${order.customerSalesOrder}">REQ100094</td>
 															<td th:text="${order.customerName}">Lundby</td>
 															<td th:text="${order.orderDateAsString}">2016-02-02</td>
+															<td th:text="${order.deliveryDateDisplay}">2016-02-02</td>
 															<td th:text="${order.statusDisplay}">Ny</td>															
 														</tr>
 													</tbody>

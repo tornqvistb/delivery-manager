@@ -1,5 +1,6 @@
 package se.lanteam.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ public class Equipment {
 	private String previousSerialNo;
 	private String previousStealingTag;
 	private Date creationDate;	
+	private String registeredBy;
 	@Transient
 	private Long orderLineId;
 	
@@ -82,5 +84,15 @@ public class Equipment {
 	public void setPreviousStealingTag(String previousStealingTag) {
 		this.previousStealingTag = previousStealingTag;
 	}
-	
+	public String getRegisteredBy() {
+		return registeredBy;
+	}
+	public void setRegisteredBy(String registeredBy) {
+		this.registeredBy = registeredBy;
+	}
+	@Transient
+	public String getCreationDateDisplay() {		
+		String result = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(creationDate);
+		return result;		
+	}
 }

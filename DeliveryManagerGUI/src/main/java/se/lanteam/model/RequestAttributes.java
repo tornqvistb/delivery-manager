@@ -27,6 +27,10 @@ public class RequestAttributes {
 	private List<ReqOrderLine> reqOrderLines= new ArrayList<ReqOrderLine>();	
 	private Integer newErrorMessages;
 	private List<SystemProperty> systemProperties= new ArrayList<SystemProperty>();
+	private String query;
+	private String errorMessage;
+	private String infoMessage;
+	private String registeredBy;
 	
 	public RequestAttributes() {
 		super();
@@ -186,6 +190,30 @@ public class RequestAttributes {
 	}
 	public void setSystemProperties(List<SystemProperty> systemProperties) {
 		this.systemProperties = systemProperties;
+	}
+	public String getQuery() {
+		return query;
+	}
+	public void setQuery(String query) {
+		this.query = query;
+	}
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+	public String getRegisteredBy() {
+		return registeredBy;
+	}
+	public void setRegisteredBy(String registeredBy) {
+		this.registeredBy = registeredBy;
+	}
+	public String getInfoMessage() {
+		return infoMessage;
+	}
+	public void setInfoMessage(String infoMessage) {
+		this.infoMessage = infoMessage;
 	}
 	
 	

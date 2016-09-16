@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
@@ -16,6 +17,7 @@ public class EquipmentValidator {
 	private static String RESULT_OK = "";
 	private static String SERIAL_NO_TOO_SHORT = "Serienummer måste vara minst 7 tecken långt";
 	private static String INVALID_STEALING_TAG = "Stöld-ID måste vara 6 tecken";
+	private static String REGISTERED_BY_MISSING = "Du måste fylla i Registrerad av";
 	private static String SERIAL_NO_ON_CURRENT_ORDER = "Angivet serienummer finns redan registrerat på denna order";
 	private static String STEALING_TAG_ON_CURRENT_ORDER = "Angivet stöld-ID finns redan registrerat på denna order";
 	private static String SERIAL_NO_ON_OTHER_ORDER = "Angivet serienummer finns redan registrerat på order ";
@@ -41,7 +43,10 @@ public class EquipmentValidator {
 				result = validateStealingTag(equipment, order);
 			}
 		}
-				
+		
+		if (RESULT_OK.equals(result)) {
+			result = validateRegisteredBy(equipment);
+		}
 		return result;
 	}
 
@@ -52,7 +57,11 @@ public class EquipmentValidator {
 		if (RESULT_OK.equals(result)) {
 			result = validateStealingTag(equipment, order);
 		}
-				
+		
+		if (RESULT_OK.equals(result)) {
+			result = validateRegisteredBy(equipment);
+		}		
+		
 		return result;
 	}
 
@@ -103,6 +112,14 @@ public class EquipmentValidator {
 			}
 		}
 		
+		return RESULT_OK;
+	}
+	
+	private String validateRegisteredBy(Equipment equipment) {
+		// - stealing tag exact 6 letters
+		if (StringUtils.isEmpty(equipment.getRegisteredBy())) {
+			return REGISTERED_BY_MISSING;
+		}		
 		return RESULT_OK;
 	}
 	

@@ -18,6 +18,7 @@ public class Email {
 	private String content;
 	private String status;
 	private Date creationDate;
+	private Long attachmentRef;
 	
 	public Email() {
 		super();
@@ -67,6 +68,12 @@ public class Email {
 	}
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+	public Long getAttachmentRef() {
+		return attachmentRef;
+	}
+	public void setAttachmentRef(Long attachmentRef) {
+		this.attachmentRef = attachmentRef;
 	}
 	
 }
