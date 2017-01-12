@@ -304,7 +304,22 @@
 														</tr>
 													</tbody>
 												</table>
+												<div th:if="${order.editable}">
 												
+													<h3>Makulering av order</h3>
+													<div class="system-info error-message">
+														<span><strong>OBS!</strong> Genom att makulera ordern kommer all data om ordern att raderas</span>
+													</div>
+													<form
+														th:action="@{/order-list/view/cancelOrder/} + ${order.id}"
+														th:object="${reqAttr}" method="post"
+														onsubmit="return confirm('Vill du verkligen makulera ordern?');">	
+														<div class="row cf action-area">
+															<input class="backend-operation" type="submit"
+																value="Makulera ordern" name="cancelorder" id="cancelorder" />
+														</div>
+													</form>
+												</div>												
 											</div>
 										</div>
 									</div>

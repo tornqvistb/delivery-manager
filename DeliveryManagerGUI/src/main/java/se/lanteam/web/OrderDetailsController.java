@@ -20,6 +20,7 @@ public class OrderDetailsController {
 
 	private static final String STATUS_MSG_OK = "Statusmeddelande skickat.";
 	private static final String STATUS_MSG_COMMENT_MISSING = "Du måste skriva ett meddelande.";
+	private static final String STATUS_MSG_ORDER_CANCELLED = "Följande order har makulerats: ";
 
 	private OrderRepository orderRepo;	
 	private ErrorRepository errorRepo;
@@ -58,6 +59,19 @@ public class OrderDetailsController {
 		return "correct-order";
 	}
 	
+	@RequestMapping(value = "order-list/view/cancelOrder/{orderId}", method = RequestMethod.POST)
+	public String cancelOrder(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
+			ModelMap model) {
+		OrderHeader order = orderRepo.findOne(orderId);
+		String orderNumber = order.getOrderNumber();
+		orderRepo.delete(orderId);
+		reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
+		reqAttr.setThanksMessage(STATUS_MSG_ORDER_CANCELLED + orderNumber);
+		model.put("reqAttr", reqAttr);
+
+		return "order-list";
+	}
+		
 	
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {

@@ -29,6 +29,11 @@
 										class="information-text system-info help-message side-margin">
 										<p th:utext="${reqAttr.infoMessage}"></p>
 									</div>								
+									<div
+										th:if="${not #strings.isEmpty(reqAttr.thanksMessage)}"
+										class="information-text system-info thanks-message side-margin">
+										<p th:utext="${reqAttr.thanksMessage}"></p>
+									</div>								
 									<div class="form-step">
 										<!-- Här kan man lägga på ett tack meddelande -->
 										<form class="form-general" th:action= "@{/order-list/search}" th:object="${reqAttr}" method="get">

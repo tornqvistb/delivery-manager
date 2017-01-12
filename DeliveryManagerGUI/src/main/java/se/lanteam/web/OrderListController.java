@@ -66,32 +66,7 @@ public class OrderListController {
 	public void setPropertyService(PropertyService propService) {
 		this.propService = propService;
 	}
-	/*
-	@RequestMapping(value="order-list/search", method=RequestMethod.GET)
-	public String searchOrdersOLD(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
-		
-		String status = reqAttr.getOrderStatus();
-		List<OrderHeader> orders;
-		reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
-		if (status.equals(StatusConstants.ORDER_STATUS_GROUP_ACTIVE)){ 
-			orders = orderRepo.findOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI));
-		} else if (status.equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(new Date());
-			int daysBack = propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue();
-			cal.add(Calendar.DATE, - daysBack);
-			Date startDate = cal.getTime(); 
-			orders = orderRepo.findOrdersByStatusListAfterDate(Arrays.asList(StatusConstants.INACTIVE_STATI), startDate);
-			reqAttr.setInfoMessage("De ordrar som visas är skapta " + daysBack + " dagar tillbaks i tiden fram tills idag. För att se äldre inaktiva ordrar, sök på specifik status.");
-		} else {
-			orders = orderRepo.findOrdersByStatus(status);
-		}		
-		model.put("orders", orders);		
-		reqAttr.setOrderStatus(status);
-		model.put("reqAttr", reqAttr);
-		return "order-list";
-	}
-	*/
+
 	@RequestMapping(value="order-list/search", method=RequestMethod.GET)
 	public String searchOrders(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
 		
