@@ -1,6 +1,7 @@
 package se.lanteam.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import se.lanteam.constants.StatusConstants;
@@ -31,6 +32,8 @@ public class RequestAttributes {
 	private String errorMessage;
 	private String infoMessage;
 	private String registeredBy;
+	private String fromDate;
+	private String toDate;
 	
 	public RequestAttributes() {
 		super();
@@ -214,6 +217,18 @@ public class RequestAttributes {
 	}
 	public void setInfoMessage(String infoMessage) {
 		this.infoMessage = infoMessage;
+	}
+	public String getFromDate() {
+		return fromDate;
+	}
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+	public String getToDate() {
+		return toDate;
+	}
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
 	}
 	
 	

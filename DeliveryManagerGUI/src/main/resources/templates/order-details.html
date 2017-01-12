@@ -24,7 +24,7 @@
 								<div class="content e-tjansteplattform hamster">
 									<div class="order-details">
 										<div class="back-link">
-											<a th:href="@{/order-list/search?orderStatus=} + ${order.groupStatus}" rel="nofollow">Tillbaka</a>
+											<a href="javascript:history.back()">Tillbaka</a>
 										</div>
 										<div th:if="${not #strings.isEmpty(order.transmitErrorMessage)}" class="information-text system-info error-message">
 											<p th:utext="${order.transmitErrorMessage}"></p>

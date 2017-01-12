@@ -33,8 +33,8 @@
 										<!-- Här kan man lägga på ett tack meddelande -->
 										<form class="form-general" th:action= "@{/order-list/search}" th:object="${reqAttr}" method="get">
 											<div class="form-section">
-												<h3 class="expandtrigger">Filtrera och visa</h3>
-												<div class="row cols-2 cf">
+												<h3 class="expandtrigger">Filtrera och sök</h3>
+												<div class="row cols-3 cf">
 													<div class="select">
 														<label for="status">Välj status</label> 
 														<select
@@ -54,8 +54,24 @@
 
 														</select>
 													</div>
+													<div class="col col-1">
+														<div class="text">
+															<label for="fromDate">Från leveransdatum</label>
+															<input type="date" th:field="${reqAttr.fromDate}" maxlength="10" value="" name="fromDate" class="date small" id="fromDate"/>
+														</div>
+													 </div> 
+													<div class="col col-2">
+														<div class="text">
+															<label for="toDate">Till leveransdatum</label>
+															<input type="date" th:field="${reqAttr.toDate}" maxlength="10" value="" name="toDate" class="date small" id="toDate"/>
+														</div>
+													</div>
 												</div>
-												<input class="btn" type="submit" value="Visa" />
+												<div class="search-wide">
+													<label for="query">Ange sökord</label>
+													<input class="keywords" th:field="${reqAttr.query}" type="search" id="query" value="${reqAttr.query}" placeholder="Ange ordernummer eller något av kundens ordernummer"/>
+													<input class="btn" type="submit" value="Sök" id="ActionSearchFreetext" name="ActionSearchFreetext"/>
+												</div>													
 											</div>
 										</form>
 										<form>
