@@ -178,6 +178,53 @@
 												<div th:if="${not #strings.isEmpty(order.printMessage)}" class="information-text system-info help-message">
 													<p th:utext="${order.printMessage}"></p><strong><a onclick="PrintLabels()">Skriv ut =></a></strong>
 												</div>
+												<h3 id="contact-persons">Kontaktpersoner</h3>
+													<table class="small-table">
+													<thead>
+														<tr>
+															<th>Namn</th>
+															<th>Epost-adress</th>
+															<th>Telefon</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td th:text="${order.contact1Name}">Kalle</td>
+															<td th:text="${order.contact1Email}">Kalle@gmail.com</td>
+															<td th:text="${order.contact1Phone}">070-101010</td>
+														</tr>
+														<tr>
+															<td th:text="${order.contact2Name}">Pelle</td>
+															<td th:text="${order.contact2Email}">Pelle@gmail.com</td>
+															<td th:text="${order.contact2Phone}">070-121212</td>
+														</tr>
+													</tbody>
+												</table>
+												<h3 id="Delivery-address">Leveransadress</h3>
+												<table class="small-table">
+													<colgroup>
+														<col style="width: 30%" />
+														<col style="width: 70%" />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th scope="row">Leveransadress 1</th>
+															<td th:text="${order.deliveryPostalAddress1}" id="order-del-adr-1">Storgatan 1</td>
+														</tr>
+														<tr>
+															<th scope="row">Leveransadress 2</th>
+															<td th:text="${order.deliveryPostalAddress2}" id="order-del-adr-2">3 trappor</td>
+														</tr>
+														<tr>
+															<th scope="row">Postnummer</th>
+															<td th:text="${order.deliveryPostalCode}" id="order-del-postal-code">42655</td>
+														</tr>
+														<tr>
+															<th scope="row">Ort</th>
+															<td th:text="${order.deliveryCity}" id="order-del-city">Göteborg</td>
+														</tr>
+													</tbody>
+												</table>
 												<h3 id="additional-order-info">Övrig orderinformation</h3>
 												<!-- Success or error message for file upload -->
 												<div th:if="${reqAttr.statusAttachmentSuccess != null}"
@@ -191,8 +238,7 @@
 												
 												<table class="small-table">
 													<colgroup>
-														<col style="width: 15%" />
-														<col style="width: 15%" />
+														<col style="width: 30%" />
 														<col style="width: 70%" />
 													</colgroup>
 													<tbody>
@@ -226,8 +272,10 @@
 														</tr>
 														<tr th:if="${order.attachment != null}">
 															<th scope="row">Leveransdokument</th>
-															<td><a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a></td>
-															<td th:if="${order.editable}"><a th:href="@{/order-list/view/delfile/} + ${order.id} + '#additional-order-info'">Ta bort</a></td>
+															<td>
+																<a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a>
+																<span th:if="${order.editable}"><strong><a th:href="@{/order-list/view/delfile/} + ${order.id} + '#additional-order-info'">Ta bort</a></strong></span>
+															</td>															
 														</tr>
 														
 													</tbody>
