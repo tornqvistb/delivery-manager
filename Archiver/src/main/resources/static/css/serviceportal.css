@@ -1,0 +1,3297 @@
+/*version=2.13-SNAPSHOT - developer=x1andlev - timestamp=20151215-1025*//**
+ * File: serviceportal.css
+ *
+ * Used on Service Portal pages
+ *
+ * TODO: Describe what the rules in this file are used for
+ */
+
+
+
+/* =============================================================================
+ * Layout
+ *
+ * Common layout and specific layouts based on body layout classes
+============================================================================= */
+.sp-layout-1 .content-1 {
+	float:left;
+	width:66.1%;
+	margin:0;
+}
+.sp-layout-1 .content-2 {
+	float:right;
+	width:32%;
+	margin:0;
+}
+.sp-layout-1 .content-1 {
+	padding-top:6px;
+}
+.sp-layout-2 .content-1 {
+	float:left;
+	width:74.1%;
+	margin:0;
+}
+.sp-layout-2 .content-2 {
+	float:right;
+	width:24%;
+	margin:0;
+}
+.sp-layout-2 .content-1 {
+	padding-top:6px;
+}
+.sp-layout-3 .content-1 {
+	float:left;
+	width:32%;
+	margin:0;
+}
+.sp-layout-3 .content-2 {
+	float:right;
+	width:66.1%;
+	margin:0;
+}
+.sp-layout-3 .content-2 #content-primary {
+	padding:20px;
+	border:1px solid #dadada;
+	background:#fff;
+}
+.sp-layout-4 .content-1,
+.sp-layout-orderpage .content-1,
+.sp-layout-mypage .content-1 {
+	float:none;
+	width:auto;
+	margin:0;
+}
+
+/* SP module-layouts */
+
+#service-portal .m-orderpage > .m-c,
+#service-portal .m-qna > .m-c,
+#service-portal .m-regularpage > .m-c,
+#service-portal .m-qna .m-qna-c {
+	float:left;
+	width:50%;
+	padding:14px 0;
+}
+#service-portal .m-orderpage > .m-c,
+#service-portal .m-regularpage > .m-c {width:65%;}
+#service-portal .neworder > .m-c {width:50%;}
+
+#service-portal .m-page #nav-sub {
+	float:left;
+	width:24%;
+}
+
+#service-portal .m-page #nav-sub + .m-c {
+	padding-left:0;
+}
+#service-portal .m-page > .m-c {
+	float:right;
+	width:74%;
+	padding:0;
+}
+
+/* =============================================================================
+ * Sub-header
+ *
+ * TODO: Describe this
+============================================================================= */
+.sub-header h1 {
+	min-width:0;
+}
+.sub-header h1 img {
+	float:left;
+	margin:0 10px 0 0;
+}
+.sub-header {
+	padding-bottom:10px;
+}
+#service-portal .sub-header {
+	position:relative;
+	padding:0;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .sub-header h1 {
+	float:left;
+	margin:0 0 20px 20px;
+	font-size:30px;
+	line-height:1.3;
+}
+#service-portal .sub-header h1 a {
+	color:#444;
+}
+#service-portal .sub-header h1 .byline {
+	display:block;
+	color:#888;
+	font-size:13px;
+}
+#service-portal .sub-header p {
+	margin:0;
+	color:#888;
+}
+
+
+/* Sub-header navigation
+ * TODO: Describe this
+----------------------------------------------------------------------------- */
+#service-portal .sub-header-nav {
+	float:right;
+	margin:12px 0 0;
+}
+#service-portal .sub-header-nav ul {
+	float:right;
+	margin:0;
+	border:none;
+	border-radius:3px;
+	box-shadow:0 0 4px #bbb;
+	list-style:none;
+	background:#fff;
+}
+#service-portal .sub-header-nav li {
+	float:left;
+	border-right:1px solid #eee;
+}
+#service-portal .sub-header-nav li a {
+	float:left;
+	padding:10px 14px 7px;
+	border-bottom:4px solid #fff;
+	background:#fff;
+	color:#666;
+	font-size:14px;
+	text-align:center;
+	text-decoration:none;
+}
+#service-portal .sub-header-nav li a:hover,
+#service-portal .sub-header-nav li a:focus,
+#service-portal .sub-header-nav li a:active {
+	border-color:#eee;
+	background:#fff;
+	color:#333;
+}
+#service-portal .sub-header-nav li.sel a {
+	border-color:#1e79c4;
+	box-shadow:none;
+	background:#fff;
+	color:#333;
+	font-weight:normal;
+	text-decoration:none;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .sub-header-nav li a:active {
+	box-shadow:none;
+	background:#f9f9f9;
+}
+#service-portal .sub-header-nav li:first-child,
+#service-portal .sub-header-nav li:first-child.sel,
+#service-portal .sub-header-nav li:first-child a,
+#service-portal .sub-header-nav li:first-child.sel a {
+	border-radius:3px 0 0 3px;
+}
+#service-portal .sub-header-nav li:last-child,
+#service-portal .sub-header-nav li:last-child.sel,
+#service-portal .sub-header-nav li:last-child a,
+#service-portal .sub-header-nav li:last-child.sel a {
+	border-right:none;
+	border-radius:0 3px 3px 0;
+}
+
+
+
+/* =============================================================================
+ * Main header navigation
+============================================================================= */
+#service-portal .main-header .nav {
+	float:right;
+	margin:5px 0 -1px;
+	list-style:none;
+}
+#service-portal .main-header .nav li {
+	float:left;
+	margin:0;
+	font-size:14px;
+}
+#service-portal .main-header .nav li a {
+	float:left;
+	padding:10px 14px 15px;
+	color:#fff;
+}
+#service-portal .main-header .nav li.sel a {
+	border-radius:3px 3px 0 0;
+	background:#fff;
+	color:#424242;
+}
+/*#service-portal .m-1 .main-header h2 {margin-top:10px !important;}*/
+
+
+
+/* =============================================================================
+ * Standard elements
+ *
+ * Buttons, lists, links etc.
+============================================================================= */
+
+
+/* Links
+----------------------------------------------------------------------------- */
+.m-c a:visited {
+	color:#873ba3;
+}
+a.btn,
+a.btn:link,
+a.btn:visited {
+	padding:8px 10px;
+	border:1px solid #047;
+	border-radius:5px;
+	background:#025da9 url(../img/menu-grad.png) repeat-x 0 0;
+	color:#fff;
+	font-weight:bold;
+	text-align:center;
+	text-decoration:none;
+	text-shadow:0 -1px 2px #025;
+}
+a.btn:hover,
+a.btn:focus {
+	background:#1e79c4 url(../img/menu-grad-sel.png) repeat-x 0 0;
+	text-decoration:none;
+}
+a.btn:active {
+	box-shadow:0 1px 4px #025 inset;
+	background:#025da9;
+}
+
+
+/* Updates
+----------------------------------------------------------------------------- */
+span.updates {
+	margin-left:5px;
+	padding:1px 8px;
+	border-radius:15px;
+	background:#1e79c4;
+	color:#fff;
+	font-weight:bold;
+	font-size:13px;
+	text-shadow:0 -1px 0 #025;
+}
+.sel span.updates {
+	background-color:#fff;
+	color:#1e79c4;
+	text-shadow:none;
+}
+
+
+/* System info
+----------------------------------------------------------------------------- */
+#service-portal .system-info {
+	box-sizing:border-box;
+	margin:20px 0 30px 0;
+	padding:10px 14px 10px 38px;
+	border-radius:3px;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .system-info.info-message {
+	padding-left:10px;
+}
+#service-portal .system-info p a.button {
+	display:inline;
+	margin-left:10px;
+	padding:3px 10px;
+}
+#service-portal .help-message {
+	border-left:5px solid #1e79c4;
+	background:#fff url(../img/icn-info.png) no-repeat 8px 10px;
+}
+#service-portal .error-message {
+	border-left:5px solid #f00;
+}
+#service-portal .help-message p,
+#service-portal .thanks-message p,
+#service-portal .deny-message p {
+	margin:0;
+}
+#service-portal .thanks-message {
+	border-left:5px solid #1ec20c;
+	background:#fff url(../img/icn-check-solved.png) no-repeat 8px 10px;
+}
+#service-portal .deny-message {
+	border-left:5px solid #1ec20c;
+	background:#fff url(../img/icn-info.png) no-repeat 8px 10px;
+}
+#service-portal .warning-message {
+	border-left:5px solid #c20c0e;
+	background:#fff url(../img/icn-maintenance.png) no-repeat 8px 13px;
+}
+#service-portal .system-info.big {
+	margin:0 0 20px;
+	background-position:8px 13px;
+	font-size:16px;
+}
+#service-portal .thanks-message.big {
+	border-width:0 0 0 5px;
+	border-color:#1ec20c;
+	border-radius:3px;
+	background-color:#f0faef;
+}
+#service-portal .deny-message.big {
+	border-width:0 0 0 5px;
+	border-color:#c20c0e;
+	border-radius:3px;
+	background-color:#fbe8e8;
+}
+
+
+
+/* =============================================================================
+ * Forms
+ *
+ * Non-serviceplatform
+============================================================================= */
+#service-portal .subscribe-form .checkbox .text {
+	padding:10px 16px 20px;
+}
+#service-portal .subscribe-form .checkbox .text input {
+	width:300px !important;
+}
+#service-portal .subscribe-form .checkbox .text label {
+	display:block;
+	font-weight:bold;
+}
+#service-portal .text input {
+	padding:5px 7px;
+}
+#service-portal .checkbox > div,
+#service-portal .radio > div {
+	margin:5px 0 0 22px;
+}
+
+
+
+/* =============================================================================
+ * Modules
+============================================================================= */
+#service-portal .m-1 {
+	margin-bottom:20px;
+	border-radius:3px;
+	box-shadow:0 0 4px #bbb;
+	background:#fff;
+}
+#service-portal .m-1 .m-h {
+	padding:10px 20px;
+	border-bottom:1px solid #dadada;
+	border-radius:3px 3px 0 0;
+	background:#fff url(../img/grey-grad-1.png) repeat-x 0 100%;
+}
+#service-portal.sp-layout-3 .m-1 .m-h {
+	border:1px solid #fff;
+	border-radius:3px;
+	background:#e6effa;
+}
+#service-portal .m-1 .m-h h2 {
+	margin:0;
+}
+/*#service-portal .m-1 .main-header {
+	padding-top:0;
+	padding-bottom:0;
+}*/
+#service-portal .m-1 .m-c {
+	padding:14px 20px;
+}
+#service-portal .m-1 .m-c h3 {
+	margin-bottom:10px;
+}
+#service-portal .m-1 a.btn,
+a.btn-ask,
+a.btn-ask:link,
+a.btn-ask:visited {
+	display:block;
+	margin:24px 0;
+	padding:8px 20px 10px;
+	font-size:15px;
+}
+a.btn-ask,
+a.btn-ask:link,
+a.btn-ask:visited {
+	width:50%;
+	margin:6px 0 20px;
+	text-align:center;
+}
+#service-portal .m-1 .m-c ul li,
+#service-portal .m-a .m-c ul li,
+#service-portal .m-f .m-c ul li {
+	padding-left:12px;
+	background:url(../img/thin-arrow-right.png) no-repeat 0 5px;
+}
+#service-portal .m-1 .m-c ul.edit-links li {
+	background:none;
+}
+#service-portal .m-f .m-c ul {
+	margin-bottom:10px;
+}
+#service-portal .content-2 .m-order {
+	float:left;
+	clear:left;
+	width:48.25%;
+}
+#service-portal .content-2 .m-support,
+#service-portal .content-2 .m-infopack {
+	float:right;
+	clear:right;
+	width:48.25%;
+}
+#service-portal .content-2 .m-contact {
+	float:left;
+	clear:left;
+	width:48.25%;
+}
+#service-portal .content-2 .m-infopack:nth-child(2n+1) {
+	float:left;
+	clear:left;
+}
+#service-portal .m-contact .vcard {
+	margin-bottom:20px;
+}
+#service-portal .m-contact .vcard strong {
+	display:block;
+}
+#service-portal .m-contact .vcard .email {
+	margin:20px 0;
+}
+#service-portal .m-contact .vcard .hours {
+	margin:20px 0 0;
+}
+#service-portal .m-contact .vcard .email a {
+	display:block;
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
+#service-portal .m-contact .vcard .tel .value {
+	font-size:22px;
+}
+#service-portal .m-contact .vcard .msg {
+	padding-top:20px;
+}
+#service-portal .m-contact .contact-form {
+	float:right;
+	width:48%;
+}
+#service-portal .contact-form .form-general {
+	margin:10px 0;
+}
+#service-portal .contact-form .form-general textarea {
+	width:98%;
+}
+#service-portal .contact-form .form-general .text,
+#service-portal .contact-form .form-general .select,
+#service-portal .contact-form .form-general .file {
+	margin-bottom:10px;
+}
+#service-portal .contact-form .contact-links {
+	margin-top:20px;
+}
+/* #service-portal .contact-panel {
+	padding:10px 14px;
+	background:#f9f9f9;
+	border:1px solid #dadada;
+} */
+#service-portal .contact-panel form {
+	margin:0;
+	padding:0;
+	border:none;
+	background:none;
+}
+#service-portal .contact-panel textarea {
+	height:80px;
+}
+#service-portal .contact-item {
+	padding-bottom:20px;
+}
+#service-portal .contact-item h3 {
+	border-bottom:1px solid #dadada;
+}
+#service-portal .contact-item .qa {
+	float:right;
+	width:40%;
+	margin-left:10px;
+	padding:10px 14px;
+	background:#f7f1d3;
+}
+#service-portal .contact-item .qa ul {
+	margin-top:5px;
+}
+#service-portal .m-3 {
+	margin:0;
+	border:1px solid #dadada;
+	border-width:0 0 1px 1px;
+}
+#service-portal .m-3 .m-h {
+	border:1px solid #fff;
+	background:#e6effa;
+	color:#424242;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .m-3 .m-h h2,
+#service-portal .m-3 .m-h h3 {
+	font-weight:bold;
+}
+#service-portal .m-a .m-3 {
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .m-a .m-3 .m-h {
+	border-radius:2px;
+}
+#service-portal .m-f {
+	clear:both;
+	padding:14px 0 14px 20px;
+}
+#service-portal .m-f .m {
+	border:1px solid #dadada;
+}
+#service-portal .m-form {
+	float:right;
+	width:70%;
+	padding:14px 40px 14px 0;
+}
+#service-portal .m .m-c .paging li {
+	background-image:none;
+}
+
+
+/* Recommended orders
+----------------------------------------------------------------------------- */
+#service-portal .m-orderpage .recommended {
+	float:right;
+	width:24%;
+	margin-top:44px;
+}
+#service-portal .recommended .inner {
+	padding:10px 18px;
+}
+#service-portal .recommended p {
+	color:#585858;
+}
+#service-portal .recommended li {
+	margin:0 0 10px;
+}
+#service-portal .recommended li a {
+	padding:3px 10px;
+	border-bottom:1px solid #e3dcbb;
+	border-radius:3px;
+	background:#f7f1d3;
+}
+
+
+/* Teaser
+----------------------------------------------------------------------------- */
+#service-portal .m-teaser {
+	margin-bottom:20px;
+	border-radius:3px;
+}
+#service-portal .m-teaser .m-h h2 {
+	padding:5px 20px;
+}
+#service-portal .m-teaser .m-c {
+	padding:10px 0 14px;
+}
+#service-portal .m-teaser .m-c p {
+	padding:0 20px;
+}
+#service-portal .m-teaser p.none,
+#service-portal .m-basket p.none {
+	padding:50px;
+	color:#777;
+}
+#service-portal .m-basket p.none {
+	padding:20px;
+}
+#service-portal .m-teaser .form-general {
+	margin:0;
+	padding:0 20px 10px;
+	border:none;
+	background:none;
+}
+#service-portal .step-title {
+	padding:0 18px;
+}
+#service-portal h2.step-title {
+	margin-top:20px;
+}
+#service-portal .step-title em {
+	padding:1px 5px;
+	border-radius:30px;
+	background:#1e79c4;
+	color:#fff;
+	font-style:normal;
+}
+#service-portal #order-basket .step-title {
+	padding:0 0 5px;
+}
+#service-portal .e-tjansteplattform .step-title {
+	padding:0;
+}
+#service-portal .e-tjansteplattform .step-title .submit-area h2 {
+	float:left;
+	margin:5px 20px 0 0;
+}
+#service-portal #order-basket {
+	margin:0 0 30px;
+	padding:12px 18px 8px 18px;
+	border-radius:3px;
+	background:#f7f1d3;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal #order-basket .tooltip {
+	text-shadow:none;
+}
+#service-portal #order-basket .basket-cont {
+	margin:0 -10px;
+	padding:0;
+	border-radius:3px;
+	background:#fff;
+}
+#service-portal #order-basket .basket-cont p {
+	margin:0;
+	padding:0 10px 10px;
+}
+#service-portal #order-basket h2 {
+	margin:0 0 10px;
+	padding:0 0 0 30px;
+	background:url(../img/icn-cart2.png) no-repeat 0 50%;
+}
+#service-portal #order-basket h2 span {
+	margin-left:10px;
+	color:#777;
+	font-size:13px;
+}
+#service-portal #order-basket table,
+#service-portal #order-basket th,
+#service-portal #order-basket td {
+	border:none;
+	background:none;
+}
+#service-portal #order-basket th,
+#service-portal #order-basket td {
+	padding:10px;
+	border-bottom:1px solid #e3dcbb;
+}
+#service-portal #order-basket th {
+	border-top:2px solid #dadada;
+}
+#service-portal #order-basket .continue {
+	margin:0 0 10px 0;
+	font-size:16px;
+}
+#service-portal #order-basket .button {
+	margin-left:10px;
+}
+#service-portal #order-basket .save-template {
+	float:right;
+}
+#save-draft {
+	padding:0 20px;
+}
+#save-draft h2 {
+	margin-top:0;
+}
+#save-draft label {
+	display:block;
+	font-weight:bold;
+}
+#save-draft .text input {
+	width:90%;
+	margin-bottom:10px;
+}
+#save-draft .draft-info {
+	margin:20px 0 0;
+	padding:20px 0;
+	border-top:1px solid #dadada;
+}
+#save-draft .draft-info p {
+	margin:0;
+}
+#cancel-order {
+	padding:0 20px 20px;
+}
+#cancel-order .button {
+	margin-right:10px;
+}
+#contact-dialog form {
+	border:none;
+	background:none;
+}
+
+#service-portal .indt-teaser {
+	text-align:center;
+}
+
+#service-portal .computer-help {
+	display:inline-block;
+	width:346px;
+	height:61px;
+	background:url(../img/datorhjalpen.png);
+}
+
+/* Loading box
+----------------------------------------------------------------------------- */
+#service-portal .loading-message {
+	position:fixed;
+	top:200px;
+	left:50%;
+	z-index:999;
+	width:250px;
+	margin-left:-100px;
+	padding:20px 0;
+	border:1px solid #999;
+	border-radius:12px;
+	box-shadow:0 0 8px #555;
+	background:#fff;
+}
+#service-portal .loading-message strong {
+	display:block;
+	padding-top:20px;
+	background:url(../img/ajax-loader.gif) no-repeat 50% 0;
+	font-size:18px;
+	text-align:center;
+}
+#service-portal .loading-message span {
+	display:block;
+	padding:2px 10px;
+	text-align:center;
+}
+
+
+/* My Cases
+----------------------------------------------------------------------------- */
+#service-portal .m-mycases ul {
+	margin-top:20px;
+}
+#service-portal .m-mycases li {
+	margin:0;
+	border-top:1px solid #dadada;
+}
+#service-portal .m-mycases li a {
+	display:block;
+	padding:10px 0;
+	background:url(../img/bullet-arrow.png?embed) no-repeat 100% 50%;
+}
+#service-portal .fastsearch {
+	padding:5px 10px;
+	background:#f9f9f9;
+}
+
+
+/* Module header icons
+----------------------------------------------------------------------------- */
+#service-portal .m-order .m-h h2,
+#service-portal .m-orderpage .m-h h2 {
+	padding-left:28px;
+	background:url(../img/icn-order.png) no-repeat 0 50%;
+}
+#service-portal .m-infopack .m-h h2 {
+	padding-left:28px;
+	background:url(../img/icn-info.png) no-repeat 0 50%;
+}
+#service-portal .m-support > .m-h h2,
+#service-portal .m-qna .main-header h2 {
+	padding-left:28px;
+	background:url(../img/icn-faq.png) no-repeat 0 50%;
+}
+#service-portal .m-contact > .m-h h2 {
+	padding-left:30px;
+	background:url(../img/icn-contact.png) no-repeat 0 50%;
+}
+#service-portal .m-3.m-contact > .m-h h2 {
+	padding-left:0;
+	background:none;
+	color:#424242;
+}
+#service-portal .m-mycases .m-h h2 {
+	padding-left:28px;
+	background:#fff url(../img/icn-user.png) no-repeat 0 50%;
+}
+
+
+/* Basket
+----------------------------------------------------------------------------- */
+#service-portal .m-a .m-basket {
+	background:#f7f1d3;
+}
+#service-portal .m-a .m-basket .m-h {
+	padding-left:15px;
+	border:none;
+	background:#f7f1d3;
+}
+#service-portal .m-basket .m-c {
+	padding-top:0;
+}
+#service-portal .m-basket .m-c a.btn {
+	margin:0 0 10px;
+}
+#service-portal .m-basket .drafts {
+	padding:14px 20px;
+	border-top:1px solid #efe4ae;
+	border-radius:0 0 3px 3px;
+	background:#f8f5e4;
+}
+#service-portal .m-basket .drafts a {
+	display:block;
+}
+#service-portal .m-basket .drafts li {
+	position:relative;
+	margin:0;
+	padding:5px 24px 5px 0;
+	border-top:1px solid #efe4ae;
+	color:#666;
+}
+.js #service-portal .drafts .saved {
+	position:relative;
+}
+#service-portal .drafts .saved .alert {
+	position:absolute;
+	top:0;
+	right:-8px;
+	bottom:0;
+	left:-8px;
+	border-radius:3px;
+	background:#1ec20c;
+}
+#service-portal .m-basket a.delete,
+#service-portal #order-basket a.delete,
+#service-portal .applicant a.delete,
+#service-portal .address a.delete {
+	display:block;
+	width:20px;
+	height:20px;
+	background:url(../img/btn-delete.png) no-repeat;
+	text-indent:-9999px;
+}
+#service-portal .m-basket .drafts a.delete {
+	position:absolute;
+	top:5px;
+	right:0;
+}
+#service-portal .m-basket a.delete:active,
+#service-portal #order-basket a.delete:active,
+#service-portal .applicant a.delete:active,
+#service-portal .address a.delete:active {
+	background:url(../img/btn-delete.png) no-repeat 0 -20px;
+}
+#service-portal #order-basket a.delete {
+	float:right;
+}
+#service-portal .m-basket table,
+#service-portal .m-basket td {
+	border:none;
+}
+#service-portal .m-basket td {
+	padding:5px 0;
+}
+#service-portal .m-basket td.num {
+	width:10px;
+	padding:5px 5px 5px 0;
+}
+#service-portal .m-basket td.delete {
+	width:20px;
+	padding:5px 0 5px 5px;
+}
+#service-portal .m-basket tr {
+	border-top:1px solid #e3dcbb;
+}
+#service-portal .m-basket td span {
+	display:block;
+	color:#666;
+	font-size:11px;
+}
+#service-portal .m-basket .m-h h2 {
+	padding-left:30px;
+	background:url(../img/icn-cart2.png) no-repeat 0 50%;
+}
+
+
+/* News listing
+----------------------------------------------------------------------------- */
+#service-portal .m-newslisting .m-h {
+	border-top:1px solid #dadada;
+}
+#service-portal .m-newslisting .m-h:first-child {
+	border-top:none;
+}
+#service-portal .m-newslisting .m-h h2 {
+	margin:0;
+}
+#service-portal .m-newslisting .date {
+	display:block;
+	margin:0 0 5px;
+	color:#777;
+}
+#service-portal .m-newslisting .alert .date {
+	color:#666;
+}
+#service-portal .m-newslisting .m-c ul li {
+	margin:20px 0;
+	padding:0;
+	background:none;
+}
+#service-portal .m-newslisting .status {
+	color:#424242;
+	font-weight:normal;
+}
+#service-portal .m-newslisting .m-c li p {
+	margin:0;
+}
+#service-portal .m-newslisting .type {
+	margin:0 5px 0 0;
+	padding:1px 5px;
+	border-radius:2px;
+	background:#005eac;
+	color:#fff;
+	font-weight:bold;
+	text-transform:uppercase;
+}
+#service-portal .m-newslisting .m-c li.ongoing {
+	margin:0 -20px;
+	padding:8px 20px;
+	background:#f7eec0;
+}
+#service-portal .m-newslisting .maintainance {
+	background:#c03533;
+}
+#service-portal .m-newslisting .m-c h3 {
+	max-width:95%;
+	margin:0 0 5px;
+}
+#service-portal .m-newslisting .m-c .sel {
+	margin:0 -20px;
+	padding:0 20px;
+	padding:8px 20px;
+	background:#1e79c4;
+	color:#fff;
+}
+#service-portal #maintenance-info .m-c .sel {
+	background-color:#1e79c4;
+	color:#fff;
+}
+#service-portal .m-newslisting .m-c .sel .date,
+#service-portal .m-newslisting .m-c .sel .status,
+#service-portal .m-newslisting .m-c .sel a {
+	color:#fff;
+}
+
+
+/* Maintenance info
+----------------------------------------------------------------------------- */
+#service-portal #maintenance-info .archive {
+	margin-top:14px;
+	padding-top:14px;
+}
+#service-portal #maintenance-info .title {
+	margin:0 -20px;
+	padding:0 20px;
+	border-top:1px solid #cddae9;
+	background:#e6effa;
+}
+#service-portal #maintenance-info li:first-child {
+	margin-top:0;
+}
+#service-portal #maintenance-info li.alert:first-child {
+	margin-top:-13px;
+}
+#service-portal #maintenance-info li.alert {
+	margin:0 -20px;
+	padding:8px 20px;
+	background:#f7eec0 url(../img/icn-maintenance.png) no-repeat 95% 11px;
+}
+#service-portal #maintenance-info .archive h3 {
+	margin-bottom:14px;
+}
+#service-portal #maintenance-info .archive h3 a {
+	display:block;
+	padding:3px 20px 3px 0;
+	background:url(../img/bullet-action.png) no-repeat 100% 50%;
+}
+#service-portal #maintenance-info .archive h3 a.exp {
+	background:url(../img/bullet-action-rot.png) no-repeat 100% 50%;
+}
+#service-portal #maintenance-info .m-alert {
+	margin-top:0;
+	margin-bottom:-8px;
+	padding:8px 20px 8px 40px;
+	background:#f7eec0 url(../img/icn-maintenance.png) no-repeat 19px 50%;
+}
+#service-portal #maintenance-info .m-alert p {
+	margin:0;
+}
+
+
+/* Module page
+----------------------------------------------------------------------------- */
+#service-portal .m-page > .m-h h2,
+#service-portal .m-page .main-header h2 {
+	float:left;
+	font-size:20px;
+}
+#service-portal .m-page .m-h .search-contextual {
+	float:right;
+	width:48%;
+	margin-left:64px;
+}
+#service-portal .m-page .m-h .search-contextual .keywords {
+	width:82%;
+	padding:6px;
+	border:none;
+	border:1px solid #06508c;
+	border-radius:3px;
+}
+#service-portal .m-page .m-h .search-contextual .keywords:focus {
+	background:#fff;
+}
+#service-portal .m-page .m-h .search-contextual input[type="submit"],
+#service-portal .search-header input[type="submit"] {
+	padding:5px 15px;
+	border-color:#06508c;
+}
+#service-portal .m-page .intro {
+	margin-bottom:30px;
+}
+#service-portal .m-page .m-c h2 {
+	font-size:18px;
+}
+#service-portal .m-page .m-c h3 {
+	font-size:15px;
+}
+#service-portal .search-header {
+	margin:0 0 20px 20px;
+	padding:5px 8px;
+	border:1px solid #dadada;
+	background:#f9f9f9;
+}
+#service-portal .search-header #keywords {
+	width:390px;
+}
+#service-portal .search-header input {
+	vertical-align:middle;
+}
+
+
+
+/* =============================================================================
+ * Search bar
+============================================================================= */
+#service-portal .search-bar {
+	margin:0 0 20px 0;
+	padding:14px 8px 14px 50px;
+	border:1px solid #dadada;
+	border-radius:3px;
+	box-shadow:-5px 5px 0 #eee;
+	background:#f9f9f9 url(../img/icon-search.png) no-repeat 14px 50%;
+}
+#service-portal .search-bar input {
+	padding:6px 8px;
+	vertical-align:middle;
+}
+#service-portal .search-bar .keywords {
+	width:74%;
+}
+#service-portal .search-bar .btn-search {
+	padding:6px 16px;
+	border:1px solid #047;
+	border-radius:0 4px 4px 0;
+	background:#025da9 url(../img/menu-grad.png) repeat-x 0 0;
+	color:#fff;
+	text-shadow:0 -1px 2px #025;
+}
+
+
+/* Global search bar
+----------------------------------------------------------------------------- */
+#service-portal .global-search {
+	float:right;
+	margin-left:10px;
+	border:1px solid #ccc;
+	border-radius:3px;
+	box-shadow:0 0 4px #ccc inset;
+	background:#fff;
+}
+#service-portal .global-search input[type="search"] {
+	margin:0;
+	padding:12px 2px 12px 12px;
+	border:none;
+	border-radius:3px;
+	background:transparent;
+}
+#service-portal .global-search input[type="submit"] {
+	margin:0;
+	padding:15px 18px 15px 15px;
+	border:none;
+	background:url(../img/icon-search.png) no-repeat 0 50%;
+	font-size:0;
+	line-height:0;
+	vertical-align:middle;
+}
+
+
+/* Global search results
+----------------------------------------------------------------------------- */
+#service-portal .global-search-results ul {
+	margin:0;
+	list-style:none;
+}
+#service-portal .m-page .m-c .global-search-results-list li {
+	margin-bottom:25px;
+	padding:0 0 0 34px;
+	background:none;
+}
+#service-portal .m-page .m-c .global-search-results li.order {
+	background:url(../img/icn-order.png) no-repeat 0 5px;
+}
+#service-portal .m-page .m-c .global-search-results li.support {
+	background:url(../img/icn-faq.png) no-repeat 0 5px;
+}
+#service-portal .m-page .m-c .global-search-results li.maintenance {
+	background:#f7eec0 url(../img/icn-maintenance.png) no-repeat 8px 5px;
+}
+#service-portal .m-c .global-search-results h3 {
+	margin:0;
+}
+#service-portal .global-search-results p {
+	margin:0 0 5px;
+}
+#service-portal .global-search-results img {
+	float:right;
+	margin-left:15px;
+}
+#service-portal .global-search-results a[rel="external"] {
+	padding-right:28px;
+	background:url(../img/bullet-external.png) no-repeat 100% 50%;
+}
+#service-portal .global-search-results .filter {
+	margin-bottom:25px;
+}
+#service-portal .global-search-results .filter strong {
+	float:left;
+	padding:1px 15px;
+}
+#service-portal .global-search-results .filter .checkbox {
+	float:left;
+	margin-right:10px;
+}
+#service-portal .global-search-results .filter input[type="checkbox"] {
+	position:absolute;
+	margin-left:10px;
+}
+#service-portal .global-search-results .filter label {
+	margin:0;
+	padding:6px 10px 6px 32px;
+	background-position:8px 50%;
+	background-repeat:no-repeat;
+	cursor:pointer;
+}
+#service-portal .global-search-results .filter input[type="checkbox"]:focus + label {
+	text-decoration:underline;
+}
+
+
+
+/* =============================================================================
+ * Q and A
+ *
+ * TODO: Document this
+============================================================================= */
+#service-portal .category {
+	margin:0 0 20px;
+}
+#service-portal .m-1-2 > .m-c {
+	float:left;
+	width:67%;
+	padding:0;
+}
+#service-portal .m-1-2 > .m-c .content {
+	padding:14px 20px;
+}
+#service-portal .m-1-2 > .m-a {
+	float:right;
+	width:32%;
+}
+#service-portal .m-1-3 > .m-c {
+	float:right;
+	width:67%;
+	padding:0;
+}
+#service-portal .m-1-3 > .m-c .content {
+	padding:14px 20px;
+}
+#service-portal .m-1-3 > .m-a,
+#service-portal .m-1-3 #nav-sub {
+	float:left;
+	width:32%;
+}
+#service-portal .m-qna {
+	position:relative;
+}
+#service-portal .m-qna .qna-list ul {
+	margin-bottom:30px;
+}
+#service-portal .m-qna .questions li {
+	margin:0;
+	padding:12px 0;
+	border-bottom:1px solid #eee;
+	background:none;
+}
+#service-portal .m-qna .questions .q-h {
+	float:left;
+}
+#service-portal .m-qna .questions .q-c {
+	clear:both;
+	padding-top:20px;
+}
+#service-portal .m-qna .questions h3 {
+	margin:0 0 3px;
+	font-size:16px;
+}
+#service-portal .m-qna .questions .meta {
+	margin:0;
+}
+#service-portal .m-qna .questions .meta a {
+	padding:1px 8px;
+	border-bottom:1px solid #dadada;
+	border-radius:10px;
+	background:#eee;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .m-qna .questions .answers,
+#service-portal .m-qna .questions .status {
+	float:right;
+	min-width:4em;
+	padding:5px 0;
+	border:1px solid #dadada;
+	border-radius:3px;
+	background:#eee;
+	line-height:1.2;
+	text-align:center;
+}
+#service-portal .m-qna .questions .status {
+	width:4em;
+	margin-left:5px;
+}
+#service-portal .m-qna .questions .solved {
+	border-color:#e8dda3;
+	background:#f7eec0;
+}
+#service-portal .m-qna .questions .answers strong,
+#service-portal .m-qna .questions .status strong {
+	display:block;
+	font-size:18px;
+}
+#service-portal .m-qna .questions .status strong {
+	background:url(../img/icn-check-unsolved.png) no-repeat 50% 50%;
+	text-indent:-9999px;
+}
+#service-portal .m-qna .questions .solved strong {
+	background:url(../img/icn-check-solved.png) no-repeat 50% 50%;
+}
+#service-portal .m-qna .solutions,
+#service-portal .m-qna .comments {
+	margin-top:24px;
+	padding:10px 14px;
+}
+#service-portal .m-qna .solutions h4,
+#service-portal .m-qna .comments h4 {
+	margin:0 0 10px;
+	font-weight:bold;
+}
+#service-portal .m-qna .solutions h4 span,
+#service-portal .m-qna .comments h4 span {
+	margin-left:10px;
+	padding:1px 8px;
+	border-radius:10px;
+	background:#888;
+	color:#fff;
+	font-size:13px;
+}
+#service-portal .m-qna .solutions {
+	margin-top:24px;
+	border:1px solid #eee5b4;
+	border-radius:5px;
+	background:#fcf8dc;
+}
+#service-portal .m-qna .solutions li {
+	padding:14px 0 0 36px;
+	border:none;
+	background:url(../img/icn-check-solved.png) no-repeat 0 18px;
+}
+#service-portal .m-qna .comments li {
+	padding:14px 0 0 36px;
+	border:none;
+}
+#service-portal .m-qna .solutions .meta,
+#service-portal .m-qna .comments .meta {
+	margin-bottom:4px;
+}
+#service-portal .m-qna a.promote,
+#service-portal .m-qna a.promote:link,
+#service-portal .m-qna a.promote:visited {
+	padding:3px 8px;
+	border:1px solid #dadada;
+	border-radius:3px;
+	background:#fff url(../img/grey-grad-1.png) repeat-x 0 100%;
+	color:#424242;
+	font-weight:bold;
+	text-decoration:none;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .m-qna a.promote:hover,
+#service-portal .m-qna a.promote:focus {
+	border-color:#aaa;
+	background:#fff;
+}
+#service-portal .m-qna p.none {
+	padding:10px 140px;
+}
+#service-portal .q-listing {
+	background:#f9f9f9;
+}
+#service-portal .q-listing li {
+	margin:0;
+	border:1px solid #dadada;
+	border-width:0 1px 1px 0;
+}
+#service-portal .q-listing a {
+	display:block;
+	padding:12px 15px;
+	border-right:5px solid #f0f0f0;
+}
+#service-portal .q-listing li.sel {
+	border-right:none;
+	background:#fff;
+}
+#service-portal .q-listing li.sel a {
+	border-right:none;
+	color:#424242;
+	font-weight:bold;
+}
+#service-portal .m-qna .m-c.m-qpanel {
+	position:relative;
+	float:right;
+	width:72%;
+	margin:10px -10px 10px 0;
+	padding:15px;
+	border:1px solid #dadada;
+	box-shadow:-2px 2px 8px #dadada;
+	background:#fff;
+}
+#service-portal .m-qpanel .q-c,
+#service-portal .m-qpanel .q-a,
+#service-portal .m-qpanel .related {
+	padding-bottom:20px;
+}
+#service-portal .m-qpanel .q-a {
+	padding-top:20px;
+}
+#service-portal .m-qpanel .q-f {
+	margin:0 -25px -20px;
+	padding:0 25px;
+	border-top:1px solid #dadada;
+	background:#f5f5f5;
+}
+#service-portal .m-qpanel .q-f .q-a {
+	float:left;
+	width:49%;
+}
+#service-portal .m-qpanel .q-f .related {
+	float:right;
+	width:49%;
+	padding-top:20px;
+}
+#service-portal .m-qpanel .related ul li {
+	padding:0;
+	background:none;
+}
+#service-portal .m-qpanel .q-c h2 {
+	margin:0;
+}
+#service-portal .m-qpanel .category {
+	color:#777;
+	font-size:12px;
+}
+#service-portal .m-qpanel .content {
+	padding:5px 10px !important;
+}
+
+
+
+/* =============================================================================
+ * Order page
+ *
+ * TODO: Describe this
+============================================================================= */
+#service-portal .m-orderpage #nav-sub,
+#service-portal .m-qna #nav-sub {
+	float:left;
+	width:24%;
+}
+#service-portal #nav-sub ul {
+	margin:0 10px 0 0;
+	padding:0;
+}
+#service-portal #nav-sub ul ul {
+	margin:5px 0 5px 15px;
+	border:none;
+	background:none;
+}
+#service-portal #nav-sub li {
+	margin:0;
+	border-radius:0;
+}
+#service-portal #nav-sub li a {
+	padding-left:18px;
+}
+#service-portal #nav-sub li + li a {
+	border:none;
+}
+#service-portal #nav-sub h3 {
+	margin:0;
+	padding:14px 15px 0;
+	font-weight:bold;
+}
+#service-portal #nav-sub ul + h3 {
+	margin-right:10px;
+	padding:8px 16px;
+	border-bottom:1px solid #dadada;
+	background:#e6effa;
+}
+#service-portal #nav-sub a[rel="external"] {
+	padding-right:28px;
+	background:url(../img/bullet-external.png) no-repeat 100% 50%;
+}
+#service-portal .m-orderpage > .m-c,
+#service-portal .m-qna > .m-c,
+#service-portal .m-regularpage > .m-c,
+#service-portal .m-qna .m-qna-c {
+	float:left;
+	width:50%;
+	padding:14px 0;
+}
+#service-portal .m-orderpage > .m-c,
+#service-portal .m-regularpage > .m-c {
+	width:65%;
+}
+#service-portal .neworder > .m-c {
+	width:50%;
+}
+#service-portal .m-orderpage .content,
+#service-portal .m-qna .content,
+#service-portal .m-regularpage .content {
+	padding-top:10px;
+	padding-left:20px;
+}
+#service-portal .m-orderpage > .m-a,
+#service-portal .m-qna .component-control .m-a,
+#service-portal .m-qna > .m-a {
+	float:right;
+	width:24%;
+}
+#service-portal .m-orderpage > .m-a {
+	width:33%;
+}
+#service-portal .neworder > .m-a {
+	width:24%;
+}
+#service-portal .m-qna > .m-sn {
+	float:left;
+	width:24%;
+}
+#service-portal .newmypage > .m-t {
+	float:right;
+	width:74%;
+	padding-top:25px;
+}
+
+
+/* Nav-sub
+----------------------------------------------------------------------------- */
+#service-portal #nav-sub a span {
+	margin-left:10px;
+	padding:0 8px;
+	border-radius:20px;
+	background-color:#eee;
+	color:#666;
+}
+#service-portal #nav-sub a.selected span {
+	background-color:#fff;
+}
+#service-portal .m-mypage #nav-sub span,
+#service-portal .m-orderpage #nav-sub span {
+	float:right;
+}
+/*#service-portal #nav-sub .updated span {
+	padding:0 8px 0 25px;
+	background-image:url(../img/icn-star.png);
+	background-repeat:no-repeat;
+	background-position:8px 50%;
+}*/
+#service-portal #nav-sub.grouped li {
+	margin-right:0;
+	border:none;
+}
+#service-portal #nav-sub.grouped li a {
+	border-bottom:none;
+}
+
+
+/* Order gallery listing
+----------------------------------------------------------------------------- */
+#service-portal .order-gallery {
+	margin:0 0 20px;
+	padding:10px 14px;
+	border:1px solid #dadada;
+	background:#f9f9f9;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .m .order-gallery li {
+	float:left;
+	width:49%;
+	padding:15px 0;
+	background:none;
+}
+#service-portal .order-gallery a {
+	display:block;
+	text-align:center;
+}
+#service-portal .order-gallery img {
+	display:block;
+	margin:0 auto 8px;
+}
+#service-portal .m-orderpage .categories, #service-portal .latest-listing {
+	margin-bottom:20px;
+	padding:15px 14px 1px;
+	border:1px solid #dadada;
+	border-radius:3px;
+	background:#f5f5f5;
+}
+#service-portal .m-orderpage .categories h2,
+#service-portal .latest-listing h2 {
+	margin:0;
+}
+#service-portal .m-orderpage .categories h3,
+#service-portal .latest-listing h3 {
+	margin-top:20px;
+}
+#service-portal .latest-listing {
+	padding-bottom:20px;
+}
+
+
+/* Order listing
+----------------------------------------------------------------------------- */
+#service-portal .m-c .order-listing .order {
+	margin:0;
+	padding:20px 0 10px;
+	border-top:1px solid #dadada;
+	background:none;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .order-listing .order h5 {
+	margin:0 0 10px;
+	font-size:14px;
+}
+#service-portal .order-c {
+	float:left;
+	width:63%;
+}
+#service-portal .order-a {
+	float:right;
+	width:34%;
+	text-align:right;
+}
+#service-portal .order-a .meta {
+	display:block;
+	margin-bottom:10px;
+}
+#service-portal .order .number {
+	margin:10px 0 10px;
+}
+#service-portal .order .number input {
+	width:3em;
+}
+#service-portal .order .limited {
+	display:block;
+	margin-top:10px;
+	padding:5px 7px;
+	border:1px solid #e8dda3;
+	background:#f7eec0;
+	font-size:11px;
+	text-align:left;
+}
+#service-portal .order-c .more {
+	display:none;
+}
+
+
+/* Teaser
+----------------------------------------------------------------------------- */
+#service-portal .int-teaser {
+	margin:10px 0 30px;
+	padding:0 0 1px;
+	border:1px solid #dadada;
+	box-shadow:-5px 5px 0 #eee;
+}
+#service-portal .int-teaser p,
+#service-portal .int-teaser h3 {
+	margin:10px;
+}
+#service-portal .int-teaser img {
+	display:block;
+	width:100%;
+}
+#service-portal .int-teaser a.btn {
+	margin:10px;
+	padding-right:0;
+	padding-left:0;
+}
+
+
+/* Order groups
+----------------------------------------------------------------------------- */
+#service-portal .order-group {
+	margin-top:14px;
+	padding-bottom:15px;
+	border-bottom:1px solid #eee;
+}
+#service-portal .add-to-cart {
+	list-style:none;
+}
+#service-portal .order-now {
+	list-style:none;
+}
+#service-portal .m-c .order-group .add-to-cart li,
+#service-portal .m-c .order-group .order-now li {
+	float:left;
+	margin:0 5px 5px 0;
+	padding:0;
+	background:none;
+}
+#service-portal .add-to-cart li a,
+#service-portal .order-now li a,
+#service-portal .add-to-cart li span,
+#service-portal .order-now li span {
+	float:left;
+	padding:3px 10px;
+	border-bottom:1px solid #e3dcbb;
+	border-radius:3px;
+	background:#f7f1d3;
+}
+#service-portal .add-to-cart li span,
+#service-portal .order-now li span {
+	border-color:#ccc;
+	background:#eee;
+	color:#999;
+	cursor:not-allowed;
+}
+#service-portal .order-group .order-btn {
+	float:left;
+	padding:5px 10px;
+	border-bottom:1px solid #047;
+	border-radius:3px;
+	background:#1e79c4;
+	color:#fff;
+	font-weight:bold;
+	text-shadow:0 -1px 0 #025;
+}
+#service-portal .order-group .cart-btn {
+	float:left;
+	margin-left:10px;
+	padding:5px 10px 5px 34px;
+	border-bottom:1px solid #e3dcbb;
+	border-radius:3px;
+	background:#f7f1d3 url(../img/icn-addtocart.png) no-repeat 8px 50%;
+}
+#service-portal .m-1 .m-c .order-group h3 {
+	margin-bottom:5px;
+}
+
+
+
+/* =============================================================================
+ * Contact cards
+============================================================================= */
+#service-portal .contact-cards .m {
+	float:left;
+	box-sizing:border-box;
+	width:31.333333333%;
+	margin-right:2%;
+	margin-bottom:20px;
+}
+#service-portal .contact-cards .m:nth-child(3n+4) {
+	clear:left;
+}
+
+
+
+/* =============================================================================
+ * Tabbed module
+ *
+ * A group of modules navigated by tabs
+============================================================================= */
+#service-portal .tabbed-module .m {
+	border-top:5px solid #1e79c4;
+}
+#service-portal .tab-navigation {
+	padding:0 5px;
+}
+#service-portal .m-page .tab-navigation {
+	padding:5px 5px 0;
+}
+#service-portal .m-mypage .tab-navigation {
+	padding:6px 0 0;
+}
+#service-portal .tab-navigation ul {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+#service-portal .tab-navigation li {
+	float:left;
+	margin:0 5px -1px 0;
+	padding:0 !important;
+	background:none !important;
+	font-size:16px;
+}
+#service-portal .tab-navigation a:link,
+#service-portal .tab-navigation a:visited {
+	float:left;
+	padding:10px 12px 9px;
+	border:1px solid #e0e0e0;
+	border-width:1px 1px 0;
+	border-radius:3px 3px 0 0;
+	background:#fff url(../img/tabnav-shade.png) no-repeat 50% 100%;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .tab-navigation .sel a:link,
+#service-portal .tab-navigation .sel a:visited {
+	padding:10px 12px;
+	border-color:#1e79c4;
+	background:#1e79c4;
+	color:#fff;
+	font-weight:bold;
+	text-shadow:0 -1px 0 #003058;
+	cursor:default;
+}
+#service-portal .tab-navigation .sel a:hover,
+#service-portal .tab-navigation .sel a:focus {
+	text-decoration:none;
+}
+#service-portal .hidden-tab {
+	display:none;
+}
+#service-portal .m-page .tabbed-module .m {
+	border-left:none;
+	border-radius:0;
+}
+
+
+
+/* =============================================================================
+ * My pages
+ *
+ * TODO: Describe this
+============================================================================= */
+#service-portal .m-mypage #nav-sub {
+	float:left;
+	width:24%;
+}
+#service-portal .m-mypage #nav-sub a.profile {
+	padding-left:37px;
+	background-image:url(../img/icn-user.png);
+	background-position:15px 50%;
+	background-repeat:no-repeat;
+}
+#service-portal .m-mypage #nav-sub a.gear {
+	padding-left:37px;
+	background-image:url(../img/icn-screen.png);
+	background-position:15px 50%;
+	background-repeat:no-repeat;
+}
+#service-portal .m-mypage > .m-c {
+	float:right;
+	width:74%;
+	padding:0;
+}
+#service-portal .m-mypage > .m-c .content {
+	padding:20px 20px 20px 0;
+}
+#service-portal .m-mypage .back-link {
+	margin:0;
+	padding:10px 0 10px 10px;
+	font-size:15px;
+}
+#service-portal .case-listing {
+	border-top:3px solid #1e79c4;
+}
+#service-portal .case-listing .filter {
+	padding:5px 10px;
+	border-top:1px solid #fff;
+	background:#f9f9f9;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .case-listing .filter a {
+	margin-left:10px;
+}
+#service-portal .case-listing .filter a.selected {
+	padding:1px 8px;
+	border-radius:15px;
+	background:#1e79c4;
+	color:#fff;
+	font-weight:bold;
+	text-shadow:0 -1px 0 #0a5897;
+}
+#service-portal .case-listing .filter.form-general {
+	margin:0;
+	border:none;
+	background:none repeat scroll 0 0 #f9f9f9;
+}
+#service-portal .case-group table {
+	margin:0 0 30px;
+}
+#service-portal .case-listing table,
+#service-portal .case-listing th,
+#service-portal .case-listing td {
+	border:none;
+	background:#fff;
+}
+#service-portal .case-listing th,
+#service-portal .case-listing td {
+	padding:8px 10px;
+	border-bottom:1px solid #dadada;
+}
+#service-portal .case-listing th {
+	border-top:1px solid #dadada;
+}
+#service-portal .case-listing caption {
+	padding:0 0 5px;
+	font-size:16px;
+}
+#service-portal .case-listing caption span {
+	margin-left:10px;
+	color:#666;
+	font-weight:normal;
+	font-size:13px;
+}
+/*#service-portal .case-group .updated td:first-child a {
+	padding-left:20px;
+	background:url(../img/icn-star.png) no-repeat 0 50%;
+}*/
+#service-portal thead a {
+	color:#444;
+}
+#service-portal thead .sort,
+#service-portal .case-group thead .sort {
+	background:#fff;
+}
+#service-portal thead .sort-asc a {
+	background:url(../img/bullet-sortarrow-up.png) no-repeat 100% 50%;
+}
+#service-portal thead .sort-desc a {
+	background:url(../img/bullet-sortarrow-down.png) no-repeat 100% 50%;
+}
+#service-portal .case-group thead th {
+	padding:0;
+	background:#f5f5f5;
+}
+#service-portal .case-group thead th a,
+#service-portal .case-group thead th span {
+	display:block;
+	padding:8px 16px 8px 10px;
+	border-top:1px solid #fff;
+	border-right:1px solid #dadada;
+	border-left:1px solid #fff;
+	white-space:nowrap;
+}
+#service-portal .case-group thead th span {
+	color:#666;
+}
+#service-portal .case-group thead th:last-child a {
+	border-right:none;
+}
+
+
+
+/* =============================================================================
+ * Case view
+============================================================================= */
+#service-portal .case-panel {
+	position:relative;
+	margin:0 -10px 10px 0;
+	padding:15px;
+	border:1px solid #dadada;
+	box-shadow:-2px 2px 8px #dadada;
+	background:#fff;
+}
+#service-portal .case-panel .case-panel {
+	margin-right:-30px;
+}
+#service-portal .case-panel > h2 {
+	margin-bottom:0;
+}
+#service-portal .case-panel > .date {
+	margin:0;
+	color:#777;
+}
+#service-portal .fold-down {
+	display:none;
+}
+
+/* LICENSE PAGE
+============================================================================================================================ */
+#service-portal td dl {
+	display:inline-block;
+	overflow:auto;
+	margin:0 0 0 1em;
+	vertical-align:top;
+}
+#service-portal td dt {
+	display:inline;
+}
+#service-portal td dd {
+	display:inline;
+}
+#service-portal td dd + dt:before {
+	display:block;
+	content:"";
+}
+#service-portal td dt:after {
+	content:": ";
+}
+#service-portal td dd {
+	margin:0;
+}
+#service-portal td.positive {
+	background:#efe;
+	background:rgba(150,255,150,0.3);
+}
+#service-portal td.negative {
+	background:#fee;
+	background:rgba(255,150,150,0.3);
+}
+#service-portal .m-h h2.license {
+	padding-left:28px;
+	background:url(../img/icn-license.png) no-repeat 0 50%;
+}
+.chart td {
+	min-width:2em;
+	width:8.3333333333333%;
+}
+.chart td > div {
+	position:relative;
+	height:15em;
+}
+.chart .bar {
+	display:block;
+	position:absolute;
+	bottom:0;
+	width:100%;
+	border:1px solid #ccc;
+	background:#eee;
+	text-align:right;
+}
+.chart .limit {
+	display:block;
+	position:absolute;
+	bottom:0;
+	width:100%;
+	overflow:hidden;
+	border-top:1px solid #f66;
+	border-top:1px solid rgba(255, 0, 0, 0.3);
+	color:#f66;
+	color:rgba(255, 0, 0, 0.7);
+}
+
+.m-licensepage tfoot th {
+	position:relative;
+	padding-bottom:5em;
+}
+.m-mypage .case-listing p.hint,
+.m-mypage .case-group p.hint {
+	margin:10px;
+}
+#service-portal .m-mypage .account-data .button {
+	margin: 5px 0 10px;
+}
+
+/* =============================================================================
+ * Content styling
+============================================================================= */
+#service-portal .article {
+	padding:10px 0;
+}
+#service-portal .article .meta p {
+	margin:0;
+	padding:10px 0;
+	color:#424242;
+}
+#service-portal .article .meta {
+	padding-bottom:10px;
+	border-bottom:1px solid #eaeaea;
+}
+#service-portal .article .update {
+	margin:20px 0;
+}
+#service-portal .article .update .date {
+	color:#666;
+}
+#service-portal a.attachment {
+	display:block;
+	padding:20px 0;
+}
+#service-portal a.attachment img {
+	float:left;
+	width:120px;
+	height:auto;
+	margin:0 15px 0 0;
+}
+#service-portal a.attachment strong {
+	display:block;
+	margin:20px 0 5px;
+	color:#444;
+	font-size:15px;
+}
+#service-portal .related ul {
+	margin-top:10px;
+}
+#service-portal .related .col ul li {
+	padding:0;
+	background:none;
+}
+#service-portal .related .movie {
+	display:block;
+	padding-bottom:10px;
+}
+#service-portal .related .movie img {
+	float:left;
+	width:60px;
+	margin:0 15px 0 0;
+}
+#service-portal .share-link {
+	float:left;
+	padding:2px 15px 2px 20px;
+	border:1px solid #dadada;
+	border-radius:3px;
+	background-color:#f5f5f5;
+	background-position:10px 50%;
+	font-weight:bold;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .article-footer {
+	padding-top:40px;
+}
+#service-portal .article-footer .date {
+	float:right;
+	padding:5px 0;
+	color:#777;
+}
+#service-portal .article-rating {
+	float:left;
+	margin:2px 0 0 20px;
+	border:1px solid #dadada;
+	border-radius:3px;
+	background-color:#f5f5f5;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .article-rating a {
+	float:left;
+	padding:2px 5px 2px 25px;
+	background-image:url(../img/icn-thumbs.png);
+	background-repeat:no-repeat;
+}
+#service-portal .article-rating .rate-up {
+	background-position:5px 4px;
+}
+#service-portal .article-rating .rate-down {
+	background-position:5px -57px;
+}
+#service-portal .article-rating a:first-child {
+	border-right:1px solid #dadada;
+}
+#service-portal #document-share-form {
+	clear:both;
+}
+
+/* =============================================================================
+ * Search results
+============================================================================= */
+#service-portal .m-searchresults {
+	float:left;
+	width:72%;
+	padding:14px 0 14px 20px;
+}
+
+#service-portal .m-searchresults .results li {
+	margin:0;
+	padding:14px 0;
+	border-top:1px solid #dadada;
+}
+#service-portal .m-searchresults .results p {
+	margin:0 0 5px 93px;
+}
+#service-portal .m-searchresults .results .meta {
+	margin:0 0 0 93px;
+}
+#service-portal .m-searchresults .results img {
+	float:left;
+	margin:3px 14px 0 0;
+}
+
+
+
+/* =============================================================================
+ * Account profile
+ *
+ * TODO: Comments
+============================================================================= */
+#service-portal .m-mypage .account-profile {
+	margin:20px 20px 20px 0;
+}
+#service-portal .account-profile h2 {
+	margin:0;
+	padding:5px 0;
+}
+#service-portal .account-data {
+	padding:10px 14px 0 50px;
+	border:3px solid #c9dbf6;
+	border-radius:5px;
+	background:url(../img/icon-user-big.png) no-repeat 12px 12px;
+}
+#service-portal .account-data.role-data {
+	border: none;
+	background-image: none;
+}
+#service-portal .account-data .row {
+	margin:0;
+}
+#service-portal .account-data .row .small {
+	width:16.6%;
+}
+#service-portal .account-data .col-1 {
+	text-align:right;
+}
+#service-portal .account-data .data-group {
+	margin-bottom:10px;
+	padding-top:10px;
+	border-top:1px solid #dadada;
+}
+#service-portal .account-data .data-group:first-child {
+	padding-top:0;
+	border:none;
+}
+#service-portal .account-data fieldset {
+	padding:10px;
+}
+#service-portal .account-data input[type="text"], #service-portal .account-data select {
+	width:100%;
+}
+#service-portal .account-data .button {
+	margin-top:0px;
+}
+#service-portal .account-data fieldset .button {
+	margin-bottom:5px;
+}
+#service-portal .account-data .col span,
+#service-portal .account-data .col strong {
+	display: block;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+#service-portal .account-data .col input[type=text] {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+#service-portal .account-data .col input[readonly] {
+	background-color: white;
+	color: #888;
+}
+#service-portal .account-data .col form + form {
+	padding-top: 10px;
+}
+#service-portal .account-data .col span > span {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    color: black;
+}
+#service-portal .account-data .col .custom.replaced {
+    height: 38px;
+}
+
+/* =============================================================================
+ * Popovers
+ *
+ * TODO: Comments
+============================================================================= */
+.js #service-portal .popover {
+	position:absolute;
+	top:50px;
+	right:20px;
+	z-index:999;
+	width:300px;
+	padding:13px 0 0 20px;
+}
+.js #service-portal .popover-tip {
+	position:absolute;
+	top:0;
+	left:0;
+	width:300px;
+	height:13px;
+	background:url(../img/popover-tip.png) no-repeat 250px 0;
+}
+#service-portal .popover-inner {
+	position:relative;
+	padding:20px;
+	border-radius:5px;
+	box-shadow:0 5px 20px #000;
+	background:#fff;
+}
+
+
+
+/* =============================================================================
+ * Tooltips
+ *
+ * TODO: Comments
+============================================================================= */
+#service-portal .tooltip {
+	display:none;
+}
+.js #service-portal .tooltip {
+	position:absolute;
+	max-width:300px;
+	margin-top:15px;
+	margin-left:40px;
+	padding:10px;
+	border-radius:4px;
+	box-shadow:0 1px 4px rgba(0,0,0,0.2);
+	background:#333;
+	background:rgba(0,0,0,0.8);
+	color:#fff;
+}
+.js #service-portal .order-now .tooltip {
+	margin-top:40px;
+	margin-left:15px;
+}
+.js #service-portal .tooltip:before {
+	position:absolute;
+	top:-20px;
+	width:0;
+	height:0;
+	border-width:10px;
+	border-style:solid;
+	border-color:transparent transparent rgb(128,128,128) transparent;
+	border-color:transparent transparent rgba(0,0,0,0.8) transparent;
+	content:"";
+}
+
+
+
+/* =============================================================================
+ * Lightbox
+ *
+ * TODO: Comments
+============================================================================= */
+.lb-blackout {
+	position:absolute;
+	top:0;
+	right:0;
+	left:0;
+	z-index:99;
+	background:#000;
+}
+.lb-panel,
+.lb-panel-big {
+	position:absolute;
+	top:100px;
+	left:50%;
+	z-index:100;
+	max-width:930px;
+	width:70%;
+	margin-left:-35% !important;
+	padding-top:40px !important;
+	border:5px solid #f5f3ef;
+	border-radius:5px;
+	box-shadow:0 5px 20px #000;
+	background:#fff;
+}
+.lb-panel-small {
+	max-width:475px;
+	width:36%;
+	margin-left:-18% !important;
+}
+.e-tjansteplattform.lb-panel-small {
+	max-width:700px;
+	width:50%;
+	margin-left:-25% !important;
+}
+.lb-panel .btn-close,
+.m-qpanel .btn-close,
+.case-panel .btn-close {
+	display:block;
+	position:absolute;
+	top:6px;
+	right:6px;
+	width:34px;
+	height:34px;
+	overflow:hidden;
+	border-radius:5px;
+	background:url(../img/btn-close.png) no-repeat;
+	text-indent:100%;
+	white-space:nowrap;
+}
+.lb-panel .btn-close:focus,
+.m-qpanel .btn-close:focus,
+.case-panel .btn-close:focus {
+	outline:none;
+	background-color:#dbe3ee;
+}
+.lb-panel .btn-close:active,
+.m-qpanel .btn-close:active,
+.case-panel .btn-close:active {
+	background:url(../img/btn-close.png) no-repeat 0 100%;
+}
+.e-tjansteplattform.lb-panel {
+	margin:0;
+	padding:0 !important;
+}
+.e-tjansteplattform.lb-panel form {
+	margin:0;
+}
+.e-tjansteplattform .form-step-header .status,
+.e-tjansteplattform .form-step-header .stepnum {
+	display:none;
+}
+
+
+/* Lightbox action forms
+----------------------------------------------------------------------------- */
+.lb-wrap .action-form h2 {
+	margin:-30px -10px 10px;
+	padding:0 10px;
+	background:#efeadf;
+}
+.lb-wrap .action-form .text,
+.lb-wrap .action-form .select {
+	display:inline-block;
+	margin:20px 5px;
+}
+.lb-wrap .action-form p {
+	margin:0;
+}
+.lb-wrap .action-form label {
+	margin-top:20px;
+}
+.lb-wrap .action-form .text textarea {
+	width:90%;
+}
+.lb-wrap .action-form a.cancel {
+	margin-left:20px;
+}
+
+
+
+/* =============================================================================
+ * Service platform extensions
+ *
+ * TODO: Comment
+============================================================================= */
+
+
+/* Multi applicant listing
+----------------------------------------------------------------------------- */
+.e-tjansteplattform .multi-applicant-list .item-no {
+	display:block;
+	min-width:40px;
+	min-height:35px;
+	margin-right:10px;
+	padding-top:5px;
+	background:url(../img/icon-user-big.png) no-repeat 50% 0;
+	color:#fff;
+	font-weight:normal;
+	font-size:13px;
+	line-height:1;
+	text-align:center;
+}
+.e-tjansteplattform .multi-applicant-list .applicant-edit-form .item-no,
+.e-tjansteplattform .multi-applicant-list .new-applicant .item-no {
+	margin-top:14px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant,
+.e-tjansteplattform .address-lookup .address {
+	position:relative;
+	padding:10px;
+	border:3px solid #c9dbf6;
+	border-radius:5px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant a.delete,
+.e-tjansteplattform .address-lookup .address a.delete {
+	position:absolute;
+	top:10px;
+	right:10px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data,
+.e-tjansteplattform .address-lookup .address .address-data {
+	line-height:1.4;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data strong.name,
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data strong.street,
+.e-tjansteplattform .address-lookup .address .address-data strong.name,
+.e-tjansteplattform .address-lookup .address .address-data strong.street {
+	display:block;
+	font-size:16px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data span,
+.e-tjansteplattform .address-lookup .address .address-data span {
+	color:#585858;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data span span,
+.e-tjansteplattform .address-lookup .address .address-data span span {
+	display:block;
+	color:#444;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data span.postalcode,
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data span.city,
+.e-tjansteplattform .address-lookup .address .address-data span.postalcode,
+.e-tjansteplattform .address-lookup .address .address-data span.city {
+	display:inline;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .applicant-data {
+	margin-left:70px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .group,
+.e-tjansteplattform .address-lookup .address .extra-fields,
+#service-portal .e-tjansteplattform .multi-applicant-list .applicant .group,
+#service-portal .e-tjansteplattform .address-lookup .address .extra-fields {
+	padding-top:10px;
+	padding-bottom:10px;
+}
+#service-portal .e-tjansteplattform .row .text input,
+#service-portal .e-tjansteplattform .row textarea {
+	width:182px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .group > span,
+.e-tjansteplattform .address-lookup .address .group > span {
+	float:left;
+	width:24.6%;
+}
+.e-tjansteplattform .multi-applicant-list .applicant .group input {
+	width:85%;
+	font:13px/1 Arial, sans-serif;
+}
+.e-tjansteplattform .multi-applicant-list .applicant-edit-form,
+.e-tjansteplattform .address-lookup .address-edit-form {
+	padding:10px 10px 20px;
+	border:3px dashed #eee;
+	border-radius:5px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant-edit-form h4,
+.e-tjansteplattform .address-lookup .address-edit-form h4 {
+	margin:0 0 10px;
+	font-weight:bold;
+}
+.e-tjansteplattform .multi-applicant-list .applicant-search,
+.e-tjansteplattform .address-lookup .address-search {
+	margin:0;
+	padding:0;
+}
+.e-tjansteplattform .multi-applicant-list label {
+	margin-bottom:5px;
+}
+.e-tjansteplattform .multi-applicant-list .applicant-search input {
+	margin-top:16px;
+}
+.form-general .multi-applicant-list label {
+	display:block;
+}
+#service-portal fieldset .multi-applicant-list .checkbox,
+#service-portal fieldset .multi-applicant-list .text,
+#service-portal fieldset .multi-applicant-list .radio,
+#service-portal fieldset .multi-applicant-list .select,
+#service-portal fieldset .multi-applicant-list .row {
+	padding-left:0;
+}
+#service-portal .e-tjansteplattform .toggle-target .multi-applicant-list .row .text input,
+#service-portal .e-tjansteplattform .toggle-target .multi-applicant-list .row textarea {
+	width:184px;
+}
+#service-portal .m-mypage .e-tjansteplattform .file-list li {
+	background:none;
+}
+
+/* Multi applicant autocomplete
+----------------------------------------------------------------------------- */
+.js-autocomplete {
+	z-index:999;
+	max-height:350px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	border:1px solid #ccc;
+	box-shadow:0 0 7px #ccc;
+	background:#fff;
+}
+.js-autocomplete a {
+	display:block;
+	padding:5px 7px;
+	color:#da291c;
+	text-decoration:none;
+}
+.js-autocomplete a.sel,
+.js-autocomplete a:focus,
+.js-autocomplete a.addempty.sel,
+.js-autocomplete a.addempty:focus {
+	background-color:#1e79c4;
+	color:#fff;
+}
+.js-autocomplete h2 {
+	margin:0;
+	padding:2px 7px;
+	border-top:1px solid #ccc;
+	background:#eee;
+	font-weight:bold;
+	font-size:1em;
+}
+.js-autocomplete ul {
+	margin:0;
+	list-style:none;
+}
+.js-autocomplete li {
+	margin:0;
+	border-top:1px solid #ccc;
+}
+.js-autocomplete li strong,
+.js-autocomplete li span {
+	display:block;
+	color:#333;
+}
+.js-autocomplete li a.addempty strong {
+	text-decoration:underline;
+}
+.js-autocomplete li span {
+	color:#777;
+}
+.js-autocomplete li a.sel span,
+.js-autocomplete li a:focus span,
+.js-autocomplete li a.sel strong,
+.js-autocomplete li a:focus strong {
+	color:#fff;
+}
+.js-autocomplete .disabled a {
+	cursor:default;
+}
+.js-autocomplete .disabled a strong {
+	color:#777;
+}
+.js-autocomplete .disabled a:hover,
+.js-autocomplete .disabled a:focus,
+.js-autocomplete .disabled a.sel {
+	background:#ddd;
+}
+.js-autocomplete .disabled a.sel span,
+.js-autocomplete .disabled a:hover span,
+.js-autocomplete .disabled a:focus span,
+.js-autocomplete .disabled a.sel strong,
+.js-autocomplete .disabled a:hover strong,
+.js-autocomplete .disabled a:focus strong {
+	color:#777;
+}
+.js-autocomplete.loading {
+	padding-top:27px;
+	background:#fff url(../img/ajax-loader.gif) no-repeat 50% 8px;
+}
+/* Requisitionerfield listing
+----------------------------------------------------------------------------- */
+.e-tjansteplattform .requisitioner-field label {
+	margin-bottom:0;
+}
+
+
+/* Reset or fix misc form styles
+----------------------------------------------------------------------------- */
+.lb-wrap .e-tjansteplattform .submit-area,
+#service-portal .e-tjansteplattform .submit-area {
+	font-size:1em;
+}
+#service-portal .e-tjansteplattform .submit-area input,
+.lb-wrap .e-tjansteplattform .submit-area input {
+	font-size:14px;
+}
+#service-portal .case-panel .e-tjansteplattform .verification,
+#service-portal .case-panel .e-tjansteplattform .change-form {
+	margin:0 -20px;
+}
+#service-portal .case-panel .e-tjansteplattform .verification .current-step {
+	background:none;
+}
+#service-portal .case-panel .e-tjansteplattform .verification.attest {
+	margin:0 -15px;
+}
+#service-portal .case-panel .e-tjansteplattform .change-form {
+	padding-top:15px;
+}
+#service-portal .case-panel .e-tjansteplattform .current-step {
+	border:none;
+	box-shadow:none;
+}
+#service-portal .case-panel .e-tjansteplattform .form-section {
+	margin:0;
+	border:none;
+}
+#service-portal .case-panel .e-tjansteplattform .action-links {
+	float:right;
+	margin-top:-20px;
+}
+#service-portal .case-panel .e-tjansteplattform .action-links a {
+	display:inline;
+	margin-left:20px;
+	padding:4px 0 4px 26px;
+}
+#service-portal .case-panel .e-tjansteplattform .action-links a.edit {
+	background:url(../img/icn-edit.png) no-repeat 0 50%;
+}
+#service-portal .case-panel .e-tjansteplattform .action-links a.attest-change {
+	background:url(../img/icn-revert.png) no-repeat 0 50%;
+}
+#service-portal .case-panel .e-tjansteplattform .action-links a.delete {
+	background:url(../img/icn-close.png) no-repeat 0 50%;
+}
+#service-portal .case-panel .e-tjansteplattform .case-c .system-info {
+	margin:10px 0;
+}
+#service-portal .e-tjansteplattform .submit-area .cancel,
+#service-portal .e-tjansteplattform .submit-area .other-action,
+#service-portal .e-tjansteplattform .submit-area .change,
+#service-portal .e-tjansteplattform .submit-area .save-draft,
+#service-portal .e-tjansteplattform .submit-area .save-template,
+#service-portal .e-tjansteplattform .submit-area .back,
+.lb-wrap .e-tjansteplattform .submit-area .cancel {
+	margin-top:8px;
+	font-weight:normal;
+}
+.lb-wrap #attest-change h3 {
+	margin-bottom:10px;
+	font-weight:bold;
+}
+#service-portal .e-tjansteplattform .submit-area .save-draft,
+#service-portal .e-tjansteplattform .submit-area .save-template,
+#service-portal .e-tjansteplattform .submit-area .change {
+	float:left;
+	margin-left:20px;
+}
+#service-portal .e-tjansteplattform a.cancel,
+#service-portal .e-tjansteplattform a.other-action {
+	float:right;
+	border:none;
+}
+#service-portal .e-tjansteplattform a.other-action {
+	margin:0 0 0 10px;
+	padding:0 0 0 10px;
+}
+#service-portal #service-my-pages .cases {
+	float:none;
+	width:auto;
+}
+#service-portal #service-my-pages .cases .opencase {
+	margin:0;
+	padding:0 5px;
+	border:none;
+}
+#service-portal #service-my-pages .cases .opencase .case-h {
+	padding-right:20px;
+}
+#service-portal #service-my-pages .case .body {
+	margin-top:10px;
+	border-top:1px solid #e0d8c1;
+}
+#service-portal #service-my-pages .case .body h3 {
+	margin-top:10px;
+	margin-bottom:0;
+	background:none;
+	font-size:1em;
+}
+#service-portal #service-my-pages .case .tabs {
+	border-top:1px solid #e0d8c1;
+}
+#service-portal #service-my-pages .case .tabs li {
+	padding:0;
+}
+.e-tjansteplattform textarea {
+	max-width:99%;
+}
+#service-portal .e-tjansteplattform fieldset,
+#service-portal .e-tjansteplattform .fieldset {
+	padding:5px 8px;
+	border:1px solid #dadada;
+}
+#service-portal .e-tjansteplattform legend {
+	font-weight:bold;
+}
+#service-portal .e-tjansteplattform .legend {
+	margin:-1.2em 0 0;
+	padding:0 2px;
+	background:#fff;
+	font:inherit;
+	font-weight:bold;
+}
+
+/* Object list editor
+-------------------------------------------------------------- */
+
+#service-portal .e-tjansteplattform .object-listing caption {
+	font-weight:normal;
+}
+#service-portal .e-tjansteplattform .object-listing table {
+	/*width:99%;*/
+	border:1px solid #dfe0e1;
+	margin-bottom:0;
+}
+#service-portal .e-tjansteplattform .object-listing td,
+#service-portal .e-tjansteplattform .object-listing th {
+	padding:7px 5px;
+	border:1px solid #dfe0e1;
+}
+#service-portal .e-tjansteplattform .object-listing th {
+	padding:3px 5px;
+	background:#e6effa;
+}
+#service-portal .e-tjansteplattform .object-listing .btn {
+	display:inline;
+	margin:0;
+	padding:3px 9px;
+	font-size:13px;
+	white-space:nowrap;
+}
+#service-portal .e-tjansteplattform .object-listing p.hint {
+	margin:0 0 20px;
+}
+#service-portal .e-tjansteplattform .object-list-editor {
+	background:#fff;
+}
+#service-portal .e-tjansteplattform .toggle-target .object-list-editor {
+	margin:10px 20px 25px 10px;
+}
+#service-portal .e-tjansteplattform .object-list-editor .add-object {
+	padding-left:35px;
+	background-image:url(../img/icn-add.png);
+}
+#service-portal .e-tjansteplattform .object-list-editor a.cancel {
+	margin-top:9px;
+}
+#service-portal .e-tjansteplattform .toggled {
+	border:2px solid #ddd;
+	background:#fff;
+}
+#service-portal .e-tjansteplattform .object-form div {
+	margin:0;
+}
+.lb-wrap .e-tjansteplattform .text,
+.lb-wrap .e-tjansteplattform .select {
+	display:block;
+}
+.lb-wrap .e-tjansteplattform .cancel {
+	float:right;
+}
+
+/* Validation error summary
+----------------------------------------------------------------------------- */
+#service-portal .error-summary ul {
+	margin-left:10px;
+}
+
+
+/* Terms and conditions
+----------------------------------------------------------------------------- */
+.e-tjansteplattform .terms-area label {
+	font-weight:bold;
+}
+.e-tjansteplattform .terms {
+	max-height:220px;
+	overflow:auto;
+	padding:10px;
+	border:1px solid #ccc;
+	box-shadow:0 1px 3px #ddd inset;
+	background:#f9f9f9;
+}
+.e-tjansteplattform .form-section .terms h2,
+.e-tjansteplattform .form-section .terms h3,
+.e-tjansteplattform .form-section .terms h4 {
+	margin:20px 0 10px;
+	padding:0;
+	border:none;
+	background:none;
+}
+.e-tjansteplattform .form-section .terms h2:first-child,
+.e-tjansteplattform .form-section .terms h3:first-child {
+	margin-top:0;
+}
+
+
+/* Order receipt
+----------------------------------------------------------------------------- */
+.e-tjansteplattform #print-link {
+	clear:none;
+}
+.e-tjansteplattform .receipt-header {
+	padding:15px;
+}
+.e-tjansteplattform .receipt-header h2 {
+	float:left;
+	margin:0;
+}
+.e-tjansteplattform .receipt-header a {
+	float:right;
+	margin:0 0 0 20px;
+	padding:4px 0;
+}
+
+
+/* Administrator tools
+----------------------------------------------------------------------------- */
+#service-portal .admin-tools {
+	clear:both;
+}
+#service-portal .admin-tools .button-group {
+	float:left;
+	margin:0 10px 0 0;
+	margin-bottom:20px;
+	border:1px solid #ccc;
+	border-radius:3px;
+	background:#fff url(../img/grey-grad-1.png) repeat-x 0 100%;
+}
+#service-portal .admin-tools .button-group a {
+	float:left;
+	padding:6px 10px;
+	border-left:1px solid #ccc;
+	color:#444;
+	font-weight:bold;
+	text-shadow:0 1px 0 #fff;
+}
+#service-portal .admin-tools .button-group a:first-child {
+	border:none;
+}
+#service-portal .admin-tools img {
+	margin:0 5px 0 0;
+	vertical-align:middle;
+}
+#service-portal .title-highlight {
+	color:#c00;
+	font-weight:bold;
+}
+
+/*
+ * For filtering long lists
+ */
+#service-portal .filter-row {
+	display:none;
+}
+/*
+ * Displace section legend
+ */
+#service-portal .data-group > .legend {
+    position: relative;
+    top: -20px;
+    left: 10px;
+    background-color: white;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-weight: bold;
+}
+
+
+
+
+/* =============================================================================
+ * Media queries
+ *
+ * Adjustments for different viewport widths
+============================================================================= */
+
+
+/* max-width:1010px
+----------------------------------------------------------------------------- */
+@media only screen and (max-width:1010px) {
+
+	#service-portal .tab-navigation li {
+		font-size:13px;
+	}
+
+} /* End media query */
+
+
+/* max-width:860px
+----------------------------------------------------------------------------- */
+@media only screen and (max-width:860px) {
+
+	.sp-layout-3 .content-1,
+	.sp-layout-3 .content-2 {
+		width:49%;
+	}
+	#service-portal .m-1-3 > .m-a {
+		width:40%;
+	}
+	#service-portal .m-1-3 > .m-c {
+		width:58%;
+	}
+	#service-portal .content-2 .m-order,
+	#service-portal .content-2 .m-support,
+	#service-portal .content-2 .m-infopack,
+	#service-portal .content-2 .m-contact,
+	#service-portal .content-2 .m-infopack:nth-child(2n+1),
+	#service-portal .sub-header-nav {
+		float:none;
+		width:auto;
+	}
+	#service-portal .sub-header-nav {
+		margin-bottom:10px;
+	}
+	#service-portal .sub-header-nav li a {
+		padding:8px 15px;
+		font-size:13px;
+	}
+	#service-portal .sub-header h1 {
+		float:none;
+		font-size:20px;
+	}
+	#service-portal .sub-header h1 img {
+		width:32px;
+	}
+	#service-portal .sub-header h1 .byline {
+		display:inline;
+		font-size:14px;
+	}
+
+	#service-portal .m-mypage .teasers .col {
+		float:none;
+		width:auto;
+		padding-right:10px;
+	}
+	#service-portal  .m-mypage .teasers .col.medium {
+		float:left;
+	}
+	.e-tjansteplattform.lb-panel-small {
+		width:76%;
+		margin-left:-38% !important;
+	}
+
+} /* End media query */
+
+
+/* max-width:780px
+----------------------------------------------------------------------------- */
+@media only screen and (max-width:780px) {
+
+	#service-portal .m-orderpage #nav-sub,
+	#service-portal .m-qna #nav-sub {
+		width:32%;
+	}
+	#service-portal .m-orderpage > .m-c,
+	#service-portal .m-contact > .m-c,
+	#service-portal .m-searchresults {
+		float:none;
+		width:auto;
+	}
+	#service-portal .m-searchresults {
+		padding-right:20px;
+	}
+	#service-portal .m-orderpage .content {
+		padding:10px 20px;
+	}
+	#service-portal .m-qna > .m-c,
+	#service-portal .m-regularpage > .m-c,
+	#service-portal .m-qna .m-qna-c {
+		width:66%;
+	}
+	#service-portal .m-qna .m-c.m-qpanel {
+		width:62%;
+	}
+	#service-portal .m-orderpage > .m-a,
+	#service-portal .m-contact > .m-a,
+	#service-portal .m-qna .component-control .m-a,
+	#service-portal .m-qna > .m-a {
+		float:none;
+		clear:both;
+		width:auto;
+	}
+	#service-portal .m-a .m-3 {
+		margin:5px;
+	}
+	.js #service-portal .btn-wrap {
+		border-radius:0;
+	}
+	#service-portal .article-rating {
+		margin-left:0;
+	}
+
+} /* End media query */
+
+
+/* max-width:680px
+----------------------------------------------------------------------------- */
+@media only screen and (max-width:680px) {
+
+	#service-portal .m-orderpage #nav-sub,
+	#service-portal .m-qna #nav-sub {
+		float:none;
+		width:auto;
+	}
+	#service-portal .m-orderpage #nav-sub ul,
+	#service-portal .m-qna #nav-sub ul {
+		margin:5px;
+	}
+	#service-portal .m-orderpage > .m-a,
+	#service-portal .m-orderpage > .m-c,
+	#service-portal .m-regularpage > .m-c,
+	#service-portal .m-orderpage > .m-c,
+	#service-portal .m-qna > .m-c,
+	#service-portal .m-qna .m-qna-c,
+	#service-portal .m-regularpage > .m-c,
+	#service-portal .m-orderpage > .m-a,
+	#service-portal .m-qna .component-control .m-a,
+	#service-portal .m-qna > .m-a,
+	#service-portal .m-qna .m-c.m-qpanel,
+	#service-portal .m-1-3 > .m-a,
+	#service-portal .m-1-3 > .m-c {
+		float:none;
+		width:auto;
+	}
+	#service-portal .m-qna .m-c.m-qpanel {
+		margin-left:10px;
+	}
+	#service-portal .m-orderpage .content,
+	#service-portal .m-qna .content,
+	#service-portal .m-regularpage .content {
+		padding:10px 20px;
+	}
+	#service-portal .share-link {
+		margin-right:10px;
+	}
+	.e-tjansteplattform.lb-panel-small {
+		width:94%;
+		margin-left:-47% !important;
+	}
+	.e-tjansteplattform.lb-panel-small .row .col {
+		float:none;
+		width:auto;
+		padding-right:0;
+		padding-left:0;
+	}
+	.e-tjansteplattform.lb-panel-small .row .col input,
+	.e-tjansteplattform.lb-panel-small .small input,
+	.e-tjansteplattform.lb-panel-small .medium input,
+	.e-tjansteplattform.lb-panel-small .large input {
+		width:95%;
+	}
+
+} /* End media query */
+
+
+/* max-width:600px
+----------------------------------------------------------------------------- */
+@media only screen and (max-width:600px) {
+
+	.sp-layout-3 .content-1,
+	.sp-layout-3 .content-2,
+	#service-portal .m-qpanel .q-f .m,
+	#service-portal .m-qpanel .q-f .related {
+		float:none;
+		width:auto;
+	}
+
+} /* End media query */
+
+
+/* max-width:480px
+----------------------------------------------------------------------------- */
+@media only screen and (max-width:480px) {
+
+	#service-portal .m-page .col {
+		padding:0 0 10px;
+	}
+	#service-portal .search-bar .keywords {
+		width:55%;
+	}
+
+} /* End media query */
+.content-admin {
+	float:none;
+}
+
+.content-admin-col-1 {
+	float:left;
+	width:40%;
+}
+
+.content-admin-col-2 {
+	float:left;
+	width:58%;
+	padding-left: 10px;
+}
+.add-object-form {
+	/*background:lightgrey;*/
+	/*background:lemonchiffon;*/
+	background:#efeadf;
+	padding:10px;
+	margin-bottom:10px;
+}
+
+.add-object-sub-form {
+	/*background:lightgrey;*/
+	/*background:#f6f6f6;*/
+	background:#f6f3ec;
+	padding:10px;
+	margin-bottom:0px;
+}
+
+.submit-area {
+	/*background:lightgrey;*/
+	background:#efeadf;
+	padding:10px;
+}
+
+.add-object-sub-form label strong {
+	display : inline;
+	color: #900;
+}
+
+.add-object-sub-form select {
+	max-width : 100%;
+}
+
+.add-object-sub-form input {
+	padding: 4px 6px;
+}
+
+.add-object-sub-form h2, .add-object-sub-form h3, .add-object-sub-form h4 {
+	margin: 1.2em -10px 0.5em -10px;
+	padding: 2px 10px;
+	background: #efeadf;
+}
+
+.add-object-sub-form h2 {
+	font-size: 1.5em;
+}
+
+.add-object-sub-form h3 {
+	font-size: 1.3em;
+}
+
+.add-object-sub-form h4 {
+	font-size: 1.1em;
+}
+
+/*
+.add-object-sub-form h2 {
+	margin: 1.2em -10px 0.5em -10px;
+	padding: 2px 10px;
+	background: #efeadf;
+	font-size: 1.5em;
+}
+
+.add-object-sub-form h3 {
+	margin: 1.2em -10px 0.5em -10px;
+	padding: 2px 10px;
+	background: #efeadf;
+	font-size: 1.3em;
+}
+
+.add-object-sub-form h4 {
+	margin: 1.2em -10px 0.5em -10px;
+	padding: 2px 10px;
+	background: #efeadf;
+	font-size: 1.0em;
+}
+*/
+
+.add-object-sub-form label {
+	font-weight: bold;
+}
+
+.add-object-sub-form legend {
+	font-weight: bold;
+}
+
+.add-object-sub-form fieldset {
+	margin: 1em 0;
+	padding: 5px 8px;
+	border: 1px solid #ddd;
+}
+
+.add-object-sub-form .alt {
+	display: inline;
+	margin: 0 12px 0 0;
+}
+
+.add-object-sub-form .alt label {
+	font-weight: normal;
+}
+
+.add-button {
+	margin-bottom: 10px;
+}
+
+.cancel-button {
+	float: right;
+}
+
+
+.admin-info-msg {
+	background: #58B25C;
+	border: 1px solid #4d9c50;
+	margin-bottom: 5px;
+}.admin-info-msg h2 {
+	padding: 5px 10px;
+	font-size: 1.4em;
+	color: white;
+	margin: 0px;
+}
+.admin-error-msg {
+	background: #973228;
+	border: 1px solid #820100;
+	margin-bottom: 5px;
+}
+.admin-error-msg h2 {
+	padding: 5px 10px;
+	font-size: 1.4em;
+	color: white;
+	margin: 0px;
+}
+/*
+.showSingle {
+	float: right;
+}
+*/
+.toggleSection {
+	float: right;
+}
+
+.toggleList {
+	float: left;
+	margin-right:5px;
+}
+
+.indentedList {
+	margin-left: 30px;
+}
+
+.headLink {
+	float: right;
+}
+
+.pos-input {
+	width: 40px;
+}
+
+.content-admin-col-1 li a.published {
+	display: inline;
+	padding-left: 20px;
+	background: url(../img/icn-star.png) no-repeat 0% 50%;
+}
+
+.content-admin-col-1 li a.unpublished {
+	display: inline;
+	padding-left: 20px;
+	background: url(../img/icn-warning-stop.png) no-repeat 0% 50%;
+}
+
+.faq-admin-list {
+	clear: both;
+}

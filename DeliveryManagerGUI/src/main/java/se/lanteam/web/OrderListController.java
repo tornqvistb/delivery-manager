@@ -1,5 +1,6 @@
 package se.lanteam.web;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -74,34 +75,38 @@ public class OrderListController {
 		
 		String query = "%" + reqAttr.getQuery() + "%";
 		
-		Date fromDate = DateUtil.getDefaultStartDate();
-		if (!StringUtils.isNullOrEmpty(reqAttr.getFromDate())) {
-			fromDate = DateUtil.stringToDate(reqAttr.getFromDate());
-		}
-		
-		Date toDate = DateUtil.getTomorrow();
-		if (!StringUtils.isNullOrEmpty(reqAttr.getToDate())) {
-			toDate = DateUtil.stringToDate(reqAttr.getToDate());
-		}
-		
-		Date orderDate = DateUtil.getDefaultStartDate();
-		List<OrderHeader> orders;
-		List<String> stati = new ArrayList<String>();
-		if (status.equals(StatusConstants.ORDER_STATUS_GROUP_ACTIVE)){
-			stati = Arrays.asList(StatusConstants.ACTIVE_STATI);
-		} else if (status.equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
-			stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
-			orderDate = getStartDateForInactiveOrders();
-			reqAttr.setInfoMessage("De ordrar som visas är skapta " + propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue() + " dagar tillbaks i tiden fram tills idag. För att se äldre inaktiva ordrar, sök på specifik status.");
-		} else {
-			stati.add(status);
-		}
-		if (StatusUtil.isActiveStatus(status)) {
-			orders = orderRepo.findOrdersFromSearch(stati, orderDate, query);
-		} else {
-			orders = orderRepo.findDeliveredOrdersFromSearch(stati, orderDate, query, fromDate, toDate);
-		}
-		model.put("orders", orders);		
+		try {
+			Date fromDate = DateUtil.getDefaultStartDate();
+			if (!StringUtils.isNullOrEmpty(reqAttr.getFromDate())) {
+				fromDate = DateUtil.stringToDate(reqAttr.getFromDate());
+			}
+			
+			Date toDate = DateUtil.getTomorrow();
+			if (!StringUtils.isNullOrEmpty(reqAttr.getToDate())) {
+				toDate = DateUtil.stringToDate(reqAttr.getToDate());
+			}
+			
+			Date orderDate = DateUtil.getDefaultStartDate();
+			List<OrderHeader> orders;
+			List<String> stati = new ArrayList<String>();
+			if (status.equals(StatusConstants.ORDER_STATUS_GROUP_ACTIVE)){
+				stati = Arrays.asList(StatusConstants.ACTIVE_STATI);
+			} else if (status.equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
+				stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
+				orderDate = getStartDateForInactiveOrders();
+				reqAttr.setInfoMessage("De ordrar som visas är skapta " + propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue() + " dagar tillbaks i tiden fram tills idag. För att se äldre inaktiva ordrar, sök på specifik status.");
+			} else {
+				stati.add(status);
+			}
+			if (StatusUtil.isActiveStatus(status)) {
+				orders = orderRepo.findOrdersFromSearch(stati, orderDate, query);
+			} else {
+				orders = orderRepo.findDeliveredOrdersFromSearch(stati, orderDate, query, fromDate, toDate);
+			}
+			model.put("orders", orders);
+		} catch (ParseException e) {
+			reqAttr.setErrorMessage("Felaktigt inmatade datum");
+		}		
 		reqAttr.setOrderStatus(status);
 		reqAttr.setNewErrorMessages(errorRepo.findErrorsByArchived(false).size());
 		model.put("reqAttr", reqAttr);

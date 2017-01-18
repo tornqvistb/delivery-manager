@@ -1,0 +1,370 @@
+/**
+ * File: /gui/css/basic.css
+ *
+ * Resets, basic typography, global helper classes, classes used by content
+ * editors.
+ *
+ * This file gets imported into the TinyMCE editor used by content editors and
+ * should make edited content look like it does when viewed on the actual site.
+ */
+
+/* =============================================================================
+ * Reset
+ *
+ * Resets margins and paddings, sets up basic typography/colors
+============================================================================= */
+
+
+/* Whitespace reset
+ * Zeroes margin and padding and sets a common margin-bottom on block-level
+ * elements.
+----------------------------------------------------------------------------- */
+blockquote,
+body,
+caption,
+div,
+dl,
+dt,
+dd,
+form,
+fieldset,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+html,
+li,
+ul,
+ol,
+p,
+pre,
+textarea,
+table,
+td,
+th {
+	margin:0;
+	padding:0;
+}
+address,
+dl,
+fieldset,
+p,
+pre,
+ul,
+ol,
+table {
+	margin:0 0 20px;
+}
+blockquote {
+	margin:1em 40px;
+	font-style:italic;
+}
+hr {
+	height:1px;
+	border:none;
+	background:#dadada;
+}
+
+
+/* Lists
+ * Normalises margins on lists
+----------------------------------------------------------------------------- */
+dd,
+ol,
+ul {
+	margin-left:40px;
+}
+td ol,
+td ul {
+	margin-left:15px;
+}
+ol ol,
+ol ul,
+ul ol,
+ul ul,
+td ol,
+td ul {
+	margin-bottom:0;
+}
+dt {
+	font-weight:bold;
+}
+
+
+/* Tables
+ * Normalises cellpadding and borders
+----------------------------------------------------------------------------- */
+table {
+	width:100%;
+	border-spacing:0;
+	border-collapse:collapse;
+}
+td,
+th {
+	padding:2px 3px;
+	vertical-align:top;
+}
+caption,
+th {
+	font-weight:bold;
+	text-align:left;
+}
+thead th {
+	background:#efefef;
+}
+
+
+/* Images
+ * Make images flexible.
+----------------------------------------------------------------------------- */
+img {
+	max-width:100%;
+	border:none;
+}
+
+
+/* Headings
+ * Sets global fonts and margins on headings
+----------------------------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin:1em 0 0.2em;
+	font-weight:normal;
+	font-size:1em;
+	font-family:Arial, Helvetica, sans-serif;
+}
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child {
+	margin-top:0;
+}
+h1 {
+	font-size:24px;
+}
+h2 {
+	margin-bottom:12px;
+	font-size:18px;
+}
+h3 {
+	font-size:15px;
+}
+h4 {
+	font-size:14px;
+}
+h5,
+h6 {
+	font-weight:bold;
+	font-size:1em;
+}
+
+
+/* Links
+ * Colours and pseudo-class behaviours
+----------------------------------------------------------------------------- */
+a {
+	color:#1275b8;
+	text-decoration:none;
+}
+a:visited {
+	color:#1275b8;
+}
+a:hover,
+a:focus,
+a:active,
+a:visited:hover {
+	color:#026;
+	text-decoration:underline;
+}
+
+
+/* Miscellaneous typography
+ * Normalisation of fonts
+ * [1] Base font size of 13px
+----------------------------------------------------------------------------- */
+body,
+html {
+	background:#fff url(../img/bg-noise.png);
+	color:#424242;
+}
+html {
+	font:81.25%/1.5385 Helvetica, Arial, sans-serif; /* [1] */
+}
+code,
+kbd,
+pre {
+	font-family:Monaco, Courier, "Courier New", Tahoma;
+}
+b,
+strong {
+	font-weight:bold;
+}
+i,
+em {
+	font-style:italic;
+}
+
+/*
+ * Prevent Safari/iOS from auto-increasing text size in landscape mode
+ */
+@media only screen {
+
+	body {
+		-webkit-text-size-adjust:100%; /* [1] */
+	}
+
+} /* End media query */
+
+
+/* Forms
+ * Sets fonts on form controls, normalises whitespace on buttons.
+ * [1] Enable line-wrapping in IE8+
+ * [2] Enable line-wrapping in old versions of some other browsers
+----------------------------------------------------------------------------- */
+legend {
+	display:table; /* [1] */
+	color:#333;
+	white-space:normal; /* [2] */
+}
+input,
+button,
+textarea,
+select {
+	font:inherit;
+}
+
+/*
+ * Reset search input look in webkit, making it possible to style it as a
+ * normal text input
+ */
+input[type="search"] {
+	-webkit-box-sizing:content-box;
+	-webkit-appearance:textfield;
+}
+input::-webkit-search-decoration,
+input::-webkit-search-cancel-button {
+	display:none;
+}
+
+/*
+ * Reset extra padding on gecko buttons
+ */
+input[type="submit"]::-moz-focus-inner,
+button::-moz-focus-inner {
+	padding:0;
+	border:0;
+}
+
+
+
+/* =============================================================================
+ * Global utility classes
+ *
+ * Classes for clearing floats, visually or completely hiding elements
+============================================================================= */
+
+
+/* Easy clearing of floats.
+ * See http://www.css-101.org/articles/clearfix/latest-new-clearfix-so-far.php
+----------------------------------------------------------------------------- */
+.cf:after {
+	display:table;
+	clear:both;
+	content:"";
+}
+
+
+/* Structural elements
+ * Not visible when CSS is enabled but visible for screen readers
+----------------------------------------------------------------------------- */
+.structural {
+	position:absolute;
+	width:1px;
+	height:1px;
+	overflow:hidden;
+	clip:rect(1px, 1px, 1px, 1px);
+	padding:0;
+	border:0;
+}
+
+
+/* Hidden elements
+ * Hidden even for screen readers
+----------------------------------------------------------------------------- */
+.hidden {
+	display:none;
+	visibility:hidden;
+}
+
+
+/* Clear elements
+ * Used by content editors in TinyMCE
+----------------------------------------------------------------------------- */
+.clear {
+	clear:both;
+}
+
+
+/* Nowrap
+ * Prevent line breaking, used by content editors in TinyMCE
+----------------------------------------------------------------------------- */
+.nowrap {
+	white-space:nowrap;
+}
+
+
+/* Zebra background on tables
+----------------------------------------------------------------------------- */
+.zebra tbody tr:nth-child(even) {
+	background:#eee;
+}
+
+
+/* Intro
+----------------------------------------------------------------------------- */
+.intro {
+	font-size:1.2em;
+}
+
+
+/* Images
+ * Class names for styling images, mostly used by content editors
+----------------------------------------------------------------------------- */
+.left,
+.right,
+.left-dec,
+.right-dec {
+	float:left;
+	width:auto;
+	margin:3px 18px 10px 0;
+}
+.right,
+.right-dec {
+	float:right;
+	margin:3px 0 10px 18px;
+}
+img.fullwidth,
+img.fullwidth-dec,
+span.fullwidth img,
+span.fullwidth-dec img {
+	display:block;
+	margin:3px 0 10px;
+}
+img.dec,
+img.left-dec,
+img.right-dec,
+img.fullwidth-dec,
+span.dec img,
+span.left-dec img,
+span.right-dec img,
+span.fullwidth-dec img {
+	padding:4px;
+	border:1px solid #cfcfcf;
+	background:#fff;
+}

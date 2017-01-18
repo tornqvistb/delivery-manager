@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="utf-8" />
+<head th:include="head" th:remove="tag" />
+
+<body class="layout-2">
+	<div id="body">
+		<div th:include="header" th:remove="tag"></div>
+		<div id="main" class="cf">
+			<div id="content">
+				<div th:include="sub-header-archiving" th:remove="tag"></div>
+				<div id="service-portal" class="sp-layout-4">
+					<div class="content-1">
+						<div class="m m-1 m-page cf">
+							<div class="m-h main-header cf">
+								<div class="page-heading">
+									<h2>Arkivering av leveranser</h2>
+								</div>
+							</div>
+							<div class="tab-navigation">
+								<ul class="tabs cf">
+									<li>
+										<a th:href="@{../../DeliveryManagerGUI/archiving}" rel="nofollow">Arkivera leveranser
+										</a>
+									</li>
+									<li class="sel">
+										<a href="#" rel="nofollow">Sök bland arkiverade leveranser
+										</a>			
+									</li>
+								</ul>
+							</div>
+							<div class="form-section case-listing"></div>
+							<!-- Här kan man lägga på en vänster meny -->
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div class="order-details">
+										<div class="back-link">
+											<a href="javascript:history.back()">Tillbaka</a>
+										</div>
+										
+										<div class="form-step current-step" id="registration-area">
+											<div class="form-step-header cf">
+												<h2
+													th:text="${'Leverans för order ' + {order.orderNumber}}"></h2>
+											</div>
+											<div class="form-section">
+												<h3>Orderrader</h3>
+												<table class="small-table">
+													<thead>
+														<tr>
+															<th>Orderrad</th>
+															<th>Artikelnummer</th>
+															<th>Beskrivning</th>
+															<th>Serienummerbärande</th>
+															<th>Antal</th>
+															<th>Registrerade</th>
+															<th>Återstående</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="orderLine : ${order.orderLines}"
+															th:remove="tag">
+															<tr th:class="${orderLine.rowClass}">
+																<td th:text="${orderLine.rowNumber}">1</td>
+																<td th:text="${orderLine.articleNumber}">31231312</td>
+																<td th:text="${orderLine.articleDescription}">HP elitebook</td>
+																<td th:text="${orderLine.hasSerialNoLabel}">Ja</td>
+																<td th:text="${orderLine.total}">5</td>
+																<td th:text="${orderLine.registered}">0</td>
+																<td th:text="${orderLine.remaining}">5</td>
+															</tr>
+															<tr th:if="${not #lists.isEmpty(orderLine.equipments)}">
+																<td></td>
+																<td colspan="4">
+																	<table class="small-table inner-table">
+																		<thead>
+																			<tr>
+																				<th style="width:17%;">Serienummer</th>
+																				<th style="width:13%;">Stöld-ID</th>
+																				<th style="width:20%;">Registrerad av</th>
+																				<th style="width:20%;">Tidpunkt</th>
+																			</tr>
+																		</thead>
+																		<tbody>
+																			<tr th:each="equipment : ${orderLine.equipments}">
+																				<td th:text="${equipment.serialNo}">5</td>
+																				<td th:text="${equipment.stealingTag}">5</td>
+																				<td th:text="${equipment.registeredBy}">Kalle</td>
+																				<td th:text="${equipment.creationDateDisplay}">2014-01-01</td>
+																			</tr>
+																		</tbody>
+																	</table>
+																</td>
+															</tr>
+														</tr>
+													</tbody>
+												</table>
+												<h3 id="contact-persons">Kontaktpersoner</h3>
+													<table class="small-table">
+													<thead>
+														<tr>
+															<th>Namn</th>
+															<th>Epost-adress</th>
+															<th>Telefon</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td th:text="${order.contact1Name}">Kalle</td>
+															<td th:text="${order.contact1Email}">Kalle@gmail.com</td>
+															<td th:text="${order.contact1Phone}">070-101010</td>
+														</tr>
+														<tr>
+															<td th:text="${order.contact2Name}">Pelle</td>
+															<td th:text="${order.contact2Email}">Pelle@gmail.com</td>
+															<td th:text="${order.contact2Phone}">070-121212</td>
+														</tr>
+													</tbody>
+												</table>
+												<h3 id="Delivery-address">Leveransadress</h3>
+												<table class="small-table">
+													<colgroup>
+														<col style="width: 30%" />
+														<col style="width: 70%" />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th scope="row">Leveransadress 1</th>
+															<td th:text="${order.deliveryPostalAddress1}" id="order-del-adr-1">Storgatan 1</td>
+														</tr>
+														<tr>
+															<th scope="row">Leveransadress 2</th>
+															<td th:text="${order.deliveryPostalAddress2}" id="order-del-adr-2">3 trappor</td>
+														</tr>
+														<tr>
+															<th scope="row">Postnummer</th>
+															<td th:text="${order.deliveryPostalCode}" id="order-del-postal-code">42655</td>
+														</tr>
+														<tr>
+															<th scope="row">Ort</th>
+															<td th:text="${order.deliveryCity}" id="order-del-city">Göteborg</td>
+														</tr>
+													</tbody>
+												</table>
+												<h3 id="additional-order-info">Övrig orderinformation</h3>
+												
+												<table class="small-table">
+													<colgroup>
+														<col style="width: 30%" />
+														<col style="width: 70%" />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th scope="row">Ordernummer</th>
+															<td th:text="${order.orderNumber}" id="int-order-no">LT100199</td>
+														</tr>
+														<tr>
+															<th scope="row">Kundens ordernummer</th>
+															<td th:text="${order.customerOrderNumber}" id="ext-order-no">REQ100094</td>
+														</tr>
+														<tr>
+															<th scope="row">Kundens beställningsnummer</th>
+															<td th:text="${order.customerSalesOrder}" id="ext-sales-no">REQ100094</td>
+														</tr>
+														<tr>
+															<th scope="row">Kund</th>
+															<td th:text="${order.customerName}">Lundby</td>
+														</tr>
+														<tr>
+															<th scope="row">Orderdatum</th>
+															<td th:text="${order.orderDateAsString}">2016-02-02</td>
+														</tr>
+														<tr>
+															<th scope="row">Leveransdatum</th>
+															<td th:text="${order.deliveryTimeDisplay}">2016-02-02</td>
+														</tr>
+														<tr>
+															<th scope="row">Status</th>
+															<td th:text="${order.statusDisplay}">Ny</td>
+														</tr>
+														<tr th:if="${order.attachment != null}">
+															<th scope="row">Leveransdokument</th>
+															<td>
+																<a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a>
+															</td>															
+														</tr>
+														
+													</tbody>
+												</table>
+												<h3 id="order-comments-header">Statusmeddelanden</h3>
+												<h4>Skickade statusmeddelanden</h4>
+												<table class="small-table">
+													<thead>
+														<tr>
+															<th>Orderrad</th>
+															<th>Meddelande</th>
+															<th>Tidpunkt</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="comment : ${order.orderComments}">
+															<td th:text="${comment.orderLineDisplay}">1</td>
+															<td th:text="${comment.message}">HP elitebook</td>
+															<td th:text="${comment.creationDateDisplay}">Ja</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:include="footer" th:remove="tag"></div>
+	</div>
+</body>
+</html>

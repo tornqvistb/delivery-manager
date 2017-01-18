@@ -55,6 +55,7 @@ public class OrderHeader {
 	private Set<OrderComment> orderComments = new HashSet<OrderComment>();
 	private Attachment attachment;
 	private String transmitErrorMessage;
+	private Boolean toBeArchived = false;
 	
 	@Id
 	@GeneratedValue
@@ -345,6 +346,12 @@ public class OrderHeader {
 			}
 		}
 		return result;
+	}
+	public Boolean getToBeArchived() {
+		return toBeArchived;
+	}
+	public void setToBeArchived(Boolean toBeArchived) {
+		this.toBeArchived = toBeArchived;
 	}
 	
 }

@@ -3,9 +3,13 @@ package se.lanteam.repository;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import se.lanteam.domain.OrderHeader;
@@ -31,4 +35,13 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND (LOWER(o.orderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerOrderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerSalesOrder) LIKE LOWER(:searchString))")
     public List<OrderHeader> findOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("orderDate") Date orderDate, @Param("searchString") String searchString);
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE OrderHeader o SET o.toBeArchived = :toBeArchived WHERE o.deliveryDate < :lastDeliveryDate AND o.status = :status")
+    public void setArchiving(@Param("toBeArchived") boolean archived, @Param("lastDeliveryDate") Date lastDeliveryDate, @Param("status") String status);
+
+	@Query("SELECT COUNT(*) FROM OrderHeader o WHERE o.deliveryDate < :lastDeliveryDate AND o.status = :status")
+    public Integer countOrdersForArchiving(@Param("lastDeliveryDate") Date lastDeliveryDate, @Param("status") String status);
+
+	
 }
