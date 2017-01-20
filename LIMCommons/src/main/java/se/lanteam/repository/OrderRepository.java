@@ -43,5 +43,10 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 	@Query("SELECT COUNT(*) FROM OrderHeader o WHERE o.deliveryDate < :lastDeliveryDate AND o.status = :status")
     public Integer countOrdersForArchiving(@Param("lastDeliveryDate") Date lastDeliveryDate, @Param("status") String status);
 
-	
+	@Query("SELECT COUNT(*) FROM OrderHeader o WHERE o.status in :statusList")
+    public Integer countOrdersByStatusList(@Param("statusList") List<String> statusList);
+
+	@Query("SELECT MIN(o.deliveryDate) FROM OrderHeader o WHERE o.status = :status")
+	public Date getFirstDeliveryDate(@Param("status") String status);
+
 }

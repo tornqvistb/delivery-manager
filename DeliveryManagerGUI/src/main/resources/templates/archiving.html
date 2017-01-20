@@ -56,11 +56,32 @@
 											<div class="form-section" id="search-results">
 												<h3>Arkivera</h3>
 												<div class="information-text system-info help-message">
-													<p>Ange värde för senaste leveransdatum för de ordrar som skall arkiveras. De ordrar som matchar kommer då markeras för arkivering och själva överföringen till arkiv-databasen kommer att ske i bakgrunden.</p>
+													<p>Ange värde för äldsta leveransdatum för de ordrar som skall arkiveras. De ordrar som matchar kommer då markeras för arkivering och själva överföringen till arkiv-databasen kommer att ske i bakgrunden.</p>
 												</div>
+												<h4>Aktuell status</h4>
+												<table class="small-table">
+													<colgroup>
+														<col style="width: 30%" />
+														<col style="width: 70%" />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th scope="row">Antal aktiva ordrar</th>
+															<td th:text="${reqAttr.activeCount}" id="active-count">100</td>
+														</tr>
+														<tr>
+															<th scope="row">Antal levererade ordrar</th>
+															<td th:text="${reqAttr.passiveCount}" id="passive-count">100</td>
+														</tr>
+														<tr>
+															<th scope="row">Äldsta leveransdatum</th>
+															<td th:text="${reqAttr.firstDate}" id="first-delivery-date">2001-01-01</td>
+														</tr>
+													</tbody>
+												</table>
 												
 												<div class="text">
-													<label for="fromDate"><b>Från leveransdatum</b></label><br />
+													<label for="fromDate"><b>Äldsta leveransdatum för arkivering</b></label><br />
 													<input type="date" th:field="${reqAttr.fromDate}" maxlength="10" value="" name="fromDate" class="date small" id="fromDate"/>
 												</div>
 											</div>

@@ -1,6 +1,7 @@
 package se.lanteam.web;
 
 import java.text.ParseException;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,8 @@ public class ArchivingController {
 	
 	@RequestMapping("archiving")
 	public String showArchiving(ModelMap model) {
-		model.put("reqAttr", new RequestAttributes(errorRepo.findErrorsByArchived(false).size()));
+		RequestAttributes reqAttr = new RequestAttributes();
+		model.put("reqAttr", refreshArchiveInfo(reqAttr));		
 		return "archiving";
 	}
 	@RequestMapping(value="archiving/do-archive", method=RequestMethod.POST)
@@ -32,13 +34,12 @@ public class ArchivingController {
 		try {
 			Integer count = orderRepo.countOrdersForArchiving(DateUtil.stringToDate(reqAttr.getFromDate()), StatusConstants.ORDER_STATUS_TRANSFERED);
 			orderRepo.setArchiving(true, DateUtil.stringToDate(reqAttr.getFromDate()), StatusConstants.ORDER_STATUS_TRANSFERED);
-			reqAttr.setThanksMessage("Arkivering initierad för " + count +" st order/ordrar.");
+			reqAttr.setThanksMessage("Arkivering initierad för " + count +" st order/ordrar.");			
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt angivet datum");
 		}
+		model.put("reqAttr", refreshArchiveInfo(reqAttr));
 		
-		reqAttr.setNewErrorMessages(errorRepo.findErrorsByArchived(false).size());
-		model.put("reqAttr", reqAttr);
 		return "archiving";
 	}
 	@Autowired
@@ -49,5 +50,16 @@ public class ArchivingController {
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
 	}
-	
+
+	private RequestAttributes refreshArchiveInfo(RequestAttributes reqAttr) {
+		reqAttr.setNewErrorMessages(errorRepo.findErrorsByArchived(false).size());
+		reqAttr.setActiveCount(orderRepo.countOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI)));
+		reqAttr.setPassiveCount(orderRepo.countOrdersByStatusList(Arrays.asList(StatusConstants.INACTIVE_STATI)));
+		try {
+			reqAttr.setFirstDate(DateUtil.dateToString(orderRepo.getFirstDeliveryDate(StatusConstants.ORDER_STATUS_TRANSFERED)));
+		} catch (ParseException e) {
+			reqAttr.setFirstDate("saknas");
+		}
+		return reqAttr;
+	}
 }

@@ -29,4 +29,16 @@ public class DateUtil {
 	    return date;
 		
 	}
+
+	public static String dateToString(Date date) throws ParseException {
+		
+		if (date == null) return ""; 
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String dateStr = formatter.format(date);
+	    
+	    return dateStr;
+		
+	}
+
 }

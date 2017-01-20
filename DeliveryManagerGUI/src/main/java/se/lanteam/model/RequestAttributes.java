@@ -34,6 +34,9 @@ public class RequestAttributes {
 	private String registeredBy;
 	private String fromDate;
 	private String toDate;
+	private String firstDate;
+	private Integer activeCount;
+	private Integer passiveCount;
 	
 	public RequestAttributes() {
 		super();
@@ -229,6 +232,24 @@ public class RequestAttributes {
 	}
 	public void setToDate(String toDate) {
 		this.toDate = toDate;
+	}
+	public String getFirstDate() {
+		return firstDate;
+	}
+	public void setFirstDate(String firstDate) {
+		this.firstDate = firstDate;
+	}
+	public Integer getActiveCount() {
+		return activeCount;
+	}
+	public void setActiveCount(Integer activeCount) {
+		this.activeCount = activeCount;
+	}
+	public Integer getPassiveCount() {
+		return passiveCount;
+	}
+	public void setPassiveCount(Integer passiveCount) {
+		this.passiveCount = passiveCount;
 	}
 	
 	
