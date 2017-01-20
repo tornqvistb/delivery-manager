@@ -34,14 +34,12 @@
 										<form class="form-general" th:action= "@{/search-equipment/do-search}" th:object="${reqAttr}" method="get">
 											<div class="form-section">
 												<h3 class="expandtrigger">Ange söksträng</h3>
-												<div class="row cols-2 cf">
-													<div class="select">
-														<label for="query">Sök</label> 
-														<input th:field="${reqAttr.query}"
-																		type="text" id="query" value="${reqAttr.query}" />
-													</div>
-												</div>
-												<input class="btn" type="submit" value="Sök" />
+												<div class="search-wide">
+													<label for="query">Sök</label>
+													<input class="keywords" th:field="${reqAttr.query}" type="search" id="query" value="${reqAttr.query}" placeholder="Ange del av serienmmer eller stöld-id"/>
+													<input class="btn" type="submit" value="Sök" id="ActionSearchFreetext" name="ActionSearchFreetext"/>
+												</div>													
+												
 											</div>
 										</form>
 										<form>
