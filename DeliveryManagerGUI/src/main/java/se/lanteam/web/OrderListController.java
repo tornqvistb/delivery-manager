@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.thymeleaf.util.DateUtils;
 
 import com.mysql.jdbc.StringUtils;
 
@@ -41,10 +42,11 @@ public class OrderListController {
 	}
 		
 	@RequestMapping("order-list")
-	public String showOrderList(ModelMap model) {
+	public String showOrderList(ModelMap model, HttpServletRequest request) {
 		List<OrderHeader> orders = orderRepo.findOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI));
 		model.put("orders", orders);
 		model.put("reqAttr", new RequestAttributes(errorRepo.findErrorsByArchived(false).size()));
+		request.getSession().setAttribute("customerGroup", "Göteborgs Stad");
 		return "order-list";
 	}
 	@RequestMapping(value="order-list/view/{orderId}", method=RequestMethod.GET)

@@ -18,8 +18,11 @@
 				
 		<h2 class="structural">Hjälplänkar</h2>
 		<ul>
+		
 			<li>		
 				<a th:href="@{/settings}">Inställningar</a>	
+			</li>
+			<li>(Aktiv)<strong><a th:href="@{/customer-groups}" th:text="${session.customerGroup}"></a></strong>	
 			</li>
 		</ul>
 	</div>

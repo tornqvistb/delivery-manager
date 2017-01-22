@@ -1,7 +1,6 @@
 package se.lanteam.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import se.lanteam.constants.StatusConstants;
@@ -36,10 +35,13 @@ public class RequestAttributes {
 	private String toDate;
 	private String firstDate;
 	private Integer activeCount;
-	private Integer passiveCount;
+	private Integer passiveCount;	
+	private Long customerId;
+	
 	
 	public RequestAttributes() {
 		super();
+
 	}
 	public RequestAttributes(Integer newErrorMessages) {
 		super();
@@ -250,6 +252,12 @@ public class RequestAttributes {
 	}
 	public void setPassiveCount(Integer passiveCount) {
 		this.passiveCount = passiveCount;
+	}
+	public Long getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 	
 	

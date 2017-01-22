@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -56,6 +57,7 @@ public class OrderHeader {
 	private Attachment attachment;
 	private String transmitErrorMessage;
 	private Boolean toBeArchived = false;
+	private CustomerGroup customerGroup;
 	
 	@Id
 	@GeneratedValue
@@ -352,6 +354,13 @@ public class OrderHeader {
 	}
 	public void setToBeArchived(Boolean toBeArchived) {
 		this.toBeArchived = toBeArchived;
+	}
+	@ManyToOne()
+	public CustomerGroup getCustomerGroup() {
+		return customerGroup;
+	}
+	public void setCustomerGroup(CustomerGroup customerGroup) {
+		this.customerGroup = customerGroup;
 	}
 	
 }
