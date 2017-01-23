@@ -102,6 +102,8 @@ public class EquipmentController {
 		order.setOrderStatusByProgress();
 		orderRepo.save(order);
 		model.put("order", order);
+		RequestAttributes reqAttr = new RequestAttributes(order);
+		model.put("reqAttr", reqAttr);
 		return "order-details";
 	}
 
