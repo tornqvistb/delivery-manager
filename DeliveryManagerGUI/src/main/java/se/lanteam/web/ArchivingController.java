@@ -13,13 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.model.RequestAttributes;
-import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
 public class ArchivingController {
 	
-	private ErrorRepository errorRepo;
 	private OrderRepository orderRepo;
 	
 	@RequestMapping("archiving")
@@ -43,16 +41,11 @@ public class ArchivingController {
 		return "archiving";
 	}
 	@Autowired
-	public void setErrorRepo(ErrorRepository errorRepo) {
-		this.errorRepo = errorRepo;
-	}
-	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
 	}
 
 	private RequestAttributes refreshArchiveInfo(RequestAttributes reqAttr) {
-		reqAttr.setNewErrorMessages(errorRepo.findErrorsByArchived(false).size());
 		reqAttr.setActiveCount(orderRepo.countOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI)));
 		reqAttr.setPassiveCount(orderRepo.countOrdersByStatusList(Arrays.asList(StatusConstants.INACTIVE_STATI)));
 		try {

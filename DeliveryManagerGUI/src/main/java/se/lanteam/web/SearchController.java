@@ -13,19 +13,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.lanteam.domain.Equipment;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.EquipmentRepository;
-import se.lanteam.repository.ErrorRepository;
-import se.lanteam.repository.OrderRepository;
 
 @Controller
 public class SearchController {
 	
-	private OrderRepository orderRepo;
 	private EquipmentRepository equipmentRepo;
-	private ErrorRepository errorRepo;
 	
 	@RequestMapping("search-equipment")
 	public String showOrderList(ModelMap model) {
-		model.put("reqAttr", new RequestAttributes(errorRepo.findErrorsByArchived(false).size()));
+		model.put("reqAttr", new RequestAttributes());
 		return "search-equipment";
 	}
 	@RequestMapping(value="search-equipment/do-search", method=RequestMethod.GET)
@@ -44,19 +40,11 @@ public class SearchController {
 		} else {
 			errorMessage = "Du måste ange en söksträng vid sökning.";
 		}
-		reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
+		reqAttr = new RequestAttributes();
 		reqAttr.setQuery(query);
 		reqAttr.setErrorMessage(errorMessage);
 		model.put("reqAttr", reqAttr);
 		return "search-equipment";
-	}
-	@Autowired
-	public void setOrderRepo(OrderRepository orderRepo) {
-		this.orderRepo = orderRepo;
-	}
-	@Autowired
-	public void setErrorRepo(ErrorRepository errorRepo) {
-		this.errorRepo = errorRepo;
 	}
 	@Autowired
 	public void setEquipmentRepo(EquipmentRepository equipmentRepo) {

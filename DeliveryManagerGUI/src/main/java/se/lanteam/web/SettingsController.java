@@ -13,14 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import se.lanteam.domain.SystemProperty;
 import se.lanteam.model.RequestAttributes;
-import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.PropertyRepository;
 
 @Controller
 public class SettingsController {
 	private static final Logger LOG = LoggerFactory.getLogger(SettingsController.class);
 	private PropertyRepository propertyRepo;
-	private ErrorRepository errorRepo;
 			
 	@RequestMapping("settings")
 	public String showOrderList(ModelMap model) {
@@ -34,7 +32,7 @@ public class SettingsController {
 	@RequestMapping(value = "settings/save", method = RequestMethod.POST)
 	public String saveSettings(@ModelAttribute RequestAttributes reqAttr,
 			ModelMap model) {
-		
+		LOG.debug("Saving properties");
 		for (SystemProperty prop : reqAttr.getSystemProperties()) {
 			SystemProperty theProp = propertyRepo.getOne(prop.getId());
 			theProp.setNumberValue(prop.getNumberValue());
@@ -50,7 +48,7 @@ public class SettingsController {
 	}
 
 	private RequestAttributes loadReqAttr(List<SystemProperty> properties) {
-		RequestAttributes reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
+		RequestAttributes reqAttr = new RequestAttributes();
 		reqAttr.setSystemProperties(properties);
 		return reqAttr;
 	}
@@ -58,10 +56,5 @@ public class SettingsController {
 	@Autowired
 	public void setPropertyRepo(PropertyRepository propertyRepo) {
 		this.propertyRepo = propertyRepo;
-	}
-	@Autowired
-	public void setErrorRepo(ErrorRepository errorRepo) {
-		this.errorRepo = errorRepo;
-	}
-	
+	}	
 }

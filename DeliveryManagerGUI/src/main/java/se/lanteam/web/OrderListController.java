@@ -25,7 +25,6 @@ import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
-import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
 
@@ -33,7 +32,6 @@ import se.lanteam.services.PropertyService;
 public class OrderListController {
 	
 	private OrderRepository orderRepo;
-	private ErrorRepository errorRepo;
 	private PropertyService propService;
 	
 	@RequestMapping("/")
@@ -45,25 +43,19 @@ public class OrderListController {
 	public String showOrderList(ModelMap model, HttpServletRequest request) {
 		List<OrderHeader> orders = orderRepo.findOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI));
 		model.put("orders", orders);
-		model.put("reqAttr", new RequestAttributes(errorRepo.findErrorsByArchived(false).size()));
-		request.getSession().setAttribute("customerGroup", "Göteborgs Stad");
+		model.put("reqAttr", new RequestAttributes());
 		return "order-list";
 	}
 	@RequestMapping(value="order-list/view/{orderId}", method=RequestMethod.GET)
 	public String showOrderView(@PathVariable Long orderId, ModelMap model) {
 		OrderHeader order = orderRepo.findOne(orderId);
+		model.put("reqAttr", new RequestAttributes());
 		model.put("order", order);
-		RequestAttributes reqAttr = new RequestAttributes(errorRepo.findErrorsByArchived(false).size());
-		model.put("reqAttr", reqAttr);
 		return "order-details";
 	}
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
-	}
-	@Autowired
-	public void setErrorRepo(ErrorRepository errorRepo) {
-		this.errorRepo = errorRepo;
 	}
 	@Autowired
 	public void setPropertyService(PropertyService propService) {
@@ -110,7 +102,6 @@ public class OrderListController {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
 		}		
 		reqAttr.setOrderStatus(status);
-		reqAttr.setNewErrorMessages(errorRepo.findErrorsByArchived(false).size());
 		model.put("reqAttr", reqAttr);
 		return "order-list";
 	}

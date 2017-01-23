@@ -36,6 +36,5 @@ public class StatusConstants {
 
 	public static final String EMAIL_STATUS_NEW = "new";
 	public static final String EMAIL_STATUS_SENT = "sent";
-
 	
 }

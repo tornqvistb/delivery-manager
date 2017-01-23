@@ -21,7 +21,8 @@ public class PropertyConstants {
 	public static final String ORDER_CORRECTION_MAIL_SENDER = "order-correction-mail-sender";
 	public static final String ORDER_CORRECTION_MAIL_RECEIVER = "order-correction-mail-receiver";
 	public static final String MAX_DAYS_INACTIVE_ORDERS_SEARCH = "max-days-inactive-orders-search";
+	public static final String DEFAULT_COMPANY_GROUP_ID = "default-company-group-id";
 	// Archiving db
-	public static final String ARCHIVERJOB_FREQUENCY = "archiverjob-frequency";
+	public static final String ARCHIVERJOB_FREQUENCY = "archiverjob-frequency";	
 
 }

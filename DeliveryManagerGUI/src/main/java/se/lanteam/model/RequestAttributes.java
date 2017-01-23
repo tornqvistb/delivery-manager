@@ -25,7 +25,7 @@ public class RequestAttributes {
 	private String errorStatus;
 	private String thanksMessage;
 	private List<ReqOrderLine> reqOrderLines= new ArrayList<ReqOrderLine>();	
-	private Integer newErrorMessages;
+	//private Integer newErrorMessages;
 	private List<SystemProperty> systemProperties= new ArrayList<SystemProperty>();
 	private String query;
 	private String errorMessage;
@@ -42,10 +42,6 @@ public class RequestAttributes {
 	public RequestAttributes() {
 		super();
 
-	}
-	public RequestAttributes(Integer newErrorMessages) {
-		super();
-		this.newErrorMessages = newErrorMessages;
 	}
 
 	public RequestAttributes(OrderHeader orderHeader) {
@@ -186,13 +182,6 @@ public class RequestAttributes {
 		this.thanksMessage = thanksMessage;
 	}
 
-	public Integer getNewErrorMessages() {
-		return newErrorMessages;
-	}
-
-	public void setNewErrorMessages(Integer newErrorMessages) {
-		this.newErrorMessages = newErrorMessages;
-	}
 	public List<SystemProperty> getSystemProperties() {
 		return systemProperties;
 	}

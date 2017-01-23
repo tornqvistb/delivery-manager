@@ -13,7 +13,6 @@ import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.EquipmentRepository;
-import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
@@ -23,7 +22,6 @@ public class OrderCorrectionController {
 
 	private OrderRepository orderRepo;	
 	private EquipmentRepository equipmentRepo;	
-	private ErrorRepository errorRepo;
 
 	@RequestMapping(value="order-list/correct/doCorrect/{orderId}/{equipmentId}", method=RequestMethod.GET)
 	public String doCorrectEquipment(@PathVariable Long orderId, @PathVariable Long equipmentId, ModelMap model) {
@@ -34,7 +32,6 @@ public class OrderCorrectionController {
 		OrderHeader order = orderRepo.findOne(orderId);
 		model.put("order", order);
 		RequestAttributes reqAttr = new RequestAttributes(order);
-		reqAttr.setNewErrorMessages(errorRepo.findErrorsByArchived(false).size());
 		model.put("reqAttr", reqAttr);
 		return "correct-order";
 	}
@@ -47,7 +44,6 @@ public class OrderCorrectionController {
 		OrderHeader order = orderRepo.findOne(orderId);
 		model.put("order", order);
 		RequestAttributes reqAttr = new RequestAttributes(order);
-		reqAttr.setNewErrorMessages(errorRepo.findErrorsByArchived(false).size());
 		model.put("reqAttr", reqAttr);
 		return "correct-order";
 	}
@@ -59,9 +55,5 @@ public class OrderCorrectionController {
 	@Autowired
 	public void setEquipmentRepo(EquipmentRepository equipmentRepo) {
 		this.equipmentRepo = equipmentRepo;
-	}
-	@Autowired
-	public void setErrorRepo(ErrorRepository errorRepo) {
-		this.errorRepo = errorRepo;
 	}
 }
