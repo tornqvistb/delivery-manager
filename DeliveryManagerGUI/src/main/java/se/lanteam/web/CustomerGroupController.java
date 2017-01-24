@@ -7,12 +7,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import se.lanteam.constants.SessionConstants;
 import se.lanteam.domain.CustomerGroup;
+import se.lanteam.domain.RegistrationConfig;
+import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.CustomerGroupRepository;
 
 @Controller
@@ -24,17 +27,45 @@ public class CustomerGroupController {
 	public String showCustomerList(ModelMap model) {
 		List<CustomerGroup> customers = customerRepo.findAll();		
 		model.put("customerGroups", customers);
+		model.put("reqAttr", new RequestAttributes());
 		return "customer-groups";
-	}
-
-
-	
+	}	
 	@RequestMapping(value="customer-groups/activate/{customerId}", method=RequestMethod.GET)
-	public String showOrderView(@PathVariable Long customerId, ModelMap model, HttpServletRequest request) {			
+	public String activateCustomergroup(@PathVariable Long customerId, ModelMap model, HttpServletRequest request) {			
 		CustomerGroup customerGroup = customerRepo.findOne(customerId);
 		request.getSession().setAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP, customerGroup);
 		List<CustomerGroup> customers = customerRepo.findAll();		
 		model.put("customerGroups", customers);
+		RequestAttributes reqAttr = new RequestAttributes();
+		reqAttr.setThanksMessage("Kundgrupp " + customerGroup.getName() + " aktiverad.");
+		model.put("reqAttr", reqAttr);
+		return "customer-groups";
+	}
+
+	@RequestMapping(value="customer-groups/settings/{customerId}", method=RequestMethod.GET)
+	public String editCustomerGroup(@PathVariable Long customerId, ModelMap model, HttpServletRequest request) {			
+		CustomerGroup customerGroup = customerRepo.findOne(customerId);
+		if (customerGroup.getRegistrationConfig() == null) {
+			customerGroup.setRegistrationConfig(new RegistrationConfig());
+		}
+		model.put("customerGroup", customerGroup);
+		return "edit-customer-group";
+	}
+
+	@RequestMapping(value = "customer-groups/save-settings", method = RequestMethod.POST)
+	public String saveSettings(@ModelAttribute CustomerGroup customerGroup,
+			ModelMap model) {
+			
+		customerGroup.getRegistrationConfig().setCustomerGroup(customerGroup);
+		customerGroup.getReportsConfig().setCustomerGroup(customerGroup);
+		
+		customerRepo.save(customerGroup);
+		
+		List<CustomerGroup> customers = customerRepo.findAll();		
+		model.put("customerGroups", customers);
+		RequestAttributes reqAttr = new RequestAttributes();
+		reqAttr.setThanksMessage("Kundgrupp " + customerGroup.getName() + " uppdaterad.");
+		model.put("reqAttr", reqAttr);
 		return "customer-groups";
 	}
 	

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="utf-8"/>
+<head th:include="head" th:remove="tag" />
+
+<body class="layout-2">
+	<div id="body">
+		<div th:include="header" th:remove="tag"></div>
+		<div id="main" class="cf">
+			<div id="content">
+				<div th:include="sub-header-custgroups" th:remove="tag"></div>
+				<div id="service-portal" class="sp-layout-4">
+					<div class="content-1">
+						<div class="m m-1 m-page cf">
+							<div class="m-h main-header cf">
+								<div class="page-heading">
+									<h2	th:text="${'Hantera kundgrupp ' + {customerGroup.name}}"></h2>
+								</div>
+							</div>
+							<!-- Här kan man lägga på en vänster meny -->
+							<div class="back-link side-margin">
+								<a th:href="@{/customer-groups}">Tillbaka</a>
+							</div>							
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div class="form-step">																		
+										<form
+												th:action="@{/customer-groups/save-settings}"
+												th:object="${customerGroup}" method="post">
+											<input th:field="${customerGroup.id}"	type="hidden" id="customerId" />
+											<input th:field="${customerGroup.registrationConfig.id}" type="hidden" id="registrationConfigId" />
+											<input th:field="${customerGroup.reportsConfig.id}" type="hidden" id="reportsConfigId" />
+											<div class="form-section" id="search-results">
+												<h3>Kontaktuppgifter</h3>
+												<table>
+													<colgroup>
+														<col style="width: 30%" />
+														<col style="width: 70%" />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th scope="row">Namn</th>
+															<td><input class="large-field" th:field="${customerGroup.name}"
+																type="text" id="name" /></td>
+														</tr>
+														<tr>
+															<th scope="row">Epost-adress</th>
+															<td><input class="large-field" th:field="${customerGroup.emailAddress}"
+																type="text" id="email" /></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											
+											<div class="form-section" id="search-results">
+												<h3>Fält att registrera för utrustning</h3>
+												<table>
+													<colgroup>
+														<col style="width: 30%" />
+														<col style="width: 60%" />
+														<col style="width: 10%" />
+													</colgroup>
+													<thead>
+														<tr>
+															<th scope="col">Fält</th>
+															<th scope="col">Rubrik</th>
+															<th scope="col">Aktivt</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>Fält 1</td>															
+															<td>
+																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute1}" name="label1"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="active1" th:field="${customerGroup.registrationConfig.useAttribute1}" th:checked="${customerGroup.registrationConfig.useAttribute1}" />
+															</td>
+														</tr>
+														<tr>
+															<td>Fält 2</td>															
+															<td>
+																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute2}" name="label2"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="active2" th:field="${customerGroup.registrationConfig.useAttribute2}" th:checked="${customerGroup.registrationConfig.useAttribute2}" />
+															</td>
+														</tr>
+														<tr>
+															<td>Fält 3</td>															
+															<td>
+																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute3}" name="label3"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="active3" th:field="${customerGroup.registrationConfig.useAttribute3}" th:checked="${customerGroup.registrationConfig.useAttribute3}" />
+															</td>
+														</tr>
+														<tr>
+															<td>Fält 4</td>															
+															<td>
+																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute4}" name="label4"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="active4" th:field="${customerGroup.registrationConfig.useAttribute4}" th:checked="${customerGroup.registrationConfig.useAttribute4}" />
+															</td>
+														</tr>
+														<tr>
+															<td>Fält 5</td>															
+															<td>
+																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute5}" name="label5"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="active5" th:field="${customerGroup.registrationConfig.useAttribute5}" th:checked="${customerGroup.registrationConfig.useAttribute5}" />
+															</td>
+														</tr>
+														<tr>
+															<td>Fält 6</td>															
+															<td>
+																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute6}" name="label6"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="active6" th:field="${customerGroup.registrationConfig.useAttribute6}" th:checked="${customerGroup.registrationConfig.useAttribute6}" />
+															</td>
+														</tr>
+														<tr>
+															<td>Fält 7</td>															
+															<td>
+																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute7}" name="label7"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="active7" th:field="${customerGroup.registrationConfig.useAttribute7}" th:checked="${customerGroup.registrationConfig.useAttribute7}" />
+															</td>
+														</tr>
+														<tr>
+															<td>Fält 8</td>															
+															<td>
+																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute8}" name="label8"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="active8" th:field="${customerGroup.registrationConfig.useAttribute8}" th:checked="${customerGroup.registrationConfig.useAttribute8}" />
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											
+											<div class="form-section" id="search-results">
+												<h3>Fält att visa i rapporter</h3>
+
+												<table>
+													<colgroup>
+														<col style="width: 30%" />
+														<col style="width: 70%" />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th scope="row">Kontaktpersoner</th>															
+															<td>																
+																<input type="checkbox" name="showContactPersons" th:field="${customerGroup.reportsConfig.showContactPersons}" th:checked="${customerGroup.reportsConfig.showContactPersons}" />
+															</td>
+														</tr>
+														<tr>
+															<th scope="row">Leveransadress</th>															
+															<td>																
+																<input type="checkbox" name="showDeliveryAddress" th:field="${customerGroup.reportsConfig.showDeliveryAddress}" th:checked="${customerGroup.reportsConfig.showDeliveryAddress}" />
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>																				
+											
+											<div class="submit-area">
+												<input class="button" type="submit" value="Spara ändringar" />
+											</div>
+											
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:include="footer" th:remove="tag"></div>
+	</div>
+</body>
+</html>
