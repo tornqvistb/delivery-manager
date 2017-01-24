@@ -22,8 +22,10 @@
 			<li>		
 				<a th:href="@{/settings}">Inställningar</a>	
 			</li>
-			<li>(Aktiv)<strong><a th:href="@{/customer-groups}" th:text="${session.customerGroup.name}"></a></strong>	
-			</li>
+			
+			<li th:if="${session.customerGroup}">(Aktiv)<strong><a th:href="@{/customer-groups}" th:text="${session.customerGroup.name}"></a></strong></li>
+			<li th:if="!${session.customerGroup}" ><strong><a style="color:red" th:href="@{/choose-customer-group}">OBS: Ingen aktiv kundgrupp</a></strong></li>
 		</ul>
 	</div>
+		
 </div>

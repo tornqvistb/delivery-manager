@@ -5,16 +5,17 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.SessionConstants;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.repository.CustomerGroupRepository;
@@ -44,9 +45,10 @@ public class SessionFilter implements Filter {
         session.setAttribute(SessionConstants.ERROR_COUNT, errors);
         CustomerGroup customerGroup = (CustomerGroup) session.getAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP);
         if (customerGroup == null) {
-            Long defaultGroupId = propertyRepo.findById(PropertyConstants.DEFAULT_COMPANY_GROUP_ID).getNumberValue();
-        	session.setAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP, customerGroupRepo.findById(defaultGroupId));
-        }
+        	//response.sendRedirect("/customer-groups");
+            //Long defaultGroupId = propertyRepo.findById(PropertyConstants.DEFAULT_COMPANY_GROUP_ID).getNumberValue();
+        	//session.setAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP, customerGroupRepo.findById(defaultGroupId));
+        }        
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

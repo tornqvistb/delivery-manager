@@ -21,10 +21,13 @@ import com.mysql.jdbc.StringUtils;
 
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.PropertyConstants;
+import se.lanteam.constants.SessionConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
+import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.model.SessionBean;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
 
@@ -33,15 +36,31 @@ public class OrderListController {
 	
 	private OrderRepository orderRepo;
 	private PropertyService propService;
+	private SessionBean sessionBean;
+
+	private String checkCustomerGroup(HttpServletRequest request) {
+		String result = null;
+		CustomerGroup custGroup = (CustomerGroup) request.getSession().getAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP);
+		if (custGroup == null) {
+			result = "redirect:choose-customer-group";
+		}
+		return result;
+	}
 	
 	@RequestMapping("/")
-	public String showStartPage() {
+	public String showStartPage(HttpServletRequest request) {
+		String customerRedirectLink = checkCustomerGroup(request);
+		if (customerRedirectLink != null) 
+			return customerRedirectLink;
 		return "redirect:order-list";
 	}
 		
 	@RequestMapping("order-list")
 	public String showOrderList(ModelMap model, HttpServletRequest request) {
-		List<OrderHeader> orders = orderRepo.findOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI));
+		String customerRedirectLink = checkCustomerGroup(request);
+		if (customerRedirectLink != null) 
+			return customerRedirectLink;
+		List<OrderHeader> orders = orderRepo.findOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI), sessionBean.getCustomerGroup().getId());
 		model.put("orders", orders);
 		model.put("reqAttr", new RequestAttributes());
 		return "order-list";
@@ -93,9 +112,9 @@ public class OrderListController {
 				stati.add(status);
 			}
 			if (StatusUtil.isActiveStatus(status)) {
-				orders = orderRepo.findOrdersFromSearch(stati, orderDate, query);
+				orders = orderRepo.findOrdersFromSearch(stati, orderDate, query, sessionBean.getCustomerGroup().getId());
 			} else {
-				orders = orderRepo.findDeliveredOrdersFromSearch(stati, orderDate, query, fromDate, toDate);
+				orders = orderRepo.findDeliveredOrdersFromSearch(stati, orderDate, query, fromDate, toDate, sessionBean.getCustomerGroup().getId());
 			}
 			model.put("orders", orders);
 		} catch (ParseException e) {
@@ -115,5 +134,9 @@ public class OrderListController {
 		return startDate;
 	}
 
+	@Autowired
+	public void setSessionBean(SessionBean sessionBean) {
+		this.sessionBean = sessionBean;
+	}
 	
 }

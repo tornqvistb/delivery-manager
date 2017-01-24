@@ -36,6 +36,17 @@
     color: #1275b8;
     font-size: 1em;
 }
+
+.custgroup-link {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.custgroup-list {
+    margin: 0px !important;
+    padding: 30px !important;
+}
+
 #service-portal .attachment-area {
     margin-bottom : 15px;
 }

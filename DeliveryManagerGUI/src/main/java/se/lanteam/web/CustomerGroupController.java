@@ -16,12 +16,14 @@ import se.lanteam.constants.SessionConstants;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.model.SessionBean;
 import se.lanteam.repository.CustomerGroupRepository;
 
 @Controller
 public class CustomerGroupController {
 	
 	private CustomerGroupRepository customerRepo;
+	private SessionBean sessionBean;
 	
 	@RequestMapping("customer-groups")
 	public String showCustomerList(ModelMap model) {
@@ -30,10 +32,18 @@ public class CustomerGroupController {
 		model.put("reqAttr", new RequestAttributes());
 		return "customer-groups";
 	}	
+	@RequestMapping("choose-customer-group")
+	public String chooseCustomerGroup(ModelMap model) {
+		List<CustomerGroup> customers = customerRepo.findAll();		
+		model.put("customerGroups", customers);
+		model.put("reqAttr", new RequestAttributes());
+		return "choose-customer-group";
+	}	
 	@RequestMapping(value="customer-groups/activate/{customerId}", method=RequestMethod.GET)
 	public String activateCustomergroup(@PathVariable Long customerId, ModelMap model, HttpServletRequest request) {			
 		CustomerGroup customerGroup = customerRepo.findOne(customerId);
 		request.getSession().setAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP, customerGroup);
+		sessionBean.setCustomerGroup(customerGroup);
 		List<CustomerGroup> customers = customerRepo.findAll();		
 		model.put("customerGroups", customers);
 		RequestAttributes reqAttr = new RequestAttributes();
@@ -72,6 +82,10 @@ public class CustomerGroupController {
 	@Autowired
 	public void setCustomerGroupRepo(CustomerGroupRepository customerRepo) {
 		this.customerRepo = customerRepo;
+	}
+	@Autowired
+	public void setSessionBean(SessionBean sessionBean) {
+		this.sessionBean = sessionBean;
 	}
 	
 }
