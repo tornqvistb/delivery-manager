@@ -37,7 +37,14 @@ public class RequestAttributes {
 	private Integer activeCount;
 	private Integer passiveCount;	
 	private Long customerId;
-	
+	private String customAttribute1;
+	private String customAttribute2;
+	private String customAttribute3;
+	private String customAttribute4;
+	private String customAttribute5;
+	private String customAttribute6;
+	private String customAttribute7;
+	private String customAttribute8;
 	
 	public RequestAttributes() {
 		super();
@@ -248,6 +255,69 @@ public class RequestAttributes {
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
-	
+
+	public String getCustomAttribute1() {
+		return customAttribute1;
+	}
+
+	public void setCustomAttribute1(String customAttribute1) {
+		this.customAttribute1 = customAttribute1;
+	}
+
+	public String getCustomAttribute2() {
+		return customAttribute2;
+	}
+
+	public void setCustomAttribute2(String customAttribute2) {
+		this.customAttribute2 = customAttribute2;
+	}
+
+	public String getCustomAttribute3() {
+		return customAttribute3;
+	}
+
+	public void setCustomAttribute3(String customAttribute3) {
+		this.customAttribute3 = customAttribute3;
+	}
+
+	public String getCustomAttribute4() {
+		return customAttribute4;
+	}
+
+	public void setCustomAttribute4(String customAttribute4) {
+		this.customAttribute4 = customAttribute4;
+	}
+
+	public String getCustomAttribute5() {
+		return customAttribute5;
+	}
+
+	public void setCustomAttribute5(String customAttribute5) {
+		this.customAttribute5 = customAttribute5;
+	}
+
+	public String getCustomAttribute6() {
+		return customAttribute6;
+	}
+
+	public void setCustomAttribute6(String customAttribute6) {
+		this.customAttribute6 = customAttribute6;
+	}
+
+	public String getCustomAttribute7() {
+		return customAttribute7;
+	}
+
+	public void setCustomAttribute7(String customAttribute7) {
+		this.customAttribute7 = customAttribute7;
+	}
+
+	public String getCustomAttribute8() {
+		return customAttribute8;
+	}
+
+	public void setCustomAttribute8(String customAttribute8) {
+		this.customAttribute8 = customAttribute8;
+	}
 	
 }

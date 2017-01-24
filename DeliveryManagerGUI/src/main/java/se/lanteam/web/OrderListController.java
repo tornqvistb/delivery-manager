@@ -70,6 +70,7 @@ public class OrderListController {
 		OrderHeader order = orderRepo.findOne(orderId);
 		model.put("reqAttr", new RequestAttributes());
 		model.put("order", order);
+		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		return "order-details";
 	}
 	@Autowired

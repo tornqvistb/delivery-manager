@@ -59,14 +59,17 @@
 												<table>
 													<colgroup>
 														<col style="width: 30%" />
-														<col style="width: 60%" />
+														<col style="width: 50%" />
+														<col style="width: 10%" />
 														<col style="width: 10%" />
 													</colgroup>
 													<thead>
 														<tr>
 															<th scope="col">Fält</th>
 															<th scope="col">Rubrik</th>
+															<th scope="col">Obligatoriskt</th>
 															<th scope="col">Aktivt</th>
+															
 														</tr>
 													</thead>
 													<tbody>
@@ -74,6 +77,9 @@
 															<td>Fält 1</td>															
 															<td>
 																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute1}" name="label1"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="mandatory1" th:field="${customerGroup.registrationConfig.mandatoryAttribute1}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute1}" />
 															</td>
 															<td>																
 																<input type="checkbox" name="active1" th:field="${customerGroup.registrationConfig.useAttribute1}" th:checked="${customerGroup.registrationConfig.useAttribute1}" />
@@ -85,6 +91,9 @@
 																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute2}" name="label2"/>
 															</td>
 															<td>																
+																<input type="checkbox" name="mandatory2" th:field="${customerGroup.registrationConfig.mandatoryAttribute2}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute2}" />
+															</td>
+															<td>																
 																<input type="checkbox" name="active2" th:field="${customerGroup.registrationConfig.useAttribute2}" th:checked="${customerGroup.registrationConfig.useAttribute2}" />
 															</td>
 														</tr>
@@ -92,6 +101,9 @@
 															<td>Fält 3</td>															
 															<td>
 																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute3}" name="label3"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="mandatory3" th:field="${customerGroup.registrationConfig.mandatoryAttribute3}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute3}" />
 															</td>
 															<td>																
 																<input type="checkbox" name="active3" th:field="${customerGroup.registrationConfig.useAttribute3}" th:checked="${customerGroup.registrationConfig.useAttribute3}" />
@@ -103,6 +115,9 @@
 																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute4}" name="label4"/>
 															</td>
 															<td>																
+																<input type="checkbox" name="mandatory4" th:field="${customerGroup.registrationConfig.mandatoryAttribute4}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute4}" />
+															</td>
+															<td>																
 																<input type="checkbox" name="active4" th:field="${customerGroup.registrationConfig.useAttribute4}" th:checked="${customerGroup.registrationConfig.useAttribute4}" />
 															</td>
 														</tr>
@@ -110,6 +125,9 @@
 															<td>Fält 5</td>															
 															<td>
 																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute5}" name="label5"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="mandatory5" th:field="${customerGroup.registrationConfig.mandatoryAttribute5}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute5}" />
 															</td>
 															<td>																
 																<input type="checkbox" name="active5" th:field="${customerGroup.registrationConfig.useAttribute5}" th:checked="${customerGroup.registrationConfig.useAttribute5}" />
@@ -121,6 +139,9 @@
 																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute6}" name="label6"/>
 															</td>
 															<td>																
+																<input type="checkbox" name="mandatory6" th:field="${customerGroup.registrationConfig.mandatoryAttribute6}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute6}" />
+															</td>
+															<td>																
 																<input type="checkbox" name="active6" th:field="${customerGroup.registrationConfig.useAttribute6}" th:checked="${customerGroup.registrationConfig.useAttribute6}" />
 															</td>
 														</tr>
@@ -130,6 +151,9 @@
 																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute7}" name="label7"/>
 															</td>
 															<td>																
+																<input type="checkbox" name="mandatory7" th:field="${customerGroup.registrationConfig.mandatoryAttribute7}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute7}" />
+															</td>
+															<td>																
 																<input type="checkbox" name="active7" th:field="${customerGroup.registrationConfig.useAttribute7}" th:checked="${customerGroup.registrationConfig.useAttribute7}" />
 															</td>
 														</tr>
@@ -137,6 +161,9 @@
 															<td>Fält 8</td>															
 															<td>
 																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute8}" name="label8"/>
+															</td>
+															<td>																
+																<input type="checkbox" name="mandatory8" th:field="${customerGroup.registrationConfig.mandatoryAttribute8}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute8}" />
 															</td>
 															<td>																
 																<input type="checkbox" name="active8" th:field="${customerGroup.registrationConfig.useAttribute8}" th:checked="${customerGroup.registrationConfig.useAttribute8}" />

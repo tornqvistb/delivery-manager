@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
+import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.model.CorrectionMailInfo;
 import se.lanteam.model.ReqOrderLine;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.model.SessionBean;
 import se.lanteam.repository.EquipmentRepository;
 import se.lanteam.repository.OrderLineRepository;
 import se.lanteam.repository.OrderRepository;
@@ -37,6 +39,7 @@ public class EquipmentController {
 	private EquipmentRepository equipmentRepo;
 	private EquipmentValidator equipmentValidator;
 	private MailComposer mailComposer;
+	private SessionBean sessionBean;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(EquipmentController.class);
 	
@@ -52,6 +55,39 @@ public class EquipmentController {
 			equipment.setSerialNo(reqAttr.getSerialNo());
 			equipment.setStealingTag(reqAttr.getStealingTag());
 			equipment.setRegisteredBy(reqAttr.getRegisteredBy());
+			RegistrationConfig regConfig = sessionBean.getCustomerGroup().getRegistrationConfig();
+			if (regConfig.getUseAttribute1()) {
+				equipment.setCustomAttribute1(reqAttr.getCustomAttribute1());
+				equipment.setCustomAttribute1Label(regConfig.getLabelAttribute1());
+			}
+			if (regConfig.getUseAttribute2()) {
+				equipment.setCustomAttribute2(reqAttr.getCustomAttribute2());
+				equipment.setCustomAttribute2Label(regConfig.getLabelAttribute2());
+			}
+			if (regConfig.getUseAttribute3()) {
+				equipment.setCustomAttribute3(reqAttr.getCustomAttribute3());
+				equipment.setCustomAttribute3Label(regConfig.getLabelAttribute3());
+			}
+			if (regConfig.getUseAttribute4()) {
+				equipment.setCustomAttribute4(reqAttr.getCustomAttribute4());
+				equipment.setCustomAttribute4Label(regConfig.getLabelAttribute4());
+			}
+			if (regConfig.getUseAttribute5()) {
+				equipment.setCustomAttribute5(reqAttr.getCustomAttribute5());
+				equipment.setCustomAttribute5Label(regConfig.getLabelAttribute5());
+			}
+			if (regConfig.getUseAttribute6()) {
+				equipment.setCustomAttribute6(reqAttr.getCustomAttribute6());
+				equipment.setCustomAttribute6Label(regConfig.getLabelAttribute6());
+			}
+			if (regConfig.getUseAttribute7()) {
+				equipment.setCustomAttribute7(reqAttr.getCustomAttribute7());
+				equipment.setCustomAttribute7Label(regConfig.getLabelAttribute7());
+			}
+			if (regConfig.getUseAttribute8()) {
+				equipment.setCustomAttribute8(reqAttr.getCustomAttribute8());
+				equipment.setCustomAttribute8Label(regConfig.getLabelAttribute8());
+			}
 			valResult = equipmentValidator.validateEquipment(equipment, orderRepo.findOne(orderId));
 			if (valResult.equals(RESULT_OK)) {
 				orderLine.getEquipments().add(equipment);
@@ -71,11 +107,12 @@ public class EquipmentController {
 		order.setOrderStatusByProgress();
 		orderRepo.save(order);
 		model.put("order", order);
-		long orderLineId = reqAttr.getOrderLineId();
-		reqAttr = new RequestAttributes();
+		if (RESULT_OK.equals(valResult)) {
+			reqAttr = new RequestAttributes();
+		}
 		reqAttr.setRegEquipmentResult(valResult);
-		reqAttr.setOrderLineId(orderLineId);
 		model.put("reqAttr", reqAttr);
+		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		return "order-details";
 	}
 
@@ -104,6 +141,7 @@ public class EquipmentController {
 		model.put("order", order);
 		RequestAttributes reqAttr = new RequestAttributes(order);
 		model.put("reqAttr", reqAttr);
+		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		return "order-details";
 	}
 
@@ -157,6 +195,7 @@ public class EquipmentController {
 		reqAttr.setRegEquipmentResult(result);
 		reqAttr.setThanksMessage(message);
 		model.put("reqAttr", reqAttr);
+		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		return returnPage;
 	}
 
@@ -188,5 +227,9 @@ public class EquipmentController {
 	@Autowired
 	public void setMailComposer(MailComposer mailComposer) {
 		this.mailComposer = mailComposer;
+	}
+	@Autowired
+	public void setSessionBean(SessionBean sessionBean) {
+		this.sessionBean = sessionBean;
 	}
 }

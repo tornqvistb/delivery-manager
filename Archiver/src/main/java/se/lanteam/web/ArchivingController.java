@@ -72,7 +72,7 @@ public class ArchivingController {
 			List<OrderHeader> orders;
 			List<String> stati = new ArrayList<String>();
 			stati.add(StatusConstants.ORDER_STATUS_TRANSFERED);
-			orders = orderRepo.findDeliveredOrdersFromSearch(stati, orderDate, query, fromDate, toDate);
+			orders = orderRepo.findDeliveredOrdersFromSearch(stati, orderDate, query, fromDate, toDate, reqAttr.getCustomerGroupId());
 			model.put("orders", orders);
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");

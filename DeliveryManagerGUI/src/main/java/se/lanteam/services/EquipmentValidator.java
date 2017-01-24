@@ -9,6 +9,8 @@ import org.springframework.util.StringUtils;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
+import se.lanteam.domain.RegistrationConfig;
+import se.lanteam.model.SessionBean;
 import se.lanteam.repository.EquipmentRepository;
 
 @Service
@@ -22,9 +24,11 @@ public class EquipmentValidator {
 	private static String STEALING_TAG_ON_CURRENT_ORDER = "Angivet stöld-ID finns redan registrerat på denna order";
 	private static String SERIAL_NO_ON_OTHER_ORDER = "Angivet serienummer finns redan registrerat på order ";
 	private static String STEALING_TAG_ON_OTHER_ORDER = "Angivet stöld-ID finns redan registrerat på order ";
-
+	private static String CUSTOM_FIELD_MANDATORY = "Du måste fylla i ";
 	
 	private EquipmentRepository equipmentRepo;
+	private SessionBean sessionBean;
+
 
 	public String validateEquipmentOnCorrection(Equipment equipment, OrderHeader order) {
 		
@@ -49,11 +53,12 @@ public class EquipmentValidator {
 		}
 		return result;
 	}
-
+	
 	
 	public String validateEquipment(Equipment equipment, OrderHeader order) {
 		String result = validateSerialNo(equipment, order);
 		
+		RegistrationConfig regConfig = sessionBean.getCustomerGroup().getRegistrationConfig();
 		if (RESULT_OK.equals(result)) {
 			result = validateStealingTag(equipment, order);
 		}
@@ -62,6 +67,30 @@ public class EquipmentValidator {
 			result = validateRegisteredBy(equipment);
 		}		
 		
+		if (RESULT_OK.equals(result) && regConfig.getUseAttribute1() && regConfig.getMandatoryAttribute1() && StringUtils.isEmpty(equipment.getCustomAttribute1())) {
+			result = CUSTOM_FIELD_MANDATORY + regConfig.getLabelAttribute1(); 
+		}
+		if (RESULT_OK.equals(result) && regConfig.getUseAttribute2() && regConfig.getMandatoryAttribute2() && StringUtils.isEmpty(equipment.getCustomAttribute2())) {
+			result = CUSTOM_FIELD_MANDATORY + regConfig.getLabelAttribute2(); 
+		}
+		if (RESULT_OK.equals(result) && regConfig.getUseAttribute3() && regConfig.getMandatoryAttribute3() && StringUtils.isEmpty(equipment.getCustomAttribute3())) {
+			result = CUSTOM_FIELD_MANDATORY + regConfig.getLabelAttribute3(); 
+		}
+		if (RESULT_OK.equals(result) && regConfig.getUseAttribute4() && regConfig.getMandatoryAttribute4() && StringUtils.isEmpty(equipment.getCustomAttribute4())) {
+			result = CUSTOM_FIELD_MANDATORY + regConfig.getLabelAttribute4(); 
+		}
+		if (RESULT_OK.equals(result) && regConfig.getUseAttribute5() && regConfig.getMandatoryAttribute5() && StringUtils.isEmpty(equipment.getCustomAttribute5())) {
+			result = CUSTOM_FIELD_MANDATORY + regConfig.getLabelAttribute5(); 
+		}
+		if (RESULT_OK.equals(result) && regConfig.getUseAttribute6() && regConfig.getMandatoryAttribute6() && StringUtils.isEmpty(equipment.getCustomAttribute6())) {
+			result = CUSTOM_FIELD_MANDATORY + regConfig.getLabelAttribute6(); 
+		}
+		if (RESULT_OK.equals(result) && regConfig.getUseAttribute7() && regConfig.getMandatoryAttribute7() && StringUtils.isEmpty(equipment.getCustomAttribute7())) {
+			result = CUSTOM_FIELD_MANDATORY + regConfig.getLabelAttribute7(); 
+		}
+		if (RESULT_OK.equals(result) && regConfig.getUseAttribute8() && regConfig.getMandatoryAttribute8() && StringUtils.isEmpty(equipment.getCustomAttribute8())) {
+			result = CUSTOM_FIELD_MANDATORY + regConfig.getLabelAttribute8(); 
+		}
 		return result;
 	}
 
@@ -126,6 +155,10 @@ public class EquipmentValidator {
 	@Autowired
 	public void setEquipmentRepo(EquipmentRepository equipmentRepo) {
 		this.equipmentRepo = equipmentRepo;
+	}
+	@Autowired
+	public void setSessionBean(SessionBean sessionBean) {
+		this.sessionBean = sessionBean;
 	}
 	
 }

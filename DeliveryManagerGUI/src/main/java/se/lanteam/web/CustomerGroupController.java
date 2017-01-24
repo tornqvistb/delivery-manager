@@ -70,7 +70,7 @@ public class CustomerGroupController {
 		customerGroup.getReportsConfig().setCustomerGroup(customerGroup);
 		
 		customerRepo.save(customerGroup);
-		
+		sessionBean.setCustomerGroup(customerGroup);
 		List<CustomerGroup> customers = customerRepo.findAll();		
 		model.put("customerGroups", customers);
 		RequestAttributes reqAttr = new RequestAttributes();

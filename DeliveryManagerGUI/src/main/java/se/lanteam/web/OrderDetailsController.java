@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.model.SessionBean;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
@@ -21,7 +22,8 @@ public class OrderDetailsController {
 	private static final String STATUS_MSG_COMMENT_MISSING = "Du måste skriva ett meddelande.";
 	private static final String STATUS_MSG_ORDER_CANCELLED = "Följande order har makulerats: ";
 
-	private OrderRepository orderRepo;	
+	private OrderRepository orderRepo;
+	private SessionBean sessionBean;
 
 	@RequestMapping(value = "order-list/view/registerComment/{orderId}", method = RequestMethod.POST)
 	public String registerMessage(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
@@ -45,6 +47,7 @@ public class OrderDetailsController {
 			reqAttr.setStatusMessageCreationFailed(STATUS_MSG_COMMENT_MISSING);
 			model.put("reqAttr", reqAttr);
 		}
+		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		return "order-details";
 	}
 
@@ -54,6 +57,7 @@ public class OrderDetailsController {
 		model.put("order", order);
 		RequestAttributes reqAttr = new RequestAttributes(order);
 		model.put("reqAttr", reqAttr);
+		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		return "correct-order";
 	}
 	
@@ -75,4 +79,9 @@ public class OrderDetailsController {
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
 	}
+	@Autowired
+	public void setSessionBean(SessionBean sessionBean) {
+		this.sessionBean = sessionBean;
+	}
+
 }

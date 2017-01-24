@@ -11,20 +11,28 @@ public class RegistrationConfig {
 	private CustomerGroup customerGroup;
 	private Boolean useAttribute1;
 	private String labelAttribute1;
+	private Boolean mandatoryAttribute1;
 	private Boolean useAttribute2;
 	private String labelAttribute2;
+	private Boolean mandatoryAttribute2;
 	private Boolean useAttribute3;
 	private String labelAttribute3;
+	private Boolean mandatoryAttribute3;
 	private Boolean useAttribute4;
 	private String labelAttribute4;
+	private Boolean mandatoryAttribute4;
 	private Boolean useAttribute5;
 	private String labelAttribute5;
+	private Boolean mandatoryAttribute5;
 	private Boolean useAttribute6;
 	private String labelAttribute6;
+	private Boolean mandatoryAttribute6;
 	private Boolean useAttribute7;
 	private String labelAttribute7;
+	private Boolean mandatoryAttribute7;
 	private Boolean useAttribute8;
 	private String labelAttribute8;
+	private Boolean mandatoryAttribute8;
 	
 
 	@Id
@@ -138,6 +146,54 @@ public class RegistrationConfig {
 	}
 	public void setLabelAttribute8(String labelAttribute8) {
 		this.labelAttribute8 = labelAttribute8;
+	}
+	public Boolean getMandatoryAttribute1() {
+		return mandatoryAttribute1;
+	}
+	public void setMandatoryAttribute1(Boolean mandatoryAttribute1) {
+		this.mandatoryAttribute1 = mandatoryAttribute1;
+	}
+	public Boolean getMandatoryAttribute2() {
+		return mandatoryAttribute2;
+	}
+	public void setMandatoryAttribute2(Boolean mandatoryAttribute2) {
+		this.mandatoryAttribute2 = mandatoryAttribute2;
+	}
+	public Boolean getMandatoryAttribute3() {
+		return mandatoryAttribute3;
+	}
+	public void setMandatoryAttribute3(Boolean mandatoryAttribute3) {
+		this.mandatoryAttribute3 = mandatoryAttribute3;
+	}
+	public Boolean getMandatoryAttribute4() {
+		return mandatoryAttribute4;
+	}
+	public void setMandatoryAttribute4(Boolean mandatoryAttribute4) {
+		this.mandatoryAttribute4 = mandatoryAttribute4;
+	}
+	public Boolean getMandatoryAttribute5() {
+		return mandatoryAttribute5;
+	}
+	public void setMandatoryAttribute5(Boolean mandatoryAttribute5) {
+		this.mandatoryAttribute5 = mandatoryAttribute5;
+	}
+	public Boolean getMandatoryAttribute6() {
+		return mandatoryAttribute6;
+	}
+	public void setMandatoryAttribute6(Boolean mandatoryAttribute6) {
+		this.mandatoryAttribute6 = mandatoryAttribute6;
+	}
+	public Boolean getMandatoryAttribute7() {
+		return mandatoryAttribute7;
+	}
+	public void setMandatoryAttribute7(Boolean mandatoryAttribute7) {
+		this.mandatoryAttribute7 = mandatoryAttribute7;
+	}
+	public Boolean getMandatoryAttribute8() {
+		return mandatoryAttribute8;
+	}
+	public void setMandatoryAttribute8(Boolean mandatoryAttribute8) {
+		this.mandatoryAttribute8 = mandatoryAttribute8;
 	}
 
 }

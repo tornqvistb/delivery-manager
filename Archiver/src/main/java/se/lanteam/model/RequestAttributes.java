@@ -16,6 +16,7 @@ public class RequestAttributes {
 	private String infoMessage;
 	private String fromDate;
 	private String toDate;
+	private Long customerGroupId;
 	
 	public RequestAttributes() {
 		super();
@@ -75,6 +76,14 @@ public class RequestAttributes {
 
 	public void setToDate(String toDate) {
 		this.toDate = toDate;
+	}
+
+	public Long getCustomerGroupId() {
+		return customerGroupId;
+	}
+
+	public void setCustomerGroupId(Long customerGroupId) {
+		this.customerGroupId = customerGroupId;
 	}
 
 }
