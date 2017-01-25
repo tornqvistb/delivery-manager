@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<style th:replace="inc/bootstrap :: inc"></style>
+
+	<style>
+		#header {
+			display: block;
+			position: running(header);
+		}
+		#footer {
+			display: block;
+			position: running(footer);
+		}
+
+		#content {
+			page-break-after: never;
+		}
+
+		.pagenumber:before {
+			content: counter(page);
+		}
+
+		.pagecount:before {
+			content: counter(pages);
+		}
+
+		@page {
+			@top-center { content: element(header) }
+		}
+
+		@page {
+			@bottom-center { content: element(footer) }
+		}
+
+		@page {
+			margin-bottom: 5cm;
+			margin-left: 3.5cm;
+			margin-right: 0.5cm;
+		}
+		h1 {
+			font-size: 20px;
+		}
+		h2 {
+			font-size: 17.5px;
+		}
+		h3 {
+			font-size: 15px;
+		}
+		h4 {
+			font-size: 12.5px;
+		}
+	</style>
+</head>
+<body>
+	<div id="header">
+		<span	th:text="${'Rapport för order ' + order.orderNumber}"></span>
+	</div>
+	<div id="footer">
+		<span	th:text="${'Rapport för order ' + order.orderNumber}"></span>
+		<br />
+		Sida <span class="pagenumber"></span> av <span class="pagecount"></span>
+	</div>
+	<div id="content">
+		<h1	th:text="${'Rapport för order ' + order.orderNumber}"></h1>
+		<h2>Orderrader</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="width:15%;">Orderrad</th>
+					<th style="width:20%;">Artikelnummer</th>
+					<th style="width:30%;">Beskrivning</th>
+					<th style="width:25%;">Serienummerbärande</th>
+					<th style="width:10%;">Antal</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="orderLine : ${order.orderLines}"
+					th:remove="tag">
+					<tr th:class="${orderLine.rowClass}">
+						<td th:text="${orderLine.rowNumber}">1</td>
+						<td th:text="${orderLine.articleNumber}">31231312</td>
+						<td th:text="${orderLine.articleDescription}">HP elitebook</td>
+						<td th:text="${orderLine.hasSerialNoLabel}">Ja</td>
+						<td th:text="${orderLine.total}">5</td>
+					</tr>
+					<tr th:if="${orderLine.equipments}">
+						<td></td>
+						<td colspan="4">
+							<table class="table">
+								<thead>
+									<tr>
+										<th style="width:17%;">Serienummer</th>
+										<th style="width:13%;">Stöld-ID</th>
+										<th style="width:20%;">Registrerad av</th>
+										<th style="width:20%;">Tidpunkt</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="equipment : ${orderLine.equipments}">
+										<td th:text="${equipment.serialNo}">5</td>
+										<td th:text="${equipment.stealingTag}">5</td>
+										<td th:text="${equipment.registeredBy}">Kalle</td>
+										<td th:text="${equipment.creationDateDisplay}">2014-01-01</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tr>
+			</tbody>
+		</table>
+		<h2>Kontaktpersoner</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Namn</th>
+					<th>Epost-adress</th>
+					<th>Telefon</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td th:text="${order.contact1Name}">Kalle</td>
+					<td th:text="${order.contact1Email}">Kalle@gmail.com</td>
+					<td th:text="${order.contact1Phone}">070-101010</td>
+				</tr>
+				<tr>
+					<td th:text="${order.contact2Name}">Pelle</td>
+					<td th:text="${order.contact2Email}">Pelle@gmail.com</td>
+					<td th:text="${order.contact2Phone}">070-121212</td>
+				</tr>
+			</tbody>
+		</table>
+		<h2>Levaransadress</h2>
+		<table  class="table">
+			<tbody>
+				<tr>
+					<th scope="row">Leveransadress 1</th>
+					<td th:text="${order.deliveryPostalAddress1}" id="order-del-adr-1">Storgatan 1</td>
+				</tr>
+				<tr>
+					<th scope="row">Leveransadress 2</th>
+					<td th:text="${order.deliveryPostalAddress2}" id="order-del-adr-2">3 trappor</td>
+				</tr>
+				<tr>
+					<th scope="row">Postnummer</th>
+					<td th:text="${order.deliveryPostalCode}" id="order-del-postal-code">42655</td>
+				</tr>
+				<tr>
+					<th scope="row">Ort</th>
+					<td th:text="${order.deliveryCity}" id="order-del-city">Göteborg</td>
+				</tr>
+			</tbody>
+		</table>
+		<h2>Övrig orderinformation</h2>
+		<table  class="table">
+			<tbody>
+				<tr>
+					<th scope="row">Ordernummer</th>
+					<td th:text="${order.orderNumber}" id="int-order-no">LT100199</td>
+				</tr>
+				<tr>
+					<th scope="row">Kundens ordernummer</th>
+					<td th:text="${order.customerOrderNumber}" id="ext-order-no">REQ100094</td>
+				</tr>
+				<tr>
+					<th scope="row">Kundens beställningsnummer</th>
+					<td th:text="${order.customerSalesOrder}" id="ext-sales-no">REQ100094</td>
+				</tr>
+				<tr>
+					<th scope="row">Kund</th>
+					<td th:text="${order.customerName}">Lundby</td>
+				</tr>
+				<tr>
+					<th scope="row">Orderdatum</th>
+					<td th:text="${order.orderDateAsString}">2016-02-02</td>
+				</tr>
+				<tr>
+					<th scope="row">Leveransdatum</th>
+					<td th:text="${order.deliveryTimeDisplay}">2016-02-02</td>
+				</tr>
+				<tr>
+					<th scope="row">Status</th>
+					<td th:text="${order.statusDisplay}">Ny</td>
+				</tr>
+				<tr th:if="${order.attachment != null}">
+					<th scope="row">Leveransdokument</th>
+					<td>
+						<a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a>
+					</td>															
+				</tr>
+				
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

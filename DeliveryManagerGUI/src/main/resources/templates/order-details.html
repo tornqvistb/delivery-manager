@@ -24,7 +24,7 @@
 								<div class="content e-tjansteplattform hamster">
 									<div class="order-details">
 										<div class="back-link">
-											<a href="javascript:history.back()">Tillbaka</a>
+											<a href="javascript:history.back()">Tillbaka</a>											
 										</div>
 										<div th:if="${not #strings.isEmpty(order.transmitErrorMessage)}" class="information-text system-info error-message">
 											<p th:utext="${order.transmitErrorMessage}"></p>
@@ -220,7 +220,7 @@
 													<p th:utext="${order.printMessage}"></p><strong><a onclick="PrintLabels()">Skriv ut =></a></strong>
 												</div>
 												<h3 id="contact-persons">Kontaktpersoner</h3>
-													<table class="small-table">
+												<table class="small-table">
 													<thead>
 														<tr>
 															<th>Namn</th>
@@ -408,6 +408,10 @@
 																value="Makulera ordern" name="cancelorder" id="cancelorder" />
 														</div>
 													</form>
+													<h3>Övriga operationer</h3>
+													<div class="cf">
+														<a class="button" th:href="@{/generate-report/} + ${order.id}" target="_blank">Skapa arbetsorder/plocklista</a>
+													</div>
 												</div>												
 											</div>
 										</div>

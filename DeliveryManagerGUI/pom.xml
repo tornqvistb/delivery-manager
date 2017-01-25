@@ -71,6 +71,12 @@
 			<artifactId>LIMCommons</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.xhtmlrenderer/flying-saucer-pdf -->
+		<dependency>
+		    <groupId>org.xhtmlrenderer</groupId>
+		    <artifactId>flying-saucer-pdf</artifactId>
+		    <version>9.1.1</version>
+		</dependency>
 		
 	</dependencies>
 	<build>
