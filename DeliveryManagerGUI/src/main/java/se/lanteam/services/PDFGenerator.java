@@ -16,19 +16,22 @@ import com.lowagie.text.DocumentException;
 public class PDFGenerator {
 	private TemplateResolver templateResolver;
 	private TemplateEngine templateEngine;
+	private String imagesFolder;
 
 	public PDFGenerator(
 			final String templatePrefix,
-			final String templateSuffix){
+			final String templateSuffix,
+			final String imagesFolder){
 
-		this(templatePrefix, templateSuffix, "HTML5", "UTF-8");
+		this(templatePrefix, templateSuffix, "HTML5", "UTF-8", imagesFolder);
 	}
 
 	public PDFGenerator(
 			final String templatePrefix,
 			final String templateSuffix,
 			final String templateMode,
-			final String templateEncoding){
+			final String templateEncoding,
+			final String imagesFolder){
 
 		this(new ClassLoaderTemplateResolver());
 
@@ -36,6 +39,7 @@ public class PDFGenerator {
 		this.templateResolver.setSuffix(templateSuffix);
 		this.templateResolver.setTemplateMode(templateMode);
 		this.templateResolver.setCharacterEncoding(templateEncoding);
+		this.imagesFolder = imagesFolder;
 	}
 
 	public PDFGenerator(TemplateResolver templateResolver){
@@ -74,6 +78,7 @@ public class PDFGenerator {
 	    ITextRenderer renderer = new ITextRenderer();
 
 	    renderer.setDocumentFromString(htmlContent);
+	    renderer.getSharedContext().setReplacedElementFactory(new MediaReplacedElementFactory(renderer.getSharedContext().getReplacedElementFactory(), imagesFolder));
 	    renderer.layout();
 	    FileOutputStream outPutStream = new FileOutputStream(ouputPDF);
 	    renderer.createPDF(outPutStream);

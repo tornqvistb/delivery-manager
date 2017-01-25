@@ -54,15 +54,16 @@
 </head>
 <body>
 	<div id="header">
-		<span	th:text="${'Rapport för order ' + order.orderNumber}"></span>
+		<span	th:text="${'Följesedel för order ' + order.orderNumber}"></span>
 	</div>
 	<div id="footer">
-		<span	th:text="${'Rapport för order ' + order.orderNumber}"></span>
+		<span	th:text="${'Följesedel för order ' + order.orderNumber}"></span>
 		<br />
 		Sida <span class="pagenumber"></span> av <span class="pagecount"></span>
 	</div>
 	<div id="content">
-		<h1	th:text="${'Rapport för order ' + order.orderNumber}"></h1>
+		<div id="logo" class="media" data-src="adam.PNG" />
+		<h1	th:text="${'Följesedel för order ' + order.orderNumber}"></h1>
 		<h2>Orderrader</h2>
 		<table class="table">
 			<thead>
