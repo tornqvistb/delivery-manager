@@ -50,7 +50,7 @@
 													<tbody>
 														<tr th:each="customerGroup : ${customerGroups}">
 															<td th:text="${customerGroup.name}">Något gick fel</td>															
-															<td><a th:href="@{/customer-groups/activate/} + ${customerGroup.id}">Sätt som aktiv</a></td>
+															<td><a th:href="@{/customer-groups/activate/} + ${customerGroup.id} + '/no'">Sätt som aktiv</a></td>
 															<td><a th:href="@{/customer-groups/settings/} + ${customerGroup.id}">Ändra inställningar</a></td>
 														</tr>
 													</tbody>

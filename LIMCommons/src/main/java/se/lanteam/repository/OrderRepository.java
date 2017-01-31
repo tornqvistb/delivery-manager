@@ -3,6 +3,7 @@ package se.lanteam.repository;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.NamedQuery;
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -48,7 +49,7 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
     public List<OrderHeader> findOrdersFromSearchSLAByCustGroup(@Param("statusList") List<String> statusList, @Param("customerGroupId") Long customerGroupId);
 	
 	@Transactional
-	@Modifying
+	@Modifying	
 	@Query("UPDATE OrderHeader o SET o.toBeArchived = :toBeArchived WHERE o.deliveryDate < :lastDeliveryDate AND o.status = :status")
     public void setArchiving(@Param("toBeArchived") boolean archived, @Param("lastDeliveryDate") Date lastDeliveryDate, @Param("status") String status);
 

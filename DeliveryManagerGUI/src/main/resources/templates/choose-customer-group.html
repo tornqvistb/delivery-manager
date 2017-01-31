@@ -23,7 +23,7 @@
 							</div>
 							<ul class="custgroup-list">
 								<li class="custgroup-link" th:each="customerGroup : ${customerGroups}">
-									<a class="link-padding" th:href="@{/customer-groups/activate/} + ${customerGroup.id}" th:text="${customerGroup.name}"></a>
+									<a class="link-padding" th:href="@{/customer-groups/activate/} + ${customerGroup.id} + '/yes'"  th:text="${customerGroup.name}"></a>
 								</li>
 							</ul>
 						</div>

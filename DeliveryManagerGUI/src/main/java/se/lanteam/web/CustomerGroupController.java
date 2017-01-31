@@ -40,8 +40,8 @@ public class CustomerGroupController {
 		model.put("reqAttr", new RequestAttributes());
 		return "choose-customer-group";
 	}	
-	@RequestMapping(value="customer-groups/activate/{customerId}", method=RequestMethod.GET)
-	public String activateCustomergroup(@PathVariable Long customerId, ModelMap model, HttpServletRequest request) {			
+	@RequestMapping(value="customer-groups/activate/{customerId}/{toStartPage}", method=RequestMethod.GET)
+	public String activateCustomergroup(@PathVariable Long customerId, @PathVariable String toStartPage, ModelMap model, HttpServletRequest request) {			
 		CustomerGroup customerGroup = customerRepo.findOne(customerId);
 		request.getSession().setAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP, customerGroup);
 		sessionBean.setCustomerGroup(customerGroup);
@@ -50,7 +50,11 @@ public class CustomerGroupController {
 		RequestAttributes reqAttr = new RequestAttributes();
 		reqAttr.setThanksMessage("Kundgrupp " + customerGroup.getName() + " aktiverad.");
 		model.put("reqAttr", reqAttr);
-		return "customer-groups";
+		if ("yes".equals(toStartPage)) {
+			return "order-list";
+		} else {
+			return "customer-groups";
+		}
 	}
 
 	@RequestMapping(value="customer-groups/settings/{customerId}", method=RequestMethod.GET)
