@@ -23,16 +23,16 @@
 							</div>
 							<div class="tab-navigation">
 								<ul class="tabs cf">
-									<li class="sel">
+									<li>
 										<a th:href="@{/reports/sla}" rel="nofollow">SLA-uppföljning
 										</a>			
 									</li>
-									<li>
+									<li class="sel">
 										<a th:href="@{/reports/delivery}" rel="nofollow">Utförda leveranser
 										</a>			
 									</li>
 									<li>
-										<a href="#" rel="nofollow">Körschema
+										<a th:href="@{/reports/transport}" rel="nofollow">Körschema
 										</a>			
 									</li>
 								</ul>
@@ -53,32 +53,39 @@
 									<div class="form-step">
 									
 										<!-- Här kan man lägga på ett tack meddelande -->
-										<form class="form-general" th:action= "@{/reports/sla/search}" th:object="${reqAttr}" method="get">
+										<form class="form-general" th:action= "@{/reports/delivery/search}" th:object="${reqAttr}" method="get">
 											<div class="form-section">
 												<h3 class="expandtrigger">Filtrera och sök</h3>
+												<div class="row cols-1 cf">
+													<div class="col">
+														<div class="select">
+															<label for="status">Välj kundgrupp</label> 
+															<select
+																th:field="${reqAttr.customerId}"
+																id="customerGroupId" name="customerGroupId"
+																>
+																<option th:value="${reqAttr.zeroValue}">Alla</option>
+																<option th:each="customerGroup : ${customerGroups}" th:value="${customerGroup.id}" th:text="${customerGroup.name}"></option>
+		
+															</select>
+														</div>
+													</div>
+												</div>
 												<div class="row cols-3 cf">
-													<div class="select">
-														<label for="status">Välj kundgrupp</label> 
-														<select
-															th:field="${reqAttr.customerId}"
-															id="customerGroupId" name="customerGroupId"
-															>
-															<option th:value="${reqAttr.zeroValue}">Alla</option>
-															<option th:each="customerGroup : ${customerGroups}" th:value="${customerGroup.id}" th:text="${customerGroup.name}"></option>
-
-														</select>
+													<div class="col col-1">
+														<div class="text">
+															<label for="fromOrderNo">Från ordernummer</label>
+															<input type="number" th:field="${reqAttr.fromOrderNo}" maxlength="10" value="" name="fromOrderNo" class="small" id="fromOrderNo"/>
+														</div>
+													 </div> 
+													<div class="col col-2">
+														<div class="text">
+															<label for="toOrderNo">Till ordernummer</label>
+															<input type="number" th:field="${reqAttr.toOrderNo}" maxlength="10" value="" name="toOrderNo" class="small" id="toOrderNo"/>
+														</div>
 													</div>
-													<div class="select">
-														<label for="status">Välj status</label> 
-														<select
-															th:field="${reqAttr.orderStatus}"
-															id="orderStatus" name="orderStatus"
-															>
-															<option value="active">Aktiva</option>
-															<option value="inactive">Levererade</option>
-
-														</select>
-													</div>
+												</div>
+												<div class="row cols-3 cf">													
 													<div class="col col-1">
 														<div class="text">
 															<label for="fromDate">Från leveransdatum</label>

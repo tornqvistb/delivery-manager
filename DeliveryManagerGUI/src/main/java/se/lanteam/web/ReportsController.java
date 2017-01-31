@@ -37,15 +37,24 @@ public class ReportsController {
 	private CustomerGroupRepository customerRepo;
 	private SearchBean searchBean;
 	
-	@RequestMapping("reports")
-	public String showReports(ModelMap model) {
+	
+	@RequestMapping("reports/sla")
+	public String showSlaReport(ModelMap model) {
 		model.put("customerGroups", customerRepo.findAll());
 		model.put("reqAttr", new RequestAttributes());
 		return "sla-report";
 	}
+
+	@RequestMapping("reports/delivery")
+	public String showDeliveryReport(ModelMap model) {
+		model.put("customerGroups", customerRepo.findAll());
+		model.put("reqAttr", new RequestAttributes());
+		return "delivery-report";
+	}
+
 	
 	@RequestMapping(value="reports/sla/search", method=RequestMethod.GET)
-	public String searchOrders(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
+	public String searchOrdersSla(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
 		
 		String status = reqAttr.getOrderStatus();
 		
@@ -103,6 +112,14 @@ public class ReportsController {
 		return "sla-report";
 	}
 
+	@RequestMapping(value="reports/delivery/search", method=RequestMethod.GET)
+	public String searchOrdersDelivery(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
+		List<OrderHeader> orders = orderRepo.findAll();
+		searchBean.setOrderList(orders);
+		return "redirect:/reports/sla/export";
+	}
+
+	
 	@RequestMapping(value="reports/sla/export", method=RequestMethod.GET)
 	public ModelAndView exportSlaToExcel(ModelMap model, HttpServletResponse response) throws ParseException {
 		

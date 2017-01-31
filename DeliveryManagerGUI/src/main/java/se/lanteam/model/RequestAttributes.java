@@ -46,6 +46,9 @@ public class RequestAttributes {
 	private String customAttribute7;
 	private String customAttribute8;
 	private Long zeroValue = 0L;
+	private String fromOrderNo;
+	private String toOrderNo;
+	
 	
 	public RequestAttributes() {
 		super();
@@ -327,6 +330,22 @@ public class RequestAttributes {
 
 	public void setZeroValue(Long zeroValue) {
 		this.zeroValue = zeroValue;
+	}
+
+	public String getFromOrderNo() {
+		return fromOrderNo;
+	}
+
+	public void setFromOrderNo(String fromOrderNo) {
+		this.fromOrderNo = fromOrderNo;
+	}
+
+	public String getToOrderNo() {
+		return toOrderNo;
+	}
+
+	public void setToOrderNo(String toOrderNo) {
+		this.toOrderNo = toOrderNo;
 	}
 	
 }
