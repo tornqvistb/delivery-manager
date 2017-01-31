@@ -2,6 +2,7 @@ package se.lanteam.constants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtil {
@@ -40,5 +41,14 @@ public class DateUtil {
 	    return dateStr;
 		
 	}
+	
+	public static Date getStartDateForInactiveOrders(int daysBack) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());		
+		cal.add(Calendar.DATE, - daysBack);
+		Date startDate = cal.getTime(); 
+		return startDate;
+	}
+
 
 }

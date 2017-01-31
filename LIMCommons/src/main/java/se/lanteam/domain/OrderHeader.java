@@ -1,6 +1,9 @@
 package se.lanteam.domain;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -361,6 +364,25 @@ public class OrderHeader {
 	}
 	public void setCustomerGroup(CustomerGroup customerGroup) {
 		this.customerGroup = customerGroup;
+	}
+	@Transient
+	public Integer getSlaDaysLeft() {
+		Integer result = 0;
+		Integer SLA_DAYS = 25;
+		LocalDate endDate;
+		if (this.deliveryDate == null) {
+			endDate = LocalDate.now();
+		} else {
+			endDate = deliveryDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		}
+		LocalDate startDate = orderDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate slaDate = startDate.plusDays(SLA_DAYS);
+		if (endDate.isAfter(slaDate)) {
+			result = Period.between(endDate, slaDate).getDays();
+		} else {
+			result = Period.between(slaDate, endDate).getDays();
+		}
+		return result;
 	}
 	
 }

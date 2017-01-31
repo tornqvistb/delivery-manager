@@ -107,7 +107,7 @@ public class OrderListController {
 				stati = Arrays.asList(StatusConstants.ACTIVE_STATI);
 			} else if (status.equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
 				stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
-				orderDate = getStartDateForInactiveOrders();
+				orderDate = DateUtil.getStartDateForInactiveOrders(propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue());
 				reqAttr.setInfoMessage("De ordrar som visas är skapta " + propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue() + " dagar tillbaks i tiden fram tills idag. För att se äldre inaktiva ordrar, sök på specifik status.");
 			} else {
 				stati.add(status);
@@ -126,15 +126,6 @@ public class OrderListController {
 		return "order-list";
 	}
 	
-	private Date getStartDateForInactiveOrders() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
-		int daysBack = propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue();
-		cal.add(Calendar.DATE, - daysBack);
-		Date startDate = cal.getTime(); 
-		return startDate;
-	}
-
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {
 		this.sessionBean = sessionBean;

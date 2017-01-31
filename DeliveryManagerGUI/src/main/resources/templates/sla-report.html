@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="utf-8"/>
+<head th:include="head" th:remove="tag" />
+
+<body class="layout-2">
+	<div id="body">
+		<!-- <div class="include" data-include="header"></div> -->
+		<div th:include="header" th:remove="tag"></div>
+		<div id="main" class="cf">
+			<div id="content">
+				<div th:include="sub-header-reports" th:remove="tag"></div>
+				<!-- <div class="include" data-include="sub-header"></div> -->
+				<div id="service-portal" class="sp-layout-4">
+					<div class="content-1">
+						<div class="m m-1 m-page cf">
+							<div class="m-h main-header cf">
+								<div class="page-heading">
+									<h2>Rapporter</h2>
+								</div>
+							</div>
+							<div class="tab-navigation">
+								<ul class="tabs cf">
+									<li class="sel">
+										<a href="" rel="nofollow">SLA-uppföljning
+										</a>			
+									</li>
+									<li>
+										<a href="#" rel="nofollow">Utförda leveranser
+										</a>			
+									</li>
+									<li>
+										<a href="#" rel="nofollow">Körschema
+										</a>			
+									</li>
+								</ul>
+							</div>
+							<div class="form-section case-listing"></div>
+							<!-- Här kan man lägga på en vänster meny -->
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div th:if="${reqAttr.thanksMessage != null}"
+										class="side-margin information-text system-info thanks-message">
+										<span th:text="${reqAttr.thanksMessage}">Det gick bra</span>
+									</div>
+									<div th:if="${reqAttr.errorMessage != null}" class="side-margin information-text system-info error-message">
+										<p th:utext="${reqAttr.errorMessage}"></p>
+									</div>
+									
+									
+									<div class="form-step">
+									
+										<!-- Här kan man lägga på ett tack meddelande -->
+										<form class="form-general" th:action= "@{/reports/sla/search}" th:object="${reqAttr}" method="get">
+											<div class="form-section">
+												<h3 class="expandtrigger">Filtrera och sök</h3>
+												<div class="row cols-3 cf">
+													<div class="select">
+														<label for="status">Välj kundgrupp</label> 
+														<select
+															th:field="${reqAttr.customerId}"
+															id="customerGroupId" name="customerGroupId"
+															>
+															<option th:value="${reqAttr.zeroValue}">Alla</option>
+															<option th:each="customerGroup : ${customerGroups}" th:value="${customerGroup.id}" th:text="${customerGroup.name}"></option>
+
+														</select>
+													</div>
+													<div class="select">
+														<label for="status">Välj status</label> 
+														<select
+															th:field="${reqAttr.orderStatus}"
+															id="orderStatus" name="orderStatus"
+															>
+															<option value="active">Aktiva</option>
+															<option value="inactive">Levererade</option>
+
+														</select>
+													</div>
+													<div class="col col-1">
+														<div class="text">
+															<label for="fromDate">Från leveransdatum</label>
+															<input type="date" th:field="${reqAttr.fromDate}" maxlength="10" value="" name="fromDate" class="date small" id="fromDate"/>
+														</div>
+													 </div> 
+													<div class="col col-2">
+														<div class="text">
+															<label for="toDate">Till leveransdatum</label>
+															<input type="date" th:field="${reqAttr.toDate}" maxlength="10" value="" name="toDate" class="date small" id="toDate"/>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<input class="btn" type="submit" value="Sök" id="ActionSearch" name="ActionSearch"/>
+												</div>													
+											</div>
+										</form>
+										<form class="form-general" th:action= "@{/reports/sla/export}" th:object="${reqAttr}" method="get" th:if="${not #lists.isEmpty(orders)}">											
+											<div class="form-section" id="search-results" >
+												<h3>Sökresultat</h3>
+												<input class="btn" type="submit" value="Exportera till excel" id="ActionExportToExcel" name="ActionExportToExcel"/>
+												<table>
+													<colgroup>
+														<col style="width: 10%" />
+														<col style="width: 25%" />														
+														<col style="width: 25%" />														
+														<col style="width: 10%" />
+														<col style="width: 10%" />
+														<col style="width: 10%" />
+														<col style="width: 10%" />
+													</colgroup>
+													<thead>
+														<tr>
+															<th scope="col">Ordernummer</th>
+															<th scope="col">Leveransnummer kund</th>
+															<th scope="col">Kund</th>
+															<th scope="col">Orderdatum</th>
+															<th scope="col">Leveransdatum</th>
+															<th scope="col">Status</th>
+															<th scope="col">Dagar kvar</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="order : ${orders}">
+															<td><a th:text="${order.orderNumber}" th:href="@{/order-list/view/} + ${order.id}">LT100199</a></td>															
+															<td th:text="${order.customerSalesOrder}">REQ100094</td>
+															<td th:text="${order.customerName}">Lundby</td>
+															<td th:text="${order.orderDateAsString}">2016-02-02</td>
+															<td th:text="${order.deliveryDateDisplay}">2016-02-02</td>
+															<td th:text="${order.statusDisplay}">Ny</td>
+															<td th:text="${order.slaDaysLeft}">Ny</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:include="footer" th:remove="tag"></div>
+	</div>
+</body>
+</html>

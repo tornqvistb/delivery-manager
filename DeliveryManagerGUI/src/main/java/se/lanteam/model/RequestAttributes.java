@@ -45,6 +45,7 @@ public class RequestAttributes {
 	private String customAttribute6;
 	private String customAttribute7;
 	private String customAttribute8;
+	private Long zeroValue = 0L;
 	
 	public RequestAttributes() {
 		super();
@@ -318,6 +319,14 @@ public class RequestAttributes {
 
 	public void setCustomAttribute8(String customAttribute8) {
 		this.customAttribute8 = customAttribute8;
+	}
+
+	public Long getZeroValue() {
+		return zeroValue;
+	}
+
+	public void setZeroValue(Long zeroValue) {
+		this.zeroValue = zeroValue;
 	}
 	
 }
