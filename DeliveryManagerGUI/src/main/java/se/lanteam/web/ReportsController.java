@@ -6,9 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,6 +25,7 @@ import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.model.SearchBean;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.ExcelViewBuilder;
@@ -36,6 +35,7 @@ public class ReportsController {
 	
 	private OrderRepository orderRepo;
 	private CustomerGroupRepository customerRepo;
+	private SearchBean searchBean;
 	
 	@RequestMapping("reports")
 	public String showReports(ModelMap model) {
@@ -93,6 +93,7 @@ public class ReportsController {
 			});
 			
 			model.put("orders", orders);
+			searchBean.setOrderList(orders);
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
 		}		
@@ -103,12 +104,10 @@ public class ReportsController {
 	}
 
 	@RequestMapping(value="reports/sla/export", method=RequestMethod.GET)
-	public ModelAndView exportSlaToExcel(ModelMap model,HttpServletResponse response) {
+	public ModelAndView exportSlaToExcel(ModelMap model, HttpServletResponse response) throws ParseException {
 		
-        //Map<String, Object> model = new HashMap<String, Object>();
-		List<OrderHeader> orders = (List<OrderHeader>) model.get("orders");
         //Sheet Name
-        model.put("sheetname", "TestSheetName");
+        model.put("sheetname", "sla-report");
         //Headers List
         List<String> headers = new ArrayList<String>();
 		
@@ -120,25 +119,32 @@ public class ReportsController {
         headers.add("Status");
         headers.add("Dagar kvar");
         model.put("headers", headers);
+        
+        List<String> numericColumns = new ArrayList<String>();
+        numericColumns.add("Ordernummer");
+        numericColumns.add("Dagar kvar");
+        model.put("numericcolumns", numericColumns);
+
         //Results Table (List<Object[]>)
         List<List<String>> results = new ArrayList<List<String>>();
+        
+        List<OrderHeader> orders = searchBean.getOrderList();
         
         for (OrderHeader order: orders) {
         	List<String> orderCols = new ArrayList<String>();
         	orderCols.add(order.getOrderNumber());
-        	orderCols.add(order.getOrderNumber());
-        	orderCols.add(order.getOrderNumber());
-        	orderCols.add(order.getOrderNumber());
-        	orderCols.add(order.getOrderNumber());
-        	orderCols.add(order.getOrderNumber());
-        	orderCols.add(order.getOrderNumber());
+        	orderCols.add(order.getCustomerSalesOrder());
+        	orderCols.add(order.getCustomerName());
+        	orderCols.add(order.getOrderDateAsString());
+        	orderCols.add(order.getDeliveryDateDisplay());
+        	orderCols.add(order.getStatusDisplay());
+        	orderCols.add(String.valueOf(order.getSlaDaysLeft()));
         	results.add(orderCols);
         }
         
-        
         model.put("results",results);
         response.setContentType( "application/ms-excel" );
-        response.setHeader( "Content-disposition", "attachment; filename=myfile.xls" );         
+        response.setHeader( "Content-disposition", "attachment; filename=" + "sla-report-" + DateUtil.dateToString(new Date())+ ".xls" );         
 		
 		return new ModelAndView(new ExcelViewBuilder(), model);
 	}
@@ -150,6 +156,11 @@ public class ReportsController {
 	@Autowired
 	public void setCustomerGroupRepo(CustomerGroupRepository customerRepo) {
 		this.customerRepo = customerRepo;
+	}
+
+	@Autowired
+	public void setSearchBean(SearchBean searchBean) {
+		this.searchBean = searchBean;
 	}
 
 }

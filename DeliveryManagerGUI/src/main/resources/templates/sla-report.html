@@ -97,7 +97,7 @@
 												</div>													
 											</div>
 										</form>
-										<form class="form-general" th:action= "@{/reports/sla/export}" th:object="${reqAttr}" method="get" th:if="${not #lists.isEmpty(orders)}">											
+										<form class="form-general" th:action= "@{/reports/sla/export}" th:object="${orders}" method="get" th:if="${not #lists.isEmpty(orders)}">											
 											<div class="form-section" id="search-results" >
 												<h3>Sökresultat</h3>
 												<input class="btn" type="submit" value="Exportera till excel" id="ActionExportToExcel" name="ActionExportToExcel"/>

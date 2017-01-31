@@ -16,6 +16,7 @@ import se.lanteam.constants.SessionConstants;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.model.SearchBean;
 import se.lanteam.model.SessionBean;
 import se.lanteam.repository.CustomerGroupRepository;
 

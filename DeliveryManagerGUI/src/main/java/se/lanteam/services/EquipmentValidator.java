@@ -10,6 +10,7 @@ import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.domain.RegistrationConfig;
+import se.lanteam.model.SearchBean;
 import se.lanteam.model.SessionBean;
 import se.lanteam.repository.EquipmentRepository;
 
