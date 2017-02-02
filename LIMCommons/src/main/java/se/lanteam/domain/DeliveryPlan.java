@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class DeliveryPlan {
@@ -12,6 +13,7 @@ public class DeliveryPlan {
 	private Long id;
 	private String comment;
 	private DeliveryArea deliveryArea;
+	private OrderHeader orderHeader;
 	private Date plannedDeliveryDate;
 	private Date creationDate;
 
@@ -42,6 +44,14 @@ public class DeliveryPlan {
 
 	public void setDeliveryArea(DeliveryArea deliveryArea) {
 		this.deliveryArea = deliveryArea;
+	}
+	@OneToOne
+	public OrderHeader getOrderHeader() {
+		return orderHeader;
+	}
+
+	public void setOrderHeader(OrderHeader orderHeader) {
+		this.orderHeader = orderHeader;
 	}
 
 	public Date getPlannedDeliveryDate() {
