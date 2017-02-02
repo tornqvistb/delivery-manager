@@ -61,6 +61,7 @@ public class OrderHeader {
 	private String transmitErrorMessage;
 	private Boolean toBeArchived = false;
 	private CustomerGroup customerGroup;
+	private DeliveryArea deliveryArea;
 	
 	@Id
 	@GeneratedValue
@@ -210,8 +211,7 @@ public class OrderHeader {
 		this.status = status;
 	}	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="orderHeader")
-	@OrderBy("rowNumber")
-	
+	@OrderBy("rowNumber")	
 	public Set<OrderLine> getOrderLines() {
 		return orderLines;
 	}
@@ -364,6 +364,13 @@ public class OrderHeader {
 	}
 	public void setCustomerGroup(CustomerGroup customerGroup) {
 		this.customerGroup = customerGroup;
+	}
+	@ManyToOne()
+	public DeliveryArea getDeliveryArea() {
+		return deliveryArea;
+	}
+	public void setDeliveryArea(DeliveryArea deliveryArea) {
+		this.deliveryArea = deliveryArea;
 	}
 	@Transient
 	public Integer getSlaDaysLeft() {
