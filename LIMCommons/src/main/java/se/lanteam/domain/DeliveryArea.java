@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 
 @Entity
 public class DeliveryArea {
@@ -39,6 +40,7 @@ public class DeliveryArea {
 	}
 	
 	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OrderBy("name")
 	@JoinTable(name = "delivery_day_area", joinColumns = @JoinColumn(name = "delivery_area_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "delivery_week_day_id", referencedColumnName = "id"))	
 	public Set<DeliveryWeekDay> getDeliveryWeekDays() {
 		return deliveryWeekDays;

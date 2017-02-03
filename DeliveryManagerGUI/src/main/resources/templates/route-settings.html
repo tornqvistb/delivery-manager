@@ -23,11 +23,11 @@
 							</div>
 							<div class="tab-navigation">
 								<ul class="tabs cf">
-									<li class="sel">
+									<li>
 										<a th:href="@{/settings}" rel="nofollow">Systeminställningar
 										</a>			
 									</li>
-									<li>
+									<li class="sel">
 										<a th:href="@{/route-settings}" rel="nofollow">Körschema
 										</a>			
 									</li>
@@ -52,39 +52,40 @@
 										<!-- Här kan man lägga på ett tack meddelande -->
 				
 										<form
-												th:action="@{/settings/save}"
+												th:action="@{/route-settings/save}"
 												th:object="${reqAttr}" method="post">
 											<div class="form-section" id="search-results">
-												<h3>Hantera inställningar</h3>
+												<h3>Hantera inställningar för körschema</h3>
 												<table>
 													<colgroup>
 														<col style="width: 25%" />
-														<col style="width: 60%" />
-														<col style="width: 15%" />
+														<col style="width: 25%" />
+														<col style="width: 25%" />
+														<col style="width: 25%" />
 													</colgroup>
 													<thead>
 														<tr>
-															<th scope="col">Parameter-ID</th>
-															<th scope="col">Strängvärde</th>
-															<th scope="col">Numeriskt värde</th>
+															<th scope="col">Veckodag</th>
+															<th scope="col">Kopplade områden</th>
+															<th scope="col">Lägg till</th>
 														</tr>
 													</thead>
 													<tbody>
-														<tr th:each="property, pLoop : ${properties}">
-															<td th:text="${property.id}">parameter-id</td>															
+														<tr class="border_bottom" th:each="weekDay : ${weekDays}">
+															<td th:text="${weekDay.name}">veckodag</td>
 															<td>
-																<input type="text" class="large-field" th:field="${reqAttr.systemProperties[__${pLoop.index}__].stringValue}" name="stringValue"/>
+																<span th:each="area : ${weekDay.areas}">
+																	<span th:text="${area.name}"></span> <a th:href="@{/route-settings/remove/} + ${weekDay.id} + '/' + ${area.id}"><strong>&gt;&gt;</strong></a><br />
+																</span>
 															</td>
 															<td>
-																<input type="number" th:field="${reqAttr.systemProperties[__${pLoop.index}__].numberValue}" />
-																<input type="hidden" th:field="${reqAttr.systemProperties[__${pLoop.index}__].id}" />
+																<span th:each="area : ${weekDay.unConnectedAreas}">
+																	<a th:href="@{/route-settings/add/} + ${weekDay.id} + '/' + ${area.id}"><strong>&lt;&lt;</strong></a> <span th:text="${area.name}"></span><br />
+																</span>
 															</td>
 														</tr>
 													</tbody>
 												</table>
-											</div>
-											<div class="submit-area">
-												<input class="button" type="submit" value="Spara ändringar" />
 											</div>
 										</form>
 									</div>

@@ -21,7 +21,7 @@ public class SettingsController {
 	private PropertyRepository propertyRepo;
 			
 	@RequestMapping("settings")
-	public String showOrderList(ModelMap model) {
+	public String showSettings(ModelMap model) {
 		List<SystemProperty> properties = propertyRepo.findAll();
 		model.put("properties", properties);
 		RequestAttributes reqAttr = loadReqAttr(properties);

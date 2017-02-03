@@ -76,3 +76,6 @@
 #service-portal .input-reg-by {
     width: 120px;
 }
+#service-portal tr.border_bottom td {
+  border-bottom:2pt solid grey;
+}

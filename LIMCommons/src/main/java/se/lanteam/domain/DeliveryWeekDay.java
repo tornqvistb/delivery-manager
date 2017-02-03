@@ -1,7 +1,9 @@
 package se.lanteam.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Transient;
 
 @Entity
 public class DeliveryWeekDay {
@@ -20,6 +24,8 @@ public class DeliveryWeekDay {
 	private Set<DeliveryArea> areas = new HashSet<DeliveryArea>();
 	private Long sorting;
 	private Date creationDate;
+	@Transient
+	private List<DeliveryArea> unConnectedAreas = new ArrayList<DeliveryArea>();
 
 	public DeliveryWeekDay() {
 		super();
@@ -43,6 +49,7 @@ public class DeliveryWeekDay {
 	}
 	
 	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OrderBy("name")
 	@JoinTable(name = "delivery_day_area", joinColumns = @JoinColumn(name = "delivery_week_day_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "delivery_area_id", referencedColumnName = "id"))
 	public Set<DeliveryArea> getAreas() {
 		return areas;
@@ -65,6 +72,15 @@ public class DeliveryWeekDay {
 	}
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+	@Transient
+	public List<DeliveryArea> getUnConnectedAreas() {
+		
+		return unConnectedAreas;
+	}
+
+	public void setUnConnectedAreas(List<DeliveryArea> unConnectedAreas) {
+		this.unConnectedAreas = unConnectedAreas;
 	}
 	
 }
