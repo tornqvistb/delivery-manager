@@ -24,6 +24,7 @@ import javax.persistence.Transient;
 
 import org.thymeleaf.util.ArrayUtils;
 
+import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
 
@@ -274,6 +275,32 @@ public class OrderHeader {
 	public Boolean getEditable() {
 		Boolean result = false;
 		if (ArrayUtils.contains(StatusConstants.ACTIVE_STATI, status)) {
+			result = true;
+		}
+		return result;
+	}
+	@Transient
+	public String getRoutePlanSummary() {
+		String result = "";
+		if (this.deliveryPlan != null) {
+			result = "Denna order är ruttplanerad till " + DateUtil.dateToString(this.deliveryPlan.getPlannedDeliveryDate()) + ", område " + this.deliveryPlan.getDeliveryArea().getName() + "."; 
+		} else if (!getPlannable()){
+			result = "Ordern kan endast ruttplaneras då statusen är " + StatusConstants.ORDER_STATUS_REGISTRATION_DONE_DISP + ".";
+		}
+		return result;
+	}
+	@Transient
+	public Boolean getRoutePlanEditable() {
+		Boolean result = false;
+		if (StatusConstants.ORDER_STATUS_ROUTE_PLANNED.equals(status)) {
+			result = true;
+		}
+		return result;		
+	}
+	@Transient
+	public Boolean getPlannable() {
+		Boolean result = false;
+		if (StatusConstants.ORDER_STATUS_REGISTRATION_DONE.equals(status)) {
 			result = true;
 		}
 		return result;

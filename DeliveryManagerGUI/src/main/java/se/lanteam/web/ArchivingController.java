@@ -48,11 +48,7 @@ public class ArchivingController {
 	private RequestAttributes refreshArchiveInfo(RequestAttributes reqAttr) {
 		reqAttr.setActiveCount(orderRepo.countOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI)));
 		reqAttr.setPassiveCount(orderRepo.countOrdersByStatusList(Arrays.asList(StatusConstants.INACTIVE_STATI)));
-		try {
-			reqAttr.setFirstDate(DateUtil.dateToString(orderRepo.getFirstDeliveryDate(StatusConstants.ORDER_STATUS_TRANSFERED)));
-		} catch (ParseException e) {
-			reqAttr.setFirstDate("saknas");
-		}
+		reqAttr.setFirstDate(DateUtil.dateToString(orderRepo.getFirstDeliveryDate(StatusConstants.ORDER_STATUS_TRANSFERED)));
 		return reqAttr;
 	}
 }

@@ -48,7 +48,11 @@ public class RequestAttributes {
 	private Long zeroValue = 0L;
 	private String fromOrderNo;
 	private String toOrderNo;
-	
+	private String deliveryAreaId;
+	private String deliveryDayId;
+	private String deliveryDate;
+	private String statusRouteplanSuccess;
+	private String statusRouteplanFailed;
 	
 	public RequestAttributes() {
 		super();
@@ -346,6 +350,46 @@ public class RequestAttributes {
 
 	public void setToOrderNo(String toOrderNo) {
 		this.toOrderNo = toOrderNo;
+	}
+
+	public String getDeliveryAreaId() {
+		return deliveryAreaId;
+	}
+
+	public void setDeliveryAreaId(String deliveryAreaId) {
+		this.deliveryAreaId = deliveryAreaId;
+	}
+
+	public String getDeliveryDayId() {
+		return deliveryDayId;
+	}
+
+	public void setDeliveryDayId(String deliveryDayId) {
+		this.deliveryDayId = deliveryDayId;
+	}
+
+	public String getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(String deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+
+	public String getStatusRouteplanSuccess() {
+		return statusRouteplanSuccess;
+	}
+
+	public void setStatusRouteplanSuccess(String statusRouteplanSuccess) {
+		this.statusRouteplanSuccess = statusRouteplanSuccess;
+	}
+
+	public String getStatusRouteplanFailed() {
+		return statusRouteplanFailed;
+	}
+
+	public void setStatusRouteplanFailed(String statusRouteplanFailed) {
+		this.statusRouteplanFailed = statusRouteplanFailed;
 	}
 	
 }

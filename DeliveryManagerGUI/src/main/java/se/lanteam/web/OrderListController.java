@@ -9,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,6 +28,7 @@ import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
+import se.lanteam.repository.DeliveryAreaRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
 
@@ -36,6 +38,7 @@ public class OrderListController {
 	private OrderRepository orderRepo;
 	private PropertyService propService;
 	private SessionBean sessionBean;
+	private DeliveryAreaRepository deliveryAreaRepo;
 
 	private String checkCustomerGroup(HttpServletRequest request) {
 		String result = null;
@@ -70,6 +73,7 @@ public class OrderListController {
 		model.put("reqAttr", new RequestAttributes());
 		model.put("order", order);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
+		model.put("deliveryAreas", deliveryAreaRepo.findAll(new Sort(Sort.Direction.ASC, "name")));
 		return "order-details";
 	}
 	@Autowired
@@ -79,6 +83,10 @@ public class OrderListController {
 	@Autowired
 	public void setPropertyService(PropertyService propService) {
 		this.propService = propService;
+	}
+	@Autowired
+	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
+		this.deliveryAreaRepo = deliveryAreaRepo;
 	}
 
 	@RequestMapping(value="order-list/search", method=RequestMethod.GET)

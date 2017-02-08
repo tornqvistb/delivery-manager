@@ -219,6 +219,67 @@
 												<div th:if="${not #strings.isEmpty(order.printMessage)}" class="information-text system-info help-message">
 													<p th:utext="${order.printMessage}"></p><strong><a onclick="PrintLabels()">Skriv ut =></a></strong>
 												</div>
+												
+												<h3 id="route-planning-header">Ruttplanering</h3>
+												
+												<!-- Success or error message for route planning -->
+												<div th:if="${reqAttr.statusRouteplanSuccess != null}"
+													class="information-text system-info thanks-message">
+													<span th:text="${reqAttr.statusRouteplanSuccess}">Ruttplanering OK</span>
+												</div>
+												<div th:if="${reqAttr.statusRouteplanFailed != null}"
+													class="system-info error-message">
+													<span th:text="${reqAttr.statusRouteplanFailed}">Ruttplanering misslyckades</span>
+												</div>
+												<!-- Info message for route planned order -->
+												<div th:if="${not #strings.isEmpty(order.routePlanSummary)}" class="information-text system-info help-message">
+													<p th:utext="${order.routePlanSummary}"></p>
+													<p th:if="${order.routePlanEditable}">För att göra om ruttplanering på denna order, klicka <a th:href="@{/order-list/new-routeplan/} + ${order.id}"><strong>HÄR =></strong></a></p>
+												</div>
+												
+												<form
+													th:if="${order.plannable}"
+													th:action="@{/order-list/view/planroute/} + ${order.id} + '#route-planning-header'"
+													th:object="${reqAttr}" method="post">
+													<table class="small-table fluffy">
+														<tbody>
+															<tr>
+																<th scope="row">Välj område</th>
+																<td><select th:field="${reqAttr.deliveryAreaId}"
+																	id="deliveryAreaId" name="deliveryAreaId">
+																		<option th:each="deliveryArea : ${deliveryAreas}"
+																			th:value="${deliveryArea.id}"
+																			th:text="${deliveryArea.name}" />
+																</select></td>
+															</tr>
+															<tr>
+																<th scope="row">Välj leveransdag</th>
+																<td><select th:field="${reqAttr.deliveryDayId}"
+																	id="deliveryDayId" name="deliveryDayId">																	
+																</select></td>
+															</tr>
+															<tr>
+																<th scope="row">Datum</th>
+																<td>
+																	<input th:field="${reqAttr.deliveryDate}" name="dateToDeliver" id="dateToDeliver" type="date"/>
+																</td>
+															</tr>
+															<tr>
+																<th scope="row">Kommentar</th>
+																<td><textarea th:field="${reqAttr.comment}"
+																		rows="5" cols="75" id="route-comment" name="route-comment"
+																		placeholder="Skriv din kommentar här"></textarea>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+
+													<div class="row cf action-area">
+														<input class="backend-operation" type="submit"
+															value="Spara" name="store-route-plan" id="store-route-plan" />
+													</div>
+												</form>
+												
 												<h3 id="contact-persons">Kontaktpersoner</h3>
 												<table class="small-table">
 													<thead>

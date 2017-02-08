@@ -23,6 +23,7 @@ public class DeliveryWeekDay {
 	private String name;
 	private Set<DeliveryArea> areas = new HashSet<DeliveryArea>();
 	private Long sorting;
+	private Integer dayOfWeek;
 	private Date creationDate;
 	@Transient
 	private List<DeliveryArea> unConnectedAreas = new ArrayList<DeliveryArea>();
@@ -81,6 +82,14 @@ public class DeliveryWeekDay {
 
 	public void setUnConnectedAreas(List<DeliveryArea> unConnectedAreas) {
 		this.unConnectedAreas = unConnectedAreas;
+	}
+
+	public Integer getDayOfWeek() {
+		return dayOfWeek;
+	}
+
+	public void setDayOfWeek(Integer dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
 	}
 	
 }

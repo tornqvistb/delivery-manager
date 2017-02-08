@@ -22,7 +22,7 @@ public class DateUtil {
 		return new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
 	}
 	
-	public static Date stringToDate(String dateString) throws ParseException {
+	public static Date stringToDate(String dateString) throws ParseException  {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();	
 		date = formatter.parse(dateString);
@@ -31,7 +31,7 @@ public class DateUtil {
 		
 	}
 
-	public static String dateToString(Date date) throws ParseException {
+	public static String dateToString(Date date) {
 		
 		if (date == null) return ""; 
 		
@@ -50,5 +50,20 @@ public class DateUtil {
 		return startDate;
 	}
 
+	public static Date getNextDateByWeekday(Date startDate, int weekDay) {
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(startDate);		
+		
+		while (calendar.get(Calendar.DAY_OF_WEEK) != weekDay) {
+			calendar.add(Calendar.DATE, 1);
+		}
+		
+		return calendar.getTime();
+	}
 
+	public static Date addDaysToDate(Date date, int days) { 
+		return new Date(date.getTime() + (days * 1000 * 60 * 60 * 24));
+	}
+	
 }

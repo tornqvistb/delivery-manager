@@ -62,3 +62,25 @@ function retrieve(id) {
 	var tdElem = document.getElementById ( id );
     return tdElem.textContent;
 }
+$(function() {
+	$("#deliveryAreaId").change(function() {
+		$.ajax({
+			type: "POST",
+			url: "/DeliveryManagerGUI/order-list/view/getdaybyarea/" + $(this).find(":selected").val(), 
+			dataType: "html",
+			data: { parent: $(this).find(":selected").val() },
+			success: function(result) {
+				$("#deliveryDayId").html(result);
+				$("#deliveryDayId").trigger("change");
+			},
+			error: function(result) {
+				alert("Ett fel uppstod på servern när dagar skulle hämtas för aktuellt område: " + result.responseText);
+			}
+		});
+	});
+});
+$(function() {
+	$("#deliveryDayId").change(function() {
+		$('#dateToDeliver').val($(this).find(":selected").val());
+	});
+});

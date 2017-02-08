@@ -79,3 +79,6 @@
 #service-portal tr.border_bottom td {
   border-bottom:2pt solid grey;
 }
+#service-portal table.flyffy td, th {
+    padding-bottom: 8px;
+}
