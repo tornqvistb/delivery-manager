@@ -25,7 +25,6 @@ public class RequestAttributes {
 	private String errorStatus;
 	private String thanksMessage;
 	private List<ReqOrderLine> reqOrderLines= new ArrayList<ReqOrderLine>();	
-	//private Integer newErrorMessages;
 	private List<SystemProperty> systemProperties= new ArrayList<SystemProperty>();
 	private String query;
 	private String errorMessage;
@@ -53,6 +52,7 @@ public class RequestAttributes {
 	private String deliveryDate;
 	private String statusRouteplanSuccess;
 	private String statusRouteplanFailed;
+	private String planDate;
 	
 	public RequestAttributes() {
 		super();
@@ -390,6 +390,14 @@ public class RequestAttributes {
 
 	public void setStatusRouteplanFailed(String statusRouteplanFailed) {
 		this.statusRouteplanFailed = statusRouteplanFailed;
+	}
+
+	public String getPlanDate() {
+		return planDate;
+	}
+
+	public void setPlanDate(String planDate) {
+		this.planDate = planDate;
 	}
 	
 }

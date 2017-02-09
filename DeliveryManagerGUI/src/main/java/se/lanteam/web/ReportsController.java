@@ -52,6 +52,28 @@ public class ReportsController {
 		return "delivery-report";
 	}
 
+	@RequestMapping("reports/transport")
+	public String showDeliveryPlanReport(ModelMap model) {
+		model.put("reqAttr", new RequestAttributes());
+		return "transport-report";
+	}
+
+	@RequestMapping(value="reports/transport/search", method=RequestMethod.GET)
+	public String searchPlannedOrders(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
+		
+		try {
+			Date planDate = DateUtil.stringToDate(reqAttr.getPlanDate());
+			List<OrderHeader> orders = orderRepo.findOrdersByPlanDate(planDate);
+			model.put("orders", orders);
+			if (orders.isEmpty()) {
+				reqAttr.setErrorMessage("Sökningen gav inga träffar");
+			}
+		} catch (ParseException e) {
+			reqAttr.setErrorMessage("Felaktigt inmatade datum");
+		}		
+		model.put("reqAttr", reqAttr);
+		return "transport-report";
+	}
 	
 	@RequestMapping(value="reports/sla/search", method=RequestMethod.GET)
 	public String searchOrdersSla(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
@@ -118,7 +140,6 @@ public class ReportsController {
 		searchBean.setOrderList(orders);
 		return "redirect:/reports/sla/export";
 	}
-
 	
 	@RequestMapping(value="reports/sla/export", method=RequestMethod.GET)
 	public ModelAndView exportSlaToExcel(ModelMap model, HttpServletResponse response) throws ParseException {

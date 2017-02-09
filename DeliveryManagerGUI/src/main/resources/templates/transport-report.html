@@ -23,7 +23,7 @@
 							</div>
 							<div class="tab-navigation">
 								<ul class="tabs cf">
-									<li class="sel">
+									<li>
 										<a th:href="@{/reports/sla}" rel="nofollow">SLA-uppföljning
 										</a>			
 									</li>
@@ -31,7 +31,7 @@
 										<a th:href="@{/reports/delivery}" rel="nofollow">Utförda leveranser
 										</a>			
 									</li>
-									<li>
+									<li class="sel">
 										<a th:href="@{/reports/transport}" rel="nofollow">Körschema
 										</a>			
 									</li>
@@ -53,44 +53,16 @@
 									<div class="form-step">
 									
 										<!-- Här kan man lägga på ett tack meddelande -->
-										<form class="form-general" th:action= "@{/reports/sla/search}" th:object="${reqAttr}" method="get">
+										<form class="form-general" th:action= "@{/reports/transport/search}" th:object="${reqAttr}" method="get">
 											<div class="form-section">
-												<h3 class="expandtrigger">Filtrera och sök</h3>
-												<div class="row cols-3 cf">
-													<div class="select">
-														<label for="status">Välj kundgrupp</label> 
-														<select
-															th:field="${reqAttr.customerId}"
-															id="customerGroupId" name="customerGroupId"
-															>
-															<option th:value="${reqAttr.zeroValue}">Alla</option>
-															<option th:each="customerGroup : ${customerGroups}" th:value="${customerGroup.id}" th:text="${customerGroup.name}"></option>
-
-														</select>
-													</div>
-													<div class="select">
-														<label for="status">Välj status</label> 
-														<select
-															th:field="${reqAttr.orderStatus}"
-															id="orderStatus" name="orderStatus"
-															>
-															<option value="active">Aktiva</option>
-															<option value="inactive">Levererade</option>
-
-														</select>
-													</div>
+												<h3 class="expandtrigger">Välj datum för planerad leverans och Sök</h3>
+												<div class="row cols-1 cf">
 													<div class="col col-1">
 														<div class="text">
-															<label for="fromDate">Från leveransdatum</label>
-															<input type="date" th:field="${reqAttr.fromDate}" maxlength="10" value="" name="fromDate" class="date small" id="fromDate"/>
+															<label for="planDate">Planerat leveransdatum</label>
+															<input type="date" th:field="${reqAttr.planDate}" maxlength="10" value="" name="planDate" class="date small" id="planDate"/>
 														</div>
 													 </div> 
-													<div class="col col-2">
-														<div class="text">
-															<label for="toDate">Till leveransdatum</label>
-															<input type="date" th:field="${reqAttr.toDate}" maxlength="10" value="" name="toDate" class="date small" id="toDate"/>
-														</div>
-													</div>
 												</div>
 												<div class="row">
 													<input class="btn" type="submit" value="Sök" id="ActionSearch" name="ActionSearch"/>
