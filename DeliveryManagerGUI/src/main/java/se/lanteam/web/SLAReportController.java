@@ -31,7 +31,7 @@ import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.ExcelViewBuilder;
 
 @Controller
-public class ReportsController {
+public class SLAReportController {
 	
 	private OrderRepository orderRepo;
 	private CustomerGroupRepository customerRepo;
@@ -44,37 +44,6 @@ public class ReportsController {
 		model.put("reqAttr", new RequestAttributes());
 		return "sla-report";
 	}
-
-	@RequestMapping("reports/delivery")
-	public String showDeliveryReport(ModelMap model) {
-		model.put("customerGroups", customerRepo.findAll());
-		model.put("reqAttr", new RequestAttributes());
-		return "delivery-report";
-	}
-
-	@RequestMapping("reports/transport")
-	public String showDeliveryPlanReport(ModelMap model) {
-		model.put("reqAttr", new RequestAttributes());
-		return "transport-report";
-	}
-
-	@RequestMapping(value="reports/transport/search", method=RequestMethod.GET)
-	public String searchPlannedOrders(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
-		
-		try {
-			Date planDate = DateUtil.stringToDate(reqAttr.getPlanDate());
-			List<OrderHeader> orders = orderRepo.findOrdersByPlanDate(planDate);
-			model.put("orders", orders);
-			if (orders.isEmpty()) {
-				reqAttr.setErrorMessage("Sökningen gav inga träffar");
-			}
-		} catch (ParseException e) {
-			reqAttr.setErrorMessage("Felaktigt inmatade datum");
-		}		
-		model.put("reqAttr", reqAttr);
-		return "transport-report";
-	}
-	
 	@RequestMapping(value="reports/sla/search", method=RequestMethod.GET)
 	public String searchOrdersSla(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
 		
@@ -133,13 +102,6 @@ public class ReportsController {
 		model.put("customerGroups", customerRepo.findAll());
 		return "sla-report";
 	}
-
-	@RequestMapping(value="reports/delivery/search", method=RequestMethod.GET)
-	public String searchOrdersDelivery(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
-		List<OrderHeader> orders = orderRepo.findAll();
-		searchBean.setOrderList(orders);
-		return "redirect:/reports/sla/export";
-	}
 	
 	@RequestMapping(value="reports/sla/export", method=RequestMethod.GET)
 	public ModelAndView exportSlaToExcel(ModelMap model, HttpServletResponse response) throws ParseException {
@@ -195,7 +157,6 @@ public class ReportsController {
 	public void setCustomerGroupRepo(CustomerGroupRepository customerRepo) {
 		this.customerRepo = customerRepo;
 	}
-
 	@Autowired
 	public void setSearchBean(SearchBean searchBean) {
 		this.searchBean = searchBean;

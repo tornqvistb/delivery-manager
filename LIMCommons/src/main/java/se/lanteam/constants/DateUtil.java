@@ -7,6 +7,19 @@ import java.util.Date;
 
 public class DateUtil {
 
+	public static Date NVL(Date inDate, Date replDate) {
+		Date result = inDate;
+		if (inDate == null) {
+			result = replDate;
+		}
+		return result;
+	}
+
+	public static String getDefaultStartDateAsString() { 
+
+		return "2010-01-01";
+	}
+	
 	public static Date getDefaultStartDate() { 
 
 		String dateString = "2010-01-01";
@@ -18,6 +31,15 @@ public class DateUtil {
 		return result;
 	}
 
+	public static String getOneYearAheadAsString() { 
+		return dateToString(addDaysToDate(new Date(), 365));
+	}
+
+	
+	public static Date getOneYearAhead() { 
+		return addDaysToDate(new Date(), 365);
+	}
+	
 	public static Date getTomorrow() { 
 		return new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
 	}
@@ -26,6 +48,14 @@ public class DateUtil {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();	
 		date = formatter.parse(dateString);
+	    
+	    return date;
+		
+	}
+	public static Date stringToDateMidnight(String dateString) throws ParseException  {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date date = new Date();	
+		date = formatter.parse(dateString + " 23:59");
 	    
 	    return date;
 		

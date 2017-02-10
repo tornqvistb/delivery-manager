@@ -69,40 +69,37 @@
 												</div>													
 											</div>
 										</form>
-										<form class="form-general" th:action= "@{/reports/sla/export}" th:object="${orders}" method="get" th:if="${not #lists.isEmpty(orders)}">											
+										<form class="form-general" th:action= "@{/reports/transport/export}" th:object="${orders}" method="get" th:if="${not #lists.isEmpty(orders)}">											
 											<div class="form-section" id="search-results" >
 												<h3>Sökresultat</h3>
 												<input class="btn" type="submit" value="Exportera till excel" id="ActionExportToExcel" name="ActionExportToExcel"/>
 												<table>
 													<colgroup>
 														<col style="width: 10%" />
-														<col style="width: 25%" />														
-														<col style="width: 25%" />														
+														<col style="width: 20%" />														
+														<col style="width: 20%" />														
 														<col style="width: 10%" />
-														<col style="width: 10%" />
-														<col style="width: 10%" />
-														<col style="width: 10%" />
+														<col style="width: 20%" />
+														<col style="width: 20%" />
 													</colgroup>
 													<thead>
 														<tr>
 															<th scope="col">Ordernummer</th>
 															<th scope="col">Leveransnummer kund</th>
 															<th scope="col">Kund</th>
-															<th scope="col">Orderdatum</th>
-															<th scope="col">Leveransdatum</th>
-															<th scope="col">Status</th>
-															<th scope="col">Dagar kvar</th>
+															<th scope="col">Område</th>
+															<th scope="col">Address 1</th>
+															<th scope="col">Address 2</th>
 														</tr>
 													</thead>
 													<tbody>
 														<tr th:each="order : ${orders}">
-															<td><a th:text="${order.orderNumber}" th:href="@{/order-list/view/} + ${order.id}">LT100199</a></td>															
+															<td th:text="${order.orderNumber}">12345</td>															
 															<td th:text="${order.customerSalesOrder}">REQ100094</td>
 															<td th:text="${order.customerName}">Lundby</td>
-															<td th:text="${order.orderDateAsString}">2016-02-02</td>
-															<td th:text="${order.deliveryDateDisplay}">2016-02-02</td>
-															<td th:text="${order.statusDisplay}">Ny</td>
-															<td th:text="${order.slaDaysLeft}">Ny</td>
+															<td th:text="${order.deliveryPlan.deliveryArea.name}">Öster</td>
+															<td th:text="${order.deliveryPostalAddress1}">Gatan 1</td>
+															<td th:text="${order.deliveryPostalAddress2}">Staden</td>
 														</tr>
 													</tbody>
 												</table>
