@@ -12,12 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import com.mysql.jdbc.StringUtils;
 
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.PropertyConstants;
@@ -98,12 +97,12 @@ public class OrderListController {
 		
 		try {
 			Date fromDate = DateUtil.getDefaultStartDate();
-			if (!StringUtils.isNullOrEmpty(reqAttr.getFromDate())) {
+			if (!StringUtils.isEmpty(reqAttr.getFromDate())) {
 				fromDate = DateUtil.stringToDate(reqAttr.getFromDate());
 			}
 			
 			Date toDate = DateUtil.getTomorrow();
-			if (!StringUtils.isNullOrEmpty(reqAttr.getToDate())) {
+			if (!StringUtils.isEmpty(reqAttr.getToDate())) {
 				toDate = DateUtil.stringToDate(reqAttr.getToDate());
 			}
 			
