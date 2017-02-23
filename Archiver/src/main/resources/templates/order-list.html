@@ -65,13 +65,20 @@
 															<input type="date" th:field="${reqAttr.toDate}" maxlength="10" value="" name="toDate" class="date small" id="toDate"/>
 														</div>
 													</div>
-													<div class="col col-2">
-														<div class="text">
-															<label for="orderGroup">ORDERGRUPP FIXA!!!</label>
-															<input type="text" th:field="${reqAttr.orderGroupId}" maxlength="10" value="" name="orderGroup" class="small" id="ordergroupId"/>
-														</div>
+												</div>
+												
+												<div class="row cols-2 cf">
+													<div class="select">
+														<label for="status">Välj Kundgrupp</label> 
+														<select
+															th:field="${reqAttr.customerGroupId}"
+															id="customerGroupId" name="customerGroupId"
+															>
+															<option th:each="customerGroup : ${customerGroups}" th:value="${customerGroup.id}" th:text="${customerGroup.name}"></option>
+														</select>
 													</div>
 												</div>
+												
 												<div class="search-wide">
 													<label for="query">Ange sökord</label>
 													<input class="keywords" th:field="${reqAttr.query}" type="search" id="query" value="${reqAttr.query}" placeholder="Ange ordernummer eller något av kundens ordernummer"/>

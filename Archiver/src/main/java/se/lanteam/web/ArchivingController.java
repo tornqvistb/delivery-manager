@@ -18,12 +18,14 @@ import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
 public class ArchivingController {
 	
 	private OrderRepository orderRepo;
+	private CustomerGroupRepository customerRepo;
 	
 	@RequestMapping("/")
 	public String showStartPage() {
@@ -35,6 +37,7 @@ public class ArchivingController {
 		List<OrderHeader> orders = new ArrayList<OrderHeader>();
 		model.put("orders", orders);
 		model.put("reqAttr", new RequestAttributes());
+		model.put("customerGroups", customerRepo.findAll());
 		return "order-list";
 	}
 	@RequestMapping(value="view/{orderId}", method=RequestMethod.GET)
@@ -48,6 +51,10 @@ public class ArchivingController {
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
+	}
+	@Autowired
+	public void setCustomerGroupRepo(CustomerGroupRepository customerRepo) {
+		this.customerRepo = customerRepo;
 	}
 	@RequestMapping(value="order-list/search", method=RequestMethod.GET)
 	public String searchOrders(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
@@ -77,6 +84,7 @@ public class ArchivingController {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
 		}		
 		reqAttr.setOrderStatus(status);
+		model.put("customerGroups", customerRepo.findAll());
 		model.put("reqAttr", reqAttr);
 		return "order-list";
 	}
