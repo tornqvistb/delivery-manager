@@ -43,23 +43,19 @@ public class NetsetOrderRepository {
     private static String MISSING = "Saknas";
     
     public CreateOrderResponse createOrder(CreateOrderRequest request) {
-    	
     	int returnCode = RESULT_CODE_CREATED_OK;
     	String description = DESCRIPTION_CREATED_OK;
-    	
     	if (!validationOk(request)) {
     		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_MANDATORY_DATA_MISSING + ". Ordernr: " + getOrderNoFromRequest(request, MISSING));
     		return getResponse(RESULT_CODE_ERROR_MANDATORY_DATA_MISSING, DESCRIPTION_MANDATORY_DATA_MISSING);
     	}
-    	
-    	CustomerGroup customerGroup = customerGroupRepo.findOne(Long.getLong(request.getOrderData().getValue().getHeader().getCustomerNumber()));    	
+    	CustomerGroup customerGroup = customerGroupRepo.findOne(Long.parseLong(request.getOrderData().getValue().getHeader().getCustomerNumber()));    	
     	if (customerGroup == null) {
     		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_UNKNOWN_CUSTOMER_GROUP + ". Customer group: " + getOrderNoFromRequest(request, MISSING));
     		return getResponse(RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP, DESCRIPTION_UNKNOWN_CUSTOMER_GROUP);
     	}
     	    	    	
 		OrderHeader order = null;
-		
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
 		if (orders.isEmpty()) {
 			order = new OrderHeader();
@@ -72,10 +68,9 @@ public class NetsetOrderRepository {
 		
 		order.setOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
 		order.setCustomerGroup(customerGroup);
-    	
 		if (request.getOrderData().getValue().getInformationFields() != null 
 				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null) {
-			Set<OrderInformationField> orderInfoFields = new HashSet<OrderInformationField>(); 
+			Set<OrderInformationField> orderInfoFields = new HashSet<OrderInformationField>();
 			for (InformationField infoField : request.getOrderData().getValue().getInformationFields().getInformationField()) {
 				OrderInformationField orderInfoField = new OrderInformationField();
 				orderInfoField.setIdentification(infoField.getIdentification());
@@ -88,7 +83,6 @@ public class NetsetOrderRepository {
 		}
 
 		orderRepo.save(order);
-		
 		return getResponse(returnCode, description);
 
     }
@@ -106,7 +100,7 @@ public class NetsetOrderRepository {
     	String custNumber = defaultValue;
     	if (request != null && request.getOrderData().getValue() != null && request.getOrderData().getValue().getHeader() != null 
     		&& !StringUtils.isEmpty(request.getOrderData().getValue().getHeader().getCustomerNumber())) {
-    		custNumber = String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber());
+    		custNumber = request.getOrderData().getValue().getHeader().getCustomerNumber();
     	}
     	return custNumber;
     }

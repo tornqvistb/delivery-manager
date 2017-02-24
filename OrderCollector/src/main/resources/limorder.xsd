@@ -22,7 +22,7 @@
    			<xs:element name="Header" maxOccurs="1" minOccurs="1" type="tns:Header" />
    			<xs:element name="InformationFields" maxOccurs="1" minOccurs="1" type="tns:InformationFields" />
    		</xs:sequence>
-   		<xs:attribute name="id" type="xs:string" />
+   		<xs:attribute name="id" type="xs:string"/>
    	</xs:complexType>
    	
 	<xs:complexType name="Header">
