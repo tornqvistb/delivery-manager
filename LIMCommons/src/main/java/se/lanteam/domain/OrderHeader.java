@@ -58,6 +58,7 @@ public class OrderHeader {
 	private String status;
 	private Set<OrderLine> orderLines = new HashSet<OrderLine>();
 	private Set<OrderComment> orderComments = new HashSet<OrderComment>();
+	private Set<OrderInformationField> orderInformationFields = new HashSet<OrderInformationField>();
 	private Attachment attachment;
 	private String transmitErrorMessage;
 	private Boolean toBeArchived = false;
@@ -417,6 +418,14 @@ public class OrderHeader {
 			result = Period.between(slaDate, endDate).getDays();
 		}
 		return result;
+	}
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="orderHeader")
+	@OrderBy("creationDate")
+	public Set<OrderInformationField> getOrderInformationFields() {
+		return orderInformationFields;
+	}
+	public void setOrderInformationFields(Set<OrderInformationField> orderInformationFields) {
+		this.orderInformationFields = orderInformationFields;
 	}
 	
 }

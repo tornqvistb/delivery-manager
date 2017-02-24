@@ -24,9 +24,7 @@ public class NetsetOrderEndpoint {
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "createOrderRequest")
 	@ResponsePayload
 	public CreateOrderResponse getResponse(@RequestPayload CreateOrderRequest orderRequest) {
-		CreateOrderResponse response = new CreateOrderResponse();
-		response.setOrderResponseData(netsetOrderRepository.createOrder(orderRequest));
-		return response;
+		return netsetOrderRepository.createOrder(orderRequest);
 	}
 
 }

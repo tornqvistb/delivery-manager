@@ -1,14 +1,23 @@
 package se.lanteam.ws;
 
-import javax.xml.bind.JAXBElement;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import se.lanteam.constants.StatusConstants;
+import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.ErrorRecord;
+import se.lanteam.domain.OrderHeader;
+import se.lanteam.domain.OrderInformationField;
+import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.ws.netset.CreateOrderRequest;
+import se.lanteam.ws.netset.CreateOrderResponse;
 import se.lanteam.ws.netset.InformationField;
 import se.lanteam.ws.netset.ObjectFactory;
 
@@ -17,78 +26,108 @@ public class NetsetOrderRepository {
 
 	private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
+    private CustomerGroupRepository customerGroupRepo;
 	
-    public JAXBElement<String> createOrder(CreateOrderRequest request) {
-    	String resultCode = "OK";
+    private static int RESULT_CODE_CREATED_OK = 0;
+    private static int RESULT_CODE_UPDATED_OK = 1;
+    private static int RESULT_CODE_ERROR_MANDATORY_DATA_MISSING = 2;
+    private static int RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP = 3;
+    
+    private static String DESCRIPTION_CREATED_OK = "Order skapad";
+    private static String DESCRIPTION_UPDATED_OK = "Order uppdaterad";
+    private static String DESCRIPTION_MANDATORY_DATA_MISSING = "Obligatorisk data saknas";
+    private static String DESCRIPTION_UNKNOWN_CUSTOMER_GROUP = "Okänd kundgrupp";
+    
+    private static String ERROR_LOG_GENERAL_MESSAGE = "Fel vid mottagande av order från Netset: ";
+    
+    private static String MISSING = "Saknas";
+    
+    public CreateOrderResponse createOrder(CreateOrderRequest request) {
     	
-    	if (request != null) {
-    		System.out.println("id:" + request.getOrderData().getValue().getId());
-    		System.out.println("order number:" + request.getOrderData().getValue().getHeader().getOrderNumber());
-    		System.out.println("cust number:" + request.getOrderData().getValue().getHeader().getCustomerNumber());
-    		System.out.println("cust group name:" + request.getOrderData().getValue().getHeader().getCustomerGroupName());
-    		
-    		for (InformationField infoField : request.getOrderData().getValue().getInformationFields().getInformationField()) {
-    			System.out.println("info id:" + infoField.getIdentification());
-    			System.out.println("info label:" + infoField.getLabel());
-    			System.out.println("info data:" + infoField.getData());
-    		}
+    	int returnCode = RESULT_CODE_CREATED_OK;
+    	String description = DESCRIPTION_CREATED_OK;
+    	
+    	if (!validationOk(request)) {
+    		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_MANDATORY_DATA_MISSING + ". Ordernr: " + getOrderNoFromRequest(request, MISSING));
+    		return getResponse(RESULT_CODE_ERROR_MANDATORY_DATA_MISSING, DESCRIPTION_MANDATORY_DATA_MISSING);
     	}
     	
-    	ObjectFactory factory = new ObjectFactory();
-    	JAXBElement<String> result = factory.createCreateOrderResponseOrderResponseData(resultCode);
-		return result;
-
-    }
-    /*
-	public JAXBElement<String> storeErrorReport(ErrorResponse request) {
-		String resultCode = "OK";
-		ObjectFactory factory = new ObjectFactory();
-		GBCA003AErrorResponse errorResponse = request.getErrorResponse().getValue();
-		String salesOrder = errorResponse.getYourSalesOrder();		
-		List<OrderHeader> orders = orderRepo.findOrdersByCustomerSalesOrder(salesOrder);
-		if (orders.size() > 0) {
-			OrderHeader order = orders.get(0);
-			StringBuilder sb = new StringBuilder();
-			sb.append("<strong>Felrapport från Intraservice:</strong>");
-			ArrayOfGBCA003AErrorResponseLine lineArray = errorResponse.getLine();
-			if (lineArray != null && lineArray.getGBCA003AErrorResponseLine() != null && lineArray.getGBCA003AErrorResponseLine().size() > 0) {
-				for (GBCA003AErrorResponseLine line : lineArray.getGBCA003AErrorResponseLine()) {
-					sb.append("<br/>");
-					if (!StringUtils.isEmpty(line.getLineId())) {
-						sb.append(" Radnummer: " + line.getLineId());	
-					}					
-					if (!StringUtils.isEmpty(line.getInvNo())) {
-						sb.append(" Inventarienummer: " + line.getInvNo());	
-					}
-					if (!StringUtils.isEmpty(line.getItemId())) {
-						sb.append(" Itemnummer: " + line.getItemId());	
-					}
-					if (!StringUtils.isEmpty(line.getSerialNo())) {
-						sb.append(" Serienummer: " + line.getSerialNo());	
-					}
-					if (!StringUtils.isEmpty(line.getStatus())) {
-						sb.append(" Status: " + line.getStatus());	
-					}
-					if (!StringUtils.isEmpty(line.getErrorText())) {
-						sb.append("<br/><strong>Felmeddelande: </strong>" + line.getErrorText());	
-					}
-				}
-				order.setTransmitErrorMessage(sb.toString());
-				order.setStatus(StatusConstants.ORDER_STATUS_NOT_ACCEPTED);
-				orderRepo.save(order);
-			} else {
-				resultCode = "Inga rader";
-				saveError("Fel vid hantering av felrapport från Intraservice: det finns inga orderrader i meddelandet");
-			}
+    	CustomerGroup customerGroup = customerGroupRepo.findOne(Long.getLong(request.getOrderData().getValue().getHeader().getCustomerNumber()));    	
+    	if (customerGroup == null) {
+    		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_UNKNOWN_CUSTOMER_GROUP + ". Customer group: " + getOrderNoFromRequest(request, MISSING));
+    		return getResponse(RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP, DESCRIPTION_UNKNOWN_CUSTOMER_GROUP);
+    	}
+    	    	    	
+		OrderHeader order = null;
+		
+		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
+		if (orders.isEmpty()) {
+			order = new OrderHeader();
+			order.setStatus(StatusConstants.ORDER_STATUS_NEW);
 		} else {
-			resultCode = "Hittade ej order " + salesOrder;
-			saveError("Fel vid hantering av felrapport från Intraservice: Hittade ej order " + salesOrder);
+			order = orders.get(0);
+			returnCode = RESULT_CODE_UPDATED_OK;
+			description = DESCRIPTION_UPDATED_OK;
 		}
 		
-		JAXBElement<String> result = factory.createErrorResponseResponseErrorResponseResult(resultCode);
-		return result;
-	}
-	*/
+		order.setOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
+		order.setCustomerGroup(customerGroup);
+    	
+		if (request.getOrderData().getValue().getInformationFields() != null 
+				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null) {
+			Set<OrderInformationField> orderInfoFields = new HashSet<OrderInformationField>(); 
+			for (InformationField infoField : request.getOrderData().getValue().getInformationFields().getInformationField()) {
+				OrderInformationField orderInfoField = new OrderInformationField();
+				orderInfoField.setIdentification(infoField.getIdentification());
+				orderInfoField.setData(infoField.getData());
+				orderInfoField.setLabel(infoField.getLabel());
+				orderInfoField.setOrderHeader(order);
+				orderInfoFields.add(orderInfoField);
+			}
+			order.setOrderInformationFields(orderInfoFields);
+		}
+
+		orderRepo.save(order);
+		
+		return getResponse(returnCode, description);
+
+    }
+    
+    private String getOrderNoFromRequest(CreateOrderRequest request, String defaultValue) {
+    	String orderNumber = defaultValue;
+    	if (request != null && request.getOrderData().getValue() != null && request.getOrderData().getValue().getHeader() != null 
+    		&& request.getOrderData().getValue().getHeader().getOrderNumber() > 0) {
+    		orderNumber = String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber());
+    	}
+    	return orderNumber;
+    }
+
+    private String getCustomerNoFromRequest(CreateOrderRequest request, String defaultValue) {
+    	String custNumber = defaultValue;
+    	if (request != null && request.getOrderData().getValue() != null && request.getOrderData().getValue().getHeader() != null 
+    		&& !StringUtils.isEmpty(request.getOrderData().getValue().getHeader().getCustomerNumber())) {
+    		custNumber = String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber());
+    	}
+    	return custNumber;
+    }
+
+    
+    private boolean validationOk(CreateOrderRequest request) {
+    	boolean result = false;
+    	if (!StringUtils.isEmpty(getOrderNoFromRequest(request, "")) && !StringUtils.isEmpty(getCustomerNoFromRequest(request, ""))) {
+    		result = true;
+    	}
+    	return result;
+    }
+    
+    private CreateOrderResponse getResponse(int code, String desc) {
+    	ObjectFactory factory = new ObjectFactory();
+    	CreateOrderResponse response = factory.createCreateOrderResponse();
+    	response.setReturnCode(code);
+    	response.setDescription(desc);    	
+		return response;
+    }
+    
 	private void saveError(String errorText) {
 		errorRepo.save(new ErrorRecord(errorText));
 	}
@@ -100,6 +139,10 @@ public class NetsetOrderRepository {
 	@Autowired
 	public void setErrorRepo(ErrorRepository errorRepo) {
 		this.errorRepo = errorRepo;
+	}
+	@Autowired
+	public void setCustomerGroupRepo(CustomerGroupRepository customerGroupRepo) {
+		this.customerGroupRepo = customerGroupRepo;
 	}
 
 }
