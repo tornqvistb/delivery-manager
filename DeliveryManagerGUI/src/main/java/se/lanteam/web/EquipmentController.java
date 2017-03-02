@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +22,7 @@ import se.lanteam.model.CorrectionMailInfo;
 import se.lanteam.model.ReqOrderLine;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
+import se.lanteam.repository.DeliveryAreaRepository;
 import se.lanteam.repository.EquipmentRepository;
 import se.lanteam.repository.OrderLineRepository;
 import se.lanteam.repository.OrderRepository;
@@ -37,6 +39,7 @@ public class EquipmentController {
 	private OrderRepository orderRepo;
 	private OrderLineRepository orderLineRepo;
 	private EquipmentRepository equipmentRepo;
+	private DeliveryAreaRepository deliveryAreaRepo;
 	private EquipmentValidator equipmentValidator;
 	private MailComposer mailComposer;
 	private SessionBean sessionBean;
@@ -113,6 +116,7 @@ public class EquipmentController {
 		reqAttr.setRegEquipmentResult(valResult);
 		model.put("reqAttr", reqAttr);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
+		model.put("deliveryAreas", deliveryAreaRepo.findAll(new Sort(Sort.Direction.ASC, "name")));
 		return "order-details";
 	}
 
@@ -207,7 +211,10 @@ public class EquipmentController {
 		}
 		return result;
 	}
-
+	@Autowired
+	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
+		this.deliveryAreaRepo = deliveryAreaRepo;
+	}
 	@Autowired
 	public void setEquipmentRepo(EquipmentRepository equipmentRepo) {
 		this.equipmentRepo = equipmentRepo;

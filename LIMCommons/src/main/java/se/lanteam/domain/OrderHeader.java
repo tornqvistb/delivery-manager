@@ -247,7 +247,8 @@ public class OrderHeader {
 	}
 	@Transient
 	public String getOrderDateAsString() {
-		return String.valueOf(orderDate).substring(0, 10);
+		return DateUtil.dateToString(orderDate);
+		//return String.valueOf(orderDate).substring(0, 10);
 	}
 	@Transient
 	public List<OrderLine> getUnCompletedOrderLines() {
