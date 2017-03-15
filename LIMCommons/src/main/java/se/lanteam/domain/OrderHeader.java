@@ -64,6 +64,8 @@ public class OrderHeader {
 	private Boolean toBeArchived = false;
 	private CustomerGroup customerGroup;
 	private DeliveryPlan deliveryPlan;
+	private String jointDelivery;
+	private int jointInvoicing;
 	
 	@Id
 	@GeneratedValue
@@ -427,6 +429,18 @@ public class OrderHeader {
 	}
 	public void setOrderInformationFields(Set<OrderInformationField> orderInformationFields) {
 		this.orderInformationFields = orderInformationFields;
+	}
+	public String getJointDelivery() {
+		return jointDelivery;
+	}
+	public void setJointDelivery(String jointDelivery) {
+		this.jointDelivery = jointDelivery;
+	}
+	public int getJointInvoicing() {
+		return jointInvoicing;
+	}
+	public void setJointInvoicing(int jointInvoicing) {
+		this.jointInvoicing = jointInvoicing;
 	}
 	
 }

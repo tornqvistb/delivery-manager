@@ -55,6 +55,12 @@ public class NetsetOrderRepository {
     		return getResponse(RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP, DESCRIPTION_UNKNOWN_CUSTOMER_GROUP);
     	}
     	    	    	
+    	String jointDelivery = "";
+    	if (!StringUtils.isEmpty(request.getOrderData().getValue().getHeader().getJointDelivery())) {
+    		jointDelivery = request.getOrderData().getValue().getHeader().getJointDelivery();
+    	}
+    	int jointInvoicing = request.getOrderData().getValue().getHeader().getJointInvoicing();
+    	
 		OrderHeader order = null;
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
 		if (orders.isEmpty()) {
@@ -68,6 +74,8 @@ public class NetsetOrderRepository {
 		
 		order.setOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
 		order.setCustomerGroup(customerGroup);
+		order.setJointDelivery(jointDelivery);
+		order.setJointInvoicing(jointInvoicing);
 		if (request.getOrderData().getValue().getInformationFields() != null 
 				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null) {
 			Set<OrderInformationField> orderInfoFields = new HashSet<OrderInformationField>();

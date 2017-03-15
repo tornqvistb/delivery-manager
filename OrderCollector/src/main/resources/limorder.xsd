@@ -30,8 +30,17 @@
 			<xs:element name="OrderNumber" type="xs:int" />
 			<xs:element name="CustomerNumber" type="tns:CustomerNumber" />
 			<xs:element name="CustomerGroupName" type="tns:CustomerGroupName" />
+			<xs:element name="JointDelivery" type="tns:JointDelivery" />			
+			<xs:element name="JointInvoicing" type="xs:int" />
 		</xs:sequence>
 	</xs:complexType>
+
+	<xs:simpleType name="JointDelivery">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"></xs:minLength>
+			<xs:maxLength value="20"></xs:maxLength>
+		</xs:restriction>
+	</xs:simpleType>
 
 	<xs:simpleType name="CustomerNumber">
 		<xs:restriction base="xs:string">
