@@ -11,8 +11,9 @@ import org.springframework.util.StringUtils;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.ErrorRecord;
+import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
-import se.lanteam.domain.OrderInformationField;
+import se.lanteam.repository.CustomFieldRepository;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
@@ -27,6 +28,7 @@ public class NetsetOrderRepository {
 	private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
     private CustomerGroupRepository customerGroupRepo;
+    private CustomFieldRepository customFieldRepo;
 	
     private static int RESULT_CODE_CREATED_OK = 0;
     private static int RESULT_CODE_UPDATED_OK = 1;
@@ -78,16 +80,15 @@ public class NetsetOrderRepository {
 		order.setJointInvoicing(jointInvoicing);
 		if (request.getOrderData().getValue().getInformationFields() != null 
 				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null) {
-			Set<OrderInformationField> orderInfoFields = new HashSet<OrderInformationField>();
+			Set<OrderCustomField> orderCustomFields = new HashSet<OrderCustomField>();
 			for (InformationField infoField : request.getOrderData().getValue().getInformationFields().getInformationField()) {
-				OrderInformationField orderInfoField = new OrderInformationField();
-				orderInfoField.setIdentification(infoField.getIdentification());
-				orderInfoField.setData(infoField.getData());
-				orderInfoField.setLabel(infoField.getLabel());
-				orderInfoField.setOrderHeader(order);
-				orderInfoFields.add(orderInfoField);
+				OrderCustomField orderCustomField = new OrderCustomField();
+				orderCustomField.setCustomField(customFieldRepo.findOne(Long.valueOf(infoField.getIdentification())));
+				orderCustomField.setValue(infoField.getData());
+				orderCustomField.setOrderHeader(order);
+				orderCustomFields.add(orderCustomField);
 			}
-			order.setOrderInformationFields(orderInfoFields);
+			order.setOrderCustomFields(orderCustomFields);
 		}
 
 		orderRepo.save(order);
@@ -146,5 +147,8 @@ public class NetsetOrderRepository {
 	public void setCustomerGroupRepo(CustomerGroupRepository customerGroupRepo) {
 		this.customerGroupRepo = customerGroupRepo;
 	}
-
+	@Autowired
+	public void setCustomFieldRepo(CustomFieldRepository customFieldRepo) {
+		this.customFieldRepo = customFieldRepo;
+	}
 }
