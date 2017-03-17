@@ -178,25 +178,40 @@
 
 												<table>
 													<colgroup>
-														<col style="width: 30%" />
-														<col style="width: 70%" />
+														<col style="width: 32%" />
+														<col style="width: 17%" />
+														<col style="width: 17%" />
+														<col style="width: 17%" />
+														<col style="width: 17%" />
 													</colgroup>
-													<tbody>
+													<thead>
 														<tr>
-															<th scope="row">Kontaktpersoner</th>															
-															<td>																
-																<input type="checkbox" name="showContactPersons" th:field="${customerGroup.reportsConfig.showContactPersons}" th:checked="${customerGroup.reportsConfig.showContactPersons}" />
-															</td>
+															<th scope="col">Fält</th>
+															<th scope="col">SLA-uppföljning</th>
+															<th scope="col">Utförda leveranser</th>
+															<th scope="col">Leveranssedel</th>
+															<th scope="col">Arbetsorder</th>															
 														</tr>
-														<tr>
-															<th scope="row">Leveransadress</th>															
+													</thead>
+													<tbody>														
+														<tr th:each="customerCustomField, loop : ${customerGroup.customerCustomFields}">
+															<td th:text="${customerCustomField.customField.label}">Rubriken</td>
 															<td>																
-																<input type="checkbox" name="showDeliveryAddress" th:field="${customerGroup.reportsConfig.showDeliveryAddress}" th:checked="${customerGroup.reportsConfig.showDeliveryAddress}" />
+																<input type="checkbox" name="showInSlaReport" th:field="${customerGroup.customerCustomFields[__${loop.index}__].showInSlaReport}" th:checked="${customerGroup.customerCustomFields[__${loop.index}__].showInSlaReport}" />
+															</td>
+															<td>																
+																<input type="checkbox" name="showInDeliveryReport" th:field="${customerGroup.customerCustomFields[__${loop.index}__].showInDeliveryReport}" th:checked="${customerGroup.customerCustomFields[__${loop.index}__].showInDeliveryReport}" />
+															</td>
+															<td>																
+																<input type="checkbox" name="showInDeliveryNote" th:field="${customerGroup.customerCustomFields[__${loop.index}__].showInDeliveryNote}" th:checked="${customerGroup.customerCustomFields[__${loop.index}__].showInDeliveryNote}" />
+															</td>
+															<td>																
+																<input type="checkbox" name="showInWorkNote" th:field="${customerGroup.customerCustomFields[__${loop.index}__].showInWorkNote}" th:checked="${customerGroup.customerCustomFields[__${loop.index}__].showInWorkNote}" />
 															</td>
 														</tr>
 													</tbody>
 												</table>
-											</div>																				
+											</div>											
 											
 											<div class="submit-area">
 												<input class="button" type="submit" value="Spara ändringar" />

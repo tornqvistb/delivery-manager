@@ -43,12 +43,12 @@ public class SessionFilter implements Filter {
         HttpSession session = request.getSession(); 
         String errors = String.valueOf(errorRepo.findErrorsByArchived(false).size());        
         session.setAttribute(SessionConstants.ERROR_COUNT, errors);
-        CustomerGroup customerGroup = (CustomerGroup) session.getAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP);
-        if (customerGroup == null) {
+        //CustomerGroup customerGroup = (CustomerGroup) session.getAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP);
+        //if (customerGroup == null) {
         	//response.sendRedirect("/customer-groups");
             //Long defaultGroupId = propertyRepo.findById(PropertyConstants.DEFAULT_COMPANY_GROUP_ID).getNumberValue();
         	//session.setAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP, customerGroupRepo.findById(defaultGroupId));
-        }        
+        //}        
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

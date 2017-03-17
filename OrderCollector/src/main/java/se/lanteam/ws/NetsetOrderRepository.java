@@ -16,6 +16,7 @@ import se.lanteam.domain.OrderHeader;
 import se.lanteam.repository.CustomFieldRepository;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
+import se.lanteam.repository.OrderCustomFieldRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.ws.netset.CreateOrderRequest;
 import se.lanteam.ws.netset.CreateOrderResponse;
@@ -29,6 +30,7 @@ public class NetsetOrderRepository {
     private ErrorRepository errorRepo;
     private CustomerGroupRepository customerGroupRepo;
     private CustomFieldRepository customFieldRepo;
+    private OrderCustomFieldRepository orderCustomFieldRepo;
 	
     private static int RESULT_CODE_CREATED_OK = 0;
     private static int RESULT_CODE_UPDATED_OK = 1;
@@ -72,6 +74,10 @@ public class NetsetOrderRepository {
 			order = orders.get(0);
 			returnCode = RESULT_CODE_UPDATED_OK;
 			description = DESCRIPTION_UPDATED_OK;
+			List<OrderCustomField> orderCustomFields = orderCustomFieldRepo.findByOrderId(order.getId());
+			for (OrderCustomField orderCustField : orderCustomFields) {
+				orderCustomFieldRepo.delete(orderCustField);
+			}
 		}
 		
 		order.setOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
@@ -150,5 +156,9 @@ public class NetsetOrderRepository {
 	@Autowired
 	public void setCustomFieldRepo(CustomFieldRepository customFieldRepo) {
 		this.customFieldRepo = customFieldRepo;
+	}
+	@Autowired
+	public void setOrderCustomFieldRepo(OrderCustomFieldRepository orderCustomFieldRepo) {
+		this.orderCustomFieldRepo = orderCustomFieldRepo;
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import se.lanteam.constants.SessionConstants;
+import se.lanteam.domain.CustomerCustomField;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.model.RequestAttributes;
@@ -60,6 +61,7 @@ public class CustomerGroupController {
 	@RequestMapping(value="customer-groups/settings/{customerId}", method=RequestMethod.GET)
 	public String editCustomerGroup(@PathVariable Long customerId, ModelMap model, HttpServletRequest request) {			
 		CustomerGroup customerGroup = customerRepo.findOne(customerId);
+		System.out.println("size of custom config: " + customerGroup.getCustomerCustomFields().size());
 		if (customerGroup.getRegistrationConfig() == null) {
 			customerGroup.setRegistrationConfig(new RegistrationConfig());
 		}
@@ -73,6 +75,10 @@ public class CustomerGroupController {
 			
 		customerGroup.getRegistrationConfig().setCustomerGroup(customerGroup);
 		customerGroup.getReportsConfig().setCustomerGroup(customerGroup);
+		
+		for (CustomerCustomField customerCustomField : customerGroup.getCustomerCustomFields()) {
+			customerCustomField.setCustomerGroup(customerGroup);
+		}
 		
 		customerRepo.save(customerGroup);
 		sessionBean.setCustomerGroup(customerGroup);
