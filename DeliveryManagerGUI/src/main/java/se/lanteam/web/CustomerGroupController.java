@@ -73,6 +73,7 @@ public class CustomerGroupController {
 	public String saveSettings(@ModelAttribute CustomerGroup customerGroup,
 			ModelMap model) {
 			
+		System.out.println("HE HEJ");
 		customerGroup.getRegistrationConfig().setCustomerGroup(customerGroup);
 		customerGroup.getReportsConfig().setCustomerGroup(customerGroup);
 		

@@ -12,27 +12,35 @@ public class RegistrationConfig {
 	private Boolean useAttribute1;
 	private String labelAttribute1;
 	private Boolean mandatoryAttribute1;
+	private Boolean showInDeliveryNote1;
 	private Boolean useAttribute2;
 	private String labelAttribute2;
 	private Boolean mandatoryAttribute2;
+	private Boolean showInDeliveryNote2;
 	private Boolean useAttribute3;
 	private String labelAttribute3;
 	private Boolean mandatoryAttribute3;
+	private Boolean showInDeliveryNote3;
 	private Boolean useAttribute4;
 	private String labelAttribute4;
 	private Boolean mandatoryAttribute4;
+	private Boolean showInDeliveryNote4;
 	private Boolean useAttribute5;
 	private String labelAttribute5;
 	private Boolean mandatoryAttribute5;
+	private Boolean showInDeliveryNote5;
 	private Boolean useAttribute6;
 	private String labelAttribute6;
 	private Boolean mandatoryAttribute6;
+	private Boolean showInDeliveryNote6;
 	private Boolean useAttribute7;
 	private String labelAttribute7;
 	private Boolean mandatoryAttribute7;
+	private Boolean showInDeliveryNote7;
 	private Boolean useAttribute8;
 	private String labelAttribute8;
 	private Boolean mandatoryAttribute8;
+	private Boolean showInDeliveryNote8;
 	
 
 	@Id
@@ -194,6 +202,54 @@ public class RegistrationConfig {
 	}
 	public void setMandatoryAttribute8(Boolean mandatoryAttribute8) {
 		this.mandatoryAttribute8 = mandatoryAttribute8;
+	}
+	public Boolean getShowInDeliveryNote1() {
+		return showInDeliveryNote1;
+	}
+	public void setShowInDeliveryNote1(Boolean showInDeliveryNote1) {
+		this.showInDeliveryNote1 = showInDeliveryNote1;
+	}
+	public Boolean getShowInDeliveryNote2() {
+		return showInDeliveryNote2;
+	}
+	public void setShowInDeliveryNote2(Boolean showInDeliveryNote2) {
+		this.showInDeliveryNote2 = showInDeliveryNote2;
+	}
+	public Boolean getShowInDeliveryNote3() {
+		return showInDeliveryNote3;
+	}
+	public void setShowInDeliveryNote3(Boolean showInDeliveryNote3) {
+		this.showInDeliveryNote3 = showInDeliveryNote3;
+	}
+	public Boolean getShowInDeliveryNote4() {
+		return showInDeliveryNote4;
+	}
+	public void setShowInDeliveryNote4(Boolean showInDeliveryNote4) {
+		this.showInDeliveryNote4 = showInDeliveryNote4;
+	}
+	public Boolean getShowInDeliveryNote5() {
+		return showInDeliveryNote5;
+	}
+	public void setShowInDeliveryNote5(Boolean showInDeliveryNote5) {
+		this.showInDeliveryNote5 = showInDeliveryNote5;
+	}
+	public Boolean getShowInDeliveryNote6() {
+		return showInDeliveryNote6;
+	}
+	public void setShowInDeliveryNote6(Boolean showInDeliveryNote6) {
+		this.showInDeliveryNote6 = showInDeliveryNote6;
+	}
+	public Boolean getShowInDeliveryNote7() {
+		return showInDeliveryNote7;
+	}
+	public void setShowInDeliveryNote7(Boolean showInDeliveryNote7) {
+		this.showInDeliveryNote7 = showInDeliveryNote7;
+	}
+	public Boolean getShowInDeliveryNote8() {
+		return showInDeliveryNote8;
+	}
+	public void setShowInDeliveryNote8(Boolean showInDeliveryNote8) {
+		this.showInDeliveryNote8 = showInDeliveryNote8;
 	}
 
 }

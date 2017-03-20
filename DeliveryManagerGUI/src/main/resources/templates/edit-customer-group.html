@@ -58,10 +58,11 @@
 												<h3>Fält att registrera för utrustning</h3>
 												<table>
 													<colgroup>
+														<col style="width: 25%" />
 														<col style="width: 30%" />
-														<col style="width: 50%" />
-														<col style="width: 10%" />
-														<col style="width: 10%" />
+														<col style="width: 13%" />
+														<col style="width: 13%" />
+														<col style="width: 19%" />
 													</colgroup>
 													<thead>
 														<tr>
@@ -69,6 +70,7 @@
 															<th scope="col">Rubrik</th>
 															<th scope="col">Obligatoriskt</th>
 															<th scope="col">Aktivt</th>
+															<th scope="col">Visa i leveranssedel</th>
 															
 														</tr>
 													</thead>
@@ -84,6 +86,9 @@
 															<td>																
 																<input type="checkbox" name="active1" th:field="${customerGroup.registrationConfig.useAttribute1}" th:checked="${customerGroup.registrationConfig.useAttribute1}" />
 															</td>
+															<td>																
+																<input type="checkbox" name="delnote1" th:field="${customerGroup.registrationConfig.showInDeliveryNote1}" th:checked="${customerGroup.registrationConfig.showInDeliveryNote1}" />
+															</td>
 														</tr>
 														<tr>
 															<td>Fält 2</td>															
@@ -95,6 +100,9 @@
 															</td>
 															<td>																
 																<input type="checkbox" name="active2" th:field="${customerGroup.registrationConfig.useAttribute2}" th:checked="${customerGroup.registrationConfig.useAttribute2}" />
+															</td>
+															<td>																
+																<input type="checkbox" name="delnote2" th:field="${customerGroup.registrationConfig.showInDeliveryNote2}" th:checked="${customerGroup.registrationConfig.showInDeliveryNote2}" />
 															</td>
 														</tr>
 														<tr>
@@ -108,6 +116,9 @@
 															<td>																
 																<input type="checkbox" name="active3" th:field="${customerGroup.registrationConfig.useAttribute3}" th:checked="${customerGroup.registrationConfig.useAttribute3}" />
 															</td>
+															<td>																
+																<input type="checkbox" name="delnote3" th:field="${customerGroup.registrationConfig.showInDeliveryNote3}" th:checked="${customerGroup.registrationConfig.showInDeliveryNote3}" />
+															</td>
 														</tr>
 														<tr>
 															<td>Fält 4</td>															
@@ -119,6 +130,9 @@
 															</td>
 															<td>																
 																<input type="checkbox" name="active4" th:field="${customerGroup.registrationConfig.useAttribute4}" th:checked="${customerGroup.registrationConfig.useAttribute4}" />
+															</td>
+															<td>																
+																<input type="checkbox" name="delnote4" th:field="${customerGroup.registrationConfig.showInDeliveryNote4}" th:checked="${customerGroup.registrationConfig.showInDeliveryNote4}" />
 															</td>
 														</tr>
 														<tr>
@@ -132,6 +146,9 @@
 															<td>																
 																<input type="checkbox" name="active5" th:field="${customerGroup.registrationConfig.useAttribute5}" th:checked="${customerGroup.registrationConfig.useAttribute5}" />
 															</td>
+															<td>																
+																<input type="checkbox" name="delnote5" th:field="${customerGroup.registrationConfig.showInDeliveryNote5}" th:checked="${customerGroup.registrationConfig.showInDeliveryNote5}" />
+															</td>
 														</tr>
 														<tr>
 															<td>Fält 6</td>															
@@ -143,6 +160,9 @@
 															</td>
 															<td>																
 																<input type="checkbox" name="active6" th:field="${customerGroup.registrationConfig.useAttribute6}" th:checked="${customerGroup.registrationConfig.useAttribute6}" />
+															</td>
+															<td>																
+																<input type="checkbox" name="delnote6" th:field="${customerGroup.registrationConfig.showInDeliveryNote6}" th:checked="${customerGroup.registrationConfig.showInDeliveryNote6}" />
 															</td>
 														</tr>
 														<tr>
@@ -156,6 +176,9 @@
 															<td>																
 																<input type="checkbox" name="active7" th:field="${customerGroup.registrationConfig.useAttribute7}" th:checked="${customerGroup.registrationConfig.useAttribute7}" />
 															</td>
+															<td>																
+																<input type="checkbox" name="delnote7" th:field="${customerGroup.registrationConfig.showInDeliveryNote7}" th:checked="${customerGroup.registrationConfig.showInDeliveryNote7}" />
+															</td>
 														</tr>
 														<tr>
 															<td>Fält 8</td>															
@@ -167,6 +190,9 @@
 															</td>
 															<td>																
 																<input type="checkbox" name="active8" th:field="${customerGroup.registrationConfig.useAttribute8}" th:checked="${customerGroup.registrationConfig.useAttribute8}" />
+															</td>
+															<td>																
+																<input type="checkbox" name="delnote8" th:field="${customerGroup.registrationConfig.showInDeliveryNote8}" th:checked="${customerGroup.registrationConfig.showInDeliveryNote8}" />
 															</td>
 														</tr>
 													</tbody>
