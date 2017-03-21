@@ -442,5 +442,9 @@ public class OrderHeader {
 	public void setJointInvoicing(int jointInvoicing) {
 		this.jointInvoicing = jointInvoicing;
 	}
+	@Transient
+	public String getCurrentDate() {
+		return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+	}
 	
 }

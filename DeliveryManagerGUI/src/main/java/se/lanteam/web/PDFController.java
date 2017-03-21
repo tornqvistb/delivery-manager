@@ -21,6 +21,7 @@ import se.lanteam.domain.CustomerCustomField;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.model.SessionBean;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PDFGenerator;
@@ -32,6 +33,7 @@ public class PDFController {
 	private OrderRepository orderRepo;
 	private PropertyService propService;
 	private CustomerGroupRepository customerRepo;
+	private SessionBean sessionBean;
 
 	@RequestMapping(value = "generate-work-order/{orderId}", method = RequestMethod.GET, produces = "application/pdf")
 	@ResponseBody
@@ -78,7 +80,18 @@ public class PDFController {
 		OrderHeader order = orderRepo.findOne(orderId);
 
 		model.put("order", order);
-
+		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
+		
+		CustomerGroup customerGroup = customerRepo.getOne(order.getCustomerGroup().getId()); 
+		List<OrderCustomField> orderCustomFields = new ArrayList<OrderCustomField>();
+		for (OrderCustomField orderCustomField : order.getOrderCustomFields()) {
+			if (showInDeliveryNote(customerGroup, orderCustomField)) {
+				orderCustomFields.add(orderCustomField);
+			}
+		}
+		
+		model.put("orderCustomFields", orderCustomFields);
+		
 		try {
 			String folder = propService.getString(PropertyConstants.DELIVERY_NOTES_FOLDER);
 			gen.generate(new File(folder + "delivery-note-" + order.getOrderNumber() + ".pdf"), "delivery-note", model);
@@ -89,6 +102,17 @@ public class PDFController {
 		return null;
 	}
 
+	private Boolean showInDeliveryNote(CustomerGroup customerGroup, OrderCustomField orderCustomField) {
+		for (CustomerCustomField customerCustomfield : customerGroup.getCustomerCustomFields()) {
+			if (customerCustomfield.getCustomField().getIdentification() 
+					== orderCustomField.getCustomField().getIdentification()
+					&& customerCustomfield.getShowInDeliveryNote() == true) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
@@ -101,5 +125,8 @@ public class PDFController {
 	public void setCustomerGroupRepo(CustomerGroupRepository customerGroupRepo) {
 		this.customerRepo = customerGroupRepo;
 	}
-
+	@Autowired
+	public void setSessionBean(SessionBean sessionBean) {
+		this.sessionBean = sessionBean;
+	}
 }

@@ -50,9 +50,22 @@
 		h4 {
 			font-size: 12.5px;
 		}
+		.page-divider {
+    		border-bottom: 2px solid #ccc;
+    		width: 100%;
+    		margin-bottom: 10px;
+		}
+		.signature-line {
+    		border-bottom: 1px solid #000;
+    		width: 100%;
+    		margin-bottom: 10px;
+    		margin-top: 40px;
+		}
 	</style>
 </head>
 <body>
+
+
 	<div id="header">
 		<span	th:text="${'Följesedel för order ' + order.orderNumber}"></span>
 	</div>
@@ -61,139 +74,182 @@
 		<br />
 		Sida <span class="pagenumber"></span> av <span class="pagecount"></span>
 	</div>
+	
+	
 	<div id="content">
-		<div id="logo" class="media" data-src="adam.PNG" />
-		<h1	th:text="${'Följesedel för order ' + order.orderNumber}"></h1>
-		<h2>Orderrader</h2>
+			
 		<table class="table">
-			<thead>
-				<tr>
-					<th style="width:15%;">Orderrad</th>
-					<th style="width:20%;">Artikelnummer</th>
-					<th style="width:30%;">Beskrivning</th>
-					<th style="width:25%;">Serienummerbärande</th>
-					<th style="width:10%;">Antal</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="orderLine : ${order.orderLines}"
-					th:remove="tag">
-					<tr th:class="${orderLine.rowClass}">
-						<td th:text="${orderLine.rowNumber}">1</td>
-						<td th:text="${orderLine.articleNumber}">31231312</td>
-						<td th:text="${orderLine.articleDescription}">HP elitebook</td>
-						<td th:text="${orderLine.hasSerialNoLabel}">Ja</td>
-						<td th:text="${orderLine.total}">5</td>
-					</tr>
-					<tr th:if="${orderLine.equipments}">
-						<td></td>
-						<td colspan="4">
-							<table class="table">
-								<thead>
-									<tr>
-										<th style="width:17%;">Serienummer</th>
-										<th style="width:13%;">Stöld-ID</th>
-										<th style="width:20%;">Registrerad av</th>
-										<th style="width:20%;">Tidpunkt</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="equipment : ${orderLine.equipments}">
-										<td th:text="${equipment.serialNo}">5</td>
-										<td th:text="${equipment.stealingTag}">5</td>
-										<td th:text="${equipment.registeredBy}">Kalle</td>
-										<td th:text="${equipment.creationDateDisplay}">2014-01-01</td>
-									</tr>
-								</tbody>
-							</table>
-						</td>
-					</tr>
-				</tr>
-			</tbody>
+			<tr>
+				<td style="width:50%;">
+					<div id="logo" class="media" data-src="lanteam.PNG" />
+				</td>
+				<td style="width:50%;">
+					<h1>Följesedel</h1>
+					<table class="table">
+						<tr>
+							<th style="width:33%;">Följesedelsnr</th>
+							<th style="width:33%;">Kundnr</th>
+							<th style="width:34%;">Följesedelsdatum</th>
+						</tr>
+						<tr>
+							<td th:text="${order.orderNumber}">79797789</td>
+							<td th:text="${order.customerNumber}">77897</td>
+							<td th:text="${order.currentDate}">2017-01-02</td>					
+						</tr>						
+					</table>
+				</td>
+			</tr>
 		</table>
-		<h2>Kontaktpersoner</h2>
+		
+		<div class="page-divider"></div>
+		
 		<table class="table">
-			<thead>
-				<tr>
-					<th>Namn</th>
-					<th>Epost-adress</th>
-					<th>Telefon</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td th:text="${order.contact1Name}">Kalle</td>
-					<td th:text="${order.contact1Email}">Kalle@gmail.com</td>
-					<td th:text="${order.contact1Phone}">070-101010</td>
-				</tr>
-				<tr>
-					<td th:text="${order.contact2Name}">Pelle</td>
-					<td th:text="${order.contact2Email}">Pelle@gmail.com</td>
-					<td th:text="${order.contact2Phone}">070-121212</td>
-				</tr>
-			</tbody>
+			<tr>
+				<th style="width:50%;">Leveransadress</th>
+				<th style="width:50%;">Fakturadress</th>
+			</tr>			
+			<tr>
+				<td th:text="${order.deliveryPostalAddress1}">Intraservice</td>
+				<td th:text="${order.postalAddress1}">N060 Intraservice</td>
+			</tr>		
+			<tr>
+				<td th:text="${order.deliveryPostalAddress2}">Intern kommunikation</td>
+				<td th:text="${order.postalAddress2}">Intraservice</td>
+			</tr>		
+			<tr>
+				<td th:text="${order.deliveryPostalCode}">Rosenlundsgatan 4</td>
+				<td th:text="${order.deliveryPostalCode}"></td>
+			</tr>		
+			<tr>
+				<td th:text="${order.deliveryCity}">403 31 Göteborg</td>
+				<td  th:text="${order.city}">405 38 Göteborg</td>
+			</tr>
+		</table>	
+		<div class="page-divider"></div>
+		<table class="table">
+			<tr>
+				<th style="width:25%;">Vår referens</th>
+				<td style="width:25%;">Namn från LanTeam?</td>
+				<th style="width:25%;">Er referens</th>
+				<td style="width:25%;" th:text="${order.contact1Name}">Björn Törnqvist</td>
+			</tr>					
+			<tr>
+				<th style="width:25%;">Leveransdatum</th>
+				<td style="width:25%;" th:text="${order.deliveryDateDisplay}">2017-01-07</td>
+				<th style="width:25%;">Ert ordernummer</th>
+				<td style="width:25%;" th:text="${order.customerSalesOrder}">LE010110/REQ9119191</td>
+			</tr>					
+			<tr>
+				<th style="width:25%;">Weborder</th>
+				<td style="width:25%;" th:text="${order.orderNumber}">82289</td>
+			</tr>	
 		</table>
-		<h2>Levaransadress</h2>
+
+		<div class="page-divider"></div>					
+
+		<table class="table">
+			<tr>
+				<th>Rad</th>
+				<th>Artikelnummer</th>
+				<th>Beskrivning</th>
+				<th>Best ant</th>
+				<th>Lev ant</th>
+				<th>Enhet</th>
+			</tr>
+			<tr th:each="orderLine : ${order.orderLines}">
+				<td th:text="${orderLine.rowNumber}">1</td>
+				<td th:text="${orderLine.articleNumber}">31231312</td>
+				<td th:text="${orderLine.articleDescription}">HP elitebook</td>
+				<td th:text="${orderLine.total}">5</td>
+				<td th:text="${orderLine.registered}">5</td>
+				<td>st</td>
+			</tr>
+		</table>					
+
+		<div class="page-divider"></div>
+
+		<h3>Kontaktpersoner hos kund</h3>
+		<table class="table">
+			<tr>
+				<th>Namn</th>
+				<th>Epost-adress</th>
+				<th>Telefon</th>
+			</tr>
+			<tr>
+				<td th:text="${order.contact1Name}">Kalle</td>
+				<td th:text="${order.contact1Email}">Kalle@gmail.com</td>
+				<td th:text="${order.contact1Phone}">070-101010</td>
+			</tr>
+			<tr>
+				<td th:text="${order.contact2Name}">Pelle</td>
+				<td th:text="${order.contact2Email}">Pelle@gmail.com</td>
+				<td th:text="${order.contact2Phone}">070-121212</td>
+			</tr>
+		</table>
+		
+		<div class="page-divider"></div>
+
+		<h3>Övrig orderinformation</h3>
 		<table  class="table">
-			<tbody>
-				<tr>
-					<th scope="row">Leveransadress 1</th>
-					<td th:text="${order.deliveryPostalAddress1}" id="order-del-adr-1">Storgatan 1</td>
-				</tr>
-				<tr>
-					<th scope="row">Leveransadress 2</th>
-					<td th:text="${order.deliveryPostalAddress2}" id="order-del-adr-2">3 trappor</td>
-				</tr>
-				<tr>
-					<th scope="row">Postnummer</th>
-					<td th:text="${order.deliveryPostalCode}" id="order-del-postal-code">42655</td>
-				</tr>
-				<tr>
-					<th scope="row">Ort</th>
-					<td th:text="${order.deliveryCity}" id="order-del-city">Göteborg</td>
-				</tr>
-			</tbody>
+			<tr>
+				<th scope="row">Kund</th>
+				<td th:text="${order.customerName}">Lundby</td>
+			</tr>
+			<tr>
+				<th scope="row">Orderdatum</th>
+				<td th:text="${order.orderDateAsString}">2016-02-02</td>
+			</tr>
+			<tr th:each="orderCustomField : ${orderCustomFields}">
+				<th th:text="${orderCustomField.customField.label}" scope="row">Customfält</th>
+				<td th:text="${orderCustomField.value}">1</td>
+			</tr>	
 		</table>
-		<h2>Övrig orderinformation</h2>
-		<table  class="table">
-			<tbody>
-				<tr>
-					<th scope="row">Ordernummer</th>
-					<td th:text="${order.orderNumber}" id="int-order-no">LT100199</td>
-				</tr>
-				<tr>
-					<th scope="row">Kundens ordernummer</th>
-					<td th:text="${order.customerOrderNumber}" id="ext-order-no">REQ100094</td>
-				</tr>
-				<tr>
-					<th scope="row">Kundens beställningsnummer</th>
-					<td th:text="${order.customerSalesOrder}" id="ext-sales-no">REQ100094</td>
-				</tr>
-				<tr>
-					<th scope="row">Kund</th>
-					<td th:text="${order.customerName}">Lundby</td>
-				</tr>
-				<tr>
-					<th scope="row">Orderdatum</th>
-					<td th:text="${order.orderDateAsString}">2016-02-02</td>
-				</tr>
-				<tr>
-					<th scope="row">Leveransdatum</th>
-					<td th:text="${order.deliveryTimeDisplay}">2016-02-02</td>
-				</tr>
-				<tr>
-					<th scope="row">Status</th>
-					<td th:text="${order.statusDisplay}">Ny</td>
-				</tr>
-				<tr th:if="${order.attachment != null}">
-					<th scope="row">Leveransdokument</th>
-					<td>
-						<a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a>
-					</td>															
-				</tr>
-				
-			</tbody>
+		<div class="page-divider"></div>
+
+		<h3>Signering</h3>			
+		
+		<table class="table">
+			<tr>
+				<th style="width:30%;">Datum</th>
+				<th style="width:35%;">Signatur</th>
+				<th style="width:35%;">Namnförtydligande</th>
+			</tr>
 		</table>
+		
+		<div class="signature-line"></div>
+
+		<h3>Utrustningslista</h3>			
+		<table class="table">
+			<tr>
+				<th>Rad</th>
+				<th>Serienr</th>
+				<th>Stöld-id</th>
+				<th th:if="${regConfig.useAttribute1}" th:text="${regConfig.labelAttribute1}">Attribut 1</th>
+				<th th:if="${regConfig.useAttribute2}" th:text="${regConfig.labelAttribute2}">Attribut 2</th>
+				<th th:if="${regConfig.useAttribute3}" th:text="${regConfig.labelAttribute3}">Attribut 3</th>
+				<th th:if="${regConfig.useAttribute4}" th:text="${regConfig.labelAttribute4}">Attribut 4</th>
+				<th th:if="${regConfig.useAttribute5}" th:text="${regConfig.labelAttribute5}">Attribut 5</th>
+				<th th:if="${regConfig.useAttribute6}" th:text="${regConfig.labelAttribute6}">Attribut 6</th>
+				<th th:if="${regConfig.useAttribute7}" th:text="${regConfig.labelAttribute7}">Attribut 7</th>
+				<th th:if="${regConfig.useAttribute8}" th:text="${regConfig.labelAttribute8}">Attribut 8</th>
+			</tr>
+			<tr th:each="orderLine : ${order.orderLines}" th:remove="tag">				
+				<tr th:if="${orderLine.equipments}" th:each="equipment : ${orderLine.equipments}">					
+					<td th:text="${orderLine.rowNumber}">5</td>
+					<td th:text="${equipment.serialNo}">5</td>
+					<td th:text="${equipment.stealingTag}">5</td>
+					<td th:if="${regConfig.useAttribute1}" th:text="${equipment.customAttribute1}">Attribut 1</td>
+					<td th:if="${regConfig.useAttribute2}" th:text="${equipment.customAttribute2}">Attribut 2</td>
+					<td th:if="${regConfig.useAttribute3}" th:text="${equipment.customAttribute3}">Attribut 3</td>
+					<td th:if="${regConfig.useAttribute4}" th:text="${equipment.customAttribute4}">Attribut 4</td>
+					<td th:if="${regConfig.useAttribute5}" th:text="${equipment.customAttribute5}">Attribut 5</td>
+					<td th:if="${regConfig.useAttribute6}" th:text="${equipment.customAttribute6}">Attribut 6</td>
+					<td th:if="${regConfig.useAttribute7}" th:text="${equipment.customAttribute7}">Attribut 7</td>
+					<td th:if="${regConfig.useAttribute8}" th:text="${equipment.customAttribute8}">Attribut 8</td>
+				</tr>
+			</tr>
+		</table>
+		
 	</div>
 </body>
 </html>
