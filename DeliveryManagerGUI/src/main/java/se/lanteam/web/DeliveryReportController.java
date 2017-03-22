@@ -19,6 +19,7 @@ import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.LimStringUtil;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.model.SearchBean;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.ExcelViewBuilder;
@@ -28,6 +29,7 @@ public class DeliveryReportController {
 	
 	private OrderRepository orderRepo;
 	private CustomerGroupRepository customerRepo;
+	private SearchBean searchBean;
 	
 	@RequestMapping("reports/delivery")
 	public String showDeliveryReport(ModelMap model) {
@@ -37,19 +39,40 @@ public class DeliveryReportController {
 	}
 
 	@RequestMapping(value="reports/delivery/search", method=RequestMethod.GET)
-	public ModelAndView searchOrdersDelivery(ModelMap model, HttpServletResponse response, @ModelAttribute RequestAttributes reqAttr) throws ParseException {
+	public String searchOrdersDelivery(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
 		
-		Date fromDate = DateUtil.stringToDate(LimStringUtil.NVL(reqAttr.getFromDate(), DateUtil.getDefaultStartDateAsString()));
-		Date toDate = DateUtil.stringToDateMidnight(LimStringUtil.NVL(reqAttr.getToDate(), DateUtil.getOneYearAheadAsString()));
-		String fromOrderNo = LimStringUtil.NVL(reqAttr.getFromOrderNo(), LimStringUtil.firstOrderNo);
-		String toOrderNo = LimStringUtil.NVL(reqAttr.getToOrderNo(), LimStringUtil.lastOrderNo);
-		
-		List<OrderHeader> orders;
-		if (reqAttr.getCustomerId() != reqAttr.getZeroValue()) {
-			orders = orderRepo.findDeliveredOrdersByCustGroup(fromDate, toDate, fromOrderNo, toOrderNo, reqAttr.getCustomerId());
-		} else {
-			orders = orderRepo.findDeliveredOrders(fromDate, toDate, fromOrderNo, toOrderNo);
+		try {
+			Date fromDate = DateUtil.stringToDate(LimStringUtil.NVL(reqAttr.getFromDate(), DateUtil.getDefaultStartDateAsString()));
+			Date toDate = DateUtil.stringToDateMidnight(LimStringUtil.NVL(reqAttr.getToDate(), DateUtil.getOneYearAheadAsString()));
+			String fromOrderNo = LimStringUtil.NVL(reqAttr.getFromOrderNo(), LimStringUtil.firstOrderNo);
+			String toOrderNo = LimStringUtil.NVL(reqAttr.getToOrderNo(), LimStringUtil.lastOrderNo);
+			
+			List<OrderHeader> orders;
+			if (reqAttr.getCustomerId() != reqAttr.getZeroValue()) {
+				orders = orderRepo.findDeliveredOrdersByCustGroup(fromDate, toDate, fromOrderNo, toOrderNo, reqAttr.getCustomerId());
+			} else {
+				orders = orderRepo.findDeliveredOrders(fromDate, toDate, fromOrderNo, toOrderNo);
+			}
+					
+			if (!orders.isEmpty()) {
+				reqAttr.setResultNotEmptyMsg("Sökningen gav " + orders.size() + " träff(ar)");
+			} else {
+				reqAttr.setResultEmptyMsg("Sökningen gav inga träffar");
+			}
+			model.put("reqAttr", reqAttr);
+			model.put("orders", orders);
+			model.put("customerGroups", customerRepo.findAll());
+			searchBean.setOrderList(orders);
+		} catch (ParseException e) {
+			reqAttr.setErrorMessage("Felaktigt inmatade datum");
 		}
+		return "delivery-report";
+	}
+
+	@RequestMapping(value="reports/delivery/export", method=RequestMethod.GET)
+	public ModelAndView exportDeliveryToExcel(ModelMap model, HttpServletResponse response) throws ParseException {
+		
+		List<OrderHeader> orders = searchBean.getOrderList();
 		
         //Sheet Name
         model.put("sheetname", "delivery-report");
@@ -87,6 +110,7 @@ public class DeliveryReportController {
 		return new ModelAndView(new ExcelViewBuilder(), model);
 	}
 
+	
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
@@ -95,5 +119,8 @@ public class DeliveryReportController {
 	public void setCustomerGroupRepo(CustomerGroupRepository customerRepo) {
 		this.customerRepo = customerRepo;
 	}
-
+	@Autowired
+	public void setSearchBean(SearchBean searchBean) {
+		this.searchBean = searchBean;
+	}
 }

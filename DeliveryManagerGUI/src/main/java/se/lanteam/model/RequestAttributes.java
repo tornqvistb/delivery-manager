@@ -53,6 +53,8 @@ public class RequestAttributes {
 	private String statusRouteplanSuccess;
 	private String statusRouteplanFailed;
 	private String planDate;
+	private String resultNotEmptyMsg;
+	private String resultEmptyMsg;
 	
 	public RequestAttributes() {
 		super();
@@ -398,6 +400,22 @@ public class RequestAttributes {
 
 	public void setPlanDate(String planDate) {
 		this.planDate = planDate;
+	}
+
+	public String getResultNotEmptyMsg() {
+		return resultNotEmptyMsg;
+	}
+
+	public void setResultNotEmptyMsg(String resultNotEmptyMsg) {
+		this.resultNotEmptyMsg = resultNotEmptyMsg;
+	}
+
+	public String getResultEmptyMsg() {
+		return resultEmptyMsg;
+	}
+
+	public void setResultEmptyMsg(String resultEmptyMsg) {
+		this.resultEmptyMsg = resultEmptyMsg;
 	}
 	
 }

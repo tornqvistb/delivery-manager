@@ -71,6 +71,9 @@
 														</div>
 													</div>
 												</div>
+												<div class="information-text system-info help-message">
+													<p>Enförklarande text på hur order-nummer filtreringen funkar....</p>
+												</div>
 												<div class="row cols-3 cf">
 													<div class="col col-1">
 														<div class="text">
@@ -104,45 +107,28 @@
 												</div>													
 											</div>
 										</form>
-										<form class="form-general" th:action= "@{/reports/sla/export}" th:object="${orders}" method="get" th:if="${not #lists.isEmpty(orders)}">											
-											<div class="form-section" id="search-results" >
-												<h3>Sökresultat</h3>
-												<input class="btn" type="submit" value="Exportera till excel" id="ActionExportToExcel" name="ActionExportToExcel"/>
-												<table>
-													<colgroup>
-														<col style="width: 10%" />
-														<col style="width: 25%" />														
-														<col style="width: 25%" />														
-														<col style="width: 10%" />
-														<col style="width: 10%" />
-														<col style="width: 10%" />
-														<col style="width: 10%" />
-													</colgroup>
-													<thead>
-														<tr>
-															<th scope="col">Ordernummer</th>
-															<th scope="col">Leveransnummer kund</th>
-															<th scope="col">Kund</th>
-															<th scope="col">Orderdatum</th>
-															<th scope="col">Leveransdatum</th>
-															<th scope="col">Status</th>
-															<th scope="col">Dagar kvar</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr th:each="order : ${orders}">
-															<td><a th:text="${order.orderNumber}" th:href="@{/order-list/view/} + ${order.id}">LT100199</a></td>															
-															<td th:text="${order.customerSalesOrder}">REQ100094</td>
-															<td th:text="${order.customerName}">Lundby</td>
-															<td th:text="${order.orderDateAsString}">2016-02-02</td>
-															<td th:text="${order.deliveryDateDisplay}">2016-02-02</td>
-															<td th:text="${order.statusDisplay}">Ny</td>
-															<td th:text="${order.slaDaysLeft}">Ny</td>
-														</tr>
-													</tbody>
-												</table>
+										<div th:if="${not #lists.isEmpty(orders)}" class="form-section">
+											<h3>Sökresultat</h3>
+											<div class="information-text system-info thanks-message">
+												<p th:text="${reqAttr.resultNotEmptyMsg}">Succetext</p>
 											</div>
-										</form>
+											<form class="form-general" th:action= "@{/reports/delivery/export}" th:object="${orders}" method="get" >											
+												<div class="form-section" id="search-results" >
+													<input class="btn" type="submit" value="Exportera till excel" id="ActionExportToExcel" name="ActionExportToExcel"/>
+												</div>
+											</form>
+											<form class="form-general" th:action= "@{/reports/delivery/export}" th:object="${orders}" method="get" >											
+												<div class="form-section" id="search-results" >
+													<input class="btn" type="submit" value="Maila rapport till kund" id="ActionExportToExcel" name="ActionExportToExcel"/>
+												</div>
+											</form>
+										</div>
+										<div th:if="${reqAttr.resultEmptyMsg != null}" class="form-section">
+											<h3>Sökresultat</h3>
+											<div class="information-text system-info error-message">
+												<p th:text="${reqAttr.resultEmptyMsg}">Succetext</p>
+											</div>										
+										</div>
 									</div>
 								</div>
 							</div>
