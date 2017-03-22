@@ -405,22 +405,26 @@ public class OrderHeader {
 	}
 	@Transient
 	public Integer getSlaDaysLeft() {
-		Integer result = 0;
 		Integer SLA_DAYS = 25;
 		LocalDate endDate;
+		
 		if (this.deliveryDate == null) {
 			endDate = LocalDate.now();
 		} else {
 			endDate = deliveryDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		}
+		
 		LocalDate startDate = orderDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		LocalDate slaDate = startDate.plusDays(SLA_DAYS);
-		if (endDate.isAfter(slaDate)) {
-			result = Period.between(endDate, slaDate).getDays();
-		} else {
-			result = Period.between(slaDate, endDate).getDays();
+		LocalDate slaDate = DateUtil.addWorkingDays(startDate, SLA_DAYS);
+		return DateUtil.getWorkingDaysBetweenDates(endDate, slaDate);
+	}
+	@Transient
+	public String getSlaDisplayClass() {
+		String theClass = "";
+		if (this.getSlaDaysLeft() < 0) {
+			theClass = "late-order";
 		}
-		return result;
+		return theClass;
 	}
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="orderHeader")
 	@OrderBy("creationDate")

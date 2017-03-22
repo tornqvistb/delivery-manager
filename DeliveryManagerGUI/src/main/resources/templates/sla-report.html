@@ -123,7 +123,7 @@
 														</tr>
 													</thead>
 													<tbody>
-														<tr th:each="order : ${orders}">
+														<tr th:each="order : ${orders}" th:class="${order.slaDisplayClass}">
 															<td><a th:text="${order.orderNumber}" th:href="@{/order-list/view/} + ${order.id}">LT100199</a></td>															
 															<td th:text="${order.customerSalesOrder}">REQ100094</td>
 															<td th:text="${order.customerName}">Lundby</td>

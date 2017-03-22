@@ -82,3 +82,6 @@
 #service-portal table.flyffy td, th {
     padding-bottom: 8px;
 }
+#service-portal tr.late-order {
+    color: red;
+}
