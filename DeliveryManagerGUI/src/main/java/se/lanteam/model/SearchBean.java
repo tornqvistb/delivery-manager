@@ -1,5 +1,6 @@
 package se.lanteam.model;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -13,13 +14,68 @@ import se.lanteam.domain.OrderHeader;
 public class SearchBean {
 
 	private List<OrderHeader> orderList;
+	private Long customerGroupId;
+	private Date fromDate;
+	private Date toDate;
+	private String fromOrderNo;
+	private String toOrderNo;
 
 	public List<OrderHeader> getOrderList() {
 		return orderList;
 	}
 
+	public void populate(List<OrderHeader> orderList, Long customerGroupId, Date fromDate, Date toDate, String fromOrderNo,
+			String toOrderNo) {
+		this.orderList = orderList;
+		this.customerGroupId = customerGroupId;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+		this.fromOrderNo = fromOrderNo;
+		this.toOrderNo = toOrderNo;
+	}
+
 	public void setOrderList(List<OrderHeader> orderList) {
 		this.orderList = orderList;
+	}
+
+	public Long getCustomerGroupId() {
+		return customerGroupId;
+	}
+
+	public void setCustomerGroupId(Long customerGroupId) {
+		this.customerGroupId = customerGroupId;
+	}
+
+	public Date getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public Date getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
+	}
+
+	public String getFromOrderNo() {
+		return fromOrderNo;
+	}
+
+	public void setFromOrderNo(String fromOrderNo) {
+		this.fromOrderNo = fromOrderNo;
+	}
+
+	public String getToOrderNo() {
+		return toOrderNo;
+	}
+
+	public void setToOrderNo(String toOrderNo) {
+		this.toOrderNo = toOrderNo;
 	}
 	
 	

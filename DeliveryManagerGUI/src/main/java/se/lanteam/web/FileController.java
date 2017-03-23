@@ -40,6 +40,7 @@ public class FileController {
 				attEntity.setFileContent(attachment.getBytes());
 				attEntity.setFileName(attachment.getOriginalFilename());
 				attEntity.setFileSize(attachment.getSize());
+				attEntity.setContentType("image/jpeg");
 				order.setAttachment(attEntity);
 				order.setOrderStatusByProgress();
 				orderRepo.save(order);

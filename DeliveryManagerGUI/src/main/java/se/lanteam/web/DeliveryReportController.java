@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,12 +17,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import se.lanteam.constants.DateUtil;
+import se.lanteam.constants.FileConstants;
 import se.lanteam.constants.LimStringUtil;
+import se.lanteam.constants.PropertyConstants;
+import se.lanteam.constants.StatusConstants;
+import se.lanteam.domain.Attachment;
+import se.lanteam.domain.CustomerGroup;
+import se.lanteam.domain.Email;
+import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.domain.OrderLine;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SearchBean;
+import se.lanteam.repository.AttachmentRepository;
 import se.lanteam.repository.CustomerGroupRepository;
+import se.lanteam.repository.EmailRepository;
 import se.lanteam.repository.OrderRepository;
+import se.lanteam.repository.PropertyRepository;
+import se.lanteam.services.ExcelGenerator;
 import se.lanteam.services.ExcelViewBuilder;
 
 @Controller
@@ -30,6 +43,13 @@ public class DeliveryReportController {
 	private OrderRepository orderRepo;
 	private CustomerGroupRepository customerRepo;
 	private SearchBean searchBean;
+	private ExcelGenerator excelGenerator;
+	private AttachmentRepository attachmentRepo;
+	private EmailRepository emailRepo;
+	private PropertyRepository propertyRepo;
+	
+	private static final String EXCEL_EXPORT_FILE_NAME = "Leveransrapport-#customer-" + DateUtil.dateToString(new Date()) + FileConstants.FILE_ENDING_EXCEL;
+	private static final String MAIL_SUBJECT = "Leveransrapport från LanTeam";
 	
 	@RequestMapping("reports/delivery")
 	public String showDeliveryReport(ModelMap model) {
@@ -43,7 +63,7 @@ public class DeliveryReportController {
 		
 		try {
 			Date fromDate = DateUtil.stringToDate(LimStringUtil.NVL(reqAttr.getFromDate(), DateUtil.getDefaultStartDateAsString()));
-			Date toDate = DateUtil.stringToDateMidnight(LimStringUtil.NVL(reqAttr.getToDate(), DateUtil.getOneYearAheadAsString()));
+			Date toDate = DateUtil.stringToDateMidnight(LimStringUtil.NVL(reqAttr.getToDate(), DateUtil.getTodayAsString()));
 			String fromOrderNo = LimStringUtil.NVL(reqAttr.getFromOrderNo(), LimStringUtil.firstOrderNo);
 			String toOrderNo = LimStringUtil.NVL(reqAttr.getToOrderNo(), LimStringUtil.lastOrderNo);
 			
@@ -62,7 +82,7 @@ public class DeliveryReportController {
 			model.put("reqAttr", reqAttr);
 			model.put("orders", orders);
 			model.put("customerGroups", customerRepo.findAll());
-			searchBean.setOrderList(orders);
+			searchBean.populate(orders, reqAttr.getCustomerId(), fromDate, toDate, fromOrderNo, toOrderNo);
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
 		}
@@ -72,10 +92,63 @@ public class DeliveryReportController {
 	@RequestMapping(value="reports/delivery/export", method=RequestMethod.GET)
 	public ModelAndView exportDeliveryToExcel(ModelMap model, HttpServletResponse response) throws ParseException {
 		
+		model = getExcelDataIntoModel(model);
+        response.setContentType( "application/ms-excel" );
+        String fileName = EXCEL_EXPORT_FILE_NAME.replace("#customer", getCustomerNameFromsession());
+        response.setHeader( "Content-disposition", "attachment; filename=" + fileName);         
+		
+		return new ModelAndView(new ExcelViewBuilder(), model);
+	}
+
+	@RequestMapping(value="reports/delivery/informCustomer", method=RequestMethod.GET)
+	public String informCustomer(ModelMap model) {			
+		model = getExcelDataIntoModel(model);
+		// Create excel
+		RequestAttributes reqAttr = new RequestAttributes(); 
+		Workbook wb = excelGenerator.generate(model);
+		if (wb != null) {
+			byte[] content = excelGenerator.wbToByteArray(wb);
+			if (content != null) {
+				Attachment attachment = new Attachment();
+				attachment.setFileContent(content);
+				attachment.setFileName(EXCEL_EXPORT_FILE_NAME.replace("#customer", getCustomerNameFromsession()));
+				attachment.setFileSize(Long.valueOf(content.length));
+				attachment.setContentType("application/ms-excel");
+				attachment = attachmentRepo.save(attachment);
+				Email email = new Email();
+				email.setAttachmentRef(attachment.getId());
+				
+				email.setSubject(MAIL_SUBJECT);
+				StringBuffer sb = new StringBuffer();
+				sb.append("Hej!\n\n");
+				sb.append("Bifogat finner ni en rapport med utförda leveranser från LanTeam till " + getCustomerNameFromsession() + ".\n\n");
+				sb.append("Datumintervall för leveranser i denna rapport: " + DateUtil.dateToString(searchBean.getFromDate()) + " - " + DateUtil.dateToString(searchBean.getToDate()) + "\n");
+				sb.append("Ordernummerintervall för leveranser i denna rapport: " + searchBean.getFromOrderNo() + " - " + searchBean.getToOrderNo() + "\n\n");
+				sb.append("Med vänlig hälsning\n");
+				sb.append("LanTeam");								
+				email.setContent(sb.toString());
+				email.setSender(propertyRepo.findById(PropertyConstants.MAIL_USERNAME).getStringValue());
+				email.setReceiver(getCustomerEmailFromsession());
+				email.setStatus(StatusConstants.EMAIL_STATUS_NEW);
+				emailRepo.save(email);
+				reqAttr.setThanksMessage("Epost-meddelande skickat till kund");
+			} else {
+				reqAttr.setErrorMessage("Epost-meddelande kunde ej skapas");
+			}
+		} else {
+			reqAttr.setErrorMessage("Epost-meddelande kunde ej skapas");
+		}
+		model.put("customerGroups", customerRepo.findAll());
+		model.put("reqAttr", reqAttr);
+		
+		return "delivery-report";
+	}
+
+	private ModelMap getExcelDataIntoModel(ModelMap model) {
 		List<OrderHeader> orders = searchBean.getOrderList();
 		
         //Sheet Name
-        model.put("sheetname", "delivery-report");
+        model.put("sheetname", "Leveransrapport");
         //Headers List
         List<String> headers = new ArrayList<String>();
 		
@@ -84,6 +157,15 @@ public class DeliveryReportController {
         headers.add("Kund");
         headers.add("Orderdatum");
         headers.add("Leveransdatum");
+        // Lägg till Order customattribut
+        headers.add("Orderrad");
+        headers.add("Artikelnr");
+        headers.add("Artikelbeskrivning");
+        headers.add("Antal");
+        headers.add("Registrerat");
+        headers.add("Serienummer");
+        headers.add("Stöld-ID");
+        // Lägg till Equipment customattribut
         model.put("headers", headers);
         
         List<String> numericColumns = new ArrayList<String>();
@@ -94,22 +176,60 @@ public class DeliveryReportController {
         List<List<String>> results = new ArrayList<List<String>>();
         
         for (OrderHeader order: orders) {
-        	List<String> orderCols = new ArrayList<String>();
-        	orderCols.add(order.getOrderNumber());
-        	orderCols.add(order.getCustomerSalesOrder());
-        	orderCols.add(order.getCustomerName());
-        	orderCols.add(order.getOrderDateAsString());
-        	orderCols.add(order.getDeliveryDateDisplay());
-        	results.add(orderCols);
-        }
-        
+        	order = orderRepo.getOne(order.getId());
+        	for (OrderLine line : order.getOrderLines()) {
+        		if (line.getHasSerialNo()) {
+            		for (Equipment equipment : line.getEquipments()) {
+            			List<String> orderCols = new ArrayList<String>();
+                    	orderCols.add(order.getOrderNumber());
+                    	orderCols.add(order.getCustomerSalesOrder());
+                    	orderCols.add(order.getCustomerName());
+                    	orderCols.add(order.getOrderDateAsString());
+                    	orderCols.add(order.getDeliveryDateDisplay());
+                    	orderCols.add(String.valueOf(line.getRowNumber()));
+                    	orderCols.add(line.getArticleNumber());
+                    	orderCols.add(line.getArticleDescription());
+                    	orderCols.add(String.valueOf(line.getTotal()));
+                    	orderCols.add(String.valueOf(line.getRegistered()));
+                    	orderCols.add(equipment.getSerialNo());
+                    	orderCols.add(equipment.getStealingTag());
+                    	results.add(orderCols);            			
+            		}        			
+        		}
+        	}        	
+        }        
         model.put("results",results);
-        response.setContentType( "application/ms-excel" );
-        response.setHeader( "Content-disposition", "attachment; filename=" + "delivery-report-" + DateUtil.dateToString(new Date())+ ".xls" );         
+        
+        return model;
 		
-		return new ModelAndView(new ExcelViewBuilder(), model);
+	}
+	
+	private String getCustomerNameFromsession() {
+		String result = "Alla kunder";		
+		CustomerGroup group = getCustomerGroupFromSession();
+		if (group != null) {
+			result = group.getName();
+		}
+		return result;
 	}
 
+	private String getCustomerEmailFromsession() {
+		String result = "";		
+		CustomerGroup group = getCustomerGroupFromSession();
+		if (group != null) {
+			result = group.getEmailAddress();
+		}
+		return result;
+	}
+
+	private CustomerGroup getCustomerGroupFromSession() {		
+		CustomerGroup result = null;
+		Long custGroupId = searchBean.getCustomerGroupId();		
+		if (custGroupId > 0) {
+			result = customerRepo.getOne(custGroupId);
+		}
+		return result;
+	}
 	
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
@@ -123,4 +243,20 @@ public class DeliveryReportController {
 	public void setSearchBean(SearchBean searchBean) {
 		this.searchBean = searchBean;
 	}
+	@Autowired
+	public void setExcelGenerator(ExcelGenerator excelGenerator) {
+		this.excelGenerator = excelGenerator;
+	}
+	@Autowired
+	public void setAttachmentRepo(AttachmentRepository attachmentRepo) {
+		this.attachmentRepo = attachmentRepo;
+	}
+	@Autowired
+	public void setEmailRepo(EmailRepository emailRepo) {
+		this.emailRepo = emailRepo;
+	}	
+	@Autowired
+	public void setPropertyRepo(PropertyRepository propertyRepo) {
+		this.propertyRepo = propertyRepo;
+	}	
 }

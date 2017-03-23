@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPTransport;
 
+import se.lanteam.constants.LimStringUtil;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Attachment;
@@ -85,7 +86,8 @@ public class MailSenderService {
 						Multipart multipart = new MimeMultipart();
 						multipart.addBodyPart(messageBodyPart);
 						messageBodyPart = new MimeBodyPart();
-				        DataSource source = new ByteArrayDataSource(attachment.getFileContent(), "image/jpeg");
+						String contentType = LimStringUtil.NVL(attachment.getContentType(),"image/jpeg");
+				        DataSource source = new ByteArrayDataSource(attachment.getFileContent(), contentType);
 				        messageBodyPart.setDataHandler(new DataHandler(source));
 				        messageBodyPart.setFileName(attachment.getFileName());
 				        multipart.addBodyPart(messageBodyPart);

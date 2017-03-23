@@ -72,7 +72,7 @@
 													</div>
 												</div>
 												<div class="information-text system-info help-message">
-													<p>Enförklarande text på hur order-nummer filtreringen funkar....</p>
+													<p>Om ni vill kan ni ange en lägre resp. högre gräns för ordernummer.<br />Detsamma gäller för leveransdatum.</p>
 												</div>
 												<div class="row cols-3 cf">
 													<div class="col col-1">
@@ -107,19 +107,21 @@
 												</div>													
 											</div>
 										</form>
-										<div th:if="${not #lists.isEmpty(orders)}" class="form-section">
-											<h3>Sökresultat</h3>
-											<div class="information-text system-info thanks-message">
-												<p th:text="${reqAttr.resultNotEmptyMsg}">Succetext</p>
+										<div th:if="${not #lists.isEmpty(orders)}" th:remove="tag">
+											<div class="form-section">
+												<h3>Sökresultat</h3>
+												<div class="information-text system-info thanks-message">
+													<p th:text="${reqAttr.resultNotEmptyMsg}">Succetext</p>
+												</div>
 											</div>
 											<form class="form-general" th:action= "@{/reports/delivery/export}" th:object="${orders}" method="get" >											
 												<div class="form-section" id="search-results" >
 													<input class="btn" type="submit" value="Exportera till excel" id="ActionExportToExcel" name="ActionExportToExcel"/>
 												</div>
 											</form>
-											<form class="form-general" th:action= "@{/reports/delivery/export}" th:object="${orders}" method="get" >											
+											<form th:if="${reqAttr.customerId > 0}" class="form-general" th:action= "@{/reports/delivery/informCustomer}" th:object="${orders}" method="get" >											
 												<div class="form-section" id="search-results" >
-													<input class="btn" type="submit" value="Maila rapport till kund" id="ActionExportToExcel" name="ActionExportToExcel"/>
+													<input class="btn" type="submit" value="Maila rapport till kund" id="ActionInformCustomer" name="ActionInformCustomer"/>
 												</div>
 											</form>
 										</div>
@@ -128,7 +130,7 @@
 											<div class="information-text system-info error-message">
 												<p th:text="${reqAttr.resultEmptyMsg}">Succetext</p>
 											</div>										
-										</div>
+										</div>										
 									</div>
 								</div>
 							</div>

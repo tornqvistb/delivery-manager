@@ -46,6 +46,11 @@ public class DateUtil {
 	public static Date getTomorrow() { 
 		return new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
 	}
+
+	public static String getTodayAsString() { 
+		return dateToString(new Date());
+	}
+
 	
 	public static Date stringToDate(String dateString) throws ParseException  {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

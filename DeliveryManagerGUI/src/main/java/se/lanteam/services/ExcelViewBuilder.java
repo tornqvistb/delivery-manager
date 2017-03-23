@@ -19,8 +19,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.view.document.AbstractXlsView;
 
 
-public class ExcelViewBuilder extends AbstractXlsView
-	{
+public class ExcelViewBuilder extends AbstractXlsView {
+
+
 	    @SuppressWarnings("unchecked")
 	    protected void buildExcelDocument(Map<String, Object> model,
 	            Workbook workbook,

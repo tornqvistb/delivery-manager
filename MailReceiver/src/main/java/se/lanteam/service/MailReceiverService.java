@@ -190,6 +190,7 @@ public class MailReceiverService {
 				attachment.setFileName(fileName);
 				attachment.setFileContent(fileContent);
 				attachment.setFileSize(Long.valueOf(fileContent.length));
+				attachment.setContentType("image/jpeg");
 				order.setAttachment(attachment);
 				order.setOrderStatusByProgress();
 				orderRepo.save(order);

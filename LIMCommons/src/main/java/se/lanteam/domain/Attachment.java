@@ -13,6 +13,7 @@ public class Attachment {
 	private String fileName;
 	private Long fileSize;
 	private byte[] fileContent;
+	private String contentType;
 	private OrderHeader orderHeader;
 	
 	@Id
@@ -48,6 +49,12 @@ public class Attachment {
 	}
 	public void setOrderHeader(OrderHeader orderHeader) {
 		this.orderHeader = orderHeader;
+	}
+	public String getContentType() {
+		return contentType;
+	}
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}		
 	
 }
