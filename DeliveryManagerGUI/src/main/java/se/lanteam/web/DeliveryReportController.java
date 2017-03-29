@@ -22,11 +22,15 @@ import se.lanteam.constants.LimStringUtil;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Attachment;
+import se.lanteam.domain.CustomField;
+import se.lanteam.domain.CustomerCustomField;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.Email;
 import se.lanteam.domain.Equipment;
+import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
+import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SearchBean;
 import se.lanteam.repository.AttachmentRepository;
@@ -158,6 +162,11 @@ public class DeliveryReportController {
         headers.add("Orderdatum");
         headers.add("Leveransdatum");
         // Lägg till Order customattribut
+        List<CustomField> customFields = getCustomFieldsForCustomer();
+        for (CustomField customField : customFields) {
+        	headers.add(customField.getLabel());
+        }
+        
         headers.add("Orderrad");
         headers.add("Artikelnr");
         headers.add("Artikelbeskrivning");
@@ -166,13 +175,16 @@ public class DeliveryReportController {
         headers.add("Serienummer");
         headers.add("Stöld-ID");
         // Lägg till Equipment customattribut
+        for (String eqHeader : getCustomerEquipmentFields()) {
+        	headers.add(eqHeader);
+        }
+        
         model.put("headers", headers);
         
         List<String> numericColumns = new ArrayList<String>();
         numericColumns.add("Ordernummer");
         model.put("numericcolumns", numericColumns);
 
-        //Results Table (List<Object[]>)
         List<List<String>> results = new ArrayList<List<String>>();
         
         for (OrderHeader order: orders) {
@@ -186,13 +198,19 @@ public class DeliveryReportController {
                     	orderCols.add(order.getCustomerName());
                     	orderCols.add(order.getOrderDateAsString());
                     	orderCols.add(order.getDeliveryDateDisplay());
+                    	for (CustomField customField : customFields) {
+                    		orderCols.add(getOrderCustomFieldValue(customField, order));
+                    	}
                     	orderCols.add(String.valueOf(line.getRowNumber()));
                     	orderCols.add(line.getArticleNumber());
                     	orderCols.add(line.getArticleDescription());
                     	orderCols.add(String.valueOf(line.getTotal()));
                     	orderCols.add(String.valueOf(line.getRegistered()));
                     	orderCols.add(equipment.getSerialNo());
-                    	orderCols.add(equipment.getStealingTag());
+                    	orderCols.add(equipment.getStealingTag());                    	
+                    	for (String customValue : getEquipmentFieldValues(equipment)) {
+                    		orderCols.add(customValue);
+                    	}                    	
                     	results.add(orderCols);            			
             		}        			
         		}
@@ -202,6 +220,97 @@ public class DeliveryReportController {
         
         return model;
 		
+	}
+
+	private List<String> getCustomerEquipmentFields() {
+		List<String> list = new ArrayList<String>();
+		CustomerGroup customerGroup = customerRepo.getOne(searchBean.getCustomerGroupId());
+		if (customerGroup != null && customerGroup.getRegistrationConfig() != null) {
+			RegistrationConfig config = customerGroup.getRegistrationConfig();
+			if (config.getUseAttribute1()) {
+				list.add(config.getLabelAttribute1());
+			}
+			if (config.getUseAttribute2()) {
+				list.add(config.getLabelAttribute2());
+			}
+			if (config.getUseAttribute3()) {
+				list.add(config.getLabelAttribute3());
+			}
+			if (config.getUseAttribute4()) {
+				list.add(config.getLabelAttribute4());
+			}
+			if (config.getUseAttribute5()) {
+				list.add(config.getLabelAttribute5());
+			}
+			if (config.getUseAttribute6()) {
+				list.add(config.getLabelAttribute6());
+			}
+			if (config.getUseAttribute7()) {
+				list.add(config.getLabelAttribute7());
+			}
+			if (config.getUseAttribute8()) {
+				list.add(config.getLabelAttribute8());
+			}
+		}
+		return list;
+	}
+
+	private List<String> getEquipmentFieldValues(Equipment equipment) {
+		List<String> list = new ArrayList<String>();
+		CustomerGroup customerGroup = customerRepo.getOne(searchBean.getCustomerGroupId());
+		if (customerGroup != null && customerGroup.getRegistrationConfig() != null) {
+			RegistrationConfig config = customerGroup.getRegistrationConfig();
+			if (config.getUseAttribute1()) {
+				list.add(equipment.getCustomAttribute1());
+			}
+			if (config.getUseAttribute2()) {
+				list.add(equipment.getCustomAttribute2());
+			}
+			if (config.getUseAttribute3()) {
+				list.add(equipment.getCustomAttribute3());
+			}
+			if (config.getUseAttribute4()) {
+				list.add(equipment.getCustomAttribute4());
+			}
+			if (config.getUseAttribute5()) {
+				list.add(equipment.getCustomAttribute5());
+			}
+			if (config.getUseAttribute6()) {
+				list.add(equipment.getCustomAttribute6());
+			}
+			if (config.getUseAttribute7()) {
+				list.add(equipment.getCustomAttribute7());
+			}
+			if (config.getUseAttribute8()) {
+				list.add(equipment.getCustomAttribute8());
+			}
+		}
+		return list;
+	}
+
+	
+	private List<CustomField> getCustomFieldsForCustomer() {
+		List<CustomField> customFields = new ArrayList<CustomField>();
+	    if (searchBean.getCustomerGroupId() != 0) {
+	    	CustomerGroup customerGroup = customerRepo.getOne(searchBean.getCustomerGroupId());
+	    	for (CustomerCustomField customerCustomField : customerGroup.getCustomerCustomFields()) {
+	    		if (customerCustomField.getShowInDeliveryReport()) {
+	    			customFields.add(customerCustomField.getCustomField());	    	        
+	    		}        		
+	    	}
+	    }
+	    return customFields;
+	}
+	
+	private String getOrderCustomFieldValue(CustomField customField, OrderHeader order) {
+		String value = "";
+		for (OrderCustomField orderCustomField : order.getOrderCustomFields()) {
+			if (orderCustomField.getCustomField().getIdentification() == customField.getIdentification()) {
+				value = orderCustomField.getValue();
+				break;
+			}
+		}
+		return value;
 	}
 	
 	private String getCustomerNameFromsession() {
@@ -230,6 +339,7 @@ public class DeliveryReportController {
 		}
 		return result;
 	}
+
 	
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
