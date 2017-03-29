@@ -198,7 +198,7 @@
 													</tbody>
 												</table>
 											</div>
-											
+
 											<div class="form-section" id="search-results">
 												<h3>Fält att visa i rapporter</h3>
 
@@ -219,20 +219,21 @@
 															<th scope="col">Arbetsorder</th>															
 														</tr>
 													</thead>
-													<tbody>														
-														<tr th:each="customerCustomField, loop : ${customerGroup.customerCustomFields}">
+													<tbody>													
+														<tr th:each="customerCustomField, loop : *{customerCustomFields}">
 															<td th:text="${customerCustomField.customField.label}">Rubriken</td>
 															<td>																
-																<input type="checkbox" name="showInSlaReport" th:field="${customerGroup.customerCustomFields[__${loop.index}__].showInSlaReport}" th:checked="${customerGroup.customerCustomFields[__${loop.index}__].showInSlaReport}" />
+																<input type="checkbox" name="showInSlaReport" th:field="*{customerCustomFields[__${loop.index}__].showInSlaReport}" th:checked="*{customerCustomFields[__${loop.index}__].showInSlaReport}" />
 															</td>
 															<td>																
-																<input type="checkbox" name="showInDeliveryReport" th:field="${customerGroup.customerCustomFields[__${loop.index}__].showInDeliveryReport}" th:checked="${customerGroup.customerCustomFields[__${loop.index}__].showInDeliveryReport}" />
+																<input type="checkbox" name="showInDeliveryReport" th:field="*{customerCustomFields[__${loop.index}__].showInDeliveryReport}" th:checked="*{customerCustomFields[__${loop.index}__].showInDeliveryReport}" />
 															</td>
 															<td>																
-																<input type="checkbox" name="showInDeliveryNote" th:field="${customerGroup.customerCustomFields[__${loop.index}__].showInDeliveryNote}" th:checked="${customerGroup.customerCustomFields[__${loop.index}__].showInDeliveryNote}" />
+																<input type="checkbox" name="showInDeliveryNote" th:field="*{customerCustomFields[__${loop.index}__].showInDeliveryNote}" th:checked="*{customerCustomFields[__${loop.index}__].showInDeliveryNote}" />
 															</td>
 															<td>																
-																<input type="checkbox" name="showInWorkNote" th:field="${customerGroup.customerCustomFields[__${loop.index}__].showInWorkNote}" th:checked="${customerGroup.customerCustomFields[__${loop.index}__].showInWorkNote}" />
+																<input type="checkbox" name="showInWorkNote" th:field="*{customerCustomFields[__${loop.index}__].showInWorkNote}" th:checked="*{customerCustomFields[__${loop.index}__].showInWorkNote}" />
+																<input type="hidden" name="identification" th:field="*{customerCustomFields[__${loop.index}__].customField.identification}" value="*{customerCustomFields[__${loop.index}__].customField.identification}" />
 															</td>
 														</tr>
 													</tbody>

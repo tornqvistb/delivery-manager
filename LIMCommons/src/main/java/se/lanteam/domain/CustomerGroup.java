@@ -1,7 +1,8 @@
 package se.lanteam.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -21,7 +22,7 @@ public class CustomerGroup {
 	private String emailAddress;
 	private RegistrationConfig registrationConfig;
 	private ReportsConfig reportsConfig;
-	private Set<CustomerCustomField> customerCustomFields = new HashSet<CustomerCustomField>();
+	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
 
 	public CustomerGroup() {
 		super();
@@ -72,11 +73,19 @@ public class CustomerGroup {
 	}
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="customerGroup", orphanRemoval=true)
 	@OrderBy("id")
-	public Set<CustomerCustomField> getCustomerCustomFields() {
+	public List<CustomerCustomField> getCustomerCustomFields() {
 		return customerCustomFields;
 	}
+		
+	//bind to this
+	/*
+	@Transient
+    public List<CustomerCustomField> getCustomerCustomFieldsAsList(){
+        return new ArrayList<CustomerCustomField>(customerCustomFields);
+    }
+    */
 
-	public void setCustomerCustomFields(Set<CustomerCustomField> customerCustomFields) {
+	public void setCustomerCustomFields(List<CustomerCustomField> customerCustomFields) {
 		this.customerCustomFields = customerCustomFields;
 	}
 	

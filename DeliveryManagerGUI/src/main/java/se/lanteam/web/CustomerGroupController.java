@@ -17,13 +17,14 @@ import se.lanteam.domain.CustomerCustomField;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.model.RequestAttributes;
-import se.lanteam.model.SearchBean;
 import se.lanteam.model.SessionBean;
+import se.lanteam.repository.CustomFieldRepository;
 import se.lanteam.repository.CustomerGroupRepository;
 
 @Controller
 public class CustomerGroupController {
 	
+	private CustomFieldRepository customFieldRepo;
 	private CustomerGroupRepository customerRepo;
 	private SessionBean sessionBean;
 	
@@ -61,7 +62,6 @@ public class CustomerGroupController {
 	@RequestMapping(value="customer-groups/settings/{customerId}", method=RequestMethod.GET)
 	public String editCustomerGroup(@PathVariable Long customerId, ModelMap model, HttpServletRequest request) {			
 		CustomerGroup customerGroup = customerRepo.findOne(customerId);
-		System.out.println("size of custom config: " + customerGroup.getCustomerCustomFields().size());
 		if (customerGroup.getRegistrationConfig() == null) {
 			customerGroup.setRegistrationConfig(new RegistrationConfig());
 		}
@@ -73,12 +73,12 @@ public class CustomerGroupController {
 	public String saveSettings(@ModelAttribute CustomerGroup customerGroup,
 			ModelMap model) {
 			
-		System.out.println("HE HEJ");
 		customerGroup.getRegistrationConfig().setCustomerGroup(customerGroup);
 		customerGroup.getReportsConfig().setCustomerGroup(customerGroup);
 		
 		for (CustomerCustomField customerCustomField : customerGroup.getCustomerCustomFields()) {
 			customerCustomField.setCustomerGroup(customerGroup);
+			customerCustomField.setCustomField(customFieldRepo.getOne(customerCustomField.getCustomField().getIdentification()));
 		}
 		
 		customerRepo.save(customerGroup);
@@ -90,10 +90,14 @@ public class CustomerGroupController {
 		model.put("reqAttr", reqAttr);
 		return "customer-groups";
 	}
-	
+
 	@Autowired
 	public void setCustomerGroupRepo(CustomerGroupRepository customerRepo) {
 		this.customerRepo = customerRepo;
+	}
+	@Autowired
+	public void setCustomFieldRepo(CustomFieldRepository customFieldRepo) {
+		this.customFieldRepo = customFieldRepo;
 	}
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {
