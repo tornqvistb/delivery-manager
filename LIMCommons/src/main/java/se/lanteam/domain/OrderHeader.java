@@ -66,6 +66,7 @@ public class OrderHeader {
 	private DeliveryPlan deliveryPlan;
 	private String jointDelivery;
 	private int jointInvoicing;
+	private String articleNumbers;
 	
 	@Id
 	@GeneratedValue
@@ -449,6 +450,12 @@ public class OrderHeader {
 	@Transient
 	public String getCurrentDate() {
 		return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+	}
+	public String getArticleNumbers() {
+		return articleNumbers;
+	}
+	public void setArticleNumbers(String articleNumbers) {
+		this.articleNumbers = articleNumbers;
 	}
 	
 }

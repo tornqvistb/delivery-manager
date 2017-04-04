@@ -40,6 +40,41 @@ insert into custom_field (identification, label, creation_date) values (8, 'Gamm
 insert into custom_field (identification, label, creation_date) values (9, 'Övrigt 1', sysdate());
 insert into custom_field (identification, label, creation_date) values (10, 'Övrigt 2', sysdate());
 
+-- Update article ids field on order_header
+CREATE PROCEDURE `update_articles_on_order_header`()
+BLOCK1: BEGIN
+    
+    DECLARE orderId INT(11);
+    DECLARE articleNumbers VARCHAR(1000);
+    DECLARE done INTEGER DEFAULT 0;
+    DECLARE oh_cursor CURSOR FOR SELECT id FROM lanteam.order_header;
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    
+    SET done = 0;
+    OPEN oh_cursor;
+    orderLoop: LOOP
+		FETCH oh_cursor INTO orderId;
+        IF done = 1 THEN LEAVE orderLoop; END IF;
+        BLOCK2: BEGIN
+			DECLARE done2 INTEGER DEFAULT 0;
+			DECLARE articleNumber VARCHAR(100);
+            DECLARE ol_cursor CURSOR FOR SELECT article_number FROM lanteam.order_line WHERE order_header_id = orderId;
+            DECLARE CONTINUE HANDLER FOR NOT FOUND SET done2 = 1;
+			OPEN ol_cursor;
+			SET articleNumbers := '';
+			orderLineLoop: LOOP
+				FETCH ol_cursor INTO articleNumber;
+                IF done2 = 1 THEN LEAVE orderLineLoop; END IF;
+				SET articleNumbers := CONCAT(articleNumbers, ';', articleNumber);        	
+			END LOOP orderLineLoop;
+        END BLOCK2;
+        UPDATE order_header SET article_numbers = articleNumbers where id = orderId;
+	END LOOP orderLoop;
+    COMMIT;
+
+END BLOCK1
+
 insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (1, 1, 1, 0, 0, 0, 0, sysdate());
 insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (2, 2, 1, 0, 0, 0, 0, sysdate());
 insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (3, 3, 1, 0, 0, 0, 0, sysdate());

@@ -29,10 +29,10 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 	@Query("SELECT o FROM OrderHeader o WHERE o.customerSalesOrder = :customerSalesOrder")
     public List<OrderHeader> findOrdersByCustomerSalesOrder(@Param("customerSalesOrder") String customerSalesOrder);
 
-	@Query("SELECT o FROM OrderHeader o, OrderLine ol WHERE o.status in :statusList AND o.orderDate > :orderDate AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND (LOWER(o.orderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerOrderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerSalesOrder) LIKE LOWER(:searchString) OR LOWER(ol.articleNumber) LIKE LOWER(:searchString)) AND o.customerGroup.id = :customerGroupId AND o.id = ol.orderHeader.id")
+	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND (LOWER(o.orderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerOrderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerSalesOrder) LIKE LOWER(:searchString) OR LOWER(o.articleNumbers) LIKE LOWER(:searchString)) AND o.customerGroup.id = :customerGroupId")
     public List<OrderHeader> findDeliveredOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("orderDate") Date orderDate, @Param("searchString") String searchString, @Param("deliveryStartDate") Date deliveryStartDate, @Param("deliveryEndDate") Date deliveryEndDate, @Param("customerGroupId") Long customerGroupId);
 
-	@Query("SELECT o FROM OrderHeader o, OrderLine ol WHERE o.status in :statusList AND o.orderDate > :orderDate AND (LOWER(o.orderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerOrderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerSalesOrder) LIKE LOWER(:searchString) OR LOWER(ol.articleNumber) LIKE LOWER(:searchString)) AND o.customerGroup.id = :customerGroupId AND o.id = ol.orderHeader.id")
+	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND (LOWER(o.orderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerOrderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerSalesOrder) LIKE LOWER(:searchString) OR LOWER(o.articleNumbers) LIKE LOWER(:searchString)) AND o.customerGroup.id = :customerGroupId")
     public List<OrderHeader> findOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("orderDate") Date orderDate, @Param("searchString") String searchString, @Param("customerGroupId") Long customerGroupId);
 
 	// SLA queries
