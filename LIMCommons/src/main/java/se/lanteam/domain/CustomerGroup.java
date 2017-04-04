@@ -3,7 +3,6 @@ package se.lanteam.domain;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,6 +19,7 @@ public class CustomerGroup {
 	private String name;
 	private Date creationDate;
 	private String emailAddress;
+	private String backgroundColor;
 	private RegistrationConfig registrationConfig;
 	private ReportsConfig reportsConfig;
 	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
@@ -55,6 +55,14 @@ public class CustomerGroup {
 
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
+	}
+
+	public String getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public void setBackgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
 	}
 
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="customerGroup", orphanRemoval=true)

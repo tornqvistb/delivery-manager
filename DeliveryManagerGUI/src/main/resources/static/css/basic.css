@@ -188,8 +188,8 @@ a:visited:hover {
  * Normalisation of fonts
  * [1] Base font size of 13px
 ----------------------------------------------------------------------------- */
-body,
-html {
+body
+ {
 	background:#fff url(../img/bg-noise.png);
 	color:#424242;
 }

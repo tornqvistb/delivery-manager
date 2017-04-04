@@ -64,6 +64,7 @@ public class OrderListController {
 		List<OrderHeader> orders = orderRepo.findOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI), sessionBean.getCustomerGroup().getId());
 		model.put("orders", orders);
 		model.put("reqAttr", new RequestAttributes());
+		model.put("color", "red");
 		return "order-list";
 	}
 	@RequestMapping(value="order-list/view/{orderId}", method=RequestMethod.GET)
