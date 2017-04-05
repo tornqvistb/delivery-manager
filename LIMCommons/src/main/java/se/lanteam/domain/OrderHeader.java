@@ -67,6 +67,8 @@ public class OrderHeader {
 	private String jointDelivery;
 	private int jointInvoicing;
 	private String articleNumbers;
+	@Transient
+	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
 	
 	@Id
 	@GeneratedValue
@@ -456,6 +458,14 @@ public class OrderHeader {
 	}
 	public void setArticleNumbers(String articleNumbers) {
 		this.articleNumbers = articleNumbers;
+	}
+	@Transient
+	public List<OrderCustomField> getCustomFieldsInDeliveryNote() {
+		return customFieldsInDeliveryNote;
+	}
+	@Transient
+	public void setCustomFieldsInDeliveryNote(List<OrderCustomField> customFieldsInDeliveryNote) {
+		this.customFieldsInDeliveryNote = customFieldsInDeliveryNote;
 	}
 	
 }
