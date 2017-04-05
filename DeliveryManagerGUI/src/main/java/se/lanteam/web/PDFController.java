@@ -13,14 +13,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.lowagie.text.DocumentException;
 
+import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.domain.CustomerCustomField;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.model.SearchBean;
 import se.lanteam.model.SessionBean;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.OrderRepository;
@@ -34,6 +37,7 @@ public class PDFController {
 	private PropertyService propService;
 	private CustomerGroupRepository customerRepo;
 	private SessionBean sessionBean;
+	private SearchBean searchBean;
 
 	@RequestMapping(value = "generate-work-order/{orderId}", method = RequestMethod.GET, produces = "application/pdf")
 	@ResponseBody
@@ -72,6 +76,46 @@ public class PDFController {
 		}
 		return false;
 	}
+
+	@RequestMapping(value = "generate-delivery-notes", method = RequestMethod.GET, produces = "application/pdf")
+	@ResponseBody
+	public FileSystemResource generateDeliveryNotes(ModelMap model) {
+		PDFGenerator gen = new PDFGenerator("pdftemplates/", ".html", propService.getString(PropertyConstants.PDF_IMAGES_FOLDER));
+
+		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
+		List<OrderHeader> orders = searchBean.getOrderList();
+		//CustomerGroup customerGroup = customerRepo.getOne(sessionBean.getCustomerGroup().getId());
+		/*
+		for (OrderHeader order : orders) {
+			
+			List<OrderCustomField> orderCustomFields = new ArrayList<OrderCustomField>();
+			for (OrderCustomField orderCustomField : order.getOrderCustomFields()) {
+				if (showInDeliveryNote(customerGroup, orderCustomField)) {
+					orderCustomFields.add(orderCustomField);
+				}
+			}
+			order.setOrderCustomFields(orderCustomFields);
+		}
+		*/
+		
+		List<OrderHeader> completeOrders = new ArrayList<OrderHeader>();
+		for (OrderHeader order : orders) {
+			OrderHeader completeOrder = orderRepo.getOne(order.getId());
+			completeOrders.add(completeOrder);
+		}
+		
+		model.put("orders", completeOrders);
+		
+		try {
+			String folder = propService.getString(PropertyConstants.DELIVERY_NOTES_FOLDER);
+			gen.generate(new File(folder + "delivery-notes-" + DateUtil.getTodayAsString() + ".pdf"), "delivery-notes", model);
+			return new FileSystemResource(folder + "delivery-notes-" + DateUtil.getTodayAsString() + ".pdf");
+		} catch (FileNotFoundException e) {
+		} catch (DocumentException e) {
+		}
+		return null;
+	}
+
 	
 	@RequestMapping(value = "generate-delivery-note/{orderId}", method = RequestMethod.GET, produces = "application/pdf")
 	@ResponseBody
@@ -128,5 +172,9 @@ public class PDFController {
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {
 		this.sessionBean = sessionBean;
+	}
+	@Autowired
+	public void setSearchBean(SearchBean searchBean) {
+		this.searchBean = searchBean;
 	}
 }

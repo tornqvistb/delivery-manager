@@ -1,9 +1,8 @@
 package se.lanteam.ws;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -84,7 +83,7 @@ public class NetsetOrderRepository {
 		order.setJointInvoicing(getJointInvoicing(request.getOrderData().getValue().getHeader().getCustomerNumber()));
 		if (request.getOrderData().getValue().getInformationFields() != null 
 				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null) {
-			Set<OrderCustomField> orderCustomFields = new HashSet<OrderCustomField>();
+			List<OrderCustomField> orderCustomFields = new ArrayList<OrderCustomField>();
 			for (InformationField infoField : request.getOrderData().getValue().getInformationFields().getInformationField()) {
 				OrderCustomField orderCustomField = new OrderCustomField();
 				orderCustomField.setCustomField(customFieldRepo.findOne(Long.valueOf(infoField.getIdentification())));
