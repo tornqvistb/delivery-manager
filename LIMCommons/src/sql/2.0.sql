@@ -2,6 +2,7 @@ insert into system_property (id, string_value, number_value) values ('default-co
 insert into system_property (id, string_value, number_value) values ('pdf-images-folder', 'D:/lim/resources/', 1);
 insert into system_property (id, string_value, number_value) values ('work-orders-folder', 'D:/lim/pdf/work-orders/', 1);
 insert into system_property (id, string_value, number_value) values ('delivery-notes-folder', 'D:/lim/pdf/delivery-notes/', 1);
+insert into system_property (id, string_value, number_value) values ('joint-invoicing-cust-numbers', '0450', 0);
 commit;
 
 insert into delivery_week_day (id, name, sorting, creation_date) values (1, 'Måndag', 1, sysdate());
@@ -37,7 +38,7 @@ insert into custom_field (identification, label, creation_date) values (5, 'Mail
 insert into custom_field (identification, label, creation_date) values (6, 'Förvalting', sysdate());
 insert into custom_field (identification, label, creation_date) values (7, 'Användare i klartext', sysdate());
 insert into custom_field (identification, label, creation_date) values (8, 'Gammalt datornamn', sysdate());
-insert into custom_field (identification, label, creation_date) values (9, 'Övrigt 1', sysdate());
+insert into custom_field (identification, label, creation_date) values (9, 'Godsmärkning', sysdate());
 insert into custom_field (identification, label, creation_date) values (10, 'Övrigt 2', sysdate());
 
 -- Update article ids field on order_header

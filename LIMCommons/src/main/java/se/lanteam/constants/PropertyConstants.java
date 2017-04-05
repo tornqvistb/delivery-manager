@@ -25,6 +25,7 @@ public class PropertyConstants {
 	public static final String DELIVERY_NOTES_FOLDER = "delivery-notes-folder";
 	public static final String WORK_ORDERS_FOLDER = "work-orders-folder";
 	public static final String PDF_IMAGES_FOLDER = "pdf-images-folder";
+	public static final String JOINT_INVOICING_CUST_NUMBERS = "joint-invoicing-cust-numbers";
 	// Archiving db
 	public static final String ARCHIVERJOB_FREQUENCY = "archiverjob-frequency";	
 

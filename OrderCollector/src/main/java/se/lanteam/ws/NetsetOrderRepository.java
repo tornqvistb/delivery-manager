@@ -1,5 +1,6 @@
 package se.lanteam.ws;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,16 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.domain.SystemProperty;
 import se.lanteam.repository.CustomFieldRepository;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCustomFieldRepository;
 import se.lanteam.repository.OrderRepository;
+import se.lanteam.repository.PropertyRepository;
 import se.lanteam.ws.netset.CreateOrderRequest;
 import se.lanteam.ws.netset.CreateOrderResponse;
 import se.lanteam.ws.netset.InformationField;
@@ -31,6 +35,7 @@ public class NetsetOrderRepository {
     private CustomerGroupRepository customerGroupRepo;
     private CustomFieldRepository customFieldRepo;
     private OrderCustomFieldRepository orderCustomFieldRepo;
+    private PropertyRepository propertyRepo;
 	
     private static int RESULT_CODE_CREATED_OK = 0;
     private static int RESULT_CODE_UPDATED_OK = 1;
@@ -58,12 +63,6 @@ public class NetsetOrderRepository {
     		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_UNKNOWN_CUSTOMER_GROUP + ". Customer group: " + getOrderNoFromRequest(request, MISSING));
     		return getResponse(RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP, DESCRIPTION_UNKNOWN_CUSTOMER_GROUP);
     	}
-    	    	    	
-    	String jointDelivery = "";
-    	if (!StringUtils.isEmpty(request.getOrderData().getValue().getHeader().getJointDelivery())) {
-    		jointDelivery = request.getOrderData().getValue().getHeader().getJointDelivery();
-    	}
-    	int jointInvoicing = request.getOrderData().getValue().getHeader().getJointInvoicing();
     	
 		OrderHeader order = null;
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
@@ -82,8 +81,7 @@ public class NetsetOrderRepository {
 		
 		order.setOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
 		order.setCustomerGroup(customerGroup);
-		order.setJointDelivery(jointDelivery);
-		order.setJointInvoicing(jointInvoicing);
+		order.setJointInvoicing(getJointInvoicing(request.getOrderData().getValue().getHeader().getCustomerNumber()));
 		if (request.getOrderData().getValue().getInformationFields() != null 
 				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null) {
 			Set<OrderCustomField> orderCustomFields = new HashSet<OrderCustomField>();
@@ -100,6 +98,17 @@ public class NetsetOrderRepository {
 		orderRepo.save(order);
 		return getResponse(returnCode, description);
 
+    }
+    
+    private int getJointInvoicing (String customerNo) {
+    	int result = 0;
+    	SystemProperty jointInvProp = propertyRepo.getOne(PropertyConstants.JOINT_INVOICING_CUST_NUMBERS);
+    	if (jointInvProp != null && !StringUtils.isEmpty(jointInvProp.getStringValue())) {
+    		if (Arrays.asList(jointInvProp.getStringValue().split(";")).contains(customerNo)) {
+    			result = 1;
+    		}
+    	}    	
+    	return result;
     }
     
     private String getOrderNoFromRequest(CreateOrderRequest request, String defaultValue) {
@@ -160,5 +169,9 @@ public class NetsetOrderRepository {
 	@Autowired
 	public void setOrderCustomFieldRepo(OrderCustomFieldRepository orderCustomFieldRepo) {
 		this.orderCustomFieldRepo = orderCustomFieldRepo;
+	}
+	@Autowired
+	public void setPropertyRepo(PropertyRepository propertyRepo) {
+		this.propertyRepo = propertyRepo;
 	}
 }
