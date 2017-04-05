@@ -70,8 +70,10 @@ public class OrderTransmitService {
 					if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
 						throw new Exception(header.getKod() + " - " + header.getText());
 					}
-					// Create message to Visma and store on disk
-					createFileToBusinessSystem(order);
+					// Create message to Visma and store on disk. Only if joint invoicing (samfakturering) is not true.
+					if (order.getJointInvoicing() == 0) {
+						createFileToBusinessSystem(order);
+					}
 					// Create mail to contact persons
 					createMailToContactPersons(order);
 					// Update order status
