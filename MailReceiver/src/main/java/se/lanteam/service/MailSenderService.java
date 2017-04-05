@@ -63,7 +63,7 @@ public class MailSenderService {
 		LOG.info("Check for emails to send");
 		for (Email email : emails) {
 			try {
-				LOG.info("New mail to send");
+				LOG.debug("New mail to send");
 				Properties props = System.getProperties();
 				props.put("mail.smtps.host",mailSmtpHost);
 				props.put("mail.smtps.auth","true");
@@ -98,7 +98,7 @@ public class MailSenderService {
 				    (SMTPTransport)session.getTransport("smtps");
 				t.connect(mailSmtpHost, mailUsername, mailPassword);
 				t.sendMessage(msg, msg.getAllRecipients());
-				LOG.info("Response: " + t.getLastServerResponse());
+				LOG.debug("Response: " + t.getLastServerResponse());
 				t.close();
 			} catch (AddressException e) {
 				saveError(GENERAL_EMAIL_ERROR + "AddressException");

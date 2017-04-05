@@ -18,9 +18,9 @@ public class ArchiverService {
     private StoredProcRepository spRepo;
     
 	public void archiveOrders() {
-		LOG.info("before archive");
+		LOG.debug("before archive");
 		String result = spRepo.doArchiving();
-		LOG.info("after archive: " + result);
+		LOG.debug("after archive: " + result);
 	}    
 		
 	@Autowired

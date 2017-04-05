@@ -93,19 +93,19 @@ public class MailReceiverService {
 			
 			// retrieve the messages from the folder in an array and print it
 			Message[] messages = emailFolder.getMessages();
-			LOG.info("Got " + messages.length + " mails!");
+			LOG.debug("Got " + messages.length + " mails!");
 			for (int i = 0, n = messages.length; i < n; i++) {
 				Message message = messages[i];
 				String contentType = message.getContentType();
-				LOG.info("Contenttype: " + contentType);
+				LOG.debug("Contenttype: " + contentType);
 				if (contentType.contains("multipart")) {
-					LOG.info("Got mail: " + message.getSubject());					
+					LOG.debug("Got mail: " + message.getSubject());					
                     // content may contain attachments
                     Multipart multiPart = (Multipart) message.getContent();
                     int numberOfParts = multiPart.getCount();
                     for (int partCount = 0; partCount < numberOfParts; partCount++) {
                         MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(partCount);
-                        LOG.info("Disposition: " + part.getDisposition());
+                        LOG.debug("Disposition: " + part.getDisposition());
                         if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()) || Part.INLINE.equalsIgnoreCase(part.getDisposition())) {                        	
                             // this part is attachment
                             String fileName = part.getFileName();
@@ -121,7 +121,7 @@ public class MailReceiverService {
                         }
                     }
                 } else {
-                	LOG.info("No attachment in mail: " + message.getSubject());
+                	LOG.debug("No attachment in mail: " + message.getSubject());
                 }
 			}
 			// close the store and folder objects

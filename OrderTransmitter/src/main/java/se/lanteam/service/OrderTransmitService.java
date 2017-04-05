@@ -144,7 +144,7 @@ public class OrderTransmitService {
 	}
 		
 	public void transmitOrderComments() {
-        LOG.info("Looking for orders to transmit!");
+        LOG.info("Looking for order comments to transmit!");
 		String wsEndpointOrderComment = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_COMMENT);
 		String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_GBCA);
 		String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_GBCA);

@@ -124,18 +124,18 @@ public class EquipmentController {
 	@RequestMapping(value = "order-list/view/deleq/{orderId}/{orderLineId}/{equipmentId}", method = RequestMethod.GET)
 	public String deleteEquipment(@PathVariable Long orderId, @PathVariable Long orderLineId,
 			@PathVariable Long equipmentId, ModelMap model) {
-		LOG.info("equipmentId: " + equipmentId + " ,orderId: " + orderId);
+		LOG.debug("equipmentId: " + equipmentId + " ,orderId: " + orderId);
 		OrderLine orderLine = orderLineRepo.findOne(orderLineId);
 		for (Iterator<Equipment> iterator = orderLine.getEquipments().iterator(); iterator.hasNext();) {			
 			Equipment equipment = iterator.next();
-			LOG.info("in loop, equipmentId: " + equipment.getId());
+			LOG.debug("in loop, equipmentId: " + equipment.getId());
 			if (equipment.getId().equals(equipmentId)) {
-				LOG.info("in loop, going to remove equipment: " + equipment.getId());
+				LOG.debug("in loop, going to remove equipment: " + equipment.getId());
 				equipment.setOrderLine(null);
 				iterator.remove();
 				orderLine.setRegistered(orderLine.getRegistered() - 1);
 				orderLine.setRemaining(orderLine.getRemaining() + 1);
-				LOG.info("Order line updated: " + orderLine.getId());
+				LOG.debug("Order line updated: " + orderLine.getId());
 			}
 		}
 		orderLineRepo.save(orderLine);
@@ -151,7 +151,7 @@ public class EquipmentController {
 
 	@RequestMapping(value="order-list/correct/confirm/{orderId}", method=RequestMethod.POST)
 	public String confirmCorrection(@PathVariable Long orderId, ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
-		LOG.info("In confirmCorrection");		
+		LOG.debug("In confirmCorrection");		
 		OrderHeader order = orderRepo.findOne(orderId);
 		// Check every modified equipment
 		Boolean validationOk = true;
@@ -161,7 +161,7 @@ public class EquipmentController {
 		CorrectionMailInfo mailInfo = new CorrectionMailInfo(order);
 		for (ReqOrderLine line : reqAttr.getReqOrderLines()) {			
 			for (Equipment equipReq : line.getEquipments()) {
-				LOG.info("equipment: " + equipReq.toString());
+				LOG.debug("equipment: " + equipReq.toString());
 				if (equipReq.getId() != null) {
 					String valResult = equipmentValidator.validateEquipmentOnCorrection(equipReq, order);
 					if (!valResult.equals(RESULT_OK)) {

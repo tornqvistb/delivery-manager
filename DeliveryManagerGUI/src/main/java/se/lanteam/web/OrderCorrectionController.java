@@ -25,7 +25,7 @@ public class OrderCorrectionController {
 
 	@RequestMapping(value="order-list/correct/doCorrect/{orderId}/{equipmentId}", method=RequestMethod.GET)
 	public String doCorrectEquipment(@PathVariable Long orderId, @PathVariable Long equipmentId, ModelMap model) {
-		LOG.info("In doCorrectEquipment");
+		LOG.debug("In doCorrectEquipment");
 		Equipment equipment = equipmentRepo.findOne(equipmentId);
 		equipment.setToCorrect(true);
 		equipmentRepo.save(equipment);
@@ -37,7 +37,7 @@ public class OrderCorrectionController {
 	}
 	@RequestMapping(value="order-list/correct/undoCorrect/{orderId}/{equipmentId}", method=RequestMethod.GET)
 	public String undoCorrectEquipment(@PathVariable Long orderId, @PathVariable Long equipmentId, ModelMap model) {
-		LOG.info("In undoCorrectEquipment");
+		LOG.debug("In undoCorrectEquipment");
 		Equipment equipment = equipmentRepo.findOne(equipmentId);
 		equipment.setToCorrect(false);
 		equipmentRepo.save(equipment);
