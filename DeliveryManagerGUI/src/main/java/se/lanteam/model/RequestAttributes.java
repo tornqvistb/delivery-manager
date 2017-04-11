@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.lanteam.constants.StatusConstants;
+import se.lanteam.domain.CustomerCustomField;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
@@ -55,6 +56,7 @@ public class RequestAttributes {
 	private String planDate;
 	private String resultNotEmptyMsg;
 	private String resultEmptyMsg;
+	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
 	
 	public RequestAttributes() {
 		super();
@@ -416,6 +418,14 @@ public class RequestAttributes {
 
 	public void setResultEmptyMsg(String resultEmptyMsg) {
 		this.resultEmptyMsg = resultEmptyMsg;
+	}
+
+	public List<CustomerCustomField> getCustomerCustomFields() {
+		return customerCustomFields;
+	}
+
+	public void setCustomerCustomFields(List<CustomerCustomField> customerCustomFields) {
+		this.customerCustomFields = customerCustomFields;
 	}
 	
 }

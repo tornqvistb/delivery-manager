@@ -33,6 +33,7 @@ import se.lanteam.domain.OrderLine;
 import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SearchBean;
+import se.lanteam.model.SessionBean;
 import se.lanteam.repository.AttachmentRepository;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.EmailRepository;
@@ -51,6 +52,7 @@ public class DeliveryReportController {
 	private AttachmentRepository attachmentRepo;
 	private EmailRepository emailRepo;
 	private PropertyRepository propertyRepo;
+	private SessionBean sessionBean;
 	
 	private static final String EXCEL_EXPORT_FILE_NAME = "Leveransrapport-#customer-" + DateUtil.dateToString(new Date()) + FileConstants.FILE_ENDING_EXCEL;
 	private static final String MAIL_SUBJECT = "Leveransrapport från LanTeam";
@@ -58,7 +60,9 @@ public class DeliveryReportController {
 	@RequestMapping("reports/delivery")
 	public String showDeliveryReport(ModelMap model) {
 		model.put("customerGroups", customerRepo.findAll());
-		model.put("reqAttr", new RequestAttributes());
+		RequestAttributes reqAttr = new RequestAttributes();
+		reqAttr.setCustomerCustomFields(sessionBean.getCustomerGroup().getCustomerCustomFields());
+		model.put("reqAttr", reqAttr);
 		return "delivery-report";
 	}
 
@@ -77,7 +81,7 @@ public class DeliveryReportController {
 			} else {
 				orders = orderRepo.findDeliveredOrders(fromDate, toDate, fromOrderNo, toOrderNo);
 			}
-					
+			reqAttr.setCustomerCustomFields(updateFieldListWithLabels(reqAttr.getCustomerCustomFields()));					
 			if (!orders.isEmpty()) {
 				reqAttr.setResultNotEmptyMsg("Sökningen gav " + orders.size() + " träff(ar)");
 			} else {
@@ -86,7 +90,7 @@ public class DeliveryReportController {
 			model.put("reqAttr", reqAttr);
 			model.put("orders", orders);
 			model.put("customerGroups", customerRepo.findAll());
-			searchBean.populate(orders, reqAttr.getCustomerId(), fromDate, toDate, fromOrderNo, toOrderNo);
+			searchBean.populate(orders, reqAttr.getCustomerId(), fromDate, toDate, fromOrderNo, toOrderNo, reqAttr.getCustomerCustomFields());
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
 		}
@@ -95,7 +99,6 @@ public class DeliveryReportController {
 
 	@RequestMapping(value="reports/delivery/export", method=RequestMethod.GET)
 	public ModelAndView exportDeliveryToExcel(ModelMap model, HttpServletResponse response) throws ParseException {
-		
 		model = getExcelDataIntoModel(model);
         response.setContentType( "application/ms-excel" );
         String fileName = EXCEL_EXPORT_FILE_NAME.replace("#customer", getCustomerNameFromsession());
@@ -105,10 +108,9 @@ public class DeliveryReportController {
 	}
 
 	@RequestMapping(value="reports/delivery/informCustomer", method=RequestMethod.GET)
-	public String informCustomer(ModelMap model) {			
+	public String informCustomer(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {			
 		model = getExcelDataIntoModel(model);
 		// Create excel
-		RequestAttributes reqAttr = new RequestAttributes(); 
 		Workbook wb = excelGenerator.generate(model);
 		if (wb != null) {
 			byte[] content = excelGenerator.wbToByteArray(wb);
@@ -135,6 +137,7 @@ public class DeliveryReportController {
 				email.setReceiver(getCustomerEmailFromsession());
 				email.setStatus(StatusConstants.EMAIL_STATUS_NEW);
 				emailRepo.save(email);
+				reqAttr.setCustomerCustomFields(searchBean.getCustomerCustomFields());
 				reqAttr.setThanksMessage("Epost-meddelande skickat till kund");
 			} else {
 				reqAttr.setErrorMessage("Epost-meddelande kunde ej skapas");
@@ -143,6 +146,7 @@ public class DeliveryReportController {
 			reqAttr.setErrorMessage("Epost-meddelande kunde ej skapas");
 		}
 		model.put("customerGroups", customerRepo.findAll());
+		
 		model.put("reqAttr", reqAttr);
 		
 		return "delivery-report";
@@ -162,7 +166,7 @@ public class DeliveryReportController {
         headers.add("Orderdatum");
         headers.add("Leveransdatum");
         // Lägg till Order customattribut
-        List<CustomField> customFields = getCustomFieldsForCustomer();
+        List<CustomField> customFields = getCustomFieldsFromSession();
         for (CustomField customField : customFields) {
         	headers.add(customField.getLabel());
         }
@@ -288,19 +292,16 @@ public class DeliveryReportController {
 		return list;
 	}
 
-	
-	private List<CustomField> getCustomFieldsForCustomer() {
+	private List<CustomField> getCustomFieldsFromSession() {
 		List<CustomField> customFields = new ArrayList<CustomField>();
-	    if (searchBean.getCustomerGroupId() != 0) {
-	    	CustomerGroup customerGroup = customerRepo.getOne(searchBean.getCustomerGroupId());
-	    	for (CustomerCustomField customerCustomField : customerGroup.getCustomerCustomFields()) {
-	    		if (customerCustomField.getShowInDeliveryReport()) {
-	    			customFields.add(customerCustomField.getCustomField());	    	        
-	    		}        		
-	    	}
-	    }
+    	for (CustomerCustomField customerCustomField : searchBean.getCustomerCustomFields()) {
+    		if (customerCustomField.getShowInDeliveryReport()) {
+    			customFields.add(customerCustomField.getCustomField());	    	        
+    		}        		
+    	}
 	    return customFields;
 	}
+
 	
 	private String getOrderCustomFieldValue(CustomField customField, OrderHeader order) {
 		String value = "";
@@ -340,6 +341,15 @@ public class DeliveryReportController {
 		return result;
 	}
 
+	private List<CustomerCustomField> updateFieldListWithLabels(List<CustomerCustomField> customerFields) {
+		CustomerGroup custGroup = customerRepo.getOne(sessionBean.getCustomerGroup().getId());
+		int index = 0;
+		for (CustomerCustomField field : customerFields) {
+			field.setCustomField(custGroup.getCustomerCustomFields().get(index).getCustomField());
+			index++;
+		}
+		return customerFields;
+	}
 	
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
@@ -369,4 +379,8 @@ public class DeliveryReportController {
 	public void setPropertyRepo(PropertyRepository propertyRepo) {
 		this.propertyRepo = propertyRepo;
 	}	
+	@Autowired
+	public void setSessionBean(SessionBean sessionBean) {
+		this.sessionBean = sessionBean;
+	}
 }

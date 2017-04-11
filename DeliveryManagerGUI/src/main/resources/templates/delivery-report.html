@@ -19,7 +19,7 @@
 							<div class="m-h main-header cf">
 								<div class="page-heading">
 									<h2>Rapporter</h2>
-								</div>
+								</div>+
 							</div>
 							<div class="tab-navigation">
 								<ul class="tabs cf">
@@ -102,6 +102,30 @@
 														</div>
 													</div>
 												</div>
+												
+												<h3>Fält att visa i rapporten</h3>
+
+												<table>
+													<colgroup>
+														<col style="width: 50%" />
+														<col style="width: 50%" />
+													</colgroup>
+													<thead>
+														<tr>
+															<th scope="col">Fält</th>
+															<th scope="col">Visa</th>
+														</tr>
+													</thead>
+													<tbody>													
+														<tr th:each="customerCustomField, loop : *{customerCustomFields}">
+															<td th:text="${customerCustomField.customField.label}">Rubriken</td>
+															<td>																
+																<input type="checkbox" name="showInDeliveryReport" th:field="*{customerCustomFields[__${loop.index}__].showInDeliveryReport}" th:checked="*{customerCustomFields[__${loop.index}__].showInDeliveryReport}" />
+															</td>
+														</tr>
+													</tbody>
+												</table>
+												
 												<div class="row">
 													<input class="btn" type="submit" value="Sök" id="ActionSearch" name="ActionSearch"/>
 												</div>													
