@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -66,6 +67,18 @@ public class DeliveryReportController {
 		return "delivery-report";
 	}
 
+	@RequestMapping(value = "reports/delivery/changecustomer/{customerId}", method = RequestMethod.GET)
+	public String registerMessage(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long customerId,
+			ModelMap model) {
+		CustomerGroup customerGroup = customerRepo.findOne(customerId);
+		//searchBean.setCustomerCustomFields(customerGroup.getCustomerCustomFields());
+		reqAttr.setCustomerCustomFields(customerGroup.getCustomerCustomFields());
+		reqAttr.setCustomerId(customerId);		
+		model.put("reqAttr", reqAttr);
+		model.put("customerGroups", customerRepo.findAll());
+		return "delivery-report";
+	}
+	
 	@RequestMapping(value="reports/delivery/search", method=RequestMethod.GET)
 	public String searchOrdersDelivery(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
 		
