@@ -224,28 +224,28 @@
 				<th>Rad</th>
 				<th>Serienr</th>
 				<th>Stöld-id</th>
-				<th th:if="${regConfig.useAttribute1}" th:text="${regConfig.labelAttribute1}">Attribut 1</th>
-				<th th:if="${regConfig.useAttribute2}" th:text="${regConfig.labelAttribute2}">Attribut 2</th>
-				<th th:if="${regConfig.useAttribute3}" th:text="${regConfig.labelAttribute3}">Attribut 3</th>
-				<th th:if="${regConfig.useAttribute4}" th:text="${regConfig.labelAttribute4}">Attribut 4</th>
-				<th th:if="${regConfig.useAttribute5}" th:text="${regConfig.labelAttribute5}">Attribut 5</th>
-				<th th:if="${regConfig.useAttribute6}" th:text="${regConfig.labelAttribute6}">Attribut 6</th>
-				<th th:if="${regConfig.useAttribute7}" th:text="${regConfig.labelAttribute7}">Attribut 7</th>
-				<th th:if="${regConfig.useAttribute8}" th:text="${regConfig.labelAttribute8}">Attribut 8</th>
+				<th th:if="${regConfig.showInDeliveryNote1}" th:text="${regConfig.labelAttribute1}">Attribut 1</th>
+				<th th:if="${regConfig.showInDeliveryNote2}" th:text="${regConfig.labelAttribute2}">Attribut 2</th>
+				<th th:if="${regConfig.showInDeliveryNote3}" th:text="${regConfig.labelAttribute3}">Attribut 3</th>
+				<th th:if="${regConfig.showInDeliveryNote4}" th:text="${regConfig.labelAttribute4}">Attribut 4</th>
+				<th th:if="${regConfig.showInDeliveryNote5}" th:text="${regConfig.labelAttribute5}">Attribut 5</th>
+				<th th:if="${regConfig.showInDeliveryNote6}" th:text="${regConfig.labelAttribute6}">Attribut 6</th>
+				<th th:if="${regConfig.showInDeliveryNote7}" th:text="${regConfig.labelAttribute7}">Attribut 7</th>
+				<th th:if="${regConfig.showInDeliveryNote8}" th:text="${regConfig.labelAttribute8}">Attribut 8</th>
 			</tr>
 			<tr th:each="orderLine : ${order.orderLines}" th:remove="tag">				
 				<tr th:if="${orderLine.equipments}" th:each="equipment : ${orderLine.equipments}">					
 					<td th:text="${orderLine.rowNumber}">5</td>
 					<td th:text="${equipment.serialNo}">5</td>
 					<td th:text="${equipment.stealingTag}">5</td>
-					<td th:if="${regConfig.useAttribute1}" th:text="${equipment.customAttribute1}">Attribut 1</td>
-					<td th:if="${regConfig.useAttribute2}" th:text="${equipment.customAttribute2}">Attribut 2</td>
-					<td th:if="${regConfig.useAttribute3}" th:text="${equipment.customAttribute3}">Attribut 3</td>
-					<td th:if="${regConfig.useAttribute4}" th:text="${equipment.customAttribute4}">Attribut 4</td>
-					<td th:if="${regConfig.useAttribute5}" th:text="${equipment.customAttribute5}">Attribut 5</td>
-					<td th:if="${regConfig.useAttribute6}" th:text="${equipment.customAttribute6}">Attribut 6</td>
-					<td th:if="${regConfig.useAttribute7}" th:text="${equipment.customAttribute7}">Attribut 7</td>
-					<td th:if="${regConfig.useAttribute8}" th:text="${equipment.customAttribute8}">Attribut 8</td>
+					<td th:if="${regConfig.showInDeliveryNote1}" th:text="${equipment.customAttribute1}">Attribut 1</td>
+					<td th:if="${regConfig.showInDeliveryNote2}" th:text="${equipment.customAttribute2}">Attribut 2</td>
+					<td th:if="${regConfig.showInDeliveryNote3}" th:text="${equipment.customAttribute3}">Attribut 3</td>
+					<td th:if="${regConfig.showInDeliveryNote4}" th:text="${equipment.customAttribute4}">Attribut 4</td>
+					<td th:if="${regConfig.showInDeliveryNote5}" th:text="${equipment.customAttribute5}">Attribut 5</td>
+					<td th:if="${regConfig.showInDeliveryNote6}" th:text="${equipment.customAttribute6}">Attribut 6</td>
+					<td th:if="${regConfig.showInDeliveryNote7}" th:text="${equipment.customAttribute7}">Attribut 7</td>
+					<td th:if="${regConfig.showInDeliveryNote8}" th:text="${equipment.customAttribute8}">Attribut 8</td>
 				</tr>
 			</tr>
 		</table>

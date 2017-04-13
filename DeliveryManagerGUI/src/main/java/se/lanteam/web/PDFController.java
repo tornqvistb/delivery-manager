@@ -125,7 +125,7 @@ public class PDFController {
 		for (CustomerCustomField customerCustomfield : customerGroup.getCustomerCustomFields()) {
 			if (customerCustomfield.getCustomField().getIdentification() 
 					== orderCustomField.getCustomField().getIdentification()
-					&& customerCustomfield.getShowInDeliveryNote() == true) {
+					&& customerCustomfield.getShowInDeliveryNote()) {
 				return true;
 			}
 		}
