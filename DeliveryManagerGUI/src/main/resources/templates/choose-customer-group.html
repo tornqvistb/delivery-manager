@@ -2,7 +2,7 @@
 
 <html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
 
-<meta charset="utf-8"/>
+<meta charset="utf-8" />
 <head th:include="head" th:remove="tag" />
 
 <body class="layout-2">
@@ -21,11 +21,28 @@
 									<h2>Välj kundgrupp</h2>
 								</div>
 							</div>
-							<ul class="custgroup-list">
-								<li class="custgroup-link" th:each="customerGroup : ${customerGroups}">
-									<a class="link-padding" th:href="@{/customer-groups/activate/} + ${customerGroup.id} + '/yes'"  th:text="${customerGroup.name}"></a>
-								</li>
-							</ul>
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div class="form-step">
+										<form>
+											<div class="form-section">
+
+												<div class="information-text system-info help-message">
+													<p>Innan du går vidare med övriga operationer i LIM
+														måste du välja en aktiv kundgrupp i listan nedan.</p>
+												</div>
+												<ul>
+													<li class="custgroup-link"
+														th:each="customerGroup : ${customerGroups}"><a
+														class="link-padding"
+														th:href="@{/customer-groups/activate/} + ${customerGroup.id} + '/yes'"
+														th:text="${customerGroup.name}"></a></li>
+												</ul>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

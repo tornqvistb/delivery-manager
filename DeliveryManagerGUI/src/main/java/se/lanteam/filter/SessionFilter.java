@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -18,40 +17,49 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import se.lanteam.constants.SessionConstants;
 import se.lanteam.domain.CustomerGroup;
-import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
-import se.lanteam.repository.PropertyRepository;
 
 public class SessionFilter implements Filter {
 	
 	@Autowired
-	private PropertyRepository propertyRepo;
-	@Autowired
 	private ErrorRepository errorRepo;
-	@Autowired
-	private CustomerGroupRepository customerGroupRepo;
 	
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     	SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
                 filterConfig.getServletContext());
     }
-
-    @Override
+    @Override  
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    	
         HttpServletRequest request = (HttpServletRequest) servletRequest;
+        String contextPath = request.getContextPath();
+        String uri = request.getRequestURI();
         HttpSession session = request.getSession(); 
         String errors = String.valueOf(errorRepo.findErrorsByArchived(false).size());        
         session.setAttribute(SessionConstants.ERROR_COUNT, errors);
-        //CustomerGroup customerGroup = (CustomerGroup) session.getAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP);
-        //if (customerGroup == null) {
-        	//response.sendRedirect("/customer-groups");
-            //Long defaultGroupId = propertyRepo.findById(PropertyConstants.DEFAULT_COMPANY_GROUP_ID).getNumberValue();
-        	//session.setAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP, customerGroupRepo.findById(defaultGroupId));
-        //}        
-        filterChain.doFilter(servletRequest, servletResponse);
+        CustomerGroup customerGroup = (CustomerGroup) session.getAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP);        
+        if (customerGroup == null && redirectPatternInUri(uri)) {
+        	HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+        	httpResponse.sendRedirect(contextPath + "/choose-customer-group");
+        	return;
+        } else {        
+	        filterChain.doFilter(servletRequest, servletResponse);
+        }
     }
 
+    private boolean redirectPatternInUri(String uri) {
+    	boolean result = false;
+    	if (!uri.contains("choose-customer-group")
+    			&& !uri.contains("/css/")
+    			&& !uri.contains("/js/")
+    			&& !uri.contains("/img/")
+    			&& !uri.contains("customer-groups/activate")) {
+    		result = true;
+    	}
+    	return result;
+    }
+    
     @Override
     public void destroy() {
     }
