@@ -247,6 +247,7 @@
 																<th scope="row">Välj område</th>
 																<td><select th:field="${reqAttr.deliveryAreaId}"
 																	id="deliveryAreaId" name="deliveryAreaId">
+																		<option value="0">-- Välj -- </option>
 																		<option th:each="deliveryArea : ${deliveryAreas}"
 																			th:value="${deliveryArea.id}"
 																			th:text="${deliveryArea.name}" />

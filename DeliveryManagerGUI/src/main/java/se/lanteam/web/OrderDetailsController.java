@@ -96,6 +96,9 @@ public class OrderDetailsController {
 
 	@RequestMapping(value = "order-list/view/getdaybyarea/{areaId}", method = RequestMethod.POST)
 	public @ResponseBody String getDaysByArea(@PathVariable Long areaId) {
+		if (areaId == 0) {
+			return "";
+		}
 		DeliveryArea area = deliveryAreaRepo.getOne(areaId);
 		StringBuffer sb = new StringBuffer();
 		List<DeliveryDay> deliveryDays = new ArrayList<DeliveryDay>();

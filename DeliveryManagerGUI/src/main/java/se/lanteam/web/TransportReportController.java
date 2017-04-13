@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import se.lanteam.constants.DateUtil;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.domain.OrderLine;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SearchBean;
 import se.lanteam.repository.OrderRepository;
@@ -66,27 +67,47 @@ public class TransportReportController {
         headers.add("Address 1");
         headers.add("Address 2");
         headers.add("Kommentar");
+        headers.add("Artikelnummer");
+        headers.add("Artikelbeskrivning");
+        headers.add("Antal");
         model.put("headers", headers);
         
         List<String> numericColumns = new ArrayList<String>();
-        numericColumns.add("Ordernummer");
+        numericColumns.add("Antal");
         model.put("numericcolumns", numericColumns);
 
-        //Results Table (List<Object[]>)
         List<List<String>> results = new ArrayList<List<String>>();
         
         List<OrderHeader> orders = searchBean.getOrderList();
         
         for (OrderHeader order: orders) {
-        	List<String> orderCols = new ArrayList<String>();
-        	orderCols.add(order.getOrderNumber());
-        	orderCols.add(order.getCustomerSalesOrder());
-        	orderCols.add(order.getCustomerName());
-        	orderCols.add(order.getDeliveryPlan().getDeliveryArea().getName());
-        	orderCols.add(order.getDeliveryPostalAddress1());
-        	orderCols.add(order.getDeliveryPostalAddress2());
-        	orderCols.add(order.getDeliveryPlan().getComment());
-        	results.add(orderCols);
+        	boolean firstRow = true;
+        	order = orderRepo.getOne(order.getId());
+        	for (OrderLine orderLine : order.getOrderLines()) {
+	        	List<String> orderCols = new ArrayList<String>();
+	        	if (firstRow) {
+		        	orderCols.add(order.getOrderNumber());
+		        	orderCols.add(order.getCustomerSalesOrder());
+		        	orderCols.add(order.getCustomerName());
+		        	orderCols.add(order.getDeliveryPlan().getDeliveryArea().getName());
+		        	orderCols.add(order.getDeliveryPostalAddress1());
+		        	orderCols.add(order.getDeliveryPostalAddress2());
+		        	orderCols.add(order.getDeliveryPlan().getComment());
+	        	} else {
+		        	orderCols.add("");
+		        	orderCols.add("");
+		        	orderCols.add("");
+		        	orderCols.add("");
+		        	orderCols.add("");
+		        	orderCols.add("");
+		        	orderCols.add("");	        		
+	        	}
+	        	orderCols.add(orderLine.getArticleNumber());
+	        	orderCols.add(orderLine.getArticleDescription());
+	        	orderCols.add(String.valueOf(orderLine.getTotal()));
+	        	results.add(orderCols);
+	        	firstRow = false;
+        	}
         }
         
         model.put("results",results);

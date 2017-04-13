@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.PropertyConstants;
-import se.lanteam.constants.SessionConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
-import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
@@ -39,28 +37,14 @@ public class OrderListController {
 	private SessionBean sessionBean;
 	private DeliveryAreaRepository deliveryAreaRepo;
 
-	private String checkCustomerGroup(HttpServletRequest request) {
-		String result = null;
-		CustomerGroup custGroup = (CustomerGroup) request.getSession().getAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP);
-		if (custGroup == null) {
-			result = "redirect:choose-customer-group";
-		}
-		return result;
-	}
 	
 	@RequestMapping("/")
 	public String showStartPage(HttpServletRequest request) {
-		String customerRedirectLink = checkCustomerGroup(request);
-		if (customerRedirectLink != null) 
-			return customerRedirectLink;
 		return "redirect:order-list";
 	}
 		
 	@RequestMapping("order-list")
 	public String showOrderList(ModelMap model, HttpServletRequest request) {
-		String customerRedirectLink = checkCustomerGroup(request);
-		if (customerRedirectLink != null) 
-			return customerRedirectLink;
 		List<OrderHeader> orders = orderRepo.findOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI), sessionBean.getCustomerGroup().getId());
 		model.put("orders", orders);
 		model.put("reqAttr", new RequestAttributes());
