@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8"/>
 <head>
 	<style th:replace="inc/bootstrap :: inc"></style>
 
@@ -69,10 +70,15 @@
 	<div id="header">
 		<span	th:text="${'Följesedel för order ' + order.orderNumber}"></span>
 	</div>
-	<div id="footer">
-		<span	th:text="${'Följesedel för order ' + order.orderNumber}"></span>
+	<div id="footer">		
+		<strong>Göteborg</strong><br />
+		Lanteam Consulting AB<br />
+		Datavägen 12A<br />
+		43632 ASKIM<br />
+		Tel: 010-722 29 00<br />
+		E-post: avisering@lanteam.se<br />
 		<br />
-		Sida <span class="pagenumber"></span> av <span class="pagecount"></span>
+		
 	</div>
 	
 	
@@ -129,7 +135,7 @@
 		<table class="table">
 			<tr>
 				<th style="width:25%;">Vår referens</th>
-				<td style="width:25%;">Namn från LanTeam?</td>
+				<td style="width:25%;" th:text="${order.customerGroup.ourReference}">Namn från LanTeam</td>
 				<th style="width:25%;">Er referens</th>
 				<td style="width:25%;" th:text="${order.contact1Name}">Björn Törnqvist</td>
 			</tr>					
@@ -144,27 +150,6 @@
 				<td style="width:25%;" th:text="${order.orderNumber}">82289</td>
 			</tr>	
 		</table>
-
-		<div class="page-divider"></div>					
-
-		<table class="table">
-			<tr>
-				<th>Rad</th>
-				<th>Artikelnummer</th>
-				<th>Beskrivning</th>
-				<th>Best ant</th>
-				<th>Lev ant</th>
-				<th>Enhet</th>
-			</tr>
-			<tr th:each="orderLine : ${order.orderLines}">
-				<td th:text="${orderLine.rowNumber}">1</td>
-				<td th:text="${orderLine.articleNumber}">31231312</td>
-				<td th:text="${orderLine.articleDescription}">HP elitebook</td>
-				<td th:text="${orderLine.total}">5</td>
-				<td th:text="${orderLine.registered}">5</td>
-				<td>st</td>
-			</tr>
-		</table>					
 
 		<div class="page-divider"></div>
 
@@ -206,17 +191,27 @@
 		</table>
 		<div class="page-divider"></div>
 
-		<h3>Signering</h3>			
-		
+		<h3>Orderrader</h3>
 		<table class="table">
 			<tr>
-				<th style="width:30%;">Datum</th>
-				<th style="width:35%;">Signatur</th>
-				<th style="width:35%;">Namnförtydligande</th>
+				<th>Rad</th>
+				<th>Artikelnummer</th>
+				<th>Beskrivning</th>
+				<th>Best ant</th>
+				<th>Lev ant</th>
+				<th>Enhet</th>
 			</tr>
-		</table>
-		
-		<div class="signature-line"></div>
+			<tr th:each="orderLine : ${order.orderLines}">
+				<td th:text="${orderLine.rowNumber}">1</td>
+				<td th:text="${orderLine.articleNumber}">31231312</td>
+				<td th:text="${orderLine.articleDescription}">HP elitebook</td>
+				<td th:text="${orderLine.total}">5</td>
+				<td th:text="${orderLine.registered}">5</td>
+				<td>st</td>
+			</tr>
+		</table>					
+
+		<div class="page-divider"></div>					
 
 		<h3>Utrustningslista</h3>			
 		<table class="table">
@@ -249,6 +244,20 @@
 				</tr>
 			</tr>
 		</table>
+		
+		<div class="page-divider"></div>
+
+		<h3>Signering</h3>			
+		
+		<table class="table">
+			<tr>
+				<th style="width:30%;">Datum</th>
+				<th style="width:35%;">Signatur</th>
+				<th style="width:35%;">Namnförtydligande</th>
+			</tr>
+		</table>
+		
+		<div class="signature-line"></div>		
 		
 	</div>
 </div>

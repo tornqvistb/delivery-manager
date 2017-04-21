@@ -23,6 +23,7 @@ public class CustomerGroup {
 	private RegistrationConfig registrationConfig;
 	private ReportsConfig reportsConfig;
 	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
+	private String ourReference;
 
 	public CustomerGroup() {
 		super();
@@ -95,6 +96,14 @@ public class CustomerGroup {
 
 	public void setCustomerCustomFields(List<CustomerCustomField> customerCustomFields) {
 		this.customerCustomFields = customerCustomFields;
+	}
+
+	public String getOurReference() {
+		return ourReference;
+	}
+
+	public void setOurReference(String ourReference) {
+		this.ourReference = ourReference;
 	}
 	
 }
