@@ -135,19 +135,19 @@ public class DeliveryReportController {
 				attachment.setContentType("application/ms-excel");
 				attachment = attachmentRepo.save(attachment);
 				Email email = new Email();
-				email.setAttachmentRef(attachment.getId());
-				
+				email.setAttachmentRef(attachment.getId());				
 				email.setSubject(MAIL_SUBJECT);
 				StringBuffer sb = new StringBuffer();
 				sb.append("Hej!\n\n");
 				sb.append("Bifogat finner ni en rapport med utförda leveranser från LanTeam till " + getCustomerNameFromsession() + ".\n\n");
-				sb.append("Datumintervall för leveranser i denna rapport: " + DateUtil.dateToString(searchBean.getFromDate()) + " - " + DateUtil.dateToString(searchBean.getToDate()) + "\n");
-				sb.append("Ordernummerintervall för leveranser i denna rapport: " + searchBean.getFromOrderNo() + " - " + searchBean.getToOrderNo() + "\n\n");
+				//sb.append("Datumintervall för leveranser i denna rapport: " + DateUtil.dateToString(searchBean.getFromDate()) + " - " + DateUtil.dateToString(searchBean.getToDate()) + "\n");
+				//sb.append("Ordernummerintervall för leveranser i denna rapport: " + searchBean.getFromOrderNo() + " - " + searchBean.getToOrderNo() + "\n\n");
 				sb.append("Med vänlig hälsning\n");
 				sb.append("LanTeam");								
 				email.setContent(sb.toString());
 				email.setSender(propertyRepo.findById(PropertyConstants.MAIL_USERNAME).getStringValue());
 				email.setReceiver(getCustomerEmailFromsession());
+				email.setReplyTo(propertyRepo.findById(PropertyConstants.MAIL_REPLY_TO_ADDRESS).getStringValue());
 				email.setStatus(StatusConstants.EMAIL_STATUS_NEW);
 				emailRepo.save(email);
 				reqAttr.setCustomerCustomFields(searchBean.getCustomerCustomFields());

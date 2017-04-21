@@ -19,6 +19,7 @@ public class Email {
 	private String status;
 	private Date creationDate;
 	private Long attachmentRef;
+	private String replyTo;
 	
 	public Email() {
 		super();
@@ -74,6 +75,12 @@ public class Email {
 	}
 	public void setAttachmentRef(Long attachmentRef) {
 		this.attachmentRef = attachmentRef;
+	}
+	public String getReplyTo() {
+		return replyTo;
+	}
+	public void setReplyTo(String replyTo) {
+		this.replyTo = replyTo;
 	}
 	
 }

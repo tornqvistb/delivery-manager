@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.sun.mail.smtp.SMTPTransport;
 
@@ -71,7 +72,11 @@ public class MailSenderService {
 				Session session = Session.getInstance(props, null);
 				Message msg = new MimeMessage(session);
 				msg.setFrom(new InternetAddress(mailUsername, "LanTeam"));
-				msg.setReplyTo(InternetAddress.parse(email.getSender(), false));
+				if (!StringUtils.isEmpty(email.getReplyTo())) {
+					msg.setReplyTo(InternetAddress.parse(email.getReplyTo(), false));
+				} else {
+					msg.setReplyTo(InternetAddress.parse(email.getSender(), false));
+				}
 				msg.setRecipients(Message.RecipientType.TO,
 						InternetAddress.parse(email.getReceiver(), false));
 				msg.setSubject(email.getSubject());
