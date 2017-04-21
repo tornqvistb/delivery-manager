@@ -85,8 +85,8 @@ public class TransportReportController {
         	order = orderRepo.getOne(order.getId());
         	for (OrderLine orderLine : order.getOrderLines()) {
 	        	List<String> orderCols = new ArrayList<String>();
-	        	if (firstRow) {
-		        	orderCols.add(order.getOrderNumber());
+	        	orderCols.add(order.getOrderNumber());
+	        	if (firstRow) {		        	
 		        	orderCols.add(order.getCustomerSalesOrder());
 		        	orderCols.add(order.getCustomerName());
 		        	orderCols.add(order.getDeliveryPlan().getDeliveryArea().getName());
@@ -94,7 +94,6 @@ public class TransportReportController {
 		        	orderCols.add(order.getDeliveryPostalAddress2());
 		        	orderCols.add(order.getDeliveryPlan().getComment());
 	        	} else {
-		        	orderCols.add("");
 		        	orderCols.add("");
 		        	orderCols.add("");
 		        	orderCols.add("");
