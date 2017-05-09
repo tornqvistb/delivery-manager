@@ -50,6 +50,10 @@ public class NetsetOrderRepository {
     
     private static String MISSING = "Saknas";
     
+    private static long CUSTOM_FIELD_CONTACT_NAME = 1;
+    private static long CUSTOM_FIELD_CONTACT_EMAIL = 2;
+    private static long CUSTOM_FIELD_CONTACT_PHONE = 3;
+    
     public CreateOrderResponse createOrder(CreateOrderRequest request) {
     	int returnCode = RESULT_CODE_CREATED_OK;
     	String description = DESCRIPTION_CREATED_OK;
@@ -57,7 +61,7 @@ public class NetsetOrderRepository {
     		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_MANDATORY_DATA_MISSING + ". Ordernr: " + getOrderNoFromRequest(request, MISSING));
     		return getResponse(RESULT_CODE_ERROR_MANDATORY_DATA_MISSING, DESCRIPTION_MANDATORY_DATA_MISSING);
     	}
-    	CustomerGroup customerGroup = customerGroupRepo.findOne(Long.parseLong(request.getOrderData().getValue().getHeader().getCustomerNumber()));    	
+    	CustomerGroup customerGroup = customerGroupRepo.findByName(request.getOrderData().getValue().getHeader().getCustomerGroupName());    	
     	if (customerGroup == null) {
     		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_UNKNOWN_CUSTOMER_GROUP + ". Customer group: " + getOrderNoFromRequest(request, MISSING));
     		return getResponse(RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP, DESCRIPTION_UNKNOWN_CUSTOMER_GROUP);
@@ -82,7 +86,8 @@ public class NetsetOrderRepository {
 		order.setCustomerGroup(customerGroup);
 		order.setJointInvoicing(getJointInvoicing(request.getOrderData().getValue().getHeader().getCustomerNumber()));
 		if (request.getOrderData().getValue().getInformationFields() != null 
-				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null) {
+				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null
+				&& !customerGroup.getName().equals(propertyRepo.getOne(PropertyConstants.CUSTOMER_GROUP_INTRASERVICE).getStringValue())) {
 			List<OrderCustomField> orderCustomFields = new ArrayList<OrderCustomField>();
 			for (InformationField infoField : request.getOrderData().getValue().getInformationFields().getInformationField()) {
 				OrderCustomField orderCustomField = new OrderCustomField();
@@ -90,6 +95,7 @@ public class NetsetOrderRepository {
 				orderCustomField.setValue(infoField.getData());
 				orderCustomField.setOrderHeader(order);
 				orderCustomFields.add(orderCustomField);
+				order = checkForMatchingField(order, infoField);
 			}
 			order.setOrderCustomFields(orderCustomFields);
 		}
@@ -97,6 +103,17 @@ public class NetsetOrderRepository {
 		orderRepo.save(order);
 		return getResponse(returnCode, description);
 
+    }
+    
+    private OrderHeader checkForMatchingField(OrderHeader order, InformationField infoField) {
+    	if (infoField.getIdentification() == CUSTOM_FIELD_CONTACT_NAME) {
+    		order.setContact1Name(infoField.getData());
+    	} else if (infoField.getIdentification() == CUSTOM_FIELD_CONTACT_EMAIL) {
+    		order.setContact1Email(infoField.getData());
+    	} else if (infoField.getIdentification() == CUSTOM_FIELD_CONTACT_PHONE) {
+        	order.setContact1Phone(infoField.getData());
+    	}
+    	return order;
     }
     
     private int getJointInvoicing (String customerNo) {

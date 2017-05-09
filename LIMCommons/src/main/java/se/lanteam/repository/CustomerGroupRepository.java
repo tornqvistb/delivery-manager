@@ -11,4 +11,7 @@ import se.lanteam.domain.CustomerGroup;
 public interface CustomerGroupRepository extends JpaRepository<CustomerGroup, Long> {
 	@Query("SELECT c FROM CustomerGroup c WHERE c.id = :id")
     public CustomerGroup findById(@Param("id") Long id);
+	@Query("SELECT c FROM CustomerGroup c WHERE c.name = :name")
+    public CustomerGroup findByName(@Param("name") String name);
+	
 }
