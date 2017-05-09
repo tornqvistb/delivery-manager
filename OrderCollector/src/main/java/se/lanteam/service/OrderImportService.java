@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import se.lanteam.constants.PropertyConstants;
+import se.lanteam.constants.RestrictionCodes;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderComment;
@@ -40,7 +41,6 @@ public class OrderImportService {
 	private static final String ERROR_ARTICLE_ID_MISSING = GENERAL_FILE_ERROR + "Artikel-ID saknas på orderrad i fil: ";
 	private static final String ERROR_ROW_NUMBER_MISSING = GENERAL_FILE_ERROR + "Orderradnummer saknas på orderrad i fil: ";
 	private static final String ERROR_TOTAL_MISSING = GENERAL_FILE_ERROR + "Antal saknas på orderrad i fil: ";
-	private static final String ERROR_RESTRICTION_CODE_MISSING = GENERAL_FILE_ERROR + "Restriktionskod saknas på orderrad i fil: ";
 	private static final String ERROR_ORDER_NUMBER_ALREADY_EXISTS = GENERAL_FILE_ERROR + "Ordernummer finns redan, fil: ";
 	
 	private static final Logger LOG = LoggerFactory.getLogger(OrderImportService.class);
@@ -126,7 +126,7 @@ public class OrderImportService {
 				orderLine.setTotal(jsonOrderLine.optInt("Antal"));
 				orderLine.setRemaining(jsonOrderLine.optInt("Antal"));
 				orderLine.setRegistered(0);
-				orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod"));
+				orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod", RestrictionCodes.NO_SLA_NO_SERIALN0));
 				orderLine.setOrderHeader(orderHeader);
 				orderHeader.getOrderLines().add(orderLine);
 				articleNumbers.append(orderLine.getArticleNumber() + ";");
@@ -162,10 +162,6 @@ public class OrderImportService {
 					saveError(ERROR_TOTAL_MISSING + fileName);
 					return false;					
 				}
-				if (StringUtils.isEmpty(line.getRestrictionCode())) {
-					saveError(ERROR_RESTRICTION_CODE_MISSING + fileName);
-					return false;					
-				}				
 			}
 		}
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderHeader.getOrderNumber());

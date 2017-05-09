@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
+import se.lanteam.constants.RestrictionCodes;
+
 @Entity
 public class OrderLine {
 
@@ -95,7 +97,7 @@ public class OrderLine {
 	@Transient
 	public Boolean getHasSerialNo() {
 		Boolean result = false;
-		if (this.restrictionCode.equals("1") || this.restrictionCode.equals("3")) {
+		if (this.restrictionCode.equals(RestrictionCodes.NO_SLA_SERIALN0) || this.restrictionCode.equals(RestrictionCodes.SLA_SERIALN0)) {
 			result = true;
 		}
 		return result;
