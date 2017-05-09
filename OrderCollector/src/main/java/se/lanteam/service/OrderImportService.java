@@ -118,19 +118,18 @@ public class OrderImportService {
 		StringBuffer articleNumbers = new StringBuffer();
 		for (int i = 0; i < jsonOrderLines.length(); i++) {			
 			JSONObject jsonOrderLine = jsonOrderLines.getJSONObject(i);
-			if (jsonOrderLine.optInt("KundRadnummer") > 0) {
-				OrderLine orderLine = new OrderLine();
-				orderLine.setRowNumber(jsonOrderLine.optInt("KundRadnummer"));
-				orderLine.setArticleNumber(jsonOrderLine.optString("Artikelnummer"));
-				orderLine.setArticleDescription(jsonOrderLine.optString("Artikelbenämning"));
-				orderLine.setTotal(jsonOrderLine.optInt("Antal"));
-				orderLine.setRemaining(jsonOrderLine.optInt("Antal"));
-				orderLine.setRegistered(0);
-				orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod", RestrictionCodes.NO_SLA_NO_SERIALN0));
-				orderLine.setOrderHeader(orderHeader);
-				orderHeader.getOrderLines().add(orderLine);
-				articleNumbers.append(orderLine.getArticleNumber() + ";");
-			}
+			OrderLine orderLine = new OrderLine();
+			orderLine.setRowNumber(jsonOrderLine.optInt("Radnummer"));
+			orderLine.setCustomerRowNumber(jsonOrderLine.optInt("KundRadnummer", 0));
+			orderLine.setArticleNumber(jsonOrderLine.optString("Artikelnummer"));
+			orderLine.setArticleDescription(jsonOrderLine.optString("Artikelbenämning"));
+			orderLine.setTotal(jsonOrderLine.optInt("Antal"));
+			orderLine.setRemaining(jsonOrderLine.optInt("Antal"));
+			orderLine.setRegistered(0);
+			orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod", RestrictionCodes.NO_SLA_NO_SERIALN0));
+			orderLine.setOrderHeader(orderHeader);
+			orderHeader.getOrderLines().add(orderLine);
+			articleNumbers.append(orderLine.getArticleNumber() + ";");
 		}
 		orderHeader.setArticleNumbers(articleNumbers.toString());
 		return orderHeader;

@@ -28,6 +28,7 @@ public class OrderLine {
 	private Integer remaining;
 	private OrderHeader orderHeader;
 	private Set<Equipment> equipments = new HashSet<Equipment>();
+	private Integer customerRowNumber;
 	
 	@Id
 	@GeneratedValue
@@ -136,6 +137,12 @@ public class OrderLine {
 			}
 		}
 		return result;
+	}
+	public Integer getCustomerRowNumber() {
+		return customerRowNumber;
+	}
+	public void setCustomerRowNumber(Integer customerRowNumber) {
+		this.customerRowNumber = customerRowNumber;
 	}
 	
 }

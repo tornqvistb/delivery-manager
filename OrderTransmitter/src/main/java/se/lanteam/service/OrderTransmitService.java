@@ -66,10 +66,12 @@ public class OrderTransmitService {
         	for (OrderHeader order : orders) {
         		// Create soap message and send to Intraservice
         		try {
-					Header header = wsClient.sendOrderDelivery(order, config);
-					if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
-						throw new Exception(header.getKod() + " - " + header.getText());
-					}
+        			if (order.getCustomerGroup().getSendDeliveryNotification()) {
+						Header header = wsClient.sendOrderDelivery(order, config);
+						if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
+							throw new Exception(header.getKod() + " - " + header.getText());
+						}
+        			}
 					// Create message to Visma and store on disk. Only if joint invoicing (samfakturering) is not true.
 					if (order.getJointInvoicing() == 0) {
 						createFileToBusinessSystem(order);

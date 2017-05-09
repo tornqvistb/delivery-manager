@@ -24,6 +24,7 @@ public class CustomerGroup {
 	private ReportsConfig reportsConfig;
 	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
 	private String ourReference;
+	private Boolean sendDeliveryNotification;
 
 	public CustomerGroup() {
 		super();
@@ -104,6 +105,14 @@ public class CustomerGroup {
 
 	public void setOurReference(String ourReference) {
 		this.ourReference = ourReference;
+	}
+
+	public Boolean getSendDeliveryNotification() {
+		return sendDeliveryNotification;
+	}
+
+	public void setSendDeliveryNotification(Boolean sendDeliveryNotification) {
+		this.sendDeliveryNotification = sendDeliveryNotification;
 	}
 	
 }

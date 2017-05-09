@@ -60,6 +60,12 @@
 															<td><input class="large-field" th:field="${customerGroup.backgroundColor}"
 																type="text" id="backgroundColor" /></td>
 														</tr>
+														<tr>
+															<th scope="row">Anropa leveransaviseringstjänst hos kund </th>
+															<td><input type="checkbox" name="deliveryNotification" th:field="${customerGroup.sendDeliveryNotification}" th:checked="${customerGroup.sendDeliveryNotification}" /></td>
+														</tr>
+																												
+														
 													</tbody>
 												</table>
 											</div>

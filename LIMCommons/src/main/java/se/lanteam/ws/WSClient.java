@@ -66,31 +66,33 @@ public class WSClient {
 		avisering.setTransactionId("");
 		// orderlines
 		for (OrderLine orderLine : orderHeader.getOrderLines()) {
-			line = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLine();
-			line.setLineId(String.valueOf(orderLine.getRowNumber()));
-			line.setLineStatus("");
-			line.setYourOrderLine(String.valueOf(orderLine.getRowNumber()));
-			line.setItemId(orderLine.getArticleNumber());
-			line.setQty(String.valueOf(orderLine.getTotal()));
-			line.setPrice("");
-			line.setTotal("");
-			line.setCurrency("");
-			line.setRequestedDelDate(""); // Värde här? finns från Atea - skicka tomt
-			line.setEstimatedDelDate(""); // Värde här? finns från Atea - skicka tomt
-			line.setDescription("");
-			line.setSpecification("");
-			line.setDescription2("");
-			line.setSpecification2("");
-			line.setActualDelDate(""); // Värde här? finns från Atea - Datumet när detta skickas
-			line.setOrderLineComment("");			
-			
-			for (Equipment equipment : orderLine.getEquipments()) {
-				info = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLineInfo();
-				info.setInvNo(equipment.getStealingTag());
-				info.setSerialNo(equipment.getSerialNo());
-				line.getInfo().add(info);
+			if (orderLine.getCustomerRowNumber() > 0) {
+				line = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLine();
+				line.setLineId(String.valueOf(orderLine.getRowNumber()));
+				line.setLineStatus("");
+				line.setYourOrderLine(String.valueOf(orderLine.getRowNumber()));
+				line.setItemId(orderLine.getArticleNumber());
+				line.setQty(String.valueOf(orderLine.getTotal()));
+				line.setPrice("");
+				line.setTotal("");
+				line.setCurrency("");
+				line.setRequestedDelDate(""); // Värde här? finns från Atea - skicka tomt
+				line.setEstimatedDelDate(""); // Värde här? finns från Atea - skicka tomt
+				line.setDescription("");
+				line.setSpecification("");
+				line.setDescription2("");
+				line.setSpecification2("");
+				line.setActualDelDate(""); // Värde här? finns från Atea - Datumet när detta skickas
+				line.setOrderLineComment("");			
+				
+				for (Equipment equipment : orderLine.getEquipments()) {
+					info = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLineInfo();
+					info.setInvNo(equipment.getStealingTag());
+					info.setSerialNo(equipment.getSerialNo());
+					line.getInfo().add(info);
+				}
+				avisering.getLine().add(line);
 			}
-			avisering.getLine().add(line);
 		}
 		body.setLeveransAvisering(avisering);
 		delivery.setBody(body);
