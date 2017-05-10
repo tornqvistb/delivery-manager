@@ -86,7 +86,7 @@ public class NetsetOrderRepository {
 		order.setJointInvoicing(getJointInvoicing(request.getOrderData().getValue().getHeader().getCustomerNumber()));
 		if (request.getOrderData().getValue().getInformationFields() != null 
 				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null
-				&& !customerGroup.getName().equals(propertyRepo.getOne(PropertyConstants.CUSTOMER_GROUP_INTRASERVICE).getStringValue())) {
+				&& !customerGroup.getName().equals(propertyRepo.findById(PropertyConstants.CUSTOMER_GROUP_INTRASERVICE).getStringValue())) {
 			List<OrderCustomField> orderCustomFields = new ArrayList<OrderCustomField>();
 			for (InformationField infoField : request.getOrderData().getValue().getInformationFields().getInformationField()) {
 				OrderCustomField orderCustomField = new OrderCustomField();
@@ -118,8 +118,8 @@ public class NetsetOrderRepository {
     
     private int getJointInvoicing (String customerNo) {
     	int result = 0;
-    	SystemProperty jointInvProp = propertyRepo.getOne(PropertyConstants.JOINT_INVOICING_CUST_NUMBERS);
-    	if (jointInvProp != null && !StringUtils.isEmpty(jointInvProp.getStringValue())) {
+    	SystemProperty jointInvProp = propertyRepo.findById(PropertyConstants.JOINT_INVOICING_CUST_NUMBERS);
+    	if (jointInvProp != null && jointInvProp.getStringValue() != null) {
     		if (Arrays.asList(jointInvProp.getStringValue().split(";")).contains(customerNo)) {
     			result = 1;
     		}

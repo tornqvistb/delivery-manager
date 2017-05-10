@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import se.lanteam.constants.LimStringUtil;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.RestrictionCodes;
 import se.lanteam.constants.StatusConstants;
@@ -75,6 +77,7 @@ public class OrderImportService {
 						comment.setMessage("Tack för din beställning!");
 						comment.setOrderLine("0");
 						comment.setOrderHeader(orderHeader);
+						orderHeader.setOrderComments(new HashSet<OrderComment>());
 						orderHeader.getOrderComments().add(comment);
 						orderHeader.setReceivingStatus();
 						orderRepo.save(orderHeader);
@@ -93,7 +96,7 @@ public class OrderImportService {
 		JSONObject jsonOrder = new JSONObject(json);
 		List<OrderHeader> orderHeaderList = orderRepo.findOrdersByOrderNumber(String.valueOf(jsonOrder.optInt("Ordernummer")));
 		if (orderHeaderList.size() > 0) {
-			return orderHeaderList.get(0);
+			return orderRepo.findOne(orderHeaderList.get(0).getId());			
 		} else {
 			return null;
 		}
@@ -127,9 +130,9 @@ public class OrderImportService {
 		orderHeader.setCustomerOrderNumber(jsonOrder.optString("Intraservice_ordernummer"));
 		orderHeader.setCustomerSalesOrder(jsonOrder.optString("Intraservice_beställningsnummer"));
 		orderHeader.setPartnerId(jsonOrder.optString("PartnerId"));
-		orderHeader.setContact1Name(jsonOrder.optString("Kontakt1_namn", alternativeC1Name));
-		orderHeader.setContact1Email(jsonOrder.optString("Kontakt1_epost", alternativeC1EMail));
-		orderHeader.setContact1Phone(jsonOrder.optString("Kontakt1_telefon", alternativeC1EPhone));
+		orderHeader.setContact1Name(LimStringUtil.NVL(jsonOrder.optString("Kontakt1_namn"), alternativeC1Name));
+		orderHeader.setContact1Email(LimStringUtil.NVL(jsonOrder.optString("Kontakt1_epost"), alternativeC1EMail));
+		orderHeader.setContact1Phone(LimStringUtil.NVL(jsonOrder.optString("Kontakt1_telefon"), alternativeC1EPhone));
 		orderHeader.setContact2Name(jsonOrder.optString("Kontakt2_namn"));
 		orderHeader.setContact2Email(jsonOrder.optString("Kontakt2_epost"));
 		orderHeader.setContact2Phone(jsonOrder.optString("Kontakt2_telefon"));
@@ -148,6 +151,9 @@ public class OrderImportService {
 			orderLine.setRegistered(0);
 			orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod", RestrictionCodes.NO_SLA_NO_SERIALN0));
 			orderLine.setOrderHeader(orderHeader);
+			if (i == 0) {
+				orderHeader.setOrderLines(new HashSet<OrderLine>());
+			}
 			orderHeader.getOrderLines().add(orderLine);
 			articleNumbers.append(orderLine.getArticleNumber() + ";");
 		}
@@ -184,11 +190,13 @@ public class OrderImportService {
 				}
 			}
 		}
+		/*
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderHeader.getOrderNumber());
 		if (orders != null && orders.size() > 0) {
 			saveError(ERROR_ORDER_NUMBER_ALREADY_EXISTS + fileName);
 			return false;								
 		}
+		*/
 		return true;
 	}
 	
