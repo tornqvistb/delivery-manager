@@ -2,7 +2,6 @@ package se.lanteam.domain;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,6 +66,8 @@ public class OrderHeader {
 	private String jointDelivery;
 	private int jointInvoicing;
 	private String articleNumbers;
+	private Boolean receivedFromWebshop = false;
+	private Boolean receivedFromERP = false;
 	@Transient
 	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
 	
@@ -315,7 +316,9 @@ public class OrderHeader {
 	@Transient
 	public String getOrderSummary() {
 		StringBuilder result = new StringBuilder();
-		if (this.status.equals(StatusConstants.ORDER_STATUS_NEW)) {
+		if (this.status.equals(StatusConstants.ORDER_STATUS_RECEIVING)) {
+			result.append("Ordern är delvis mottagen i LIM. Registrering kan påbörjas först när ordern har tagit emot information från samtliga system.");
+		} else if (this.status.equals(StatusConstants.ORDER_STATUS_NEW)) {
 			result.append("Registrering ej påbörjad");
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_STARTED)) {
 			result.append("Registrering påbörjad.");
@@ -449,15 +452,27 @@ public class OrderHeader {
 	public void setJointInvoicing(int jointInvoicing) {
 		this.jointInvoicing = jointInvoicing;
 	}
-	@Transient
-	public String getCurrentDate() {
-		return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-	}
 	public String getArticleNumbers() {
 		return articleNumbers;
 	}
 	public void setArticleNumbers(String articleNumbers) {
 		this.articleNumbers = articleNumbers;
+	}
+	public Boolean getReceivedFromWebshop() {
+		return receivedFromWebshop;
+	}
+	public void setReceivedFromWebshop(Boolean receivedFromWebshop) {
+		this.receivedFromWebshop = receivedFromWebshop;
+	}
+	public Boolean getReceivedFromERP() {
+		return receivedFromERP;
+	}
+	public void setReceivedFromERP(Boolean receivedFromERP) {
+		this.receivedFromERP = receivedFromERP;
+	}
+	@Transient
+	public String getCurrentDate() {
+		return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 	}
 	@Transient
 	public List<OrderCustomField> getCustomFieldsInDeliveryNote() {
@@ -466,6 +481,24 @@ public class OrderHeader {
 	@Transient
 	public void setCustomFieldsInDeliveryNote(List<OrderCustomField> customFieldsInDeliveryNote) {
 		this.customFieldsInDeliveryNote = customFieldsInDeliveryNote;
+	}
+	@Transient
+	public void setReceivingStatus() {
+		if (this.receivedFromERP && this.receivedFromWebshop) {
+			this.status = StatusConstants.ORDER_STATUS_NEW;
+		} else {
+			this.status = StatusConstants.ORDER_STATUS_RECEIVING;
+		}
+	}
+	@Transient
+	public Boolean getOkToRegister() {
+		if (this.getUnCompletedOrderLines().size() > 0
+				&& this.receivedFromWebshop != null && this.receivedFromWebshop
+				&& this.receivedFromERP != null && this.receivedFromERP) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 }

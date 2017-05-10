@@ -68,13 +68,15 @@ public class OrderImportService {
 					for (String row : rows) {
 						sb.append(row);
 					}
-					OrderHeader orderHeader = getOrderHeaderFromJson(sb.toString());
+					OrderHeader orderHeader = getOrderHeaderFromDB(sb.toString());
+					orderHeader = getOrderHeaderFromJson(sb.toString(), orderHeader);
 					if (validate(orderHeader, fileEntry.getName())) {
 						OrderComment comment = new OrderComment();
 						comment.setMessage("Tack för din beställning!");
 						comment.setOrderLine("0");
 						comment.setOrderHeader(orderHeader);
 						orderHeader.getOrderComments().add(comment);
+						orderHeader.setReceivingStatus();
 						orderRepo.save(orderHeader);
 						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
 					} else {
@@ -87,9 +89,27 @@ public class OrderImportService {
 		}
 	}
 
+	private OrderHeader getOrderHeaderFromDB(String json) {
+		JSONObject jsonOrder = new JSONObject(json);
+		List<OrderHeader> orderHeaderList = orderRepo.findOrdersByOrderNumber(String.valueOf(jsonOrder.optInt("Ordernummer")));
+		if (orderHeaderList.size() > 0) {
+			return orderHeaderList.get(0);
+		} else {
+			return null;
+		}
+	}
     
-	private OrderHeader getOrderHeaderFromJson(String json) {
-		OrderHeader orderHeader = new OrderHeader();
+	private OrderHeader getOrderHeaderFromJson(String json, OrderHeader orderHeader) {
+		String alternativeC1Name = "";
+		String alternativeC1EMail = "";
+		String alternativeC1EPhone = "";
+		if (orderHeader == null) {
+			orderHeader = new OrderHeader();
+		} else {
+			alternativeC1Name = orderHeader.getContact1Name();
+			alternativeC1EMail = orderHeader.getContact1Email();
+			alternativeC1EPhone = orderHeader.getContact1Phone();			
+		}
 		JSONObject jsonOrder = new JSONObject(json);
 		orderHeader.setOrderNumber(String.valueOf(jsonOrder.optInt("Ordernummer")));
 		orderHeader.setOrderDate(jsonDateToDate(jsonOrder.optString("Orderdatum")));
@@ -107,9 +127,9 @@ public class OrderImportService {
 		orderHeader.setCustomerOrderNumber(jsonOrder.optString("Intraservice_ordernummer"));
 		orderHeader.setCustomerSalesOrder(jsonOrder.optString("Intraservice_beställningsnummer"));
 		orderHeader.setPartnerId(jsonOrder.optString("PartnerId"));
-		orderHeader.setContact1Name(jsonOrder.optString("Kontakt1_namn"));
-		orderHeader.setContact1Email(jsonOrder.optString("Kontakt1_epost"));
-		orderHeader.setContact1Phone(jsonOrder.optString("Kontakt1_telefon"));
+		orderHeader.setContact1Name(jsonOrder.optString("Kontakt1_namn", alternativeC1Name));
+		orderHeader.setContact1Email(jsonOrder.optString("Kontakt1_epost", alternativeC1EMail));
+		orderHeader.setContact1Phone(jsonOrder.optString("Kontakt1_telefon", alternativeC1EPhone));
 		orderHeader.setContact2Name(jsonOrder.optString("Kontakt2_namn"));
 		orderHeader.setContact2Email(jsonOrder.optString("Kontakt2_epost"));
 		orderHeader.setContact2Phone(jsonOrder.optString("Kontakt2_telefon"));
@@ -132,6 +152,7 @@ public class OrderImportService {
 			articleNumbers.append(orderLine.getArticleNumber() + ";");
 		}
 		orderHeader.setArticleNumbers(articleNumbers.toString());
+		orderHeader.setReceivedFromERP(true);
 		return orderHeader;
 	}
 	

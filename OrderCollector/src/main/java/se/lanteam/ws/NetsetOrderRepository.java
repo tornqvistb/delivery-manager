@@ -71,7 +71,6 @@ public class NetsetOrderRepository {
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
 		if (orders.isEmpty()) {
 			order = new OrderHeader();
-			order.setStatus(StatusConstants.ORDER_STATUS_NEW);
 		} else {
 			order = orders.get(0);
 			returnCode = RESULT_CODE_UPDATED_OK;
@@ -99,7 +98,8 @@ public class NetsetOrderRepository {
 			}
 			order.setOrderCustomFields(orderCustomFields);
 		}
-
+		order.setReceivedFromWebshop(true);
+		order.setReceivingStatus();
 		orderRepo.save(order);
 		return getResponse(returnCode, description);
 

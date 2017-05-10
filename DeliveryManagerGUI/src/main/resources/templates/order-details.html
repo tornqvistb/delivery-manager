@@ -46,7 +46,7 @@
 											<div class="form-section">
 												<!-- Show registration section only if there are things left to register -->
 												<div
-													th:if="${not #lists.isEmpty(order.unCompletedOrderLines)}"
+													th:if="${order.okToRegister} == true"
 													th:remove="tag">
 													<h3>Registrera utrustning</h3>
 													<div th:if="${not #strings.isEmpty(reqAttr.regEquipmentResult)}"
