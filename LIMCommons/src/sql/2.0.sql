@@ -21,27 +21,32 @@ insert into delivery_area (id, name, creation_date) values (5, 'Hisingen', sysda
 insert into delivery_area (id, name, creation_date) values (6, 'Marks kommun', sysdate());
 insert into delivery_area (id, name, creation_date) values (7, 'Partille', sysdate());
 
-insert into customer_group (id, name, email_address, creation_date) values (1, 'Göteborgs Stad', 'tornqvistb@gmail.com', sysdate());
-insert into customer_group (id, name, email_address, creation_date) values (2, 'Partille Kommun', 'tornqvistb@gmail.com',sysdate());
+insert into customer_group (id, name, email_address, creation_date) values (1, 'Intraservice', 'tornqvistb@gmail.com', sysdate());
+insert into customer_group (id, name, email_address, creation_date) values (2, 'Partille', 'tornqvistb@gmail.com',sysdate());
+insert into customer_group (id, name, email_address, creation_date) values (3, 'Partille Kommun', 'tornqvistb@gmail.com',sysdate());
 
 insert into registration_config (id, customer_group_id) values (1,1);
 insert into registration_config (id, customer_group_id) values (2,2);
+insert into registration_config (id, customer_group_id) values (3,3);
+
 
 insert into reports_config (id, customer_group_id) values (1,1);
 insert into reports_config (id, customer_group_id) values (2,2);
+insert into reports_config (id, customer_group_id) values (3,3);
+
 
 update order_header set customer_group_id = 1 where id > 1;
 
-insert into custom_field (identification, label, creation_date) values (1, 'OU/image', sysdate());
-insert into custom_field (identification, label, creation_date) values (2, 'Extra program', sysdate());
-insert into custom_field (identification, label, creation_date) values (3, 'Ekonomisk leveransadress', sysdate());
-insert into custom_field (identification, label, creation_date) values (4, 'Telefonnummer', sysdate());
-insert into custom_field (identification, label, creation_date) values (5, 'Mailadress', sysdate());
-insert into custom_field (identification, label, creation_date) values (6, 'Förvalting', sysdate());
-insert into custom_field (identification, label, creation_date) values (7, 'Användare i klartext', sysdate());
+insert into custom_field (identification, label, creation_date) values (6, 'OU/image', sysdate());
+insert into custom_field (identification, label, creation_date) values (7, 'Extra program', sysdate());
+insert into custom_field (identification, label, creation_date) values (4, 'Ekonomisk leveransadress', sysdate());
+insert into custom_field (identification, label, creation_date) values (3, 'Telefonnummer', sysdate());
+insert into custom_field (identification, label, creation_date) values (2, 'Mailadress', sysdate());
+insert into custom_field (identification, label, creation_date) values (5, 'Förvalting', sysdate());
+insert into custom_field (identification, label, creation_date) values (1, 'Användare i klartext', sysdate());
 insert into custom_field (identification, label, creation_date) values (8, 'Gammalt datornamn', sysdate());
-insert into custom_field (identification, label, creation_date) values (9, 'Godsmärkning', sysdate());
-insert into custom_field (identification, label, creation_date) values (10, 'Övrigt 2', sysdate());
+insert into custom_field (identification, label, creation_date) values (9, 'Samleverans', sysdate());
+insert into custom_field (identification, label, creation_date) values (10, 'Övrigt', sysdate());
 
 -- Update article ids field on order_header
 CREATE PROCEDURE `update_articles_on_order_header`()
@@ -88,6 +93,28 @@ insert into customer_custom_field (id, custom_field_identification, customer_gro
 insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (8, 8, 1, 0, 0, 0, 0, sysdate());
 insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (9, 9, 1, 0, 0, 0, 0, sysdate());
 insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (10, 10, 1, 0, 0, 0, 0, sysdate());
+
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (11, 1, 2, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (12, 2, 2, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (13, 3, 2, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (14, 4, 2, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (15, 5, 2, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (16, 6, 2, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (17, 7, 2, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (18, 8, 2, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (19, 9, 2, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (20, 10, 2, 0, 0, 0, 0, sysdate());
+
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (21, 1, 3, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (22, 2, 3, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (23, 3, 3, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (24, 4, 3, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (25, 5, 3, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (26, 6, 3, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (27, 7, 3, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (28, 8, 3, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (29, 9, 3, 0, 0, 0, 0, sysdate());
+insert into customer_custom_field (id, custom_field_identification, customer_group_id, show_in_delivery_note, show_in_delivery_report, show_in_sla_report, show_in_work_note, creation_date) values (30, 10, 3, 0, 0, 0, 0, sysdate());
 
 
 commit;
