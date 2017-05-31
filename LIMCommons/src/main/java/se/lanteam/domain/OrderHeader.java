@@ -32,6 +32,7 @@ public class OrderHeader {
 
 	private Long id;
 	private String orderNumber;
+	private String netsetOrderNumber;
 	private Date orderDate;
 	private String customerNumber;
 	private String customerName;
@@ -85,6 +86,12 @@ public class OrderHeader {
 	}
 	public void setOrderNumber(String orderNumber) {
 		this.orderNumber = orderNumber;
+	}
+	public String getNetsetOrderNumber() {
+		return netsetOrderNumber;
+	}
+	public void setNetsetOrderNumber(String netsetOrderNumber) {
+		this.netsetOrderNumber = netsetOrderNumber;
 	}
 	public String getCustomerOrderNumber() {
 		return customerOrderNumber;
