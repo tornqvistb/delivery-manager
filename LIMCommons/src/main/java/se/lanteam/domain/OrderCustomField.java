@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
+import se.lanteam.constants.CustomFieldConstants;
 
 @Entity
 public class OrderCustomField {
@@ -61,5 +64,13 @@ public class OrderCustomField {
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
-	
+	@Transient
+	public Boolean getShowInOrderDetails() {
+		for (long id : CustomFieldConstants.CONTACT_FIELDS) {
+			if (id == this.customField.getIdentification()) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

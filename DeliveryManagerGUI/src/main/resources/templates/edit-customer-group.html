@@ -61,10 +61,13 @@
 																type="text" id="backgroundColor" /></td>
 														</tr>
 														<tr>
-															<th scope="row">Anropa leveransaviseringstjänst hos kund </th>
+															<th scope="row">Anropa leveransaviseringstjänst hos kund</th>
 															<td><input type="checkbox" name="deliveryNotification" th:field="${customerGroup.sendDeliveryNotification}" th:checked="${customerGroup.sendDeliveryNotification}" /></td>
 														</tr>
-																												
+														<tr>
+															<th scope="row">Hämta kontaktuppgifter från Netset</th>
+															<td><input type="checkbox" name="getContactInfoFromNetset" th:field="${customerGroup.getContactInfoFromNetset}" th:checked="${customerGroup.getContactInfoFromNetset}" /></td>
+														</tr>
 														
 													</tbody>
 												</table>

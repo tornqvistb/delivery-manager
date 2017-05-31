@@ -85,6 +85,7 @@ public class OrderImportService {
 					} else {
 						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					}
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -98,23 +99,22 @@ public class OrderImportService {
 		if (orderHeaderList.size() > 0) {
 			return orderRepo.findOne(orderHeaderList.get(0).getId());			
 		} else {
-			return null;
+			orderHeaderList = orderRepo.findOrdersByNetsetOrderNumber(String.valueOf(jsonOrder.optInt("Netset_ordernummer")));
+			if (orderHeaderList.size() > 0) {
+				return orderRepo.findOne(orderHeaderList.get(0).getId());
+			} else {
+				return null;
+			}
 		}
 	}
     
 	private OrderHeader getOrderHeaderFromJson(String json, OrderHeader orderHeader) {
-		String alternativeC1Name = "";
-		String alternativeC1EMail = "";
-		String alternativeC1EPhone = "";
 		if (orderHeader == null) {
 			orderHeader = new OrderHeader();
-		} else {
-			alternativeC1Name = orderHeader.getContact1Name();
-			alternativeC1EMail = orderHeader.getContact1Email();
-			alternativeC1EPhone = orderHeader.getContact1Phone();			
 		}
 		JSONObject jsonOrder = new JSONObject(json);
 		orderHeader.setOrderNumber(String.valueOf(jsonOrder.optInt("Ordernummer")));
+		orderHeader.setNetsetOrderNumber(String.valueOf(jsonOrder.optInt("Netset_ordernummer")));
 		orderHeader.setOrderDate(jsonDateToDate(jsonOrder.optString("Orderdatum")));
 		orderHeader.setCustomerName(jsonOrder.optString("Kundnamn"));
 		orderHeader.setCustomerNumber(jsonOrder.optString("Kundnummer"));
@@ -130,9 +130,11 @@ public class OrderImportService {
 		orderHeader.setCustomerOrderNumber(jsonOrder.optString("Intraservice_ordernummer"));
 		orderHeader.setCustomerSalesOrder(jsonOrder.optString("Intraservice_beställningsnummer"));
 		orderHeader.setPartnerId(jsonOrder.optString("PartnerId"));
-		orderHeader.setContact1Name(LimStringUtil.NVL(jsonOrder.optString("Kontakt1_namn"), alternativeC1Name));
-		orderHeader.setContact1Email(LimStringUtil.NVL(jsonOrder.optString("Kontakt1_epost"), alternativeC1EMail));
-		orderHeader.setContact1Phone(LimStringUtil.NVL(jsonOrder.optString("Kontakt1_telefon"), alternativeC1EPhone));
+		if (!orderHeader.getContactInfoFromNetset()) {
+			orderHeader.setContact1Name(jsonOrder.optString("Kontakt1_namn"));
+			orderHeader.setContact1Email(jsonOrder.optString("Kontakt1_epost"));
+			orderHeader.setContact1Phone(jsonOrder.optString("Kontakt1_telefon"));
+		}
 		orderHeader.setContact2Name(jsonOrder.optString("Kontakt2_namn"));
 		orderHeader.setContact2Email(jsonOrder.optString("Kontakt2_epost"));
 		orderHeader.setContact2Phone(jsonOrder.optString("Kontakt2_telefon"));

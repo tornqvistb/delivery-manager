@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.constants.PropertyConstants;
-import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderCustomField;
@@ -50,9 +50,8 @@ public class NetsetOrderRepository {
     
     private static String MISSING = "Saknas";
     
-    private static long CUSTOM_FIELD_CONTACT_NAME = 1;
-    private static long CUSTOM_FIELD_CONTACT_EMAIL = 2;
-    private static long CUSTOM_FIELD_CONTACT_PHONE = 3;
+    private static String POSTFIX_NETSET_ORDER_NO = "-N";
+    
     
     public CreateOrderResponse createOrder(CreateOrderRequest request) {
     	int returnCode = RESULT_CODE_CREATED_OK;
@@ -68,9 +67,10 @@ public class NetsetOrderRepository {
     	}
     	
 		OrderHeader order = null;
-		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
+		List<OrderHeader> orders = orderRepo.findOrdersByNetsetOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
 		if (orders.isEmpty()) {
 			order = new OrderHeader();
+			order.setOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()) + POSTFIX_NETSET_ORDER_NO);
 		} else {
 			order = orders.get(0);
 			returnCode = RESULT_CODE_UPDATED_OK;
@@ -80,8 +80,8 @@ public class NetsetOrderRepository {
 				orderCustomFieldRepo.delete(orderCustField);
 			}
 		}
-		
-		order.setOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
+				
+		order.setNetsetOrderNumber(String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
 		order.setCustomerGroup(customerGroup);
 		order.setJointInvoicing(getJointInvoicing(request.getOrderData().getValue().getHeader().getCustomerNumber()));
 		if (request.getOrderData().getValue().getInformationFields() != null 
@@ -94,10 +94,13 @@ public class NetsetOrderRepository {
 				orderCustomField.setValue(infoField.getData());
 				orderCustomField.setOrderHeader(order);
 				orderCustomFields.add(orderCustomField);
-				order = checkForMatchingField(order, infoField);
+				if (customerGroup.getGetContactInfoFromNetset()) {
+					order = checkForMatchingField(order, infoField);
+				}				
 			}
 			order.setOrderCustomFields(orderCustomFields);
 		}
+		order.setContactInfoFromNetset(customerGroup.getGetContactInfoFromNetset());
 		order.setReceivedFromWebshop(true);
 		order.setReceivingStatus();
 		orderRepo.save(order);
@@ -106,11 +109,11 @@ public class NetsetOrderRepository {
     }
     
     private OrderHeader checkForMatchingField(OrderHeader order, InformationField infoField) {
-    	if (infoField.getIdentification() == CUSTOM_FIELD_CONTACT_NAME) {
+    	if (infoField.getIdentification() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_NAME) {
     		order.setContact1Name(infoField.getData());
-    	} else if (infoField.getIdentification() == CUSTOM_FIELD_CONTACT_EMAIL) {
+    	} else if (infoField.getIdentification() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_EMAIL) {
     		order.setContact1Email(infoField.getData());
-    	} else if (infoField.getIdentification() == CUSTOM_FIELD_CONTACT_PHONE) {
+    	} else if (infoField.getIdentification() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_PHONE) {
         	order.setContact1Phone(infoField.getData());
     	}
     	return order;

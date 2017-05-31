@@ -25,6 +25,16 @@ public class CustomerGroup {
 	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
 	private String ourReference;
 	private Boolean sendDeliveryNotification;
+	private Boolean getContactInfoFromNetset;
+	
+
+	public Boolean getGetContactInfoFromNetset() {
+		return getContactInfoFromNetset;
+	}
+
+	public void setGetContactInfoFromNetset(Boolean getContactInfoFromNetset) {
+		this.getContactInfoFromNetset = getContactInfoFromNetset;
+	}
 
 	public CustomerGroup() {
 		super();

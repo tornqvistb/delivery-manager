@@ -69,6 +69,7 @@ public class OrderHeader {
 	private String articleNumbers;
 	private Boolean receivedFromWebshop = false;
 	private Boolean receivedFromERP = false;
+	private Boolean contactInfoFromNetset = false;
 	@Transient
 	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
 	
@@ -506,6 +507,12 @@ public class OrderHeader {
 		} else {
 			return false;
 		}
+	}
+	public Boolean getContactInfoFromNetset() {
+		return contactInfoFromNetset;
+	}
+	public void setContactInfoFromNetset(Boolean contactInfoFromNetset) {
+		this.contactInfoFromNetset = contactInfoFromNetset;
 	}
 	
 }
