@@ -37,7 +37,9 @@
 										<div th:if="${not #strings.isEmpty(order.orderSummary)}" class="information-text system-info help-message">
 											<p th:utext="${order.orderSummary}"></p>
 											<p th:if="${order.orderCanBeCorrected}">För att korrigera serienummer eller stöld-id på denna order, klicka <a th:href="@{/order-list/correct/} + ${order.id}"><strong>HÄR =></strong></a></p>
+											<p th:if="${order.jointDeliveryText != null}" th:text="${order.jointDeliveryText}" class="important-message">Info om samleverans</p>
 										</div>
+										
 										<div class="form-step current-step" id="registration-area">
 											<div class="form-step-header cf">
 												<h2

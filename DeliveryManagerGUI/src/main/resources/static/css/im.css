@@ -80,3 +80,7 @@
 #service-portal tr.late-order {
     color: red;
 }
+
+#service-portal p.important-message {
+    font-weight: bold;
+}
