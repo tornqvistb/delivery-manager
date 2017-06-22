@@ -63,6 +63,7 @@
 	</div>
 	<div id="content">
 		<h1	th:text="${'Arbetsorder för order ' + order.orderNumber}"></h1>
+		<h2 th:if="${order.jointDeliveryText != null}" th:text="${order.jointDeliveryText}">Info om samleverans</h2>
 		<h2>Huvudinformation</h2>
 		<table  class="table">
 			<tbody>

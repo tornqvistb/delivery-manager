@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import se.lanteam.constants.LimStringUtil;
+import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.RestrictionCodes;
 import se.lanteam.constants.StatusConstants;
@@ -43,13 +43,33 @@ public class OrderImportService {
 	private static final String ERROR_ARTICLE_ID_MISSING = GENERAL_FILE_ERROR + "Artikel-ID saknas på orderrad i fil: ";
 	private static final String ERROR_ROW_NUMBER_MISSING = GENERAL_FILE_ERROR + "Orderradnummer saknas på orderrad i fil: ";
 	private static final String ERROR_TOTAL_MISSING = GENERAL_FILE_ERROR + "Antal saknas på orderrad i fil: ";
-	private static final String ERROR_ORDER_NUMBER_ALREADY_EXISTS = GENERAL_FILE_ERROR + "Ordernummer finns redan, fil: ";
 	
 	private static final Logger LOG = LoggerFactory.getLogger(OrderImportService.class);
 
     private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
     private PropertyService propService;
+    
+    public void addJointDeliveryInfo() {
+    	List<OrderHeader> unJoinedOrders = orderRepo.findOrdersJointDeliveryUnjoined(StatusConstants.ORDER_STATUS_NEW);
+    	for (OrderHeader order : unJoinedOrders) {
+    		if (CustomFieldConstants.VALUE_SAMLEVERANS_MASTER.equalsIgnoreCase(order.getJointDelivery())) {
+    			// Master order
+				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDelivery(order.getNetsetOrderNumber());
+				if (childOrders.size() > 0) {
+					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_MASTER, childOrders.get(0).getOrderNumber()));
+					orderRepo.save(order);
+				}
+    		} else {
+    			// Child order
+    			List<OrderHeader> masterOrders = orderRepo.findOrdersByNetsetOrderNumber(order.getJointDelivery());
+    			if (masterOrders.size() > 0) {
+					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_CHILD, masterOrders.get(0).getOrderNumber()));
+					orderRepo.save(order);
+    			}
+    		}    		
+    	}    	
+    }
     
 	public void moveFiles() {
 	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_INCOMING_FOLDER);	    

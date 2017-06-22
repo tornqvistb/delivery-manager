@@ -36,23 +36,22 @@ public class NetsetOrderRepository {
     private OrderCustomFieldRepository orderCustomFieldRepo;
     private PropertyRepository propertyRepo;
 	
-    private static int RESULT_CODE_CREATED_OK = 0;
-    private static int RESULT_CODE_UPDATED_OK = 1;
-    private static int RESULT_CODE_ERROR_MANDATORY_DATA_MISSING = 2;
-    private static int RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP = 3;
+    private static final int RESULT_CODE_CREATED_OK = 0;
+    private static final int RESULT_CODE_UPDATED_OK = 1;
+    private static final int RESULT_CODE_ERROR_MANDATORY_DATA_MISSING = 2;
+    private static final int RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP = 3;
     
-    private static String DESCRIPTION_CREATED_OK = "Order skapad";
-    private static String DESCRIPTION_UPDATED_OK = "Order uppdaterad";
-    private static String DESCRIPTION_MANDATORY_DATA_MISSING = "Obligatorisk data saknas";
-    private static String DESCRIPTION_UNKNOWN_CUSTOMER_GROUP = "Okänd kundgrupp";
+    private static final String DESCRIPTION_CREATED_OK = "Order skapad";
+    private static final String DESCRIPTION_UPDATED_OK = "Order uppdaterad";
+    private static final String DESCRIPTION_MANDATORY_DATA_MISSING = "Obligatorisk data saknas";
+    private static final String DESCRIPTION_UNKNOWN_CUSTOMER_GROUP = "Okänd kundgrupp";
     
-    private static String ERROR_LOG_GENERAL_MESSAGE = "Fel vid mottagande av order från Netset: ";
+    private static final String ERROR_LOG_GENERAL_MESSAGE = "Fel vid mottagande av order från Netset: ";
     
-    private static String MISSING = "Saknas";
+    private static final String MISSING = "Saknas";
     
-    private static String POSTFIX_NETSET_ORDER_NO = "-N";
-    
-    
+    private static final String POSTFIX_NETSET_ORDER_NO = "-N";
+        
     public CreateOrderResponse createOrder(CreateOrderRequest request) {
     	int returnCode = RESULT_CODE_CREATED_OK;
     	String description = DESCRIPTION_CREATED_OK;
@@ -115,6 +114,11 @@ public class NetsetOrderRepository {
     		order.setContact1Email(infoField.getData());
     	} else if (infoField.getIdentification() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_PHONE) {
         	order.setContact1Phone(infoField.getData());
+    	} else if (infoField.getIdentification() == CustomFieldConstants.CUSTOM_FIELD_JOINT_DELIVERY) {
+    		order.setJointDelivery(infoField.getData());
+    		if (CustomFieldConstants.VALUE_SAMLEVERANS_MASTER.equalsIgnoreCase(infoField.getData())) {
+    			order.setJointDelivery(CustomFieldConstants.VALUE_SAMLEVERANS_MASTER);
+    		}
     	}
     	return order;
     }
