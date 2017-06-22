@@ -2,6 +2,7 @@ package se.lanteam.ws;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,9 @@ public class NetsetOrderRepository {
 		order.setContactInfoFromNetset(customerGroup.getGetContactInfoFromNetset());
 		order.setReceivedFromWebshop(true);
 		order.setReceivingStatus();
+		if (order.getOrderDate() == null) {
+			order.setOrderDate(new Date());
+		}		
 		orderRepo.save(order);
 		return getResponse(returnCode, description);
 
