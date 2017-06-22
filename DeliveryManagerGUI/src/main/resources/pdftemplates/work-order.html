@@ -96,7 +96,7 @@
 						<a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a>
 					</td>															
 				</tr>
-				<tr th:each="orderCustomField : ${orderCustomFields}">
+				<tr th:each="orderCustomField : ${order.orderCustomFields}">
 					<th th:text="${orderCustomField.customField.label}" scope="row">Customfält</th>
 					<td th:text="${orderCustomField.value}">1</td>
 				</tr>

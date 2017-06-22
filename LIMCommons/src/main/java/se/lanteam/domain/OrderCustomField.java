@@ -8,11 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import org.springframework.util.StringUtils;
+
 import se.lanteam.constants.CustomFieldConstants;
 
 @Entity
 public class OrderCustomField {
-
+	
 	private Long id;
 	private CustomField customField;
 	private OrderHeader orderHeader;
