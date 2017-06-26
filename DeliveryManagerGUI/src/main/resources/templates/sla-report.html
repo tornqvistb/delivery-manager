@@ -61,7 +61,7 @@
 														<label for="status">Välj kundgrupp</label> 
 														<select
 															th:field="${reqAttr.customerId}"
-															id="customerGroupId" name="customerGroupId"
+															id="customerGroup" name="customerGroup"
 															>
 															<option th:value="${reqAttr.zeroValue}">Alla</option>
 															<option th:each="customerGroup : ${customerGroups}" th:value="${customerGroup.id}" th:text="${customerGroup.name}"></option>
