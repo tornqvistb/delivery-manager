@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.parboiled.common.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,7 @@ import se.lanteam.ws.WSConfig;
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
  */
 @Service
+@Transactional
 public class OrderTransmitService {
 
 	private static final String GENERAL_ERROR = "Fel vid överföring av orderleverans till kund. ";

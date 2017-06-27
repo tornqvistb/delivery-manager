@@ -28,7 +28,9 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
+import javax.transaction.Transactional;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,7 @@ import se.lanteam.services.PropertyService;
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
  */
 @Service
+@Transactional
 public class MailReceiverService {
 
 	private static final String GENERAL_FILE_ERROR = "Fel vid läsning av mail. ";
@@ -183,7 +186,7 @@ public class MailReceiverService {
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderNumber);
 		String resultText = "";
 		if (orders != null && orders.size() > 0) {
-			OrderHeader order = orders.get(0);
+			OrderHeader order = orderRepo.findOne(orders.get(0).getId());
 			if (order.getEditable()) {
 				Attachment attachment = new Attachment();
 				attachment.setOrderHeader(order);
