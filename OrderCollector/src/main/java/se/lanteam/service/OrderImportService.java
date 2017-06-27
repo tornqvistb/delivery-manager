@@ -26,6 +26,7 @@ import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
+import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
@@ -44,11 +45,14 @@ public class OrderImportService {
 	private static final String ERROR_ROW_NUMBER_MISSING = GENERAL_FILE_ERROR + "Orderradnummer saknas på orderrad i fil: ";
 	private static final String ERROR_TOTAL_MISSING = GENERAL_FILE_ERROR + "Antal saknas på orderrad i fil: ";
 	
+	private static final String PROPERTY_WEBSHOP_INTEGRATION_ACTIVATED = "webshop-integration-activated";
+	
 	private static final Logger LOG = LoggerFactory.getLogger(OrderImportService.class);
 
     private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
     private PropertyService propService;
+    private CustomerGroupRepository customerGroupRepo;
     
     public void addJointDeliveryInfo() {
     	List<OrderHeader> unJoinedOrders = orderRepo.findOrdersJointDeliveryUnjoined(StatusConstants.ORDER_STATUS_NEW);
@@ -181,6 +185,16 @@ public class OrderImportService {
 		}
 		orderHeader.setArticleNumbers(articleNumbers.toString());
 		orderHeader.setReceivedFromERP(true);
+		// check if webshop integration is active
+		Long wsIntegrationActivated = propService.getLong(PROPERTY_WEBSHOP_INTEGRATION_ACTIVATED);
+		if (wsIntegrationActivated == 0) {
+			// Not acticated
+			orderHeader.setReceivedFromWebshop(true);
+			String intraGroupName = propService.getString(PropertyConstants.CUSTOMER_GROUP_INTRASERVICE);
+			orderHeader.setCustomerGroup(customerGroupRepo.findByName(intraGroupName));
+			orderHeader.setStatus(StatusConstants.ORDER_STATUS_NEW);
+		}
+		
 		return orderHeader;
 	}
 	
@@ -247,5 +261,9 @@ public class OrderImportService {
 	public void setPropService(PropertyService propService) {
 		this.propService = propService;
 	}	
-	
+	@Autowired
+	public void setCustomerGroupRepo(CustomerGroupRepository customerGroupRepo) {
+		this.customerGroupRepo = customerGroupRepo;
+	}
+
 }

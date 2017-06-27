@@ -5,6 +5,9 @@ insert into system_property (id, string_value, number_value) values ('delivery-n
 insert into system_property (id, string_value, number_value) values ('joint-invoicing-cust-numbers', '0450', 0);
 insert into system_property (id, string_value, number_value) values ('mail-reply-to-address', 'avisering@lanteam.se', 0);
 insert into system_property (id, string_value, number_value) values ('customer-group-intraservice', 'Intraservice', 0);
+insert into system_property (id, string_value, number_value) values ('archiverjob-frequency','',300);
+insert into system_property (id, string_value, number_value) values ('webshop-integration-activated','Netset-integration aktiverad (0 = nej, 1 = ja)',0);
+
 commit;
 
 insert into delivery_week_day (id, name, sorting, creation_date) values (1, 'Måndag', 1, sysdate());
