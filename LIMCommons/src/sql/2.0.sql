@@ -152,3 +152,6 @@ BEGIN
     SET result = 'Det gick bra';
 
 END
+
+-- sql sats för att uppdatera ordrar som kommit in utan netset-integration
+update order_header set received_fromerp = 1, received_from_netset = 1, status= 'new', customer_group_uid = 1 where status = 'receiving';
