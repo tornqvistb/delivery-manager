@@ -176,6 +176,9 @@ public class OrderImportService {
 			orderLine.setRemaining(jsonOrderLine.optInt("Antal"));
 			orderLine.setRegistered(0);
 			orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod", RestrictionCodes.NO_SLA_NO_SERIALN0));
+			orderLine.setOrganisationUnit(jsonOrderLine.optString("Instruktion_1"));
+			orderLine.setInstallationType(jsonOrderLine.optString("Instruktion_2"));
+			orderLine.setOperatingSystem(jsonOrderLine.optString("Instruktion_3"));
 			orderLine.setOrderHeader(orderHeader);
 			if (i == 0) {
 				orderHeader.setOrderLines(new HashSet<OrderLine>());

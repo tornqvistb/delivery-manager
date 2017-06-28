@@ -151,11 +151,14 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th style="width:15%;">Orderrad</th>
-					<th style="width:20%;">Artikelnummer</th>
-					<th style="width:30%;">Beskrivning</th>
-					<th style="width:25%;">Serienummerbärande</th>
-					<th style="width:10%;">Antal</th>
+					<th>Rad</th>
+					<th>Artnr.</th>
+					<th>Beskrivning</th>
+					<th>Serienr.</th>
+					<th>OU</th>
+					<th>Installationstyp</th>
+					<th>OS</th>					
+					<th>Antal</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -165,6 +168,10 @@
 					<td th:text="${orderLine.articleNumber}">31231312</td>
 					<td th:text="${orderLine.articleDescription}">HP elitebook</td>
 					<td th:text="${orderLine.hasSerialNoLabel}">Ja</td>
+					<td th:text="${orderLine.organisationUnit}">Angered</td>
+					<td th:text="${orderLine.installationType}">Adm</td>
+					<td th:text="${orderLine.operatingSystem}">Win 10</td>
+					
 					<td th:text="${orderLine.total}">5</td>
 				</tr>
 			</tbody>

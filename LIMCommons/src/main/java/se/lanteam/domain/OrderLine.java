@@ -29,6 +29,9 @@ public class OrderLine {
 	private OrderHeader orderHeader;
 	private Set<Equipment> equipments = new HashSet<Equipment>();
 	private Integer customerRowNumber;
+	private String organisationUnit;
+	private String installationType;
+	private String operatingSystem;
 	
 	@Id
 	@GeneratedValue
@@ -144,5 +147,25 @@ public class OrderLine {
 	public void setCustomerRowNumber(Integer customerRowNumber) {
 		this.customerRowNumber = customerRowNumber;
 	}
+
+	public String getOrganisationUnit() {
+		return organisationUnit;
+	}
+	public void setOrganisationUnit(String organisationUnit) {
+		this.organisationUnit = organisationUnit;
+	}
+	public String getInstallationType() {
+		return installationType;
+	}
+	public void setInstallationType(String installationType) {
+		this.installationType = installationType;
+	}
+	public String getOperatingSystem() {
+		return operatingSystem;
+	}
+	public void setOperatingSystem(String operatingSystem) {
+		this.operatingSystem = operatingSystem;
+	}
+
 	
 }
