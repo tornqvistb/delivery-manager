@@ -60,9 +60,9 @@ public class NetsetOrderRepository {
     		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_MANDATORY_DATA_MISSING + ". Ordernr: " + getOrderNoFromRequest(request, MISSING));
     		return getResponse(RESULT_CODE_ERROR_MANDATORY_DATA_MISSING, DESCRIPTION_MANDATORY_DATA_MISSING);
     	}
-    	CustomerGroup customerGroup = customerGroupRepo.findByName(request.getOrderData().getValue().getHeader().getCustomerGroupName());    	
+    	CustomerGroup customerGroup = customerGroupRepo.findByName(getCustomerGroupFromRequest(request, MISSING));    	
     	if (customerGroup == null) {
-    		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_UNKNOWN_CUSTOMER_GROUP + ". Customer group: " + getOrderNoFromRequest(request, MISSING));
+    		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_UNKNOWN_CUSTOMER_GROUP + ". Customer group: " + getCustomerGroupFromRequest(request, MISSING));
     		return getResponse(RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP, DESCRIPTION_UNKNOWN_CUSTOMER_GROUP);
     	}
     	
@@ -156,6 +156,14 @@ public class NetsetOrderRepository {
     	return custNumber;
     }
 
+    private String getCustomerGroupFromRequest(CreateOrderRequest request, String defaultValue) {
+    	String custGroup = defaultValue;
+    	if (request != null && request.getOrderData().getValue() != null && request.getOrderData().getValue().getHeader() != null 
+    		&& !StringUtils.isEmpty(request.getOrderData().getValue().getHeader().getCustomerGroupName())) {
+    		custGroup = request.getOrderData().getValue().getHeader().getCustomerGroupName();
+    	}
+    	return custGroup;
+    }
     
     private boolean validationOk(CreateOrderRequest request) {
     	boolean result = false;
