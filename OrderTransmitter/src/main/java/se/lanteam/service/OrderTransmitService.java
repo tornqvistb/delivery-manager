@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.NumberUtils;
 
 import com.google.gson.Gson;
 
@@ -57,6 +58,16 @@ public class OrderTransmitService {
     private PropertyService propService;
     private EmailRepository emailRepo;
     
+	private boolean isNumeric(String s) {
+		boolean result = true;
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException nfe) {
+			result = false;
+		}
+		return result;
+	}
+    
 	public void transmitOrders() {
 		String wsEndpointOrderDelivery = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_DELIVERY);
 		String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_GBCA);
@@ -69,7 +80,7 @@ public class OrderTransmitService {
         	for (OrderHeader order : orders) {
         		// Create soap message and send to Intraservice
         		try {
-        			if (order.getCustomerGroup().getSendDeliveryNotification()) {
+        			if (order.getCustomerGroup().getSendDeliveryNotification() && isNumeric(order.getCustomerOrderNumber())) {
 						Header header = wsClient.sendOrderDelivery(order, config);
 						if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
 							throw new Exception(header.getKod() + " - " + header.getText());
