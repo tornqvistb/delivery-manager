@@ -166,6 +166,11 @@ public class OrderLine {
 	public void setOperatingSystem(String operatingSystem) {
 		this.operatingSystem = operatingSystem;
 	}
+	@Transient
+	public void updateEquipmentCounters() {
+		this.setRegistered(this.getEquipments().size());
+		this.setRemaining(this.getTotal() - this.getEquipments().size());
+	}
 
 	
 }

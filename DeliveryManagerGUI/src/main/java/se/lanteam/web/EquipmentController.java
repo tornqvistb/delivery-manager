@@ -94,8 +94,7 @@ public class EquipmentController {
 			valResult = equipmentValidator.validateEquipment(equipment, orderRepo.findOne(orderId));
 			if (valResult.equals(RESULT_OK)) {
 				orderLine.getEquipments().add(equipment);
-				orderLine.setRegistered(orderLine.getRegistered() + 1);
-				orderLine.setRemaining(orderLine.getRemaining() - 1);
+				orderLine.updateEquipmentCounters();
 				orderLineRepo.save(orderLine);
 			}
 		} else {
@@ -133,8 +132,7 @@ public class EquipmentController {
 				LOG.debug("in loop, going to remove equipment: " + equipment.getId());
 				equipment.setOrderLine(null);
 				iterator.remove();
-				orderLine.setRegistered(orderLine.getRegistered() - 1);
-				orderLine.setRemaining(orderLine.getRemaining() + 1);
+				orderLine.updateEquipmentCounters();
 				LOG.debug("Order line updated: " + orderLine.getId());
 			}
 		}

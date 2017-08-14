@@ -132,8 +132,7 @@ public class OrderTransmitService {
 	private void createFileToBusinessSystem(OrderHeader order) {
 		String fileTransmitFolder = propService.getString(PropertyConstants.FILE_OUTGOING_FOLDER);
 		Order vismaOrder = new Order();
-		vismaOrder.setOrdernummer(Integer.parseInt(order.getOrderNumber()));
-		List<Orderrad> vismaRows = new ArrayList<Orderrad>();
+		vismaOrder.setOrdernummer(Integer.parseInt(order.getOrderNumber()));		List<Orderrad> vismaRows = new ArrayList<Orderrad>();
 		for (OrderLine line : order.getOrderLines()) {
 			Orderrad vismaRow = new Orderrad();
 			vismaRow.setArtikelnummer(line.getArticleNumber());
