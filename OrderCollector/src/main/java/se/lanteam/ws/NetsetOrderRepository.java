@@ -62,7 +62,11 @@ public class NetsetOrderRepository {
     	}
     	CustomerGroup customerGroup = customerGroupRepo.findByName(getCustomerGroupFromRequest(request, MISSING));    	
     	if (customerGroup == null) {
+    		/*
+    		 * 170816: No need for this error log att the moment, too many error messages are created.
+    		 * 
     		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_UNKNOWN_CUSTOMER_GROUP + ". Customer group: " + getCustomerGroupFromRequest(request, MISSING));
+    		*/
     		return getResponse(RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP, DESCRIPTION_UNKNOWN_CUSTOMER_GROUP);
     	}
     	
