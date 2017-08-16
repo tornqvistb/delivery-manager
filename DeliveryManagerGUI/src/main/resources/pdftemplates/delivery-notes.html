@@ -52,7 +52,7 @@
 			font-size: 12.5px;
 		}
 		.page-divider {
-    		border-bottom: 2px solid #ccc;
+    		border-bottom: 1px solid #ccc;
     		width: 100%;
     		margin-bottom: 10px;
 		}
@@ -61,18 +61,21 @@
     		width: 100%;
     		margin-bottom: 10px;
     		margin-top: 40px;
-    		page-break-after: always;
+    		page-break-after: never;
+		}
+		.following-item {
+    		page-break-before: always;
 		}
 	</style>
 </head>
 <body>
-<div th:each="order : ${orders}">
+<div th:each="order, iterStat : ${orders}" th:class="${iterStat.first}? 'first-item' : 'following-item'">
 
 	<div id="header">
 		<span	th:text="${'Följesedel för order ' + order.orderNumber}"></span>
 	</div>
 	<div id="footer">		
-		<strong>Göteborg</strong><br />
+		<div class="page-divider"></div>
 		Lanteam Consulting AB<br />
 		Datavägen 12A<br />
 		43632 ASKIM<br />
