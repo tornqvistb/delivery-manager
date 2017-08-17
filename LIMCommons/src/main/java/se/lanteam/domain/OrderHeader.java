@@ -356,10 +356,12 @@ public class OrderHeader {
 	}
 	@Transient
 	public String getPrintMessage() {
-		String result = "Här kan du skriva ut etiketter för denna order. Ordern innehåller <span class='big-fat'>#1</span> enheter.";
+		String result = "Här kan du skriva ut etiketter för denna order. Ordern innehåller <span class='big-fat'>#1</span> enheter med serienummer.";
 		Integer count = 0;
 		for (OrderLine line : this.orderLines) {
-			count = count + line.getTotal();
+			if (line.getHasSerialNo()) {
+				count = count + line.getTotal();
+			}
 		}
 		result = result.replaceFirst("#1", String.valueOf(count));
 		return result;
