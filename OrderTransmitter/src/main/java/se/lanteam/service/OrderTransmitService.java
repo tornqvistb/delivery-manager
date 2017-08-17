@@ -125,7 +125,8 @@ public class OrderTransmitService {
 				+ "Vi hoppas att du är nöjd med leveransen.\n\n"
 				+ "Med vänlig hälsning\n"
 				+ "LanTeam");
-		email.setSender(propService.getString(PropertyConstants.MAIL_USERNAME));		
+		email.setSender(propService.getString(PropertyConstants.MAIL_USERNAME));
+		email.setReplyTo(propService.getString(PropertyConstants.MAIL_REPLY_TO_ADDRESS));
 		if (order.getAttachment() != null) {
 			email.setAttachmentRef(order.getAttachment().getId());
 		}
