@@ -119,9 +119,12 @@ public class OrderTransmitService {
 	
 	private Email getOrderDeliveredMail(OrderHeader order) {
 		Email email = new Email();
-		// Check text for subject and content
 		email.setSubject("Order levererad från Lanteam");
-		email.setContent("Order " + order.getOrderNumber() + " levererad från Lanteam");
+		email.setContent("Hej!\n\n"
+				+ "Order " + order.getCustomerSalesOrder() + " är nu levererad.\n"
+				+ "Vi hoppas att du är nöjd med leveransen.\n\n"
+				+ "Med vänlig hälsning\n"
+				+ "LanTeam");
 		email.setSender(propService.getString(PropertyConstants.MAIL_USERNAME));		
 		if (order.getAttachment() != null) {
 			email.setAttachmentRef(order.getAttachment().getId());
