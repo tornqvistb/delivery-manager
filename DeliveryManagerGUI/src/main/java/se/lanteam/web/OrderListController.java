@@ -23,6 +23,7 @@ import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.model.OrderListSearchBean;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
 import se.lanteam.repository.DeliveryAreaRepository;
@@ -36,6 +37,7 @@ public class OrderListController {
 	private PropertyService propService;
 	private SessionBean sessionBean;
 	private DeliveryAreaRepository deliveryAreaRepo;
+	private OrderListSearchBean orderListSearchBean;
 
 	
 	@RequestMapping("/")
@@ -45,9 +47,17 @@ public class OrderListController {
 		
 	@RequestMapping("order-list")
 	public String showOrderList(ModelMap model, HttpServletRequest request) {
-		List<OrderHeader> orders = orderRepo.findOrdersByStatusList(Arrays.asList(StatusConstants.ACTIVE_STATI), sessionBean.getCustomerGroup().getId());
-		model.put("orders", orders);
-		model.put("reqAttr", new RequestAttributes());
+		RequestAttributes reqAttr = new RequestAttributes();
+		try {
+			model.put("orders", search());
+		} catch (ParseException e) {
+			reqAttr.setErrorMessage("Felaktigt inmatade datum");
+		}		
+		reqAttr.setQuery(orderListSearchBean.getQuery());
+		reqAttr.setFromDate(orderListSearchBean.getFromDate());
+		reqAttr.setToDate(orderListSearchBean.getToDate());
+		reqAttr.setOrderStatus(orderListSearchBean.getStatus());
+		model.put("reqAttr", reqAttr);
 		model.put("color", "red");
 		return "order-list";
 	}
@@ -72,54 +82,60 @@ public class OrderListController {
 	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
 		this.deliveryAreaRepo = deliveryAreaRepo;
 	}
-
 	@RequestMapping(value="order-list/search", method=RequestMethod.GET)
-	public String searchOrders(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
-		
-		String status = reqAttr.getOrderStatus();
-		
-		String query = "%" + reqAttr.getQuery() + "%";
-		
+	public String searchOrders(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {		
+	
 		try {
-			Date fromDate = DateUtil.getDefaultStartDate();
-			if (!StringUtils.isEmpty(reqAttr.getFromDate())) {
-				fromDate = DateUtil.stringToDate(reqAttr.getFromDate());
-			}
-			
-			Date toDate = DateUtil.getTomorrow();
-			if (!StringUtils.isEmpty(reqAttr.getToDate())) {
-				toDate = DateUtil.stringToDate(reqAttr.getToDate());
-			}
-			
-			Date orderDate = DateUtil.getDefaultStartDate();
-			List<OrderHeader> orders;
-			List<String> stati = new ArrayList<String>();
-			if (status.equals(StatusConstants.ORDER_STATUS_GROUP_ACTIVE)){
-				stati = Arrays.asList(StatusConstants.ACTIVE_STATI);
-			} else if (status.equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
-				stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
-				orderDate = DateUtil.getStartDateForInactiveOrders(propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue());
-				reqAttr.setInfoMessage("De ordrar som visas är skapta " + propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue() + " dagar tillbaks i tiden fram tills idag. För att se äldre inaktiva ordrar, sök på specifik status.");
-			} else {
-				stati.add(status);
-			}
-			if (StatusUtil.isActiveStatus(status)) {
-				orders = orderRepo.findOrdersFromSearch(stati, orderDate, query, sessionBean.getCustomerGroup().getId());
-			} else {
-				orders = orderRepo.findDeliveredOrdersFromSearch(stati, orderDate, query, fromDate, toDate, sessionBean.getCustomerGroup().getId());
-			}
-			model.put("orders", orders);
+			orderListSearchBean = new OrderListSearchBean(reqAttr.getQuery(), reqAttr.getFromDate(), reqAttr.getToDate(), reqAttr.getOrderStatus());
+			model.put("orders", search());
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
 		}		
-		reqAttr.setOrderStatus(status);
+		if (reqAttr.getOrderStatus().equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
+			reqAttr.setInfoMessage("De ordrar som visas är skapta " + propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue() + " dagar tillbaks i tiden fram tills idag. För att se äldre inaktiva ordrar, sök på specifik status.");
+		}
 		model.put("reqAttr", reqAttr);
 		return "order-list";
+	}
+
+	
+	private List<OrderHeader> search() throws ParseException {
+		Date fromDate = DateUtil.getDefaultStartDate();
+		if (!StringUtils.isEmpty(orderListSearchBean.getFromDate())) {
+			fromDate = DateUtil.stringToDate(orderListSearchBean.getFromDate());
+		}
+		
+		Date toDate = DateUtil.getTomorrow();
+		if (!StringUtils.isEmpty(orderListSearchBean.getToDate())) {
+			toDate = DateUtil.stringToDate(orderListSearchBean.getToDate());
+		}
+		List<OrderHeader> orders;
+		Date orderDate = DateUtil.getDefaultStartDate();
+		String query = "%" + orderListSearchBean.getQuery() + "%";
+		List<String> stati = new ArrayList<String>();
+		if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_ACTIVE)){
+			stati = Arrays.asList(StatusConstants.ACTIVE_STATI);
+		} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
+			stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
+			orderDate = DateUtil.getStartDateForInactiveOrders(propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue());
+		} else {
+			stati.add(orderListSearchBean.getStatus());
+		}
+		if (StatusUtil.isActiveStatus(orderListSearchBean.getStatus())) {
+			orders = orderRepo.findOrdersFromSearch(stati, orderDate, query, sessionBean.getCustomerGroup().getId());
+		} else {
+			orders = orderRepo.findDeliveredOrdersFromSearch(stati, orderDate, query, fromDate, toDate, sessionBean.getCustomerGroup().getId());
+		}
+		return orders;
 	}
 	
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {
 		this.sessionBean = sessionBean;
+	}
+	@Autowired
+	public void setOrderListSearchBean(OrderListSearchBean orderListSearchBean) {
+		this.orderListSearchBean = orderListSearchBean;
 	}
 	
 }
