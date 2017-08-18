@@ -43,6 +43,7 @@ public class TransportReportController {
 			List<OrderHeader> orders = orderRepo.findOrdersByPlanDate(planDate);
 			model.put("orders", orders);
 			searchBean.setOrderList(orders);
+			searchBean.setFromDate(planDate);
 			if (orders.isEmpty()) {
 				reqAttr.setErrorMessage("Sökningen gav inga träffar");
 			}
@@ -110,6 +111,7 @@ public class TransportReportController {
         }
         
         model.put("results",results);
+        model.put("pageheader", "Körschema " +  DateUtil.dateToString(searchBean.getFromDate()));
         response.setContentType( "application/ms-excel" );
         response.setHeader( "Content-disposition", "attachment; filename=" + "transport-report-" + DateUtil.dateToString(new Date())+ ".xls" );         
 		

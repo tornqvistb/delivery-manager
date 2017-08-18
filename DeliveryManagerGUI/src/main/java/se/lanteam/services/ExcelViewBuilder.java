@@ -35,16 +35,25 @@ public class ExcelViewBuilder extends AbstractXlsView {
 	        List<String> numericColumns = new ArrayList<String>();
 	        if (model.containsKey("numericcolumns"))
 	            numericColumns = (List<String>)model.get("numericcolumns");
+	        String pageHeader = "Resultat";
+	        if (model.containsKey("pageheader"))	        	
+	        	pageHeader = (String)model.get("pageheader");
 	        //Build doc
 	        Sheet sheet = workbook.createSheet(sheetName);
 	        sheet.setDefaultColumnWidth((short) 12);
 	        int currentRow = 0;
-	        short currentColumn = 0;
+	        short currentColumn = 0;	        
 	        //Create style for header
 	        CellStyle headerStyle = workbook.createCellStyle();
 	        Font headerFont = workbook.createFont();
 	        headerFont.setBold(true);
-	        headerStyle.setFont(headerFont); 
+	        headerStyle.setFont(headerFont);
+	        // Create page header
+	        Row pageHeaderRow = sheet.createRow(currentRow);
+	        Cell pageHeaderCell = pageHeaderRow.createCell(currentColumn);
+	        pageHeaderCell.setCellStyle(headerStyle);
+	        pageHeaderCell.setCellValue(pageHeader);
+	        currentRow = 2;
 	        //Populate header columns
 	        Row headerRow = sheet.createRow(currentRow);
 	        for(String header:headers){	            
