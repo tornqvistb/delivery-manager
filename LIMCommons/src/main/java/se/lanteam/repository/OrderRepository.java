@@ -82,7 +82,7 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
     public List<OrderHeader> findOrdersJointDeliveryUnjoined(@Param("status") String status);
 
 	@Query("SELECT o FROM OrderHeader o WHERE o.status = :status AND o.orderDate < :theDate")
-    public List<OrderHeader> find2DaysOldOrdersByStatus(@Param("status") String status, @Param("theDate") Date theDate);
+    public List<OrderHeader> findOrdersByDateAndStatus(@Param("status") String status, @Param("theDate") Date theDate);
 
 	
 }

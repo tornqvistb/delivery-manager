@@ -32,7 +32,7 @@ public class OrderDeletionService {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR, -48);
         Date theDate = cal.getTime();
-        List<OrderHeader> orders = orderRepo.find2DaysOldOrdersByStatus(StatusConstants.ORDER_STATUS_RECEIVING, theDate);
+        List<OrderHeader> orders = orderRepo.findOrdersByDateAndStatus(StatusConstants.ORDER_STATUS_RECEIVING, theDate);
         for (OrderHeader order : orders) {        	
         	orderRepo.delete(order.getId());
         }
