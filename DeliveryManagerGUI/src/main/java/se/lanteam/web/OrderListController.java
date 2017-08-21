@@ -86,7 +86,12 @@ public class OrderListController {
 	public String searchOrders(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {		
 	
 		try {
-			orderListSearchBean = new OrderListSearchBean(reqAttr.getQuery(), reqAttr.getFromDate(), reqAttr.getToDate(), reqAttr.getOrderStatus());
+
+			orderListSearchBean.setQuery(reqAttr.getQuery());
+			orderListSearchBean.setFromDate(reqAttr.getFromDate());
+			orderListSearchBean.setToDate(reqAttr.getToDate());
+			orderListSearchBean.setStatus(reqAttr.getOrderStatus());
+			
 			model.put("orders", search());
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
