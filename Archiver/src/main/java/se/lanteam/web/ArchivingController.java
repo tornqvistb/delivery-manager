@@ -1,11 +1,13 @@
 package se.lanteam.web;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.StatusConstants;
@@ -88,5 +91,12 @@ public class ArchivingController {
 		model.put("reqAttr", reqAttr);
 		return "order-list";
 	}
-	
+	@ResponseBody
+	@RequestMapping(value="order-list/view/viewfile/{orderId}", method=RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+	public byte[] downloadFile(
+			@PathVariable Long orderId) throws IOException {
+		OrderHeader order = orderRepo.findOne(orderId);
+		return order.getAttachment().getFileContent();
+	}
+
 }
