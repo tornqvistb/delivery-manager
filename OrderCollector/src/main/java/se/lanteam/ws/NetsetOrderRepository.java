@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -22,6 +24,7 @@ import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCustomFieldRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.repository.PropertyRepository;
+import se.lanteam.service.OrderImportService;
 import se.lanteam.ws.netset.CreateOrderRequest;
 import se.lanteam.ws.netset.CreateOrderResponse;
 import se.lanteam.ws.netset.InformationField;
@@ -52,8 +55,11 @@ public class NetsetOrderRepository {
     private static final String MISSING = "Saknas";
     
     private static final String POSTFIX_NETSET_ORDER_NO = "-N";
+    
+    private static final Logger LOG = LoggerFactory.getLogger(NetsetOrderRepository.class);
         
     public CreateOrderResponse createOrder(CreateOrderRequest request) {
+    	logOrder(request);
     	int returnCode = RESULT_CODE_CREATED_OK;
     	String description = DESCRIPTION_CREATED_OK;
     	if (!validationOk(request)) {
@@ -62,6 +68,7 @@ public class NetsetOrderRepository {
     	}
     	CustomerGroup customerGroup = customerGroupRepo.findByName(getCustomerGroupFromRequest(request, MISSING));    	
     	if (customerGroup == null) {
+    		LOG.info("Did not find customer group in DB: " + getCustomerGroupFromRequest(request, MISSING));
     		/*
     		 * 170816: No need for this error log att the moment, too many error messages are created.
     		 * 
@@ -187,6 +194,16 @@ public class NetsetOrderRepository {
     
 	private void saveError(String errorText) {
 		errorRepo.save(new ErrorRecord(errorText));
+	}
+	
+	private void logOrder(CreateOrderRequest request) {
+		try {
+			LOG.info("New order from Netset:");
+			LOG.info("-- customer group: " + getCustomerGroupFromRequest(request, MISSING));
+			LOG.info("-- netset order number: " + String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
+		} catch (Exception e) {
+			LOG.info("Exception in logOrder");
+		}
 	}
 	
 	@Autowired
