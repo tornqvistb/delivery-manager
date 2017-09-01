@@ -61,16 +61,16 @@ public class TransportReportController {
         //Headers List
         List<String> headers = new ArrayList<String>();
 		
-        headers.add("Ordernummer");
-        headers.add("Leveransnummer kund");
+        headers.add("Order");
+        headers.add("Leveransnr. kund");
         headers.add("Kund");
         headers.add("Område");
         headers.add("Address 1");
         headers.add("Address 2");
-        headers.add("Kommentar");
         headers.add("Artikelnummer");
         headers.add("Artikelbeskrivning");
         headers.add("Antal");
+        headers.add("Kommentar");
         model.put("headers", headers);
         
         List<String> numericColumns = new ArrayList<String>();
@@ -92,26 +92,29 @@ public class TransportReportController {
 		        	orderCols.add(order.getCustomerName());
 		        	orderCols.add(order.getDeliveryPlan().getDeliveryArea().getName());
 		        	orderCols.add(order.getDeliveryPostalAddress1());
-		        	orderCols.add(order.getDeliveryPostalAddress2());
-		        	orderCols.add(order.getDeliveryPlan().getComment());
+		        	orderCols.add(order.getDeliveryPostalAddress2());		        	
 	        	} else {
 		        	orderCols.add("");
 		        	orderCols.add("");
 		        	orderCols.add("");
 		        	orderCols.add("");
-		        	orderCols.add("");
-		        	orderCols.add("");	        		
+		        	orderCols.add("");		        		        		
 	        	}
 	        	orderCols.add(orderLine.getArticleNumber());
 	        	orderCols.add(orderLine.getArticleDescription());
 	        	orderCols.add(String.valueOf(orderLine.getTotal()));
+	        	if (firstRow) {
+	        		orderCols.add(order.getDeliveryPlan().getComment());
+	        	} else {
+	        		orderCols.add("");
+	        	}
 	        	results.add(orderCols);
 	        	firstRow = false;
         	}
         }
         
         model.put("results",results);
-        model.put("pageheader", "Körschema " +  DateUtil.dateToString(searchBean.getFromDate()));
+        model.put("pageheader", DateUtil.dateToString(searchBean.getFromDate()));
         response.setContentType( "application/ms-excel" );
         response.setHeader( "Content-disposition", "attachment; filename=" + "transport-report-" + DateUtil.dateToString(new Date())+ ".xls" );         
 		
