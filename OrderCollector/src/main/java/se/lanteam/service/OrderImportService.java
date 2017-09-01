@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.RestrictionCodes;
+import se.lanteam.constants.SLAConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderComment;
@@ -197,7 +198,7 @@ public class OrderImportService {
 			orderHeader.setCustomerGroup(customerGroupRepo.findByName(intraGroupName));
 			orderHeader.setStatus(StatusConstants.ORDER_STATUS_NEW);
 		}
-		
+		orderHeader.setSlaDays(getSlaDays(orderHeader));
 		return orderHeader;
 	}
 	
@@ -237,6 +238,21 @@ public class OrderImportService {
 		}
 		*/
 		return true;
+	}
+
+	private Integer getSlaDays(OrderHeader order) {
+		Integer slaDays = SLAConstants.SLA_LONG;
+		for (OrderLine ol : order.getOrderLines()) {
+			if (ol.getCustomerRowNumber() > 0) {
+				if ((ol.getRestrictionCode().equals(RestrictionCodes.SLA_NO_SERIALN0) || ol.getRestrictionCode().equals(RestrictionCodes.SLA_SERIALN0))
+						&& ol.getTotal() <= SLAConstants.MAX_PER_ORDER_LINE) {
+					slaDays = SLAConstants.SLA_SHORT;
+				} else {
+					return SLAConstants.SLA_LONG;
+				}
+			}
+		}
+		return slaDays;
 	}
 	
 	private void saveError(String errorText) {

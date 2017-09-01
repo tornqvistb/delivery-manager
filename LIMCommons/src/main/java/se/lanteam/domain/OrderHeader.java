@@ -24,6 +24,7 @@ import javax.persistence.Transient;
 import org.thymeleaf.util.ArrayUtils;
 
 import se.lanteam.constants.DateUtil;
+import se.lanteam.constants.SLAConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
 
@@ -71,6 +72,7 @@ public class OrderHeader {
 	private Boolean receivedFromWebshop = false;
 	private Boolean receivedFromERP = false;
 	private Boolean contactInfoFromNetset = false;
+	private Integer slaDays;
 	@Transient
 	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
 	
@@ -422,7 +424,6 @@ public class OrderHeader {
 	}
 	@Transient
 	public Integer getSlaDaysLeft() {
-		Integer SLA_DAYS = 25;
 		LocalDate endDate;
 		
 		if (this.deliveryDate == null) {
@@ -430,9 +431,10 @@ public class OrderHeader {
 		} else {
 			endDate = deliveryDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		}
-		
+		Integer slaDaysForOrder = this.slaDays;
+		if (slaDaysForOrder == null) slaDaysForOrder = SLAConstants.SLA_LONG;
 		LocalDate startDate = orderDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		LocalDate slaDate = DateUtil.addWorkingDays(startDate, SLA_DAYS);
+		LocalDate slaDate = DateUtil.addWorkingDays(startDate, slaDaysForOrder);
 		return DateUtil.getWorkingDaysBetweenDates(endDate, slaDate);
 	}
 	@Transient
@@ -486,6 +488,12 @@ public class OrderHeader {
 	}
 	public void setReceivedFromERP(Boolean receivedFromERP) {
 		this.receivedFromERP = receivedFromERP;
+	}
+	public Integer getSlaDays() {
+		return slaDays;
+	}
+	public void setSlaDays(Integer slaDays) {
+		this.slaDays = slaDays;
 	}
 	@Transient
 	public String getCurrentDate() {
