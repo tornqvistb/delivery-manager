@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import se.lanteam.constants.RestrictionCodes;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
@@ -56,11 +57,11 @@ public class EquipmentValidator {
 	}
 	
 	
-	public String validateEquipment(Equipment equipment, OrderHeader order) {
+	public String validateEquipment(Equipment equipment, OrderHeader order, String restrictionCode) {
 		String result = validateSerialNo(equipment, order);
 		
 		RegistrationConfig regConfig = sessionBean.getCustomerGroup().getRegistrationConfig();
-		if (RESULT_OK.equals(result)) {
+		if (RESULT_OK.equals(result) && !RestrictionCodes.NO_SLA_SERIALN0_NO_STEALING_TAG.equals(restrictionCode)) {
 			result = validateStealingTag(equipment, order);
 		}
 		

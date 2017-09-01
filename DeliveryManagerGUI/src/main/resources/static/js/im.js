@@ -6,13 +6,21 @@ $(function() { // Makes sure the code contained doesn't run until
 	$('#orderLineId').change(function() {
 		$('#with-serial-no').hide();
 		$('#no-serial-no').hide();
+		$('#input-stealing-id').show();
 		$('#' + $(this).find(':selected').data('art-type')).show();
+		if ($(this).find(':selected').data('restriction-code') == '4') {
+			$('#input-stealing-id').hide();
+		}
 	});
 
 	$('#orderLineId').each(function() {
 		$('#with-serial-no').hide();
 		$('#no-serial-no').hide();
+		$('#input-stealing-id').show();
 		$('#' + $(this).find(':selected').data('art-type')).show();
+		if ($(this).find(':selected').data('restriction-code') == '4') {
+			$('#input-stealing-id').hide();
+		}
 	});
 
 	$(function() {

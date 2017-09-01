@@ -101,7 +101,7 @@ public class OrderLine {
 	@Transient
 	public Boolean getHasSerialNo() {
 		Boolean result = false;
-		if (this.restrictionCode.equals(RestrictionCodes.NO_SLA_SERIALN0) || this.restrictionCode.equals(RestrictionCodes.SLA_SERIALN0)) {
+		if (this.restrictionCode.equals(RestrictionCodes.NO_SLA_SERIALN0) || this.restrictionCode.equals(RestrictionCodes.SLA_SERIALN0) || this.restrictionCode.equals(RestrictionCodes.NO_SLA_SERIALN0_NO_STEALING_TAG)) {
 			result = true;
 		}
 		return result;

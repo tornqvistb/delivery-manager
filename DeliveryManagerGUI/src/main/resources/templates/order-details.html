@@ -73,7 +73,8 @@
 																				th:each="orderLine : ${order.unCompletedOrderLines}"
 																				th:value="${orderLine.id}"
 																				th:text="${orderLine.rowNumber}"
-																				th:attr="data-art-type=${orderLine.optionClass}" />
+																				th:attr="data-art-type=${orderLine.optionClass},
+																						data-restriction-code=${orderLine.restrictionCode}" />
 																	</select></td>
 																</tr>
 															</tbody>
@@ -89,7 +90,7 @@
 																	<td><input th:field="${reqAttr.serialNo}"
 																		type="text" id="serienr" value="" /></td>
 																</tr>
-																<tr>
+																<tr id="input-stealing-id">
 																	<th scope="row">Stöld-ID</th>
 																	<td><input th:field="${reqAttr.stealingTag}"
 																		type="text" id="stealingid" name="stealingid" value=""/></td>
