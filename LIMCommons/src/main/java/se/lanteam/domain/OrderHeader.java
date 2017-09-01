@@ -67,6 +67,7 @@ public class OrderHeader {
 	private DeliveryPlan deliveryPlan;
 	private String jointDelivery;
 	private String jointDeliveryText;
+	private String jointDeliveryOrders;
 	private int jointInvoicing;
 	private String articleNumbers;
 	private Boolean receivedFromWebshop = false;
@@ -464,6 +465,12 @@ public class OrderHeader {
 	}
 	public void setJointDeliveryText(String jointDeliveryText) {
 		this.jointDeliveryText = jointDeliveryText;
+	}
+	public String getJointDeliveryOrders() {
+		return jointDeliveryOrders;
+	}
+	public void setJointDeliveryOrders(String jointDeliveryOrders) {
+		this.jointDeliveryOrders = jointDeliveryOrders;
 	}
 	public int getJointInvoicing() {
 		return jointInvoicing;

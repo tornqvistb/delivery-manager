@@ -1,0 +1,194 @@
+<!-- Master -->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:net="http://lanteam.se/ws/netset">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <net:createOrderRequest>
+         <!--Optional:-->
+         <net:OrderData id="1">
+            <net:Header>
+               <net:OrderNumber>60004</net:OrderNumber>
+               <net:CustomerNumber>0541</net:CustomerNumber>
+               <net:CustomerGroupName>Partille Kommun</net:CustomerGroupName>
+            </net:Header>
+           <!--1 or more repetitions:-->
+          <net:InformationFields>
+          <net:InformationField>
+            <net:Identification>4</net:Identification>
+            <net:Label>OU-image</net:Label>
+            <net:Data>netset ou-image</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>5</net:Identification>
+            <net:Label>Installation av extra program utöver operativsystem image</net:Label>
+            <net:Data>netset installation</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>7</net:Identification>
+            <net:Label>Leveransadress</net:Label>
+            <net:Data>netset levadress</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>3</net:Identification>
+            <net:Label>Telefonnr</net:Label>
+            <net:Data>netset telnr</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>2</net:Identification>
+            <net:Label>Mailadress</net:Label>
+            <net:Data>netset mailadr</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>6</net:Identification>
+            <net:Label>Förvalting</net:Label>
+            <net:Data>netset förv</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>1</net:Identification>
+            <net:Label>Användare i klartext</net:Label>
+            <net:Data>netset användare</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>8</net:Identification>
+            <net:Label>Gammalt datornamn anges vid datorbyte</net:Label>
+            <net:Data>netset gammalt datornamn</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>9</net:Identification>
+            <net:Label>Samleverans</net:Label>
+            <net:Data>Ja</net:Data>
+          </net:InformationField>
+            </net:InformationFields>
+         </net:OrderData>
+      </net:createOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+<!-- Child 1 -->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:net="http://lanteam.se/ws/netset">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <net:createOrderRequest>
+         <!--Optional:-->
+         <net:OrderData id="1">
+            <net:Header>
+               <net:OrderNumber>60005</net:OrderNumber>
+               <net:CustomerNumber>0541</net:CustomerNumber>
+               <net:CustomerGroupName>Partille Kommun</net:CustomerGroupName>
+            </net:Header>
+           <!--1 or more repetitions:-->
+          <net:InformationFields>
+          <net:InformationField>
+            <net:Identification>4</net:Identification>
+            <net:Label>OU-image</net:Label>
+            <net:Data>netset ou-image</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>5</net:Identification>
+            <net:Label>Installation av extra program utöver operativsystem image</net:Label>
+            <net:Data>netset installation</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>7</net:Identification>
+            <net:Label>Leveransadress</net:Label>
+            <net:Data>netset levadress</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>3</net:Identification>
+            <net:Label>Telefonnr</net:Label>
+            <net:Data>netset telnr</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>2</net:Identification>
+            <net:Label>Mailadress</net:Label>
+            <net:Data>netset mailadr</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>6</net:Identification>
+            <net:Label>Förvalting</net:Label>
+            <net:Data>netset förv</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>1</net:Identification>
+            <net:Label>Användare i klartext</net:Label>
+            <net:Data>netset användare</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>8</net:Identification>
+            <net:Label>Gammalt datornamn anges vid datorbyte</net:Label>
+            <net:Data>netset gammalt datornamn</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>9</net:Identification>
+            <net:Label>Samleverans</net:Label>
+            <net:Data>60004</net:Data>
+          </net:InformationField>
+            </net:InformationFields>
+         </net:OrderData>
+      </net:createOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+<!-- Child 2 -->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:net="http://lanteam.se/ws/netset">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <net:createOrderRequest>
+         <!--Optional:-->
+         <net:OrderData id="1">
+            <net:Header>
+               <net:OrderNumber>60006</net:OrderNumber>
+               <net:CustomerNumber>0541</net:CustomerNumber>
+               <net:CustomerGroupName>Partille Kommun</net:CustomerGroupName>
+            </net:Header>
+           <!--1 or more repetitions:-->
+          <net:InformationFields>
+          <net:InformationField>
+            <net:Identification>4</net:Identification>
+            <net:Label>OU-image</net:Label>
+            <net:Data>netset ou-image</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>5</net:Identification>
+            <net:Label>Installation av extra program utöver operativsystem image</net:Label>
+            <net:Data>netset installation</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>7</net:Identification>
+            <net:Label>Leveransadress</net:Label>
+            <net:Data>netset levadress</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>3</net:Identification>
+            <net:Label>Telefonnr</net:Label>
+            <net:Data>netset telnr</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>2</net:Identification>
+            <net:Label>Mailadress</net:Label>
+            <net:Data>netset mailadr</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>6</net:Identification>
+            <net:Label>Förvalting</net:Label>
+            <net:Data>netset förv</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>1</net:Identification>
+            <net:Label>Användare i klartext</net:Label>
+            <net:Data>netset användare</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>8</net:Identification>
+            <net:Label>Gammalt datornamn anges vid datorbyte</net:Label>
+            <net:Data>netset gammalt datornamn</net:Data>
+          </net:InformationField>
+          <net:InformationField>
+            <net:Identification>9</net:Identification>
+            <net:Label>Samleverans</net:Label>
+            <net:Data>60004</net:Data>
+          </net:InformationField>
+            </net:InformationFields>
+         </net:OrderData>
+      </net:createOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>

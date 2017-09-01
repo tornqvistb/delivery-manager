@@ -383,6 +383,11 @@
 																<span th:if="${order.editable}"><strong><a th:href="@{/order-list/view/delfile/} + ${order.id} + '#additional-order-info'">Ta bort</a></strong></span>
 															</td>															
 														</tr>
+														<tr>
+															<th scope="row">Samleverans med ordrar</th>
+															<td th:text="${order.jointDeliveryOrders}">00000</td>
+														</tr>
+														
 														<tr th:each="orderCustomField : ${order.orderCustomFields}" th:if="${orderCustomField.showInOrderDetails}">
 															<th scope="row" th:text="${orderCustomField.customField.label}">Customfält</th>
 															<td th:text="${orderCustomField.value}">Värde Customfält</td>

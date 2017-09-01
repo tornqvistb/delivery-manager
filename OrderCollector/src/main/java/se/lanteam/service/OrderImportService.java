@@ -62,14 +62,25 @@ public class OrderImportService {
     			// Master order
 				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDelivery(order.getNetsetOrderNumber());
 				if (childOrders.size() > 0) {
-					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_MASTER, childOrders.get(0).getOrderNumber()));
+					StringBuffer orders = new StringBuffer();
+					boolean first = true;
+					for (OrderHeader childOrder : childOrders) {
+						if (!first)
+							orders.append(", ");
+						orders.append(childOrder.getOrderNumber());
+						first = false;
+					}
+					order.setJointDeliveryOrders(orders.toString());
+					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_MASTER, orders.toString()));
 					orderRepo.save(order);
 				}
     		} else {
     			// Child order
     			List<OrderHeader> masterOrders = orderRepo.findOrdersByNetsetOrderNumber(order.getJointDelivery());
     			if (masterOrders.size() > 0) {
-					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_CHILD, masterOrders.get(0).getOrderNumber()));
+    				String masterOrderNr = masterOrders.get(0).getOrderNumber();
+					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_CHILD,masterOrderNr));
+					order.setJointDeliveryOrders(masterOrderNr);
 					orderRepo.save(order);
     			}
     		}    		
