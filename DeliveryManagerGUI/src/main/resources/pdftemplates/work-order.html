@@ -35,20 +35,30 @@
 
 		@page {
 			margin-bottom: 5cm;
-			margin-left: 3.5cm;
-			margin-right: 0.5cm;
+			margin-left: 2cm;
+			margin-right: 1cm;
 		}
 		h1 {
 			font-size: 20px;
 		}
 		h2 {
-			font-size: 17.5px;
-		}
-		h3 {
 			font-size: 15px;
 		}
+		h3 {
+			font-size: 14px;
+		}
 		h4 {
-			font-size: 12.5px;
+			font-size: 13px;
+		}
+		tr {
+   			font-size: 12px;
+		}
+		.wo-table >tbody>tr>td, .wo-table >tbody>tr>th, .wo-table >thead>tr>th{
+	  		height:15px;
+	  		padding:2px;
+		}
+		#order-row-header {
+			page-break-before: always;
 		}
 	</style>
 </head>
@@ -65,7 +75,7 @@
 		<h1	th:text="${'Arbetsorder för order ' + order.orderNumber}"></h1>
 		<h2 th:if="${order.jointDeliveryText != null}" th:text="${order.jointDeliveryText}">Info om samleverans</h2>
 		<h2>Huvudinformation</h2>
-		<table  class="table">
+		<table class="table wo-table" id="head-info">
 			<tbody>
 				<tr>
 					<th scope="row">Ordernummer</th>
@@ -105,7 +115,7 @@
 			</tbody>
 		</table>
 		<h2>Kontaktpersoner</h2>
-		<table class="table">
+		<table class="table wo-table">
 			<thead>
 				<tr>
 					<th>Namn</th>
@@ -127,7 +137,7 @@
 			</tbody>
 		</table>
 		<h2>Levaransadress</h2>
-		<table  class="table">
+		<table  class="table wo-table">
 			<tbody>
 				<tr>
 					<th scope="row">Leveransadress 1</th>
@@ -147,16 +157,16 @@
 				</tr>
 			</tbody>
 		</table>
-		<h2>Orderrader</h2>
-		<table class="table">
+		<h2 id="order-row-header">Orderrader</h2>
+		<table class="table wo-table">
 			<thead>
 				<tr>
 					<th>Rad</th>
 					<th>Artnr.</th>
 					<th>Beskrivning</th>
-					<th>Serienr.</th>
+					<th>Snr.</th>
 					<th>OU</th>
-					<th>Installationstyp</th>
+					<th>Inst.typ</th>
 					<th>OS</th>					
 					<th>Antal</th>
 				</tr>
