@@ -57,6 +57,7 @@ public class RequestAttributes {
 	private String resultNotEmptyMsg;
 	private String resultEmptyMsg;
 	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
+	private List<OrderHeader> relatedOrders= new ArrayList<OrderHeader>();
 	
 	public RequestAttributes() {
 		super();
@@ -426,6 +427,14 @@ public class RequestAttributes {
 
 	public void setCustomerCustomFields(List<CustomerCustomField> customerCustomFields) {
 		this.customerCustomFields = customerCustomFields;
+	}
+
+	public List<OrderHeader> getRelatedOrders() {
+		return relatedOrders;
+	}
+
+	public void setRelatedOrders(List<OrderHeader> relatedOrders) {
+		this.relatedOrders = relatedOrders;
 	}
 	
 }

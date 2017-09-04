@@ -27,13 +27,11 @@ import se.lanteam.model.OrderListSearchBean;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
 import se.lanteam.repository.DeliveryAreaRepository;
-import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
 
 @Controller
-public class OrderListController {
+public class OrderListController extends BaseController {
 	
-	private OrderRepository orderRepo;
 	private PropertyService propService;
 	private SessionBean sessionBean;
 	private DeliveryAreaRepository deliveryAreaRepo;
@@ -64,15 +62,13 @@ public class OrderListController {
 	@RequestMapping(value="order-list/view/{orderId}", method=RequestMethod.GET)
 	public String showOrderView(@PathVariable Long orderId, ModelMap model) {
 		OrderHeader order = orderRepo.findOne(orderId);
-		model.put("reqAttr", new RequestAttributes());
+		RequestAttributes reqAttr = new RequestAttributes();
+		reqAttr = addRelatedOrders(reqAttr, order);
+		model.put("reqAttr", reqAttr);
 		model.put("order", order);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		model.put("deliveryAreas", deliveryAreaRepo.findAll(new Sort(Sort.Direction.ASC, "name")));
 		return "order-details";
-	}
-	@Autowired
-	public void setOrderRepo(OrderRepository orderRepo) {
-		this.orderRepo = orderRepo;
 	}
 	@Autowired
 	public void setPropertyService(PropertyService propService) {

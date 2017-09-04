@@ -11,5 +11,6 @@ public class CustomFieldConstants {
 	public static final String VALUE_SAMLEVERANS_MASTER = "Ja";	
 	public static final String TEXT_SAMLEVERANS_MASTER = "OBS!!! Det finns en eller flera underordrar till denna order: %s";
 	public static final String TEXT_SAMLEVERANS_CHILD = "OBS!!! Det finns en huvudorder med ordernr %s till denna order.";
+	public static final String TEXT_SAMLEVERANS = "OBS! Det finns registrering kvar att göra på ordrar som skall samlevereras med denna order. Klicka på en order i listan nedan för att registrera dessa.";
 
 }

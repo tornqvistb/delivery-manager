@@ -2,6 +2,7 @@ package se.lanteam.web;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
@@ -25,18 +27,17 @@ import se.lanteam.model.SessionBean;
 import se.lanteam.repository.DeliveryAreaRepository;
 import se.lanteam.repository.EquipmentRepository;
 import se.lanteam.repository.OrderLineRepository;
-import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.EquipmentValidator;
 import se.lanteam.services.MailComposer;
 
 @Controller
-public class EquipmentController {
+public class EquipmentController extends BaseController {
 
 	private static String RESULT_OK = "";
 	private static String TOO_MANY_REGISTERED = "Du har angett ett större antal än vad som är kvar att registrera";
 	private static String RESULT_CORRECTION_COMPLETED = "Korrigering av utrustning genomförd";
 
-	private OrderRepository orderRepo;
+	//private OrderRepository orderRepo;
 	private OrderLineRepository orderLineRepo;
 	private EquipmentRepository equipmentRepo;
 	private DeliveryAreaRepository deliveryAreaRepo;
@@ -106,13 +107,19 @@ public class EquipmentController {
 			}
 		}
 		OrderHeader order = orderRepo.findOne(orderId);
-		order.setOrderStatusByProgress();
+		
+		boolean workToDoOnRelatedOrders = workToDoOnRelatedOrders(order);
+			
+		order.setOrderStatusByProgress(workToDoOnRelatedOrders);
 		orderRepo.save(order);
 		model.put("order", order);
+		updateRelatedOrders(order, workToDoOnRelatedOrders);
 		if (RESULT_OK.equals(valResult)) {
 			reqAttr = new RequestAttributes();
 		}
 		reqAttr.setRegEquipmentResult(valResult);
+		reqAttr = addRelatedOrders(reqAttr, order);
+		reqAttr = setInfoMessageForRelatedOrders(reqAttr, order, workToDoOnRelatedOrders);
 		model.put("reqAttr", reqAttr);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		model.put("deliveryAreas", deliveryAreaRepo.findAll(new Sort(Sort.Direction.ASC, "name")));
@@ -138,10 +145,11 @@ public class EquipmentController {
 		}
 		orderLineRepo.save(orderLine);
 		OrderHeader order = orderRepo.findOne(orderId);
-		order.setOrderStatusByProgress();
+		order.setOrderStatusByProgress(false);
 		orderRepo.save(order);
 		model.put("order", order);
 		RequestAttributes reqAttr = new RequestAttributes(order);
+		reqAttr = addRelatedOrders(reqAttr, order);
 		model.put("reqAttr", reqAttr);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		return "order-details";
@@ -196,6 +204,7 @@ public class EquipmentController {
 		reqAttr = new RequestAttributes(order);
 		reqAttr.setRegEquipmentResult(result);
 		reqAttr.setThanksMessage(message);
+		reqAttr = addRelatedOrders(reqAttr, order);
 		model.put("reqAttr", reqAttr);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		return returnPage;
@@ -209,6 +218,38 @@ public class EquipmentController {
 		}
 		return result;
 	}
+	
+	private boolean workToDoOnRelatedOrders(OrderHeader order) {
+		boolean result = false;
+		List<OrderHeader> relatedOrders = getRelatedOrders(order);
+		for (OrderHeader relatedOrder : relatedOrders) {
+			if (relatedOrder.getUnCompletedOrderLines().size() > 0) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+	
+	private void updateRelatedOrders(OrderHeader order, boolean updateRelatedOrders) {
+		if (order.getUnCompletedOrderLines().size() == 0 && !updateRelatedOrders) {
+			// Current orderline finished and also related order lines			
+			List<OrderHeader> relatedOrders = getRelatedOrders(order);
+			for (OrderHeader relatedOrder : relatedOrders) {
+				relatedOrder.setOrderStatusByProgress(false);
+				orderRepo.save(relatedOrder);
+			}
+		}
+	}
+
+	private RequestAttributes setInfoMessageForRelatedOrders(RequestAttributes reqAttr, OrderHeader order, boolean workToDoOnRelatedOrders) {
+		if (order.getUnCompletedOrderLines().size() == 0 && workToDoOnRelatedOrders) {
+			reqAttr.setInfoMessage(CustomFieldConstants.TEXT_SAMLEVERANS);
+		}
+		return reqAttr;
+	}
+	
+	
 	@Autowired
 	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
 		this.deliveryAreaRepo = deliveryAreaRepo;
@@ -217,10 +258,12 @@ public class EquipmentController {
 	public void setEquipmentRepo(EquipmentRepository equipmentRepo) {
 		this.equipmentRepo = equipmentRepo;
 	}
+	/*
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
 	}
+	*/
 	@Autowired
 	public void setOrderLineRepo(OrderLineRepository orderLineRepo) {
 		this.orderLineRepo = orderLineRepo;

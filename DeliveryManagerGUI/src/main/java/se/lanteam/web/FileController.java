@@ -19,7 +19,7 @@ import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
-public class FileController {
+public class FileController extends BaseController {
 
 	private static final String ATTACHMENT_MSG_OK = "Leveransdokument bifogat.";
 	private static final String ATTACHMENT_MSG_DELETE_OK = "Leveransdokument borttaget.";
@@ -42,7 +42,7 @@ public class FileController {
 				attEntity.setFileSize(attachment.getSize());
 				attEntity.setContentType("image/jpeg");
 				order.setAttachment(attEntity);
-				order.setOrderStatusByProgress();
+				order.setOrderStatusByProgress(false);
 				orderRepo.save(order);
 				reqAttr.setStatusAttachmentSuccess(ATTACHMENT_MSG_OK);
 			} catch (Exception e) {
@@ -53,6 +53,7 @@ public class FileController {
 		}
 		order = orderRepo.findOne(orderId);
 		model.put("order", order);
+		reqAttr = addRelatedOrders(reqAttr, order);
 		model.put("reqAttr", reqAttr);
 		return "order-details";
 	}
@@ -61,12 +62,13 @@ public class FileController {
 	public String deleteFile(@PathVariable Long orderId, ModelMap model) {
 		OrderHeader order = orderRepo.findOne(orderId);
 		order.setAttachment(null);
-		order.setOrderStatusByProgress();
+		order.setOrderStatusByProgress(false);
 		orderRepo.save(order);
 		order = orderRepo.findOne(orderId);
 		model.put("order", order);
 		RequestAttributes reqAttr = new RequestAttributes();
 		reqAttr.setStatusAttachmentSuccess(ATTACHMENT_MSG_DELETE_OK);
+		reqAttr = addRelatedOrders(reqAttr, order);
 		model.put("reqAttr", reqAttr);
 		return "order-details";
 	}

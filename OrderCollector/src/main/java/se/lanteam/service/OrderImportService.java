@@ -66,7 +66,7 @@ public class OrderImportService {
 					boolean first = true;
 					for (OrderHeader childOrder : childOrders) {
 						if (!first)
-							orders.append(", ");
+							orders.append(",");
 						orders.append(childOrder.getOrderNumber());
 						first = false;
 					}
@@ -81,6 +81,7 @@ public class OrderImportService {
     				String masterOrderNr = masterOrders.get(0).getOrderNumber();
 					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_CHILD,masterOrderNr));
 					order.setJointDeliveryOrders(masterOrderNr);
+					order.setExcludeFromList(true);
 					orderRepo.save(order);
     			}
     		}    		

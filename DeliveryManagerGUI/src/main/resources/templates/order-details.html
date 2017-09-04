@@ -37,9 +37,12 @@
 										<div th:if="${not #strings.isEmpty(order.orderSummary)}" class="information-text system-info help-message">
 											<p th:utext="${order.orderSummary}"></p>
 											<p th:if="${order.orderCanBeCorrected}">För att korrigera serienummer eller stöld-id på denna order, klicka <a th:href="@{/order-list/correct/} + ${order.id}"><strong>HÄR =></strong></a></p>
-											<p th:if="${order.jointDeliveryText != null}" th:text="${order.jointDeliveryText}" class="important-message">Info om samleverans</p>
 										</div>
-										
+											
+										<div th:if="${not #strings.isEmpty(reqAttr.infoMessage)}" class="information-text system-info error-message">
+											<p th:utext="${reqAttr.infoMessage}"></p>
+										</div>
+																				
 										<div class="form-step current-step" id="registration-area">
 											<div class="form-step-header cf">
 												<h2
@@ -218,6 +221,25 @@
 														</tr>
 													</tbody>
 												</table>
+												<div th:if="${order.partOfJointdelivery}">
+													<h3>Andra ordrar i denna samleverans</h3>
+													<table class="small-table">
+														<thead>
+															<tr>
+																<th>Ordernummer</th>
+																<th>Status</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr th:each="order : ${reqAttr.relatedOrders}">
+																<td><a th:text="${order.orderNumber}" th:href="@{/order-list/view/} + ${order.id}">LT100199</a></td>
+																<td th:text="${order.statusDisplay}">Ny</td>															
+															</tr>
+														</tbody>
+													</table>
+													
+												</div>
+												
 												<h3 id="label-printing">Utskrift av etiketter</h3>
 												<div th:if="${not #strings.isEmpty(order.printMessage)}" class="information-text system-info help-message">
 													<p th:utext="${order.printMessage}"></p><strong><a onclick="PrintLabels()">Skriv ut =></a></strong>
@@ -283,7 +305,6 @@
 															value="Spara" name="store-route-plan" id="store-route-plan" />
 													</div>
 												</form>
-												
 												<h3 id="contact-persons">Kontaktpersoner</h3>
 												<table class="small-table">
 													<thead>

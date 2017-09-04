@@ -21,8 +21,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
+import org.springframework.util.StringUtils;
 import org.thymeleaf.util.ArrayUtils;
 
+import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.SLAConstants;
 import se.lanteam.constants.StatusConstants;
@@ -74,6 +76,7 @@ public class OrderHeader {
 	private Boolean receivedFromERP = false;
 	private Boolean contactInfoFromNetset = false;
 	private Integer slaDays;
+	private Boolean excludeFromList = false;
 	@Transient
 	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
 	
@@ -280,10 +283,10 @@ public class OrderHeader {
 	}
 	
 	@Transient
-	public void setOrderStatusByProgress() {
+	public void setOrderStatusByProgress(boolean workToDoOnRelatedOrders) {
 		if (getUnCompletedOrderLines().size() > 0) {
 			this.status = StatusConstants.ORDER_STATUS_STARTED;
-		} else {
+		} else if (!workToDoOnRelatedOrders) {
 			if (this.attachment == null) {
 				this.status = StatusConstants.ORDER_STATUS_REGISTRATION_DONE;
 			} else {
@@ -506,6 +509,12 @@ public class OrderHeader {
 	public String getCurrentDate() {
 		return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 	}
+	public Boolean getExcludeFromList() {
+		return excludeFromList;
+	}
+	public void setExcludeFromList(Boolean excludeFromList) {
+		this.excludeFromList = excludeFromList;
+	}
 	@Transient
 	public List<OrderCustomField> getCustomFieldsInDeliveryNote() {
 		return customFieldsInDeliveryNote;
@@ -532,6 +541,23 @@ public class OrderHeader {
 			return false;
 		}
 	}
+	@Transient
+	public boolean isPartOfJointdelivery() {
+		boolean result = false;
+		if (!StringUtils.isEmpty(this.jointDelivery)) {
+			result = true;
+		}
+		return result;
+	}
+	@Transient
+	public boolean isMainOrderInJoint() {
+		boolean result = false;
+		if (isPartOfJointdelivery() && this.jointDelivery.equalsIgnoreCase(CustomFieldConstants.VALUE_SAMLEVERANS_MASTER)) {
+			result = true;
+		}
+		return result;
+	}
+	
 	public Boolean getContactInfoFromNetset() {
 		return contactInfoFromNetset;
 	}
