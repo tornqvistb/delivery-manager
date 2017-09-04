@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.OrderRepository;
