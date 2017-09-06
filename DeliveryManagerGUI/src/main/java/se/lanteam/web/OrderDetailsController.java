@@ -32,7 +32,7 @@ import se.lanteam.repository.DeliveryAreaRepository;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
-public class OrderDetailsController {
+public class OrderDetailsController extends BaseController{
 
 	private static final String STATUS_MSG_OK = "Statusmeddelande skickat.";
 	private static final String STATUS_MSG_COMMENT_MISSING = "Du måste skriva ett meddelande.";
@@ -40,7 +40,6 @@ public class OrderDetailsController {
 	private static final String STATUS_ROUTE_PLAN_OK = "Order har ruttplanerats.";
 	private static final String STATUS_ROUTE_PLAN_NOK = "Ruttplanering av ordern misslyckades. Alla obligatoriska fält ej ifyllda.";
 
-	private OrderRepository orderRepo;
 	private SessionBean sessionBean;
 	private DeliveryAreaRepository deliveryAreaRepo;
 
@@ -136,41 +135,50 @@ public class OrderDetailsController {
 		} catch (ParseException e) {
 		}
 		if (StringUtils.hasText(reqAttr.getDeliveryAreaId()) && deliveryDate != null) {
-			DeliveryPlan deliveryPlan = new DeliveryPlan();
-			deliveryPlan.setComment(reqAttr.getComment());
-			deliveryPlan.setDeliveryArea(deliveryAreaRepo.getOne(Long.parseLong(reqAttr.getDeliveryAreaId())));
-			deliveryPlan.setOrderHeader(order);
-			deliveryPlan.setPlannedDeliveryDate(deliveryDate);
-			order.setDeliveryPlan(deliveryPlan);
-			order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);			
-			orderRepo.save(order);
+			planOrder(order, reqAttr, deliveryDate);
+			for (OrderHeader relOrder : getRelatedOrders(order)) {
+				planOrder(relOrder, reqAttr, deliveryDate);
+			}
 			order = orderRepo.findOne(orderId);
 			model.put("order", order);
 			reqAttr = new RequestAttributes();
 			reqAttr.setStatusRouteplanSuccess(STATUS_ROUTE_PLAN_OK);
-			model.put("reqAttr", reqAttr);
 		} else {
 			model.put("order", order);
-			reqAttr.setStatusRouteplanFailed(STATUS_ROUTE_PLAN_NOK);
-			model.put("reqAttr", reqAttr);
+			reqAttr.setStatusRouteplanFailed(STATUS_ROUTE_PLAN_NOK);			
 		}
+		reqAttr = addRelatedOrders(reqAttr, order);
+		model.put("reqAttr", reqAttr);
 		model.put("deliveryAreas", deliveryAreaRepo.findAll(new Sort(Sort.Direction.ASC, "name")));
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		return "order-details";
 	}
+	private void planOrder(OrderHeader order, RequestAttributes reqAttr, Date planDate) {
+		DeliveryPlan deliveryPlan = new DeliveryPlan();
+		deliveryPlan.setComment(reqAttr.getComment());
+		deliveryPlan.setDeliveryArea(deliveryAreaRepo.getOne(Long.parseLong(reqAttr.getDeliveryAreaId())));
+		deliveryPlan.setOrderHeader(order);
+		deliveryPlan.setPlannedDeliveryDate(planDate);
+		order.setDeliveryPlan(deliveryPlan);
+		order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);			
+		orderRepo.save(order);
+	}
 	@RequestMapping(value = "order-list/new-routeplan/{orderId}", method = RequestMethod.GET)
-	public String newRoutePlan(@PathVariable Long orderId, ModelMap model) {
+	public String newRoutePlan(@PathVariable Long orderId, ModelMap model) {		
 		OrderHeader order = orderRepo.findOne(orderId);
+		unPlanOrder(order);
+		for (OrderHeader relOrder : getRelatedOrders(order)) {
+			unPlanOrder(relOrder);
+		}
+		return "redirect:/order-list/view/{orderId}";
+	}
+
+	private void unPlanOrder(OrderHeader order) {
 		order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);
 		order.setDeliveryPlan(null);
 		orderRepo.save(order);
-		return "redirect:/order-list/view/{orderId}";
 	}
 	
-	@Autowired
-	public void setOrderRepo(OrderRepository orderRepo) {
-		this.orderRepo = orderRepo;
-	}
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {
 		this.sessionBean = sessionBean;

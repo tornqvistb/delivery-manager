@@ -195,7 +195,7 @@ public class MailReceiverService {
 				attachment.setFileSize(Long.valueOf(fileContent.length));
 				attachment.setContentType("image/jpeg");
 				order.setAttachment(attachment);
-				order.setOrderStatusByProgress();
+				order.setOrderStatusByProgress(false);
 				orderRepo.save(order);
 				resultText = String.format(THANKS_MAIL_REPLY, fileName, orderNumber);
 			} else {

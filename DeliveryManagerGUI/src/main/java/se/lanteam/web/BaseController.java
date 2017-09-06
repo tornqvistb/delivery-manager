@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
@@ -42,7 +43,9 @@ public class BaseController {
 		List<String> otherOrdersInDelivery = new ArrayList<String>();
 		if (order.isPartOfJointdelivery()) {
 			if (order.isMainOrderInJoint()) {
-				otherOrdersInDelivery = Arrays.asList(order.getJointDeliveryOrders().split(","));
+				if (!StringUtils.isEmpty(order.getJointDeliveryOrders())) {
+					otherOrdersInDelivery = Arrays.asList(order.getJointDeliveryOrders().split(","));
+				}
 			} else {
 				// child order
 				otherOrdersInDelivery.add(order.getJointDeliveryOrders());

@@ -21,6 +21,16 @@ public class OrderCustomField {
 	private String value;
 	private Date creationDate;
 
+	
+	
+	public OrderCustomField(CustomField customField, OrderHeader orderHeader, String value, Date creationDate) {
+		super();
+		this.customField = customField;
+		this.orderHeader = orderHeader;
+		this.value = value;
+		this.creationDate = creationDate;
+	}
+
 	public OrderCustomField() {
 		super();
 		creationDate = new Date();

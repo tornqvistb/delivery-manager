@@ -6,9 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,10 +28,12 @@ import se.lanteam.constants.SLAConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderComment;
+import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
+import se.lanteam.repository.OrderCustomFieldRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
 
@@ -36,6 +41,7 @@ import se.lanteam.services.PropertyService;
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
  */
 @Service
+@Transactional
 public class OrderImportService {
 
 	private static final String GENERAL_FILE_ERROR = "Fel vid inläsning av fil. ";
@@ -54,6 +60,7 @@ public class OrderImportService {
     private ErrorRepository errorRepo;
     private PropertyService propService;
     private CustomerGroupRepository customerGroupRepo;
+    private OrderCustomFieldRepository orderCustomFieldRepo;
     
     public void addJointDeliveryInfo() {
     	List<OrderHeader> unJoinedOrders = orderRepo.findOrdersJointDeliveryUnjoined(StatusConstants.ORDER_STATUS_NEW);
@@ -78,10 +85,29 @@ public class OrderImportService {
     			// Child order
     			List<OrderHeader> masterOrders = orderRepo.findOrdersByNetsetOrderNumber(order.getJointDelivery());
     			if (masterOrders.size() > 0) {
-    				String masterOrderNr = masterOrders.get(0).getOrderNumber();
-					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_CHILD,masterOrderNr));
+    				LOG.debug("child, master-order-id: " + masterOrders.get(0).getId());
+    				OrderHeader masterOrder = orderRepo.findOne(masterOrders.get(0).getId());
+    				String masterOrderNr = masterOrder.getOrderNumber();
+					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_CHILD, masterOrderNr));
 					order.setJointDeliveryOrders(masterOrderNr);
 					order.setExcludeFromList(true);
+					for (OrderCustomField field : order.getOrderCustomFields()) {
+						orderCustomFieldRepo.delete(field.getId());
+					}
+					order.setOrderCustomFields(null);
+					List<OrderCustomField> updatedCustomFields = new ArrayList<OrderCustomField>();
+					for (OrderCustomField customField : masterOrder.getOrderCustomFields()) {
+						LOG.debug("child, customField " + customField.getId() + ", " + customField.getValue());
+						String value = customField.getValue();
+						if (customField.getCustomField().getIdentification() == CustomFieldConstants.CUSTOM_FIELD_JOINT_DELIVERY) {
+							value = masterOrder.getNetsetOrderNumber();
+						}
+						updatedCustomFields.add(new OrderCustomField(customField.getCustomField(), order, value, customField.getCreationDate()));
+					}					
+					order.setOrderCustomFields(updatedCustomFields);
+					order.setContact1Email(masterOrder.getContact1Email());
+					order.setContact1Name(masterOrder.getContact1Name());
+					order.setContact1Phone(masterOrder.getContact1Phone());
 					orderRepo.save(order);
     			}
     		}    		
@@ -279,6 +305,10 @@ public class OrderImportService {
 	    String s = jsonDate.substring(idx1+1, idx2);
 	    long l = Long.valueOf(s);
 	    return new Date(l);
+	}
+	@Autowired
+	public void setOrderCustomFieldRepo(OrderCustomFieldRepository orderCustomFieldRepo) {
+		this.orderCustomFieldRepo = orderCustomFieldRepo;
 	}
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
