@@ -1,2 +1,8 @@
-update order_header set exclude_from_list = 0 where id > 0;
-commit;
+SET FOREIGN_KEY_CHECKS=0;
+
+ALTER TABLE customer_group MODIFY COLUMN id BIGINT(20) auto_increment;
+ALTER TABLE customer_custom_field MODIFY COLUMN id BIGINT(20) auto_increment;
+ALTER TABLE registration_config MODIFY COLUMN document_id INT auto_increment;
+ALTER TABLE reports_config MODIFY COLUMN document_id INT auto_increment;
+
+SET FOREIGN_KEY_CHECKS=1;
