@@ -160,7 +160,15 @@ public class OrderDetailsController extends BaseController{
 		deliveryPlan.setOrderHeader(order);
 		deliveryPlan.setPlannedDeliveryDate(planDate);
 		order.setDeliveryPlan(deliveryPlan);
-		order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);			
+		if (order.getCustomerGroup().getBookOrderBeforeRegistration()) {
+			if (order.getUnCompletedOrderLines().size() == 0) {
+				order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);
+			} else { 
+				order.setStatus(StatusConstants.ORDER_STATUS_BOOKED);
+			}
+		} else {
+			order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);
+		}
 		orderRepo.save(order);
 	}
 	@RequestMapping(value = "order-list/new-routeplan/{orderId}", method = RequestMethod.GET)
@@ -174,7 +182,15 @@ public class OrderDetailsController extends BaseController{
 	}
 
 	private void unPlanOrder(OrderHeader order) {
-		order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);
+		if (order.getCustomerGroup().getBookOrderBeforeRegistration()) {
+			if (order.getUnCompletedOrderLines().size() == 0) {
+				order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);
+			} else {
+				order.setStatus(StatusConstants.ORDER_STATUS_NEW);
+			}
+		} else {
+			order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);
+		}
 		order.setDeliveryPlan(null);
 		orderRepo.save(order);
 	}

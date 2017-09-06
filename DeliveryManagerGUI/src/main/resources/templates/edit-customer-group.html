@@ -68,6 +68,14 @@
 															<th scope="row">Hämta kontaktuppgifter från Netset</th>
 															<td><input type="checkbox" name="getContactInfoFromNetset" th:field="${customerGroup.getContactInfoFromNetset}" th:checked="${customerGroup.getContactInfoFromNetset}" /></td>
 														</tr>
+														<tr>
+															<th scope="row">Boka ordrar för registrering</th>
+															<td><input type="checkbox" name="bookOrderBeforeRegistration" th:field="${customerGroup.bookOrderBeforeRegistration}" th:checked="${customerGroup.bookOrderBeforeRegistration}" /></td>
+														</tr>
+														<tr>
+															<th scope="row">Klarsätt ordrar i Visma efter leverans</th>
+															<td><input type="checkbox" name="deliveryFlagToERP" th:field="${customerGroup.deliveryFlagToERP}" th:checked="${customerGroup.deliveryFlagToERP}" /></td>
+														</tr>
 														
 													</tbody>
 												</table>

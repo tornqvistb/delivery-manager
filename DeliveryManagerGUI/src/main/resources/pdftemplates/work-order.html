@@ -24,7 +24,11 @@
 		.pagecount:before {
 			content: counter(pages);
 		}
-
+		/* Possibility!
+		@page {
+			size: landscape;
+		}
+		*/
 		@page {
 			@top-center { content: element(header) }
 		}

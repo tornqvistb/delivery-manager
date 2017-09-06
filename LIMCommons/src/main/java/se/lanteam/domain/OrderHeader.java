@@ -288,7 +288,11 @@ public class OrderHeader {
 			this.status = StatusConstants.ORDER_STATUS_STARTED;
 		} else if (!workToDoOnRelatedOrders) {
 			if (this.attachment == null) {
-				this.status = StatusConstants.ORDER_STATUS_REGISTRATION_DONE;
+				if (this.customerGroup.getBookOrderBeforeRegistration()) {
+					this.status = StatusConstants.ORDER_STATUS_ROUTE_PLANNED;
+				} else {
+					this.status = StatusConstants.ORDER_STATUS_REGISTRATION_DONE;
+				}
 			} else {
 				this.status = StatusConstants.ORDER_STATUS_SENT;
 			}
@@ -315,7 +319,7 @@ public class OrderHeader {
 	@Transient
 	public Boolean getRoutePlanEditable() {
 		Boolean result = false;
-		if (StatusConstants.ORDER_STATUS_ROUTE_PLANNED.equals(status)) {
+		if (StatusConstants.ORDER_STATUS_ROUTE_PLANNED.equals(status) || StatusConstants.ORDER_STATUS_BOOKED.equals(status)) {
 			result = true;
 		}
 		return result;		
@@ -323,8 +327,9 @@ public class OrderHeader {
 	@Transient
 	public Boolean getPlannable() {
 		Boolean result = false;
-		if (StatusConstants.ORDER_STATUS_REGISTRATION_DONE.equals(status)) {
-			result = true;
+		if (StatusConstants.ORDER_STATUS_REGISTRATION_DONE.equals(status)
+				|| (StatusConstants.ORDER_STATUS_NEW.equals(status) && this.customerGroup.getBookOrderBeforeRegistration())) {
+			result = true;			
 		}
 		return result;
 	}
@@ -334,7 +339,10 @@ public class OrderHeader {
 		if (this.status.equals(StatusConstants.ORDER_STATUS_RECEIVING)) {
 			result.append("Ordern är delvis mottagen i LIM. Registrering kan påbörjas först när ordern har tagit emot information från samtliga system.");
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_NEW)) {
-			result.append("Registrering ej påbörjad");
+			result.append("Registrering ej påbörjad.");
+			if (this.getCustomerGroup().getBookOrderBeforeRegistration()) {
+				result.append("<br>Ordern måste bokas innan registrering kan påbörjas. Bokning sker genom ruttplanering.");
+			}
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_STARTED)) {
 			result.append("Registrering påbörjad.");
 			if (this.attachment == null) {
@@ -349,6 +357,10 @@ public class OrderHeader {
 			result.append("Registrering klar. Leveransrapportering pågår.");			
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_TRANSFERED)) {
 			result.append("Leveransrapportering klar och överförd till kund.");			
+		} else if (this.status.equals(StatusConstants.ORDER_STATUS_BOOKED)) {
+			result.append("Ordern är bokad. Registrering av utrustning kan nu påbörjas.");
+		} else if (this.status.equals(StatusConstants.ORDER_STATUS_ROUTE_PLANNED)) {
+			result.append("Ordern är ruttplanerad och inväntar nu leveransdokument.");
 		}
 		return result.toString();
 	}
@@ -533,13 +545,23 @@ public class OrderHeader {
 	}
 	@Transient
 	public Boolean getOkToRegister() {
+		Boolean result = false;
 		if (this.getUnCompletedOrderLines().size() > 0
 				&& this.receivedFromWebshop != null && this.receivedFromWebshop
 				&& this.receivedFromERP != null && this.receivedFromERP) {
-			return true;
+			result = true;
+			// Check if order must be booked before registration
+			if (this.customerGroup.getBookOrderBeforeRegistration()) {
+				if (this.status.equals(StatusConstants.ORDER_STATUS_BOOKED) || this.status.equals(StatusConstants.ORDER_STATUS_STARTED)) {
+					result = true;
+				} else {
+					result = false;
+				}
+			}
 		} else {
-			return false;
+			result = false;
 		}
+		return result;
 	}
 	@Transient
 	public boolean isPartOfJointdelivery() {

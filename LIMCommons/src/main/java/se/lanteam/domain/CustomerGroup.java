@@ -26,7 +26,8 @@ public class CustomerGroup {
 	private String ourReference;
 	private Boolean sendDeliveryNotification;
 	private Boolean getContactInfoFromNetset;
-	
+	private Boolean bookOrderBeforeRegistration;
+	private Boolean deliveryFlagToERP;
 
 	public Boolean getGetContactInfoFromNetset() {
 		return getContactInfoFromNetset;
@@ -123,6 +124,22 @@ public class CustomerGroup {
 
 	public void setSendDeliveryNotification(Boolean sendDeliveryNotification) {
 		this.sendDeliveryNotification = sendDeliveryNotification;
+	}
+
+	public Boolean getBookOrderBeforeRegistration() {
+		return bookOrderBeforeRegistration;
+	}
+
+	public void setBookOrderBeforeRegistration(Boolean bookOrderBeforeRegistration) {
+		this.bookOrderBeforeRegistration = bookOrderBeforeRegistration;
+	}
+
+	public Boolean getDeliveryFlagToERP() {
+		return deliveryFlagToERP;
+	}
+
+	public void setDeliveryFlagToERP(Boolean deliveryFlagToERP) {
+		this.deliveryFlagToERP = deliveryFlagToERP;
 	}
 	
 }
