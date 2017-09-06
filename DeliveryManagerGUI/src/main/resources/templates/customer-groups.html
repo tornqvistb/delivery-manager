@@ -20,7 +20,7 @@
 								<div class="page-heading">
 									<h2>Hantera kundgrupper</h2>
 								</div>
-							</div>
+							</div>							
 							<!-- Här kan man lägga på en vänster meny -->
 							<div class="m-form">
 								<div class="content e-tjansteplattform hamster">
@@ -29,22 +29,32 @@
 										class="information-text system-info thanks-message side-margin">
 										<p th:utext="${reqAttr.thanksMessage}"></p>
 									</div>
+									<div 
+										th:if="${not #strings.isEmpty(reqAttr.errorMessage)}" 
+										class="information-text system-info error-message side-margin">
+										<p th:utext="${reqAttr.errorMessage}"></p>
+									</div>
+									
 									<div class="form-step">
 																		
-										<form>
+										<form
+												th:action="@{/customer-groups/addnew}"
+												method="post">
 											<div class="form-section" id="search-results">
 												<h3>Kundgrupper</h3>
 												<table>
 													<colgroup>
-														<col style="width:40%"/>
 														<col style="width:30%"/>
-														<col style="width:30%"/>
+														<col style="width:25%"/>
+														<col style="width:25%"/>
+														<col style="width:15%"/>
 													</colgroup>
 													<thead>
 														<tr>
 															<th scope="col">Namn</th>
 															<th scope="col">Aktivera</th>
 															<th scope="col">Inställningar</th>
+															<th scope="col">Ta bort</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -52,11 +62,15 @@
 															<td th:text="${customerGroup.name}">Något gick fel</td>															
 															<td><a th:href="@{/customer-groups/activate/} + ${customerGroup.id} + '/no'">Sätt som aktiv</a></td>
 															<td><a th:href="@{/customer-groups/settings/} + ${customerGroup.id}">Ändra inställningar</a></td>
+															<td><a th:href="@{/customer-groups/delete/} + ${customerGroup.id}" onclick="return confirm('Vill du verkligen ta bort kundgruppen?');">Ta bort</a></td>
 														</tr>
 													</tbody>
 												</table>
 											</div>
-										</form>
+											<div class="submit-area">
+												<input class="button" type="submit" value="Skapa ny kundgrupp"></input>
+											</div>																					
+										</form>									
 									</div>
 								</div>
 							</div>

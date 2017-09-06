@@ -19,6 +19,17 @@ public class CustomerCustomField {
 	private CustomerGroup customerGroup;
 	private Date creationDate;
 
+	public CustomerCustomField(CustomField customField, CustomerGroup customerGroup) {
+		super();
+		this.showInSlaReport = false;
+		this.showInDeliveryReport = false;
+		this.showInDeliveryNote = false;
+		this.showInWorkNote = false;
+		this.customField = customField;
+		this.customerGroup = customerGroup;
+		this.creationDate = new Date();
+	}
+
 	public CustomerCustomField() {
 		super();
 		creationDate = new Date();

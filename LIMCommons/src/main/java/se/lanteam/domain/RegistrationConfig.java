@@ -1,6 +1,7 @@
 package se.lanteam.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
@@ -44,6 +45,7 @@ public class RegistrationConfig {
 	
 
 	@Id
+	@GeneratedValue
 	public Long getId() {
 		return id;
 	}

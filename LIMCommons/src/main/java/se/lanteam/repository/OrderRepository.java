@@ -84,5 +84,7 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 	@Query("SELECT o FROM OrderHeader o WHERE o.status = :status AND o.orderDate < :theDate")
     public List<OrderHeader> findOrdersByDateAndStatus(@Param("status") String status, @Param("theDate") Date theDate);
 
+	@Query("SELECT o FROM OrderHeader o WHERE o.customerGroup.id = :customerGroupId")
+    public List<OrderHeader> findOrdersByCustGroup(@Param("customerGroupId") Long customerGroupId);
 	
 }
