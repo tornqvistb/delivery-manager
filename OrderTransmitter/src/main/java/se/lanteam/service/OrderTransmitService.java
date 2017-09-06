@@ -133,10 +133,20 @@ public class OrderTransmitService {
 		return email;
 	}
 	
+	private Integer getLeveransflaggaForOrder(OrderHeader order) {
+		Integer result = 0;
+		if (order.getCustomerGroup().getDeliveryFlagToERP()) {
+			result = 1;
+		}
+		return result;
+	}
+	
 	private void createFileToBusinessSystem(OrderHeader order) {
 		String fileTransmitFolder = propService.getString(PropertyConstants.FILE_OUTGOING_FOLDER);
 		Order vismaOrder = new Order();
-		vismaOrder.setOrdernummer(Integer.parseInt(order.getOrderNumber()));		List<Orderrad> vismaRows = new ArrayList<Orderrad>();
+		vismaOrder.setOrdernummer(Integer.parseInt(order.getOrderNumber()));
+		vismaOrder.setLeveransflagga(getLeveransflaggaForOrder(order));
+		List<Orderrad> vismaRows = new ArrayList<Orderrad>();
 		for (OrderLine line : order.getOrderLines()) {
 			Orderrad vismaRow = new Orderrad();
 			vismaRow.setArtikelnummer(line.getArticleNumber());
