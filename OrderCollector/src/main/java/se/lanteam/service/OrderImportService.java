@@ -31,6 +31,7 @@ import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
+import se.lanteam.exceptions.ReceiveOrderException;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCustomFieldRepository;
@@ -51,6 +52,7 @@ public class OrderImportService {
 	private static final String ERROR_ARTICLE_ID_MISSING = GENERAL_FILE_ERROR + "Artikel-ID saknas på orderrad i fil: ";
 	private static final String ERROR_ROW_NUMBER_MISSING = GENERAL_FILE_ERROR + "Orderradnummer saknas på orderrad i fil: ";
 	private static final String ERROR_TOTAL_MISSING = GENERAL_FILE_ERROR + "Antal saknas på orderrad i fil: ";
+	private static final String ERROR_ORDER_ALREADY_RECEIVED = GENERAL_FILE_ERROR + "Order har redan tagits emot";
 	
 	private static final String PROPERTY_WEBSHOP_INTEGRATION_ACTIVATED = "webshop-integration-activated";
 	
@@ -114,11 +116,11 @@ public class OrderImportService {
     	}    	
     }
     
-	public void moveFiles() {
+	public void moveFiles() throws IOException {
 	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_INCOMING_FOLDER);	    
 	    String fileDestFolder = propService.getString(PropertyConstants.FILE_PROCESSED_FOLDER);	    
 	    String fileErrorFolder = propService.getString(PropertyConstants.FILE_ERROR_FOLDER);	    
-        LOG.info("Looking for files to move!");
+        LOG.debug("Looking for files to move!");
 		final File inputFolder = new File(fileSourceFolder);
 		File[] filesInFolder = inputFolder.listFiles();
 		if (filesInFolder != null) {
@@ -144,25 +146,29 @@ public class OrderImportService {
 						orderHeader.getOrderComments().add(comment);
 						orderHeader.setReceivingStatus();
 						orderRepo.save(orderHeader);
+						checkThatOrderCreated(orderHeader.getOrderNumber());
 						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
 					} else {
 						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					}
 					
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (ReceiveOrderException e) {
+					saveError(e.getMessage());
+					Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 				}
 			}
 		}
 	}
 
-	private OrderHeader getOrderHeaderFromDB(String json) {
+	private OrderHeader getOrderHeaderFromDB(String json) throws ReceiveOrderException {
 		JSONObject jsonOrder = new JSONObject(json);
-		List<OrderHeader> orderHeaderList = orderRepo.findOrdersByOrderNumber(String.valueOf(jsonOrder.optInt("Ordernummer")));
+		String orderNumber = String.valueOf(jsonOrder.optInt("Ordernummer"));
+		List<OrderHeader> orderHeaderList = orderRepo.findOrdersByOrderNumber(orderNumber);
 		if (orderHeaderList.size() > 0) {
-			return orderRepo.findOne(orderHeaderList.get(0).getId());			
+			throw new ReceiveOrderException(orderNumber, ERROR_ORDER_ALREADY_RECEIVED);
 		} else {
-			orderHeaderList = orderRepo.findOrdersByNetsetOrderNumber(String.valueOf(jsonOrder.optInt("Netset_ordernummer")));
+			String netetOrderNumber = String.valueOf(jsonOrder.optInt("Netset_ordernummer"));
+			orderHeaderList = orderRepo.findOrdersByNetsetOrderNumber(netetOrderNumber);
 			if (orderHeaderList.size() > 0) {
 				return orderRepo.findOne(orderHeaderList.get(0).getId());
 			} else {
@@ -292,7 +298,12 @@ public class OrderImportService {
 		}
 		return slaDays;
 	}
-	
+	private void checkThatOrderCreated(String orderNumber) {
+		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderNumber);
+		if (orders == null || orders.size() == 0) {
+			saveError("Order " + orderNumber + " lästes in från Visma men ordern sparades ej i LIM.");
+		}
+	}
 	private void saveError(String errorText) {
 		errorRepo.save(new ErrorRecord(errorText));
 	}
