@@ -120,7 +120,6 @@ public class SLAReportController {
         model.put("headers", headers);
         
         List<String> numericColumns = new ArrayList<String>();
-        numericColumns.add("Ordernummer");
         numericColumns.add("Dagar kvar");
         model.put("numericcolumns", numericColumns);
 
