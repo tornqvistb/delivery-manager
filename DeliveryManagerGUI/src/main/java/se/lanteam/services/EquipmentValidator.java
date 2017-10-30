@@ -21,6 +21,7 @@ public class EquipmentValidator {
 	private static String RESULT_OK = "";
 	private static String SERIAL_NO_TOO_SHORT = "Serienummer måste vara minst 7 tecken långt";
 	private static String INVALID_STEALING_TAG = "Stöld-ID måste vara 6 tecken";
+	private static String STEALING_TAG_EMPTY = "Stöld-ID får ej vara tomt";
 	private static String REGISTERED_BY_MISSING = "Du måste fylla i Registrerad av";
 	private static String SERIAL_NO_ON_CURRENT_ORDER = "Angivet serienummer finns redan registrerat på denna order";
 	private static String STEALING_TAG_ON_CURRENT_ORDER = "Angivet stöld-ID finns redan registrerat på denna order";
@@ -123,9 +124,15 @@ public class EquipmentValidator {
 
 	private String validateStealingTag(Equipment equipment, OrderHeader order) {
 		// - stealing tag exact 6 letters
+		/*
 		if (equipment.getStealingTag() == null || equipment.getStealingTag().length() != 6) {
 			return INVALID_STEALING_TAG;
-		}		
+		}
+		*/		
+		if (equipment.getStealingTag() == null) {
+			return STEALING_TAG_EMPTY;
+		}
+
 		// - stealing tag not registered on current order
 		for (OrderLine line : order.getOrderLines()) {
 			for (Equipment equip : line.getEquipments()) {
