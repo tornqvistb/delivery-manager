@@ -24,7 +24,7 @@ public class OrderRepositoryTest {
 	@Test
 	public void testFindOrdersByPlanDate() {
 		try {
-			List<OrderHeader> orders = orderRepo.findOrdersByPlanDate(DateUtil.stringToDate("2017-02-13"));
+			List<OrderHeader> orders = orderRepo.findOrdersByPlanDate(DateUtil.stringToDate("2017-02-13"), 1L);
 			if (!orders.isEmpty()) {
 				assert(true);
 			} else {

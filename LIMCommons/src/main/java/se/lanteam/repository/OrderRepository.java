@@ -62,8 +62,8 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 	@Query("SELECT MIN(o.deliveryDate) FROM OrderHeader o WHERE o.status = :status")
 	public Date getFirstDeliveryDate(@Param("status") String status);
 
-	@Query("SELECT o FROM OrderHeader o WHERE o.deliveryPlan.plannedDeliveryDate = :planDate")
-    public List<OrderHeader> findOrdersByPlanDate(@Param("planDate") Date planDate);
+	@Query("SELECT o FROM OrderHeader o WHERE o.deliveryPlan.plannedDeliveryDate = :planDate and o.customerGroup.id = :customerGroupId")
+    public List<OrderHeader> findOrdersByPlanDate(@Param("planDate") Date planDate, @Param("customerGroupId") Long customerGroupId);
 
 	// Delivery report queries
 	@Query("SELECT o FROM OrderHeader o WHERE o.deliveryDate >= :firstDate AND o.deliveryDate <= :lastDate AND o.orderNumber >= :firstOrderNo AND o.orderNumber <= :lastOrderNo")

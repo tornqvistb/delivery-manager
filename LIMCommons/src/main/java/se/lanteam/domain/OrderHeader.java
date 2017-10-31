@@ -308,6 +308,14 @@ public class OrderHeader {
 		return result;
 	}
 	@Transient
+	public Boolean getStatusMessageAllowed() {
+		Boolean result = false;
+		if (this.getCustomerGroup().getSendDeliveryNotification() && this.getEditable()) {
+			result = true;
+		}
+		return result;
+	}	
+	@Transient
 	public String getRoutePlanSummary() {
 		String result = "";
 		if (this.deliveryPlan != null) {

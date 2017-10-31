@@ -23,7 +23,7 @@ public class StatusConstants {
 	public static final String ORDER_STATUS_ROUTE_PLANNED_DISP = "Ruttplanerad";
 	public static final String ORDER_STATUS_NOT_ACCEPTED_DISP = "Ej accepterad";
 	public static final String ORDER_STATUS_SENT_DISP = "Skickad";
-	public static final String ORDER_STATUS_TRANSFERED_DISP = "Överförd till Intraservice";
+	public static final String ORDER_STATUS_TRANSFERED_DISP = "Överförd till kund";
 	
 	
 	public static final String[][] ORDER_STATUS_MATRIX = {{ORDER_STATUS_RECEIVING, ORDER_STATUS_RECEIVING_DISP},

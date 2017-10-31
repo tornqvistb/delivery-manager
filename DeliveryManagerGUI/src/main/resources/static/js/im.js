@@ -58,7 +58,7 @@ function PrintLabels()
      WinPrint.document.write("Lanteam order:<br />");
      WinPrint.document.write("<span style='font-weight:bold;font-size:larger'>" + intOrderNo + "</span>");
      WinPrint.document.write("<br /><br />");
-     WinPrint.document.write("Intraservice order:<br />");
+     WinPrint.document.write("Kundens order:<br />");
      WinPrint.document.write("<span style='font-weight:bold;font-size:larger'>" + extOrderNo + "</span>");
      WinPrint.document.write("</div></body>");
      WinPrint.document.close();

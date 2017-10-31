@@ -374,6 +374,11 @@
 															<td th:text="${order.orderNumber}" id="int-order-no">LT100199</td>
 														</tr>
 														<tr>
+															<th scope="row">Web-ordernummer</th>
+															<td th:text="${order.netsetOrderNumber}" id="web-order-no">233199</td>
+														</tr>
+														
+														<tr>
 															<th scope="row">Kundens ordernummer</th>
 															<td th:text="${order.customerOrderNumber}" id="ext-order-no">REQ100094</td>
 														</tr>
@@ -441,7 +446,7 @@
 														skapades ej</span>
 												</div>
 												<form
-													th:if="${order.editable}"
+													th:if="${order.statusMessageAllowed}"
 													th:action="@{/order-list/view/registerComment/} + ${order.id} + '#order-comments-header'"
 													th:object="${reqAttr}" method="post">
 													<table class="small-table">

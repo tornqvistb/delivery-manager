@@ -20,6 +20,7 @@ import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SearchBean;
+import se.lanteam.model.SessionBean;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.ExcelViewBuilder;
 
@@ -28,6 +29,8 @@ public class TransportReportController {
 	
 	private OrderRepository orderRepo;
 	private SearchBean searchBean;
+	private SessionBean sessionBean;
+
 	
 	@RequestMapping("reports/transport")
 	public String showDeliveryPlanReport(ModelMap model) {
@@ -40,7 +43,7 @@ public class TransportReportController {
 		
 		try {
 			Date planDate = DateUtil.stringToDate(reqAttr.getPlanDate());
-			List<OrderHeader> orders = orderRepo.findOrdersByPlanDate(planDate);
+			List<OrderHeader> orders = orderRepo.findOrdersByPlanDate(planDate, sessionBean.getCustomerGroup().getId());
 			model.put("orders", orders);
 			searchBean.setOrderList(orders);
 			searchBean.setFromDate(planDate);
@@ -129,6 +132,10 @@ public class TransportReportController {
 	@Autowired
 	public void setSearchBean(SearchBean searchBean) {
 		this.searchBean = searchBean;
+	}
+	@Autowired
+	public void setSessionBean(SessionBean sessionBean) {
+		this.sessionBean = sessionBean;
 	}
 
 }
