@@ -23,6 +23,9 @@ insert into delivery_area (id, name, creation_date) values (4, 'Öster', sysdate
 insert into delivery_area (id, name, creation_date) values (5, 'Hisingen', sysdate());
 insert into delivery_area (id, name, creation_date) values (6, 'Marks kommun', sysdate());
 insert into delivery_area (id, name, creation_date) values (7, 'Partille', sysdate());
+insert into delivery_area (id, name, creation_date) values (8, 'Vänersborg', sysdate());
+insert into delivery_area (id, name, creation_date) values (9, 'Trollhättan', sysdate());
+
 
 insert into customer_group (id, name, email_address, creation_date) values (1, 'Intraservice', 'tornqvistb@gmail.com', sysdate());
 insert into customer_group (id, name, email_address, creation_date) values (2, 'Partille', 'tornqvistb@gmail.com',sysdate());
