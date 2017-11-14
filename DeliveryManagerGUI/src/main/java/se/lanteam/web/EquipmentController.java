@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import se.lanteam.constants.CustomFieldConstants;
+import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
@@ -35,7 +37,9 @@ public class EquipmentController extends BaseController {
 
 	private static String RESULT_OK = "";
 	private static String TOO_MANY_REGISTERED = "Du har angett ett större antal än vad som är kvar att registrera";
-	private static String RESULT_CORRECTION_COMPLETED = "Korrigering av utrustning genomförd";
+	private static String RESULT_CORRECTION_COMPLETED = "Korrigering av utrustning genomförd.";
+	private static String RESULT_CORRECTION_COMPLETED_WITH_MAIL = "Korrigering av utrustning genomförd, kund informerad via epost.";
+	private static String RESULT_CORRECTION_COMPLETED_NEW_DELIVERY = "Korrigering av utrustning genomförd, ny leveransavisering skickad till kund.";
 
 	//private OrderRepository orderRepo;
 	private OrderLineRepository orderLineRepo;
@@ -156,8 +160,10 @@ public class EquipmentController extends BaseController {
 	}
 
 	@RequestMapping(value="order-list/correct/confirm/{orderId}", method=RequestMethod.POST)
-	public String confirmCorrection(@PathVariable Long orderId, ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
-		LOG.debug("In confirmCorrection");		
+	public String confirmCorrection(@PathVariable Long orderId, ModelMap model, @ModelAttribute RequestAttributes reqAttr, @RequestParam(value="action", required=true) String action) {
+					
+		LOG.debug("In confirmCorrection");
+		System.out.println("action:" + action);
 		OrderHeader order = orderRepo.findOne(orderId);
 		// Check every modified equipment
 		Boolean validationOk = true;
@@ -195,7 +201,16 @@ public class EquipmentController extends BaseController {
 				}
 			}
 			message = RESULT_CORRECTION_COMPLETED;
-			mailComposer.createMail(mailInfo);
+			if (action.equals(reqAttr.getInformByEmail())) {
+				mailComposer.createMail(mailInfo);
+				order.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
+				message = RESULT_CORRECTION_COMPLETED_WITH_MAIL;
+			} else if (action.equals(reqAttr.getDoNewDelivery())) {
+				order.setTransmitErrorMessage("");
+				order.setStatus(StatusConstants.ORDER_STATUS_SENT);
+				message = RESULT_CORRECTION_COMPLETED_NEW_DELIVERY;
+			}
+			orderRepo.save(order);
 		} else {
 			returnPage = "correct-order";
 		}		

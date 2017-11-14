@@ -58,6 +58,8 @@ public class RequestAttributes {
 	private String resultEmptyMsg;
 	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
 	private List<OrderHeader> relatedOrders= new ArrayList<OrderHeader>();
+	private String informByEmail = "Informera kunden om ändringen via epost";
+	private String doNewDelivery = "Anropa leveransaviseringstjänst hos kund på nytt";
 	
 	public RequestAttributes() {
 		super();
@@ -435,6 +437,14 @@ public class RequestAttributes {
 
 	public void setRelatedOrders(List<OrderHeader> relatedOrders) {
 		this.relatedOrders = relatedOrders;
+	}
+
+	public String getInformByEmail() {
+		return informByEmail;
+	}
+
+	public String getDoNewDelivery() {
+		return doNewDelivery;
 	}
 	
 }

@@ -370,13 +370,16 @@ public class OrderHeader {
 			result.append("Ordern är bokad. Registrering av utrustning kan nu påbörjas.");
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_ROUTE_PLANNED)) {
 			result.append("Ordern är ruttplanerad och inväntar nu leveransdokument.");
+		} else if (this.status.equals(StatusConstants.ORDER_STATUS_NOT_ACCEPTED)) {
+			result.append("Orderleveransen har ej accepterats av kunden.");
 		}
 		return result.toString();
 	}
 	@Transient
 	public Boolean getOrderCanBeCorrected() {
 		Boolean result = false;
-		if (this.status.equals(StatusConstants.ORDER_STATUS_TRANSFERED)) {
+		if (this.status.equals(StatusConstants.ORDER_STATUS_TRANSFERED) || 
+			this.status.equals(StatusConstants.ORDER_STATUS_NOT_ACCEPTED)) {
 			result = true;
 		}
 		return result;

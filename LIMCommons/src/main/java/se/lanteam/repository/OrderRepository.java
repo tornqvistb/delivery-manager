@@ -26,7 +26,7 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 	@Query("SELECT o FROM OrderHeader o WHERE o.orderNumber = :orderNumber")
     public List<OrderHeader> findOrdersByOrderNumber(@Param("orderNumber") String orderNumber);
 
-	@Query("SELECT o FROM OrderHeader o WHERE o.customerSalesOrder = :customerSalesOrder")
+	@Query("SELECT o FROM OrderHeader o WHERE o.customerSalesOrder LIKE %:customerSalesOrder%")
     public List<OrderHeader> findOrdersByCustomerSalesOrder(@Param("customerSalesOrder") String customerSalesOrder);
 
 	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND (LOWER(o.orderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerOrderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerSalesOrder) LIKE LOWER(:searchString) OR LOWER(o.articleNumbers) LIKE LOWER(:searchString)) AND o.customerGroup.id = :customerGroupId AND excludeFromList = false")

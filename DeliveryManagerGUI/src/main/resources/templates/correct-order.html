@@ -119,7 +119,8 @@
 														</tbody>
 													</table>
 													<div class="submit-area">
-														<input class="btn" type="submit" value="Skicka" />
+														<input name="action" class="btn" type="submit" th:value="${reqAttr.informByEmail}" /><br />
+														<input name="action" class="btn" type="submit" th:value="${reqAttr.doNewDelivery}" />
 													</div>
 												</form>
 											</div>
