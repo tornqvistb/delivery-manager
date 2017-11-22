@@ -185,7 +185,7 @@ public class OrderTransmitService {
         		try {
         			// Get ordergroup and check if customer has integration
         			OrderHeader order = comment.getOrderHeader();
-        			if (order.getCustomerGroup().getSendDeliveryNotification()) {
+        			if (order.getCustomerGroup() != null && order.getCustomerGroup().getSendDeliveryNotification()) {
 						Header header = wsClient.sendDeliveryStatus(comment, config);
 						if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
 							throw new Exception(header.getKod() + " - " + header.getText());
