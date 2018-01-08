@@ -111,8 +111,8 @@ public class DeliveryReportController {
 	}
 
 	@RequestMapping(value="reports/delivery/export", method=RequestMethod.GET)
-	public ModelAndView exportDeliveryToExcel(ModelMap model, HttpServletResponse response) throws ParseException {
-		model = getExcelDataIntoModel(model);
+	public ModelAndView exportDeliveryToExcel(ModelMap model, HttpServletResponse response, @ModelAttribute RequestAttributes reqAttr) throws ParseException {
+		model = getExcelDataIntoModel(model, reqAttr);
         response.setContentType( "application/ms-excel" );
         String fileName = EXCEL_EXPORT_FILE_NAME.replace("#customer", getCustomerNameFromsession());
         response.setHeader( "Content-disposition", "attachment; filename=" + fileName);         
@@ -122,7 +122,7 @@ public class DeliveryReportController {
 
 	@RequestMapping(value="reports/delivery/informCustomer", method=RequestMethod.GET)
 	public String informCustomer(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {			
-		model = getExcelDataIntoModel(model);
+		model = getExcelDataIntoModel(model, reqAttr);
 		// Create excel
 		Workbook wb = excelGenerator.generate(model);
 		if (wb != null) {
@@ -165,8 +165,12 @@ public class DeliveryReportController {
 		return "delivery-report";
 	}
 
-	private ModelMap getExcelDataIntoModel(ModelMap model) {
+	private ModelMap getExcelDataIntoModel(ModelMap model, RequestAttributes reqAttr) {
 		List<OrderHeader> orders = searchBean.getOrderList();
+		
+		//test
+		
+		//
 		
         //Sheet Name
         model.put("sheetname", "Leveransrapport");
@@ -179,11 +183,13 @@ public class DeliveryReportController {
         headers.add("Orderdatum");
         headers.add("Leveransdatum");
         // Lägg till Order customattribut
-        List<CustomField> customFields = getCustomFieldsFromSession();
-        for (CustomField customField : customFields) {
-        	headers.add(customField.getLabel());
+        List<CustomField> customFields = new ArrayList<CustomField>();
+        if (searchBean.getCustomerGroupId() != reqAttr.getZeroValue()) {
+	        customFields = getCustomFieldsFromSession();
+	        for (CustomField customField : customFields) {
+	        	headers.add(customField.getLabel());
+	        }
         }
-        
         headers.add("Orderrad");
         headers.add("Artikelnr");
         headers.add("Artikelbeskrivning");
@@ -192,10 +198,11 @@ public class DeliveryReportController {
         headers.add("Serienummer");
         headers.add("Stöld-ID");
         // Lägg till Equipment customattribut
-        for (String eqHeader : getCustomerEquipmentFields()) {
-        	headers.add(eqHeader);
+        if (searchBean.getCustomerGroupId() != reqAttr.getZeroValue()) {
+	        for (String eqHeader : getCustomerEquipmentFields()) {
+	        	headers.add(eqHeader);
+	        }
         }
-        
         model.put("headers", headers);
         
         List<String> numericColumns = new ArrayList<String>();
