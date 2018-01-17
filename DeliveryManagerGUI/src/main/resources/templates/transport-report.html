@@ -94,7 +94,7 @@
 												</thead>
 												<tbody>
 													<tr th:each="order : ${orders}">
-														<td th:text="${order.orderNumber}">12345</td>															
+														<td><a th:text="${order.orderNumber}" th:href="@{/order-list/view/} + ${order.id}">LT100199</a></td>
 														<td th:text="${order.customerSalesOrder}">REQ100094</td>
 														<td th:text="${order.customerName}">Lundby</td>
 														<td th:text="${order.deliveryPlan.deliveryArea.name}">Öster</td>
