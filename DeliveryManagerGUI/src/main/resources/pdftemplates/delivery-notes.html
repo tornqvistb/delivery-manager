@@ -192,6 +192,10 @@
 				<th th:text="${orderCustomField.customField.label}" scope="row">Customfält</th>
 				<td th:text="${orderCustomField.value}">1</td>
 			</tr>	
+			<tr th:if="${order.deliveryPlan and not #strings.isEmpty(order.deliveryPlan.comment)}">
+				<th scope="row">Kommentar</th>
+				<td th:text="${order.deliveryPlan.comment}">En ruttkommentar</td>
+			</tr>
 		</table>
 		<div class="page-divider"></div>
 
