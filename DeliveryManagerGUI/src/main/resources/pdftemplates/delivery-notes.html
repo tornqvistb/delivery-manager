@@ -119,6 +119,10 @@
 				<th style="width:50%;">Fakturadress</th>
 			</tr>			
 			<tr>
+				<td>Leveransadress, kundens namn</td>
+				<td th:text="${order.customerName}">N060 Intraservice</td>
+			</tr>		
+			<tr>
 				<td th:text="${order.deliveryPostalAddress1}">Intraservice</td>
 				<td th:text="${order.postalAddress1}">N060 Intraservice</td>
 			</tr>		
