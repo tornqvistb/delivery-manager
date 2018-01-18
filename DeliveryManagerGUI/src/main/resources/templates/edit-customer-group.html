@@ -85,11 +85,11 @@
 												<h3>Fält att registrera för utrustning</h3>
 												<table>
 													<colgroup>
-														<col style="width: 25%" />
+														<col style="width: 10%" />
 														<col style="width: 30%" />
-														<col style="width: 13%" />
-														<col style="width: 13%" />
-														<col style="width: 19%" />
+														<col style="width: 20%" />
+														<col style="width: 20%" />
+														<col style="width: 20%" />
 													</colgroup>
 													<thead>
 														<tr>
@@ -103,9 +103,9 @@
 													</thead>
 													<tbody>
 														<tr>
-															<td>Fält 1</td>															
+															<td>1</td>															
 															<td>
-																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute1}" name="label1"/>
+																<input type="text" class="medium-field" th:field="${customerGroup.registrationConfig.labelAttribute1}" name="label1"/>
 															</td>
 															<td>																
 																<input type="checkbox" name="mandatory1" th:field="${customerGroup.registrationConfig.mandatoryAttribute1}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute1}" />
@@ -118,9 +118,9 @@
 															</td>
 														</tr>
 														<tr>
-															<td>Fält 2</td>															
+															<td>2</td>															
 															<td>
-																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute2}" name="label2"/>
+																<input type="text" class="medium-field" th:field="${customerGroup.registrationConfig.labelAttribute2}" name="label2"/>
 															</td>
 															<td>																
 																<input type="checkbox" name="mandatory2" th:field="${customerGroup.registrationConfig.mandatoryAttribute2}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute2}" />
@@ -133,9 +133,9 @@
 															</td>
 														</tr>
 														<tr>
-															<td>Fält 3</td>															
+															<td>3</td>															
 															<td>
-																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute3}" name="label3"/>
+																<input type="text" class="medium-field" th:field="${customerGroup.registrationConfig.labelAttribute3}" name="label3"/>
 															</td>
 															<td>																
 																<input type="checkbox" name="mandatory3" th:field="${customerGroup.registrationConfig.mandatoryAttribute3}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute3}" />
@@ -148,9 +148,9 @@
 															</td>
 														</tr>
 														<tr>
-															<td>Fält 4</td>															
+															<td>4</td>															
 															<td>
-																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute4}" name="label4"/>
+																<input type="text" class="medium-field" th:field="${customerGroup.registrationConfig.labelAttribute4}" name="label4"/>
 															</td>
 															<td>																
 																<input type="checkbox" name="mandatory4" th:field="${customerGroup.registrationConfig.mandatoryAttribute4}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute4}" />
@@ -163,9 +163,9 @@
 															</td>
 														</tr>
 														<tr>
-															<td>Fält 5</td>															
+															<td>5</td>															
 															<td>
-																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute5}" name="label5"/>
+																<input type="text" class="medium-field" th:field="${customerGroup.registrationConfig.labelAttribute5}" name="label5"/>
 															</td>
 															<td>																
 																<input type="checkbox" name="mandatory5" th:field="${customerGroup.registrationConfig.mandatoryAttribute5}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute5}" />
@@ -178,9 +178,9 @@
 															</td>
 														</tr>
 														<tr>
-															<td>Fält 6</td>															
+															<td>6</td>															
 															<td>
-																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute6}" name="label6"/>
+																<input type="text" class="medium-field" th:field="${customerGroup.registrationConfig.labelAttribute6}" name="label6"/>
 															</td>
 															<td>																
 																<input type="checkbox" name="mandatory6" th:field="${customerGroup.registrationConfig.mandatoryAttribute6}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute6}" />
@@ -193,9 +193,9 @@
 															</td>
 														</tr>
 														<tr>
-															<td>Fält 7</td>															
+															<td>7</td>															
 															<td>
-																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute7}" name="label7"/>
+																<input type="text" class="medium-field" th:field="${customerGroup.registrationConfig.labelAttribute7}" name="label7"/>
 															</td>
 															<td>																
 																<input type="checkbox" name="mandatory7" th:field="${customerGroup.registrationConfig.mandatoryAttribute7}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute7}" />
@@ -208,9 +208,9 @@
 															</td>
 														</tr>
 														<tr>
-															<td>Fält 8</td>															
+															<td>8</td>															
 															<td>
-																<input type="text" class="large-field" th:field="${customerGroup.registrationConfig.labelAttribute8}" name="label8"/>
+																<input type="text" class="medium-field" th:field="${customerGroup.registrationConfig.labelAttribute8}" name="label8"/>
 															</td>
 															<td>																
 																<input type="checkbox" name="mandatory8" th:field="${customerGroup.registrationConfig.mandatoryAttribute8}" th:checked="${customerGroup.registrationConfig.mandatoryAttribute8}" />
@@ -231,15 +231,17 @@
 
 												<table>
 													<colgroup>
-														<col style="width: 32%" />
-														<col style="width: 17%" />
-														<col style="width: 17%" />
-														<col style="width: 17%" />
-														<col style="width: 17%" />
+														<col style="width: 10%" />
+														<col style="width: 30%" />
+														<col style="width: 15%" />
+														<col style="width: 15%" />
+														<col style="width: 15%" />
+														<col style="width: 15%" />
 													</colgroup>
 													<thead>
 														<tr>
 															<th scope="col">Fält</th>
+															<th scope="col">Rubrik</th>
 															<th scope="col">SLA-uppföljning</th>
 															<th scope="col">Utförda leveranser</th>
 															<th scope="col">Leveranssedel</th>
@@ -248,7 +250,10 @@
 													</thead>
 													<tbody>													
 														<tr th:each="customerCustomField, loop : *{customerCustomFields}">
-															<td th:text="${customerCustomField.customField.label}">Rubriken</td>
+															<td th:text="${customerCustomField.customField.identification}">Fält 1</td>
+															<td>
+																<input type="text" th:field="*{customerCustomFields[__${loop.index}__].label}" name="label" class="medium-field"/>
+															</td>															
 															<td>																
 																<input type="checkbox" name="showInSlaReport" th:field="*{customerCustomFields[__${loop.index}__].showInSlaReport}" th:checked="*{customerCustomFields[__${loop.index}__].showInSlaReport}" />
 															</td>

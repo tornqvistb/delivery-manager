@@ -193,7 +193,7 @@
 				<td th:text="${order.orderDateAsString}">2016-02-02</td>
 			</tr>
 			<tr th:each="orderCustomField : ${order.customFieldsInDeliveryNote}">
-				<th th:text="${orderCustomField.customField.label}" scope="row">Customfält</th>
+				<th th:text="${orderCustomField.label}" scope="row">Customfält</th>
 				<td th:text="${orderCustomField.value}">1</td>
 			</tr>	
 			<tr th:if="${order.deliveryPlan and not #strings.isEmpty(order.deliveryPlan.comment)}">

@@ -100,14 +100,6 @@ public class CustomerGroup {
 		return customerCustomFields;
 	}
 		
-	//bind to this
-	/*
-	@Transient
-    public List<CustomerCustomField> getCustomerCustomFieldsAsList(){
-        return new ArrayList<CustomerCustomField>(customerCustomFields);
-    }
-    */
-
 	public void setCustomerCustomFields(List<CustomerCustomField> customerCustomFields) {
 		this.customerCustomFields = customerCustomFields;
 	}

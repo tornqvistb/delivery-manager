@@ -22,6 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
+import se.lanteam.domain.CustomerCustomField;
+import se.lanteam.domain.CustomerGroup;
+import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SearchBean;
@@ -35,7 +38,6 @@ public class SLAReportController {
 	private OrderRepository orderRepo;
 	private CustomerGroupRepository customerRepo;
 	private SearchBean searchBean;
-	
 	
 	@RequestMapping("reports/sla")
 	public String showSlaReport(ModelMap model) {
@@ -93,6 +95,7 @@ public class SLAReportController {
 			
 			model.put("orders", orders);
 			searchBean.setOrderList(orders);
+			searchBean.setCustomerGroupId(customerGroupId);
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
 		}		
@@ -116,19 +119,25 @@ public class SLAReportController {
         headers.add("Orderdatum");
         headers.add("Leveransdatum");
         headers.add("Status");
-        headers.add("Dagar kvar");
+        if (searchBean.getCustomerGroupId() > 0) {
+	        for (CustomerCustomField customField : getCustomerCustomFields()) {
+	        	headers.add(customField.getLabel());
+	        }
+        }
+        headers.add("Dagar kvar");        
+        
         model.put("headers", headers);
         
         List<String> numericColumns = new ArrayList<String>();
         numericColumns.add("Dagar kvar");
         model.put("numericcolumns", numericColumns);
 
-        //Results Table (List<Object[]>)
         List<List<String>> results = new ArrayList<List<String>>();
         
         List<OrderHeader> orders = searchBean.getOrderList();
         
         for (OrderHeader order: orders) {
+        	order = orderRepo.findOne(order.getId());
         	List<String> orderCols = new ArrayList<String>();
         	orderCols.add(order.getOrderNumber());
         	orderCols.add(order.getCustomerSalesOrder());
@@ -136,6 +145,11 @@ public class SLAReportController {
         	orderCols.add(order.getOrderDateAsString());
         	orderCols.add(order.getDeliveryDateDisplay());
         	orderCols.add(order.getStatusDisplay());
+        	if (searchBean.getCustomerGroupId() > 0) {
+	        	for (CustomerCustomField customField : getCustomerCustomFields()) {
+	        		orderCols.add(getOrderCustomFieldValue(customField, order));
+	        	}
+        	}
         	orderCols.add(String.valueOf(order.getSlaDaysLeft()));
         	results.add(orderCols);
         }
@@ -147,6 +161,28 @@ public class SLAReportController {
 		return new ModelAndView(new ExcelViewBuilder(), model);
 	}
 	
+	private List<CustomerCustomField> getCustomerCustomFields() {
+		List<CustomerCustomField> result = new ArrayList<CustomerCustomField>();
+		CustomerGroup custGroup = customerRepo.findOne(searchBean.getCustomerGroupId());
+		for (CustomerCustomField field : custGroup.getCustomerCustomFields()) {
+			if (field.getShowInSlaReport()) {
+				result.add(field);
+			}
+		}
+		return result;
+	}
+	
+	private String getOrderCustomFieldValue(CustomerCustomField customField, OrderHeader order) {
+		String value = "";
+		for (OrderCustomField orderCustomField : order.getOrderCustomFields()) {
+			if (orderCustomField.getCustomField().getIdentification() == customField.getCustomField().getIdentification()) {
+				value = orderCustomField.getValue();
+				break;
+			}
+		}
+		return value;
+	}
+
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;

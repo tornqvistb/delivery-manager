@@ -57,6 +57,9 @@
 #service-portal .large-field {
 	width: 500px;
 }
+#service-portal .medium-field {
+	width: 250px;
+}
 #service-portal .side-margin {
 	margin-right: 10px;
 	margin-left: 10px;

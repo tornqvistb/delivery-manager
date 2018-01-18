@@ -18,6 +18,7 @@ public class CustomerCustomField {
 	private CustomField customField;
 	private CustomerGroup customerGroup;
 	private Date creationDate;
+	private String label;
 
 	public CustomerCustomField(CustomField customField, CustomerGroup customerGroup) {
 		super();
@@ -28,6 +29,7 @@ public class CustomerCustomField {
 		this.customField = customField;
 		this.customerGroup = customerGroup;
 		this.creationDate = new Date();
+		this.label = customField.getLabel();
 	}
 
 	public CustomerCustomField() {
@@ -100,6 +102,14 @@ public class CustomerCustomField {
 
 	public void setShowInWorkNote(Boolean showInWorkNote) {
 		this.showInWorkNote = showInWorkNote;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 	
 }

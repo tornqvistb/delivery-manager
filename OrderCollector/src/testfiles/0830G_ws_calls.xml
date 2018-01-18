@@ -1,4 +1,5 @@
 <!-- Master -->
+<root>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:net="http://lanteam.se/ws/netset">
    <soapenv:Header/>
    <soapenv:Body>
@@ -192,3 +193,4 @@
       </net:createOrderRequest>
    </soapenv:Body>
 </soapenv:Envelope>
+</root>

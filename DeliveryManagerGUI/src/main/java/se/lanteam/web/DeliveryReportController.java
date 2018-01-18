@@ -168,10 +168,6 @@ public class DeliveryReportController {
 	private ModelMap getExcelDataIntoModel(ModelMap model, RequestAttributes reqAttr) {
 		List<OrderHeader> orders = searchBean.getOrderList();
 		
-		//test
-		
-		//
-		
         //Sheet Name
         model.put("sheetname", "Leveransrapport");
         //Headers List
@@ -183,10 +179,10 @@ public class DeliveryReportController {
         headers.add("Orderdatum");
         headers.add("Leveransdatum");
         // Lägg till Order customattribut
-        List<CustomField> customFields = new ArrayList<CustomField>();
+        List<CustomerCustomField> customFields = new ArrayList<CustomerCustomField>();
         if (searchBean.getCustomerGroupId() != reqAttr.getZeroValue()) {
-	        customFields = getCustomFieldsFromSession();
-	        for (CustomField customField : customFields) {
+	        customFields = getCustomerCustomFieldsFromSession();
+	        for (CustomerCustomField customField : customFields) {
 	        	headers.add(customField.getLabel());
 	        }
         }
@@ -222,7 +218,7 @@ public class DeliveryReportController {
                     	orderCols.add(order.getCustomerName());
                     	orderCols.add(order.getOrderDateAsString());
                     	orderCols.add(order.getDeliveryDateDisplay());
-                    	for (CustomField customField : customFields) {
+                    	for (CustomerCustomField customField : customFields) {
                     		orderCols.add(getOrderCustomFieldValue(customField, order));
                     	}
                     	orderCols.add(String.valueOf(line.getRowNumber()));
@@ -312,21 +308,19 @@ public class DeliveryReportController {
 		return list;
 	}
 
-	private List<CustomField> getCustomFieldsFromSession() {
-		List<CustomField> customFields = new ArrayList<CustomField>();
-    	for (CustomerCustomField customerCustomField : searchBean.getCustomerCustomFields()) {
-    		if (customerCustomField.getShowInDeliveryReport()) {
-    			customFields.add(customerCustomField.getCustomField());	    	        
-    		}        		
-    	}
-	    return customFields;
+	private List<CustomerCustomField> getCustomerCustomFieldsFromSession() {
+		List<CustomerCustomField> fields = new ArrayList<CustomerCustomField>();
+		if (searchBean.getCustomerCustomFields() != null && searchBean.getCustomerCustomFields().size() > 0) {
+			fields = searchBean.getCustomerCustomFields();
+		}
+	    return fields;
 	}
 
 	
-	private String getOrderCustomFieldValue(CustomField customField, OrderHeader order) {
+	private String getOrderCustomFieldValue(CustomerCustomField customField, OrderHeader order) {
 		String value = "";
 		for (OrderCustomField orderCustomField : order.getOrderCustomFields()) {
-			if (orderCustomField.getCustomField().getIdentification() == customField.getIdentification()) {
+			if (orderCustomField.getCustomField().getIdentification() == customField.getCustomField().getIdentification()) {
 				value = orderCustomField.getValue();
 				break;
 			}
