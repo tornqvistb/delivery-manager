@@ -10,8 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
+import se.lanteam.domain.CustomerCustomField;
+import se.lanteam.domain.CustomerGroup;
+import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
+import se.lanteam.model.SearchBean;
+import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
@@ -19,6 +24,8 @@ public class BaseController {
 	protected Logger LOG = LoggerFactory.getLogger(this.getClass());
 
 	protected OrderRepository orderRepo;
+	protected CustomerGroupRepository customerRepo;
+	protected SearchBean searchBean;
 
 	protected RequestAttributes addRelatedOrders(RequestAttributes reqAttr, OrderHeader order) {
 		if (order.isPartOfJointdelivery()) {
@@ -63,10 +70,43 @@ public class BaseController {
 		return otherOrdersInDelivery;
 	}
 
+	protected List<CustomerCustomField> getCustomerCustomFields() {
+		List<CustomerCustomField> result = new ArrayList<CustomerCustomField>();
+		if (searchBean.getCustomerGroupId() > 0) {
+			CustomerGroup custGroup = customerRepo.findOne(searchBean.getCustomerGroupId());
+			for (CustomerCustomField field : custGroup.getCustomerCustomFields()) {
+				if (field.getShowInSlaReport()) {
+					result.add(field);
+				}
+			}
+		}
+		return result;
+	}
+	
+	protected String getOrderCustomFieldValue(CustomerCustomField customField, OrderHeader order) {
+		String value = "";
+		for (OrderCustomField orderCustomField : order.getOrderCustomFields()) {
+			if (orderCustomField.getCustomField().getIdentification() == customField.getCustomField().getIdentification()) {
+				value = orderCustomField.getValue();
+				break;
+			}
+		}
+		return value;
+	}
+
+	
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
 	}
 
-	
+	@Autowired
+	public void setCustomerGroupRepo(CustomerGroupRepository customerRepo) {
+		this.customerRepo = customerRepo;
+	}
+	@Autowired
+	public void setSearchBean(SearchBean searchBean) {
+		this.searchBean = searchBean;
+	}
+
 }

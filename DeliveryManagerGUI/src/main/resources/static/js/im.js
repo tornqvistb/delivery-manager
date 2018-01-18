@@ -95,8 +95,8 @@ $(function() {
 
 $(function () {
     $("#customerGroupId").change(function () {
-    	if ($(this).val() > 0){
+    	//if ($(this).val() > 0){
     		location.href = "/DeliveryManagerGUI/reports/delivery/changecustomer/" + $(this).val();
-    	}
+    	//}
     })
 });

@@ -23,21 +23,14 @@ import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
 import se.lanteam.domain.CustomerCustomField;
-import se.lanteam.domain.CustomerGroup;
-import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
-import se.lanteam.model.SearchBean;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.ExcelViewBuilder;
 
 @Controller
-public class SLAReportController {
-	
-	private OrderRepository orderRepo;
-	private CustomerGroupRepository customerRepo;
-	private SearchBean searchBean;
+public class SLAReportController extends BaseController {
 	
 	@RequestMapping("reports/sla")
 	public String showSlaReport(ModelMap model) {
@@ -119,10 +112,8 @@ public class SLAReportController {
         headers.add("Orderdatum");
         headers.add("Leveransdatum");
         headers.add("Status");
-        if (searchBean.getCustomerGroupId() > 0) {
-	        for (CustomerCustomField customField : getCustomerCustomFields()) {
-	        	headers.add(customField.getLabel());
-	        }
+        for (CustomerCustomField customField : getCustomerCustomFields()) {
+        	headers.add(customField.getLabel());
         }
         headers.add("Dagar kvar");        
         
@@ -145,10 +136,8 @@ public class SLAReportController {
         	orderCols.add(order.getOrderDateAsString());
         	orderCols.add(order.getDeliveryDateDisplay());
         	orderCols.add(order.getStatusDisplay());
-        	if (searchBean.getCustomerGroupId() > 0) {
-	        	for (CustomerCustomField customField : getCustomerCustomFields()) {
-	        		orderCols.add(getOrderCustomFieldValue(customField, order));
-	        	}
+        	for (CustomerCustomField customField : getCustomerCustomFields()) {
+        		orderCols.add(getOrderCustomFieldValue(customField, order));
         	}
         	orderCols.add(String.valueOf(order.getSlaDaysLeft()));
         	results.add(orderCols);
@@ -160,7 +149,7 @@ public class SLAReportController {
 		
 		return new ModelAndView(new ExcelViewBuilder(), model);
 	}
-	
+/*	
 	private List<CustomerCustomField> getCustomerCustomFields() {
 		List<CustomerCustomField> result = new ArrayList<CustomerCustomField>();
 		CustomerGroup custGroup = customerRepo.findOne(searchBean.getCustomerGroupId());
@@ -182,7 +171,7 @@ public class SLAReportController {
 		}
 		return value;
 	}
-
+*/
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
@@ -190,10 +179,6 @@ public class SLAReportController {
 	@Autowired
 	public void setCustomerGroupRepo(CustomerGroupRepository customerRepo) {
 		this.customerRepo = customerRepo;
-	}
-	@Autowired
-	public void setSearchBean(SearchBean searchBean) {
-		this.searchBean = searchBean;
 	}
 
 }

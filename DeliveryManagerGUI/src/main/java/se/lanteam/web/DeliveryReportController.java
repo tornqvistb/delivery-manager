@@ -44,11 +44,8 @@ import se.lanteam.services.ExcelGenerator;
 import se.lanteam.services.ExcelViewBuilder;
 
 @Controller
-public class DeliveryReportController {
+public class DeliveryReportController extends BaseController{
 	
-	private OrderRepository orderRepo;
-	private CustomerGroupRepository customerRepo;
-	private SearchBean searchBean;
 	private ExcelGenerator excelGenerator;
 	private AttachmentRepository attachmentRepo;
 	private EmailRepository emailRepo;
@@ -62,17 +59,19 @@ public class DeliveryReportController {
 	public String showDeliveryReport(ModelMap model) {
 		model.put("customerGroups", customerRepo.findAll());
 		RequestAttributes reqAttr = new RequestAttributes();
-		reqAttr.setCustomerCustomFields(sessionBean.getCustomerGroup().getCustomerCustomFields());
 		model.put("reqAttr", reqAttr);
 		return "delivery-report";
 	}
 
 	@RequestMapping(value = "reports/delivery/changecustomer/{customerId}", method = RequestMethod.GET)
-	public String registerMessage(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long customerId,
+	public String changeCustomer(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long customerId,
 			ModelMap model) {
 		CustomerGroup customerGroup = customerRepo.findOne(customerId);
-		//searchBean.setCustomerCustomFields(customerGroup.getCustomerCustomFields());
-		reqAttr.setCustomerCustomFields(customerGroup.getCustomerCustomFields());
+		if (customerGroup != null) {
+			reqAttr.setCustomerCustomFields(customerGroup.getCustomerCustomFields());
+		} else {
+			reqAttr.setCustomerCustomFields(null);
+		}
 		reqAttr.setCustomerId(customerId);		
 		model.put("reqAttr", reqAttr);
 		model.put("customerGroups", customerRepo.findAll());
@@ -179,12 +178,8 @@ public class DeliveryReportController {
         headers.add("Orderdatum");
         headers.add("Leveransdatum");
         // Lägg till Order customattribut
-        List<CustomerCustomField> customFields = new ArrayList<CustomerCustomField>();
-        if (searchBean.getCustomerGroupId() != reqAttr.getZeroValue()) {
-	        customFields = getCustomerCustomFieldsFromSession();
-	        for (CustomerCustomField customField : customFields) {
-	        	headers.add(customField.getLabel());
-	        }
+        for (CustomerCustomField customField : getCustomerCustomFields()) {
+        	headers.add(customField.getLabel());
         }
         headers.add("Orderrad");
         headers.add("Artikelnr");
@@ -218,7 +213,7 @@ public class DeliveryReportController {
                     	orderCols.add(order.getCustomerName());
                     	orderCols.add(order.getOrderDateAsString());
                     	orderCols.add(order.getDeliveryDateDisplay());
-                    	for (CustomerCustomField customField : customFields) {
+                    	for (CustomerCustomField customField : getCustomerCustomFields()) {
                     		orderCols.add(getOrderCustomFieldValue(customField, order));
                     	}
                     	orderCols.add(String.valueOf(line.getRowNumber()));
@@ -244,32 +239,34 @@ public class DeliveryReportController {
 
 	private List<String> getCustomerEquipmentFields() {
 		List<String> list = new ArrayList<String>();
-		CustomerGroup customerGroup = customerRepo.getOne(searchBean.getCustomerGroupId());
-		if (customerGroup != null && customerGroup.getRegistrationConfig() != null) {
-			RegistrationConfig config = customerGroup.getRegistrationConfig();
-			if (config.getUseAttribute1()) {
-				list.add(config.getLabelAttribute1());
-			}
-			if (config.getUseAttribute2()) {
-				list.add(config.getLabelAttribute2());
-			}
-			if (config.getUseAttribute3()) {
-				list.add(config.getLabelAttribute3());
-			}
-			if (config.getUseAttribute4()) {
-				list.add(config.getLabelAttribute4());
-			}
-			if (config.getUseAttribute5()) {
-				list.add(config.getLabelAttribute5());
-			}
-			if (config.getUseAttribute6()) {
-				list.add(config.getLabelAttribute6());
-			}
-			if (config.getUseAttribute7()) {
-				list.add(config.getLabelAttribute7());
-			}
-			if (config.getUseAttribute8()) {
-				list.add(config.getLabelAttribute8());
+		if (searchBean.getCustomerGroupId() > 0) {
+			CustomerGroup customerGroup = customerRepo.getOne(searchBean.getCustomerGroupId());
+			if (customerGroup != null && customerGroup.getRegistrationConfig() != null) {
+				RegistrationConfig config = customerGroup.getRegistrationConfig();
+				if (config.getUseAttribute1()) {
+					list.add(config.getLabelAttribute1());
+				}
+				if (config.getUseAttribute2()) {
+					list.add(config.getLabelAttribute2());
+				}
+				if (config.getUseAttribute3()) {
+					list.add(config.getLabelAttribute3());
+				}
+				if (config.getUseAttribute4()) {
+					list.add(config.getLabelAttribute4());
+				}
+				if (config.getUseAttribute5()) {
+					list.add(config.getLabelAttribute5());
+				}
+				if (config.getUseAttribute6()) {
+					list.add(config.getLabelAttribute6());
+				}
+				if (config.getUseAttribute7()) {
+					list.add(config.getLabelAttribute7());
+				}
+				if (config.getUseAttribute8()) {
+					list.add(config.getLabelAttribute8());
+				}
 			}
 		}
 		return list;
@@ -277,55 +274,37 @@ public class DeliveryReportController {
 
 	private List<String> getEquipmentFieldValues(Equipment equipment) {
 		List<String> list = new ArrayList<String>();
-		CustomerGroup customerGroup = customerRepo.getOne(searchBean.getCustomerGroupId());
-		if (customerGroup != null && customerGroup.getRegistrationConfig() != null) {
-			RegistrationConfig config = customerGroup.getRegistrationConfig();
-			if (config.getUseAttribute1()) {
-				list.add(equipment.getCustomAttribute1());
-			}
-			if (config.getUseAttribute2()) {
-				list.add(equipment.getCustomAttribute2());
-			}
-			if (config.getUseAttribute3()) {
-				list.add(equipment.getCustomAttribute3());
-			}
-			if (config.getUseAttribute4()) {
-				list.add(equipment.getCustomAttribute4());
-			}
-			if (config.getUseAttribute5()) {
-				list.add(equipment.getCustomAttribute5());
-			}
-			if (config.getUseAttribute6()) {
-				list.add(equipment.getCustomAttribute6());
-			}
-			if (config.getUseAttribute7()) {
-				list.add(equipment.getCustomAttribute7());
-			}
-			if (config.getUseAttribute8()) {
-				list.add(equipment.getCustomAttribute8());
+		if (searchBean.getCustomerGroupId() > 0) {
+			CustomerGroup customerGroup = customerRepo.getOne(searchBean.getCustomerGroupId());
+			if (customerGroup != null && customerGroup.getRegistrationConfig() != null) {
+				RegistrationConfig config = customerGroup.getRegistrationConfig();
+				if (config.getUseAttribute1()) {
+					list.add(equipment.getCustomAttribute1());
+				}
+				if (config.getUseAttribute2()) {
+					list.add(equipment.getCustomAttribute2());
+				}
+				if (config.getUseAttribute3()) {
+					list.add(equipment.getCustomAttribute3());
+				}
+				if (config.getUseAttribute4()) {
+					list.add(equipment.getCustomAttribute4());
+				}
+				if (config.getUseAttribute5()) {
+					list.add(equipment.getCustomAttribute5());
+				}
+				if (config.getUseAttribute6()) {
+					list.add(equipment.getCustomAttribute6());
+				}
+				if (config.getUseAttribute7()) {
+					list.add(equipment.getCustomAttribute7());
+				}
+				if (config.getUseAttribute8()) {
+					list.add(equipment.getCustomAttribute8());
+				}
 			}
 		}
 		return list;
-	}
-
-	private List<CustomerCustomField> getCustomerCustomFieldsFromSession() {
-		List<CustomerCustomField> fields = new ArrayList<CustomerCustomField>();
-		if (searchBean.getCustomerCustomFields() != null && searchBean.getCustomerCustomFields().size() > 0) {
-			fields = searchBean.getCustomerCustomFields();
-		}
-	    return fields;
-	}
-
-	
-	private String getOrderCustomFieldValue(CustomerCustomField customField, OrderHeader order) {
-		String value = "";
-		for (OrderCustomField orderCustomField : order.getOrderCustomFields()) {
-			if (orderCustomField.getCustomField().getIdentification() == customField.getCustomField().getIdentification()) {
-				value = orderCustomField.getValue();
-				break;
-			}
-		}
-		return value;
 	}
 	
 	private String getCustomerNameFromsession() {
@@ -365,18 +344,6 @@ public class DeliveryReportController {
 		return customerFields;
 	}
 	
-	@Autowired
-	public void setOrderRepo(OrderRepository orderRepo) {
-		this.orderRepo = orderRepo;
-	}
-	@Autowired
-	public void setCustomerGroupRepo(CustomerGroupRepository customerRepo) {
-		this.customerRepo = customerRepo;
-	}
-	@Autowired
-	public void setSearchBean(SearchBean searchBean) {
-		this.searchBean = searchBean;
-	}
 	@Autowired
 	public void setExcelGenerator(ExcelGenerator excelGenerator) {
 		this.excelGenerator = excelGenerator;
