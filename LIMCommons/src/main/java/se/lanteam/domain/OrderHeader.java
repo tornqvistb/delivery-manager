@@ -43,6 +43,7 @@ public class OrderHeader {
 	private String postalAddress2;
 	private String postalCode;
 	private String city;
+	private String deliveryAddressName;
 	private String deliveryPostalAddress1;
 	private String deliveryPostalAddress2;
 	private String deliveryPostalCode;
@@ -149,6 +150,12 @@ public class OrderHeader {
 	}
 	public void setCity(String city) {
 		this.city = city;
+	}
+	public String getDeliveryAddressName() {
+		return deliveryAddressName;
+	}
+	public void setDeliveryAddressName(String deliveryAddressName) {
+		this.deliveryAddressName = deliveryAddressName;
 	}
 	public String getDeliveryPostalAddress1() {
 		return deliveryPostalAddress1;

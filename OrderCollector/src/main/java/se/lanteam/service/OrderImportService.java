@@ -191,6 +191,7 @@ public class OrderImportService {
 		orderHeader.setPostalAddress2(jsonOrder.optString("Postadress2"));
 		orderHeader.setPostalCode(jsonOrder.optString("Postnummer"));
 		orderHeader.setCity(jsonOrder.optString("Ort"));
+		orderHeader.setDeliveryAddressName(jsonOrder.optString("Leveransadress_namn"));
 		orderHeader.setDeliveryPostalAddress1(jsonOrder.optString("Leveransadress_postadress1"));
 		orderHeader.setDeliveryPostalAddress2(jsonOrder.optString("Leveransadress_postadress2"));
 		orderHeader.setDeliveryPostalCode(jsonOrder.optString("Leveransadress_postnummer"));
