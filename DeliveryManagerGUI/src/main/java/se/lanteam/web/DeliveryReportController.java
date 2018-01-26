@@ -173,6 +173,7 @@ public class DeliveryReportController extends BaseController{
         List<String> headers = new ArrayList<String>();
 		
         headers.add("Ordernummer");
+        headers.add("Web-ordernummer");
         headers.add("Leveransnummer kund");
         headers.add("Kund");
         headers.add("Orderdatum");
@@ -209,7 +210,8 @@ public class DeliveryReportController extends BaseController{
             		for (Equipment equipment : line.getEquipments()) {
             			List<String> orderCols = new ArrayList<String>();
                     	orderCols.add(order.getOrderNumber());
-                    	orderCols.add(order.getCustomerSalesOrder());
+                    	orderCols.add(order.getNetsetOrderNumber());
+                    	orderCols.add(order.getCustomerSalesOrder());                    	
                     	orderCols.add(order.getCustomerName());
                     	orderCols.add(order.getOrderDateAsString());
                     	orderCols.add(order.getDeliveryDateDisplay());
