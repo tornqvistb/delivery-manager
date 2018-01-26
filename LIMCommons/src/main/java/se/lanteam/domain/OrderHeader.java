@@ -598,6 +598,10 @@ public class OrderHeader {
 		}
 		return result;
 	}
+	@Transient
+	public boolean isChildOrderInJoint() {
+		return isPartOfJointdelivery() && !isMainOrderInJoint();
+	}
 	
 	public Boolean getContactInfoFromNetset() {
 		return contactInfoFromNetset;

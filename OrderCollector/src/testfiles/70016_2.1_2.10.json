@@ -1,6 +1,6 @@
 {
-	"Ordernummer": 70011,
-	"Netset_ordernummer": 60011,
+	"Ordernummer": 70016,
+	"Netset_ordernummer": 60016,
 	"Orderdatum": "\/Date(1496008800000)\/",
 	"Kundnummer": "0450",
 	"Kundnamn": "Partille Kommun",
@@ -29,7 +29,7 @@
 			"Artikelnummer": "NX.MVHED.066",
 			"Artikelbenämning": "Acer Aspire E5-573-37LC - 15.6\" - Core i3 4005U - Windows 8.",
 			"Antal": 2,
-			"Restriktionskod": "",
+			"Restriktionskod": "0",
 			"Instruktion_1": "",
 			"Instruktion_2": "",
 			"Instruktion_3": "",

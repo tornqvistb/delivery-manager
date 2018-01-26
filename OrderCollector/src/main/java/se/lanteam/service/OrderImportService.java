@@ -145,6 +145,7 @@ public class OrderImportService {
 						orderHeader.setOrderComments(new HashSet<OrderComment>());
 						orderHeader.getOrderComments().add(comment);
 						orderHeader.setReceivingStatus();
+						orderHeader = fillEmptyRestrictionCodes(orderHeader);
 						orderRepo.save(orderHeader);
 						checkThatOrderCreated(orderHeader.getOrderNumber());
 						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
@@ -221,7 +222,7 @@ public class OrderImportService {
 			orderLine.setTotal(jsonOrderLine.optInt("Antal"));
 			orderLine.setRemaining(jsonOrderLine.optInt("Antal"));
 			orderLine.setRegistered(0);
-			orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod", RestrictionCodes.NO_SLA_NO_SERIALN0));
+			orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod"));
 			orderLine.setOrganisationUnit(jsonOrderLine.optString("Instruktion_1"));
 			orderLine.setInstallationType(jsonOrderLine.optString("Instruktion_2"));
 			orderLine.setOperatingSystem(jsonOrderLine.optString("Instruktion_3"));
@@ -260,6 +261,7 @@ public class OrderImportService {
 			saveError(ERROR_NO_ORDER_LINES + fileName);
 			return false;
 		} else {
+			boolean restrictionCodedLineExist = false;
 			for (OrderLine line : orderHeader.getOrderLines()) {
 				if (StringUtils.isEmpty(line.getArticleNumber())) {
 					saveError(ERROR_ARTICLE_ID_MISSING + fileName);
@@ -273,15 +275,15 @@ public class OrderImportService {
 					saveError(ERROR_TOTAL_MISSING + fileName);
 					return false;					
 				}
+				if (!restrictionCodedLineExist) {
+					restrictionCodedLineExist = StringUtils.hasText(line.getRestrictionCode());
+				}
+			}
+			if (!restrictionCodedLineExist && !orderHeader.isChildOrderInJoint()) {
+				saveError(ERROR_NO_ORDER_LINES + fileName);
+				return false;
 			}
 		}
-		/*
-		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderHeader.getOrderNumber());
-		if (orders != null && orders.size() > 0) {
-			saveError(ERROR_ORDER_NUMBER_ALREADY_EXISTS + fileName);
-			return false;								
-		}
-		*/
 		return true;
 	}
 
@@ -317,6 +319,14 @@ public class OrderImportService {
 	    String s = jsonDate.substring(idx1+1, idx2);
 	    long l = Long.valueOf(s);
 	    return new Date(l);
+	}
+	private OrderHeader fillEmptyRestrictionCodes(OrderHeader oh) {
+		for (OrderLine ol : oh.getOrderLines()) {
+			if (StringUtils.isEmpty(ol.getRestrictionCode())) {
+				ol.setRestrictionCode(RestrictionCodes.NO_SLA_NO_SERIALN0);
+			}
+		}
+		return oh;
 	}
 	@Autowired
 	public void setOrderCustomFieldRepo(OrderCustomFieldRepository orderCustomFieldRepo) {
