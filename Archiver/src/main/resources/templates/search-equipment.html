@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="utf-8"/>
+<head th:include="head" th:remove="tag" />
+
+<body class="layout-2">
+	<div id="body">
+		<!-- <div class="include" data-include="header"></div> -->
+		<div th:include="header" th:remove="tag"></div>
+		<div id="main" class="cf">
+			<div id="content">
+				<div th:include="sub-header-archiving" th:remove="tag"></div>
+				<!-- <div class="include" data-include="sub-header"></div> -->
+				<div id="service-portal" class="sp-layout-4">
+					<div class="content-1">
+						<div class="m m-1 m-page cf">
+							<div class="m-h main-header cf">
+								<div class="page-heading">
+									<h2>Sök utrustning</h2>
+								</div>
+							</div>
+							<div class="tab-navigation">
+								<ul class="tabs cf">
+									<li>
+										<a th:href="@{../../DeliveryManagerGUI/archiving}" rel="nofollow">Arkivera leveranser
+										</a>			
+									</li>
+									<li>
+										<a th:href="@{/order-list}" rel="nofollow">Sök bland arkiverade leveranser
+										</a>			
+									</li>
+									<li class="sel">
+										<a href="#" rel="nofollow">Sök bland arkiverad utrustning
+										</a>			
+									</li>
+								</ul>
+							</div>
+							
+							<!-- Här kan man lägga på en vänster meny -->
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div
+										th:if="${not #strings.isEmpty(reqAttr.errorMessage)}"
+										class="information-text system-info error-message side-margin">
+										<p th:utext="${reqAttr.errorMessage}"></p>
+									</div>
+									<div class="form-step">
+										<!-- Här kan man lägga på ett tack meddelande -->
+										<form class="form-general" th:action= "@{/search-equipment/do-search}" th:object="${reqAttr}" method="get">
+											<div class="form-section">
+												<h3 class="expandtrigger">Ange söksträng</h3>
+												<div class="search-wide">
+													<label for="query">Sök</label>
+													<input class="keywords" th:field="${reqAttr.query}" type="search" id="query" value="${reqAttr.query}" placeholder="Ange del av serienmmer eller stöld-id"/>
+													<input class="btn" type="submit" value="Sök" id="ActionSearchFreetext" name="ActionSearchFreetext"/>
+												</div>													
+												
+											</div>
+										</form>
+										<form>
+											<div class="form-section" id="search-results">
+												<h3>Sökresultat</h3>
+												<table>
+													<colgroup>
+														<col style="width: 10%" />
+														<col style="width: 10%" />
+														<col style="width: 15%" />
+														<col style="width: 10%" />														
+														<col style="width: 15%" />
+														<col style="width: 15%" />
+														<col style="width: 15%" />														
+														<col style="width: 10%" />
+													</colgroup>
+													<thead>
+														<tr>
+															<th scope="col">Serienummer</th>
+															<th scope="col">Stöld-ID</th>
+															<th scope="col">Inscanningsdatum</th>
+															<th scope="col">Ordernummer</th>
+															<th scope="col">Modell</th>
+															<th scope="col">Leveransnr. kund</th>
+															<th scope="col">Kund</th>
+															<th scope="col">Orderstatus</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="equipment : ${equipments}">
+															<td th:text="${equipment.serialNo}">12345</td>
+															<td th:text="${equipment.stealingTag}">12345</td>
+															<td th:text="${equipment.creationDate}">2016-01-01</td>
+															<td><a th:text="${equipment.orderLine.orderHeader.orderNumber}" th:href="@{/view/} + ${equipment.orderLine.orderHeader.id}">LT100199</a></td>
+															<td th:text="${equipment.orderLine.articleDescription}">HP EliteBook</td>
+															<td th:text="${equipment.orderLine.orderHeader.customerSalesOrder}">REQ1234561</td>
+															<td th:text="${equipment.orderLine.orderHeader.customerName}">Kommunleasing</td>
+															<td th:text="${equipment.orderLine.orderHeader.statusDisplay}">Påbörjad</td>															
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:include="footer" th:remove="tag"></div>
+	</div>
+</body>
+</html>
