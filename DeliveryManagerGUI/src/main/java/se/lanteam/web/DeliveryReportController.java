@@ -23,22 +23,16 @@ import se.lanteam.constants.LimStringUtil;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Attachment;
-import se.lanteam.domain.CustomField;
 import se.lanteam.domain.CustomerCustomField;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.Email;
 import se.lanteam.domain.Equipment;
-import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.model.RequestAttributes;
-import se.lanteam.model.SearchBean;
-import se.lanteam.model.SessionBean;
 import se.lanteam.repository.AttachmentRepository;
-import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.EmailRepository;
-import se.lanteam.repository.OrderRepository;
 import se.lanteam.repository.PropertyRepository;
 import se.lanteam.services.ExcelGenerator;
 import se.lanteam.services.ExcelViewBuilder;
@@ -50,7 +44,6 @@ public class DeliveryReportController extends BaseController{
 	private AttachmentRepository attachmentRepo;
 	private EmailRepository emailRepo;
 	private PropertyRepository propertyRepo;
-	private SessionBean sessionBean;
 	
 	private static final String EXCEL_EXPORT_FILE_NAME = "Leveransrapport-#customer-" + DateUtil.dateToString(new Date()) + FileConstants.FILE_ENDING_EXCEL;
 	private static final String MAIL_SUBJECT = "Leveransrapport från LanTeam";
@@ -66,12 +59,7 @@ public class DeliveryReportController extends BaseController{
 	@RequestMapping(value = "reports/delivery/changecustomer/{customerId}", method = RequestMethod.GET)
 	public String changeCustomer(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long customerId,
 			ModelMap model) {
-		CustomerGroup customerGroup = customerRepo.findOne(customerId);
-		if (customerGroup != null) {
-			reqAttr.setCustomerCustomFields(customerGroup.getCustomerCustomFields());
-		} else {
-			reqAttr.setCustomerCustomFields(null);
-		}
+		reqAttr.setCustomerCustomFields(getCustomerCustomFields(customerId));
 		reqAttr.setCustomerId(customerId);		
 		model.put("reqAttr", reqAttr);
 		model.put("customerGroups", customerRepo.findAll());
@@ -80,7 +68,7 @@ public class DeliveryReportController extends BaseController{
 	
 	@RequestMapping(value="reports/delivery/search", method=RequestMethod.GET)
 	public String searchOrdersDelivery(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
-		
+
 		try {
 			Date fromDate = DateUtil.stringToDate(LimStringUtil.NVL(reqAttr.getFromDate(), DateUtil.getDefaultStartDateAsString()));
 			Date toDate = DateUtil.stringToDateMidnight(LimStringUtil.NVL(reqAttr.getToDate(), DateUtil.getTodayAsString()));
@@ -93,7 +81,7 @@ public class DeliveryReportController extends BaseController{
 			} else {
 				orders = orderRepo.findDeliveredOrders(fromDate, toDate, fromOrderNo, toOrderNo);
 			}
-			reqAttr.setCustomerCustomFields(updateFieldListWithLabels(reqAttr.getCustomerCustomFields()));					
+			reqAttr.setCustomerCustomFields(getCheckedCustomerCustomFields(reqAttr));
 			if (!orders.isEmpty()) {
 				reqAttr.setResultNotEmptyMsg("Sökningen gav " + orders.size() + " träff(ar)");
 			} else {
@@ -139,8 +127,6 @@ public class DeliveryReportController extends BaseController{
 				StringBuffer sb = new StringBuffer();
 				sb.append("Hej!\n\n");
 				sb.append("Bifogat finner ni en rapport med utförda leveranser från LanTeam till " + getCustomerNameFromsession() + ".\n\n");
-				//sb.append("Datumintervall för leveranser i denna rapport: " + DateUtil.dateToString(searchBean.getFromDate()) + " - " + DateUtil.dateToString(searchBean.getToDate()) + "\n");
-				//sb.append("Ordernummerintervall för leveranser i denna rapport: " + searchBean.getFromOrderNo() + " - " + searchBean.getToOrderNo() + "\n\n");
 				sb.append("Med vänlig hälsning\n");
 				sb.append("LanTeam");								
 				email.setContent(sb.toString());
@@ -179,7 +165,7 @@ public class DeliveryReportController extends BaseController{
         headers.add("Orderdatum");
         headers.add("Leveransdatum");
         // Lägg till Order customattribut
-        for (CustomerCustomField customField : getCustomerCustomFields()) {
+        for (CustomerCustomField customField : getCheckedCustomFields(searchBean.getCustomerCustomFields())) {
         	headers.add(customField.getLabel());
         }
         headers.add("Orderrad");
@@ -215,7 +201,8 @@ public class DeliveryReportController extends BaseController{
                     	orderCols.add(order.getCustomerName());
                     	orderCols.add(order.getOrderDateAsString());
                     	orderCols.add(order.getDeliveryDateDisplay());
-                    	for (CustomerCustomField customField : getCustomerCustomFields()) {
+                    	//for (CustomerCustomField customField : getCustomerCustomFields(DELIVERY_REPORT)) {
+                    	for (CustomerCustomField customField : getCheckedCustomFields(searchBean.getCustomerCustomFields())) {
                     		orderCols.add(getOrderCustomFieldValue(customField, order));
                     	}
                     	orderCols.add(String.valueOf(line.getRowNumber()));
@@ -336,16 +323,41 @@ public class DeliveryReportController extends BaseController{
 		return result;
 	}
 
-	private List<CustomerCustomField> updateFieldListWithLabels(List<CustomerCustomField> customerFields) {
-		CustomerGroup custGroup = customerRepo.getOne(sessionBean.getCustomerGroup().getId());
-		int index = 0;
-		for (CustomerCustomField field : customerFields) {
-			field.setCustomField(custGroup.getCustomerCustomFields().get(index).getCustomField());
-			index++;
+	private List<CustomerCustomField> getCustomerCustomFields(Long customerGroupId) {
+		List<CustomerCustomField> result = null;
+		if (customerGroupId != null && customerGroupId > 0) {
+			CustomerGroup customerGroup = customerRepo.findOne(customerGroupId);
+			if (customerGroup != null) {
+				result = customerGroup.getCustomerCustomFields();
+			}			
 		}
-		return customerFields;
+		return result;
 	}
 	
+	private List<CustomerCustomField> getCheckedCustomFields(List<CustomerCustomField> allFields) {
+		List<CustomerCustomField> fields = new ArrayList<CustomerCustomField>();
+		for (CustomerCustomField field : allFields) {
+			if (field.getShowInDeliveryReport()) {
+				fields.add(field);
+			}
+		}
+		return fields;
+	}
+	private List<CustomerCustomField> getCheckedCustomerCustomFields(RequestAttributes reqAttr) {
+		List<CustomerCustomField> custFields = getCustomerCustomFields(reqAttr.getCustomerId());
+		List<CustomerCustomField> checkedFields = reqAttr.getCustomerCustomFields();
+		List<CustomerCustomField> result = new ArrayList<CustomerCustomField>();
+		for (CustomerCustomField custField : custFields) {
+			for (CustomerCustomField checkedField : checkedFields) {
+				if (custField.getId().equals(checkedField.getId())) {
+					custField.setShowInDeliveryReport(checkedField.getShowInDeliveryReport());
+					break;
+				}
+			}
+			result.add(custField);
+		}
+		return result;
+	}
 	@Autowired
 	public void setExcelGenerator(ExcelGenerator excelGenerator) {
 		this.excelGenerator = excelGenerator;
@@ -362,8 +374,4 @@ public class DeliveryReportController extends BaseController{
 	public void setPropertyRepo(PropertyRepository propertyRepo) {
 		this.propertyRepo = propertyRepo;
 	}	
-	@Autowired
-	public void setSessionBean(SessionBean sessionBean) {
-		this.sessionBean = sessionBean;
-	}
 }

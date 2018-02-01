@@ -111,5 +111,5 @@ public class CustomerCustomField {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	
+
 }

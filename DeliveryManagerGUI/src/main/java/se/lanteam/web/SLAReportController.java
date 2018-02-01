@@ -112,7 +112,7 @@ public class SLAReportController extends BaseController {
         headers.add("Orderdatum");
         headers.add("Leveransdatum");
         headers.add("Status");
-        for (CustomerCustomField customField : getCustomerCustomFields()) {
+        for (CustomerCustomField customField : getCustomerCustomFields(SLA_REPORT)) {
         	headers.add(customField.getLabel());
         }
         headers.add("Dagar kvar");        
@@ -136,7 +136,7 @@ public class SLAReportController extends BaseController {
         	orderCols.add(order.getOrderDateAsString());
         	orderCols.add(order.getDeliveryDateDisplay());
         	orderCols.add(order.getStatusDisplay());
-        	for (CustomerCustomField customField : getCustomerCustomFields()) {
+        	for (CustomerCustomField customField : getCustomerCustomFields(SLA_REPORT)) {
         		orderCols.add(getOrderCustomFieldValue(customField, order));
         	}
         	orderCols.add(String.valueOf(order.getSlaDaysLeft()));

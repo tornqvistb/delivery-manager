@@ -26,6 +26,9 @@ public class BaseController {
 	protected OrderRepository orderRepo;
 	protected CustomerGroupRepository customerRepo;
 	protected SearchBean searchBean;
+	
+	protected static final String SLA_REPORT = "SLA_REPORT";
+	protected static final String DELIVERY_REPORT = "DELIVERY_REPORT";
 
 	protected RequestAttributes addRelatedOrders(RequestAttributes reqAttr, OrderHeader order) {
 		if (order.isPartOfJointdelivery()) {
@@ -70,12 +73,15 @@ public class BaseController {
 		return otherOrdersInDelivery;
 	}
 
-	protected List<CustomerCustomField> getCustomerCustomFields() {
+	protected List<CustomerCustomField> getCustomerCustomFields(String report) {
 		List<CustomerCustomField> result = new ArrayList<CustomerCustomField>();
 		if (searchBean.getCustomerGroupId() > 0) {
 			CustomerGroup custGroup = customerRepo.findOne(searchBean.getCustomerGroupId());
 			for (CustomerCustomField field : custGroup.getCustomerCustomFields()) {
-				if (field.getShowInSlaReport()) {
+				if (SLA_REPORT.equals(report) && field.getShowInSlaReport()) {
+					result.add(field);
+				}
+				if (DELIVERY_REPORT.equals(report) && field.getShowInDeliveryReport()) {
 					result.add(field);
 				}
 			}

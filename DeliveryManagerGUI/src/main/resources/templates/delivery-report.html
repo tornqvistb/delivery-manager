@@ -119,7 +119,9 @@
 													<tbody>													
 														<tr th:each="customerCustomField, loop : *{customerCustomFields}">
 															<td th:text="${customerCustomField.label}">Rubriken</td>
-															<td>																
+															<td>
+																<input type="hidden" name="show1" th:field="*{customerCustomFields[__${loop.index}__].id}"/>
+																<input type="hidden" name="show2" th:field="*{customerCustomFields[__${loop.index}__].label}"/>
 																<input type="checkbox" name="showInDeliveryReport" th:field="*{customerCustomFields[__${loop.index}__].showInDeliveryReport}" th:checked="*{customerCustomFields[__${loop.index}__].showInDeliveryReport}" />
 															</td>
 														</tr>
