@@ -35,10 +35,10 @@ public class SearchController {
 			
 			if (equipments.isEmpty()) {
 				// If no hits create error message in reqattr
-				errorMessage = "Sökningen på \"" + query + "\" gav inga träffar.";
+				errorMessage = "SÃ¶kningen pÃ¥ \"" + query + "\" gav inga trÃ¤ffar.";
 			}
 		} else {
-			errorMessage = "Du måste ange en söksträng vid sökning.";
+			errorMessage = "Du mÃ¥ste ange en sÃ¶kstrÃ¤ng vid sÃ¶kning.";
 		}
 		reqAttr = new RequestAttributes();
 		reqAttr.setQuery(query);
