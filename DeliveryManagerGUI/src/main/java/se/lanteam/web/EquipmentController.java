@@ -126,6 +126,7 @@ public class EquipmentController extends BaseController {
 		reqAttr.setRegEquipmentResult(valResult);
 		reqAttr = addRelatedOrders(reqAttr, order);
 		reqAttr = setInfoMessageForRelatedOrders(reqAttr, order, workToDoOnRelatedOrders);
+		
 		model.put("reqAttr", reqAttr);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		model.put("deliveryAreas", deliveryAreaRepo.findAll(new Sort(Sort.Direction.ASC, "name")));
@@ -222,11 +223,11 @@ public class EquipmentController extends BaseController {
 		reqAttr.setRegEquipmentResult(result);
 		reqAttr.setThanksMessage(message);
 		reqAttr = addRelatedOrders(reqAttr, order);
+		
 		model.put("reqAttr", reqAttr);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		return returnPage;
 	}
-
 	
 	private String validateEquipmentNoSN(Integer count, OrderLine orderLine) {
 		String result = RESULT_OK;

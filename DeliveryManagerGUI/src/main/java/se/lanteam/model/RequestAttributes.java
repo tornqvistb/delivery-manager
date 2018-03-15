@@ -58,9 +58,14 @@ public class RequestAttributes {
 	private String resultEmptyMsg;
 	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
 	private List<OrderHeader> relatedOrders= new ArrayList<OrderHeader>();
-	private String informByEmail = "Informera kunden om ändringen via epost";
-	private String doNewDelivery = "Anropa leveransaviseringstjänst hos kund på nytt";
+	private String informByEmail = "Spara ändringarna och informera kunden via epost";
+	private String doNewDelivery = "Spara ändringarna och anropa leveransaviseringstjänst hos kund på nytt";
+	private String saveOrder = "Spara ändringarna";
 	
+	public String getSaveOrder() {
+		return saveOrder;
+	}
+
 	public RequestAttributes() {
 		super();
 

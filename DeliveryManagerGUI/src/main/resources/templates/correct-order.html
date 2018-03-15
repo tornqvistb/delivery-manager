@@ -119,8 +119,9 @@
 														</tbody>
 													</table>
 													<div class="submit-area">
-														<input name="action" class="btn" type="submit" th:value="${reqAttr.informByEmail}" /><br />
-														<input name="action" class="btn" type="submit" th:value="${reqAttr.doNewDelivery}" />
+														<input name="action" class="btn" type="submit" th:value="${reqAttr.saveOrder}" /><br />
+														<input th:if="${order.customerGroup.sendDeliveryNotification}" name="action" class="btn" type="submit" th:value="${reqAttr.informByEmail}" /><br />
+														<input th:if="${order.customerGroup.sendDeliveryNotification}" name="action" class="btn" type="submit" th:value="${reqAttr.doNewDelivery}" />
 													</div>
 												</form>
 											</div>
