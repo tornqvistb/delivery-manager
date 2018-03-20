@@ -185,15 +185,17 @@ public class OrderTransmitService {
         		try {
         			// Get ordergroup and check if customer has integration
         			OrderHeader order = comment.getOrderHeader();
-        			if (order.getCustomerGroup() != null && order.getCustomerGroup().getSendDeliveryNotification()) {
-						Header header = wsClient.sendDeliveryStatus(comment, config);
-						if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
-							throw new Exception(header.getKod() + " - " + header.getText());
-						}
+        			if (order.getCustomerGroup() != null) {
+	        			if (order.getCustomerGroup().getSendDeliveryNotification()) {
+							Header header = wsClient.sendDeliveryStatus(comment, config);
+							if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
+								throw new Exception(header.getKod() + " - " + header.getText());
+							}
+	        			}
+						// Update order comment status
+						comment.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
+						orderCommentRepo.save(comment);
         			}
-					// Update order comment status
-					comment.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
-					orderCommentRepo.save(comment);
 				} catch (Exception e) {
 					saveError(WS_ERROR + e.getMessage());
 					e.printStackTrace();
