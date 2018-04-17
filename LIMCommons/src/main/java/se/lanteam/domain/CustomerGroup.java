@@ -29,6 +29,15 @@ public class CustomerGroup {
 	private Boolean getContactInfoFromNetset;
 	private Boolean bookOrderBeforeRegistration;
 	private Boolean deliveryFlagToERP;
+	private String deliveryEmailAddress;
+
+	public String getDeliveryEmailAddress() {
+		return deliveryEmailAddress;
+	}
+
+	public void setDeliveryEmailAddress(String deliveryEmailAddress) {
+		this.deliveryEmailAddress = deliveryEmailAddress;
+	}
 
 	public Boolean getGetContactInfoFromNetset() {
 		return getContactInfoFromNetset;

@@ -76,6 +76,11 @@
 															<th scope="row">Klarsätt ordrar i Visma efter leverans</th>
 															<td><input type="checkbox" name="deliveryFlagToERP" th:field="${customerGroup.deliveryFlagToERP}" th:checked="${customerGroup.deliveryFlagToERP}" /></td>
 														</tr>
+														<tr>
+															<th scope="row">Epost-adress för leveransmeddelande</th>
+															<td><input class="large-field" th:field="${customerGroup.deliveryEmailAddress}"
+																type="text" id="deliveryEmailAddress" /></td>
+														</tr>
 														
 													</tbody>
 												</table>

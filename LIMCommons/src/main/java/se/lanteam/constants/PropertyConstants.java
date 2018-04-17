@@ -28,6 +28,7 @@ public class PropertyConstants {
 	public static final String JOINT_INVOICING_CUST_NUMBERS = "joint-invoicing-cust-numbers";
 	public static final String MAIL_REPLY_TO_ADDRESS = "mail-reply-to-address";
 	public static final String CUSTOMER_GROUP_INTRASERVICE = "customer-group-intraservice";
+	public static final String NETSET_FILES_BASEDIR = "netset-files-basedir";
 	// Archiving db
 	public static final String ARCHIVERJOB_FREQUENCY = "archiverjob-frequency";	
 

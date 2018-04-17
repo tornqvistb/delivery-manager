@@ -89,6 +89,10 @@ public class OrderTransmitService {
 					if (order.getJointInvoicing() == 0) {
 						createFileToBusinessSystem(order);
 					}
+					// Create delivery mail to customer group mail address
+					if (StringUtils.isNotEmpty(order.getCustomerGroup().getDeliveryEmailAddress())) {
+						emailRepo.save(getDeliveryEmail(order));
+					}
 					// Create mail to contact persons
 					createMailToContactPersons(order);
 					// Update order status
@@ -102,7 +106,7 @@ public class OrderTransmitService {
         	}        
         }
 	}
-
+	
 	private void createMailToContactPersons(OrderHeader order) {
 		if (StringUtils.isNotEmpty(order.getContact1Email())) {
 			Email email1 = getOrderDeliveredMail(order);
@@ -114,6 +118,15 @@ public class OrderTransmitService {
 			email2.setReceiver(order.getContact2Email());
 			emailRepo.save(email2);			
 		}
+	}
+
+	private Email getDeliveryEmail(OrderHeader order) {
+		Email email = new Email();
+		email.setSubject("HelpdeskID " + order.getCustomerOrderNumber());
+		email.setSender(propService.getString(PropertyConstants.MAIL_USERNAME));
+		email.setReplyTo(propService.getString(PropertyConstants.MAIL_REPLY_TO_ADDRESS));
+		email.setReceiver(order.getCustomerGroup().getDeliveryEmailAddress());
+		return email;
 	}
 	
 	private Email getOrderDeliveredMail(OrderHeader order) {

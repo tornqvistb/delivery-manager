@@ -1,9 +1,15 @@
 package se.lanteam.ws;
 
+import java.io.File;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +30,7 @@ import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCustomFieldRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.repository.PropertyRepository;
-import se.lanteam.service.OrderImportService;
+import se.lanteam.services.PropertyService;
 import se.lanteam.ws.netset.CreateOrderRequest;
 import se.lanteam.ws.netset.CreateOrderResponse;
 import se.lanteam.ws.netset.InformationField;
@@ -58,17 +64,25 @@ public class NetsetOrderRepository {
     
     private static final Logger LOG = LoggerFactory.getLogger(NetsetOrderRepository.class);
         
+    private static final String PROCESSED_FILES_DIR = "processed/";
+    private static final String INCOMING_FILES_DIR = "incoming/";
+    private static final String ERROR_FILES_DIR = "error/";
+    
     public CreateOrderResponse createOrder(CreateOrderRequest request) {
+    	String baseDir = propertyRepo.findById(PropertyConstants.NETSET_FILES_BASEDIR).getStringValue();
     	logOrder(request);
+    	saveOrderToXMLFile(request, baseDir + INCOMING_FILES_DIR);
     	int returnCode = RESULT_CODE_CREATED_OK;
     	String description = DESCRIPTION_CREATED_OK;
     	if (!validationOk(request)) {
     		saveError(ERROR_LOG_GENERAL_MESSAGE + DESCRIPTION_MANDATORY_DATA_MISSING + ". Ordernr: " + getOrderNoFromRequest(request, MISSING));
+    		saveOrderToXMLFile(request, baseDir + ERROR_FILES_DIR);
     		return getResponse(RESULT_CODE_ERROR_MANDATORY_DATA_MISSING, DESCRIPTION_MANDATORY_DATA_MISSING);
     	}
     	CustomerGroup customerGroup = customerGroupRepo.findByName(getCustomerGroupFromRequest(request, MISSING));    	
     	if (customerGroup == null) {
     		LOG.info("Did not find customer group in DB: " + getCustomerGroupFromRequest(request, MISSING));
+    		saveOrderToXMLFile(request, baseDir + ERROR_FILES_DIR);
     		return getResponse(RESULT_CODE_ERROR_UNKNOWN_CUSTOMER_GROUP, DESCRIPTION_UNKNOWN_CUSTOMER_GROUP);
     	}
     	
@@ -113,6 +127,7 @@ public class NetsetOrderRepository {
 			order.setOrderDate(new Date());
 		}		
 		orderRepo.save(order);
+		saveOrderToXMLFile(request, baseDir + PROCESSED_FILES_DIR);
 		return getResponse(returnCode, description);
 
     }
@@ -196,9 +211,22 @@ public class NetsetOrderRepository {
 			LOG.info("New order from Netset:");
 			LOG.info("-- customer group: " + getCustomerGroupFromRequest(request, MISSING));
 			LOG.info("-- netset order number: " + String.valueOf(request.getOrderData().getValue().getHeader().getOrderNumber()));
+			LOG.info(request.getOrderData().toString());
 		} catch (Exception e) {
 			LOG.info("Exception in logOrder");
 		}
+	}
+	
+	private void saveOrderToXMLFile(CreateOrderRequest request, String fileDir) {	    
+	    try {
+	        JAXBContext context = JAXBContext.newInstance(CreateOrderRequest.class);
+	        Marshaller m = context.createMarshaller();
+	        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To format XML
+	        File file = new File( fileDir + getOrderNoFromRequest(request, "unknown") + ".xml" );
+	        m.marshal( request, file );
+	    } catch (JAXBException e) {
+	        LOG.error("Failed to generate xml file for netset order " + getOrderNoFromRequest(request, "unknown"));
+	    }
 	}
 	
 	@Autowired

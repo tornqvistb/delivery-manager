@@ -125,7 +125,7 @@ public class OrderImportService {
 		File[] filesInFolder = inputFolder.listFiles();
 		if (filesInFolder != null) {
 			for (final File fileEntry : filesInFolder) {
-				LOG.debug("FILE : " + fileEntry.getName());
+				LOG.info("Found file: " + fileEntry.getName());
 				Path source = Paths.get(fileSourceFolder + "/" + fileEntry.getName());
 				Path target = Paths.get(fileDestFolder + "/" + fileEntry.getName());
 				Path errorTarget = Paths.get(fileErrorFolder + "/" + fileEntry.getName());
@@ -147,6 +147,7 @@ public class OrderImportService {
 						orderHeader.setReceivingStatus();
 						orderHeader = fillEmptyRestrictionCodes(orderHeader);
 						orderRepo.save(orderHeader);
+						LOG.info("Saved order: " + orderHeader.getOrderNumber() + ", netset ordernumber: " + orderHeader.getNetsetOrderNumber());
 						checkThatOrderCreated(orderHeader.getOrderNumber());
 						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
 					} else {

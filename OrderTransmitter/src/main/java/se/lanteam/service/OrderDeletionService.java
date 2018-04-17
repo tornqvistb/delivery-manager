@@ -34,6 +34,7 @@ public class OrderDeletionService {
         Date theDate = cal.getTime();
         List<OrderHeader> orders = orderRepo.findOrdersByCreationDateAndStatus(StatusConstants.ORDER_STATUS_RECEIVING, theDate);
         for (OrderHeader order : orders) {        	
+        	LOG.info("Deleting order with status receiving after 48 hours: " + order.getOrderNumber());
         	orderRepo.delete(order.getId());
         }
 	}
