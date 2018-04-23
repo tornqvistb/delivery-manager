@@ -69,7 +69,7 @@ public class OrderImportService {
     	for (OrderHeader order : unJoinedOrders) {
     		if (CustomFieldConstants.VALUE_SAMLEVERANS_MASTER.equalsIgnoreCase(order.getJointDelivery())) {
     			// Master order
-				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDelivery(order.getNetsetOrderNumber());
+				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDeliveryAndStatus(order.getNetsetOrderNumber(), StatusConstants.ORDER_STATUS_NEW);
 				if (childOrders.size() > 0) {
 					StringBuffer orders = new StringBuffer();
 					boolean first = true;
@@ -85,7 +85,7 @@ public class OrderImportService {
 				}
     		} else {
     			// Child order
-    			List<OrderHeader> masterOrders = orderRepo.findOrdersByNetsetOrderNumber(order.getJointDelivery());
+    			List<OrderHeader> masterOrders = orderRepo.findOrdersByNetsetOrderNumberAndStatus(order.getJointDelivery(), StatusConstants.ORDER_STATUS_NEW);
     			if (masterOrders.size() > 0) {
     				LOG.debug("child, master-order-id: " + masterOrders.get(0).getId());
     				OrderHeader masterOrder = orderRepo.findOne(masterOrders.get(0).getId());

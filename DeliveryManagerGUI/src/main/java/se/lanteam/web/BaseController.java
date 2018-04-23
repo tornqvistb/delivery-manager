@@ -53,6 +53,39 @@ public class BaseController {
 		List<String> otherOrdersInDelivery = new ArrayList<String>();
 		if (order.isPartOfJointdelivery()) {
 			if (order.isMainOrderInJoint()) {
+				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDelivery(order.getNetsetOrderNumber());
+				if (!childOrders.isEmpty()) {
+					for (OrderHeader oh : childOrders) {
+						otherOrdersInDelivery.add(oh.getOrderNumber());
+					}
+				}
+			} else {
+				// child order
+				List<OrderHeader> orders = orderRepo.findOrdersByNetsetOrderNumber(order.getJointDelivery());
+				OrderHeader mainOrder = null;
+				if (!orders.isEmpty()) {
+					mainOrder = orders.get(0);
+					otherOrdersInDelivery.add(mainOrder.getOrderNumber());
+				}
+				
+				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDelivery(mainOrder.getNetsetOrderNumber());
+				if (!childOrders.isEmpty()) {
+					for (OrderHeader oh : childOrders) {
+						if (!oh.getOrderNumber().equals(order.getOrderNumber())) {
+							otherOrdersInDelivery.add(oh.getOrderNumber());
+						}
+					}
+				}
+			}
+		}
+		return otherOrdersInDelivery;
+	}
+
+/*
+	private List<String> getRelatedOrderNumbers(OrderHeader order) {
+		List<String> otherOrdersInDelivery = new ArrayList<String>();
+		if (order.isPartOfJointdelivery()) {
+			if (order.isMainOrderInJoint()) {
 				if (!StringUtils.isEmpty(order.getJointDeliveryOrders())) {
 					otherOrdersInDelivery = Arrays.asList(order.getJointDeliveryOrders().split(","));
 				}
@@ -72,7 +105,7 @@ public class BaseController {
 		}
 		return otherOrdersInDelivery;
 	}
-
+*/	
 	protected List<CustomerCustomField> getCustomerCustomFields(String report) {
 		List<CustomerCustomField> result = new ArrayList<CustomerCustomField>();
 		if (searchBean.getCustomerGroupId() > 0) {
