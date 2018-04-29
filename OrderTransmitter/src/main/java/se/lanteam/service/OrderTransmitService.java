@@ -94,7 +94,9 @@ public class OrderTransmitService {
 						emailRepo.save(getDeliveryEmail(order));
 					}
 					// Create mail to contact persons
-					createMailToContactPersons(order);
+					if (order.getCustomerGroup().getSendDeliveryMailToContacts()) {
+						createMailToContactPersons(order);
+					}
 					// Update order status
 					order.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
 					order.setDeliveryDate(new Date());

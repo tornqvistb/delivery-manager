@@ -30,6 +30,7 @@ public class CustomerGroup {
 	private Boolean bookOrderBeforeRegistration;
 	private Boolean deliveryFlagToERP;
 	private String deliveryEmailAddress;
+	private Boolean sendDeliveryMailToContacts;
 
 	public String getDeliveryEmailAddress() {
 		return deliveryEmailAddress;
@@ -144,5 +145,14 @@ public class CustomerGroup {
 	public void setDeliveryFlagToERP(Boolean deliveryFlagToERP) {
 		this.deliveryFlagToERP = deliveryFlagToERP;
 	}
+
+	public Boolean getSendDeliveryMailToContacts() {
+		return sendDeliveryMailToContacts;
+	}
+
+	public void setSendDeliveryMailToContacts(Boolean sendDeliveryMailToContacts) {
+		this.sendDeliveryMailToContacts = sendDeliveryMailToContacts;
+	}
+
 	
 }
