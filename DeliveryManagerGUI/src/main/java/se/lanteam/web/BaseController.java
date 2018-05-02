@@ -66,16 +66,15 @@ public class BaseController {
 				if (!orders.isEmpty()) {
 					mainOrder = orders.get(0);
 					otherOrdersInDelivery.add(mainOrder.getOrderNumber());
-				}
-				
-				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDelivery(mainOrder.getNetsetOrderNumber());
-				if (!childOrders.isEmpty()) {
-					for (OrderHeader oh : childOrders) {
-						if (!oh.getOrderNumber().equals(order.getOrderNumber())) {
-							otherOrdersInDelivery.add(oh.getOrderNumber());
+					List<OrderHeader> childOrders = orderRepo.findOrdersByJointDelivery(mainOrder.getNetsetOrderNumber());
+					if (!childOrders.isEmpty()) {
+						for (OrderHeader oh : childOrders) {
+							if (!oh.getOrderNumber().equals(order.getOrderNumber())) {
+								otherOrdersInDelivery.add(oh.getOrderNumber());
+							}
 						}
 					}
-				}
+				}				
 			}
 		}
 		return otherOrdersInDelivery;
