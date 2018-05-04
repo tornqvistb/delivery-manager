@@ -124,6 +124,7 @@ public class OrderTransmitService {
 
 	private Email getDeliveryEmail(OrderHeader order) {
 		Email email = new Email();
+		email.setContent("-");
 		email.setSubject("HelpdeskID " + order.getCustomerOrderNumber());
 		email.setSender(propService.getString(PropertyConstants.MAIL_USERNAME));
 		email.setReplyTo(propService.getString(PropertyConstants.MAIL_REPLY_TO_ADDRESS));

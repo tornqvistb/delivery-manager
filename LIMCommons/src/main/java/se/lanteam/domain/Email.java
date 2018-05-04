@@ -25,6 +25,7 @@ public class Email {
 		super();
 		creationDate = new Date();
 		status = StatusConstants.EMAIL_STATUS_NEW;
+		content = "-";
 	}
 	@Id
 	@GeneratedValue
