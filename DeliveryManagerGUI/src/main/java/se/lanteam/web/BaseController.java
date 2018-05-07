@@ -1,14 +1,14 @@
 package se.lanteam.web;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 
 import se.lanteam.domain.CustomerCustomField;
 import se.lanteam.domain.CustomerGroup;
@@ -21,6 +21,12 @@ import se.lanteam.repository.OrderRepository;
 
 @Controller
 public class BaseController {
+	
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+	        binder.setAutoGrowCollectionLimit(2048);
+	}
+	
 	protected Logger LOG = LoggerFactory.getLogger(this.getClass());
 
 	protected OrderRepository orderRepo;
