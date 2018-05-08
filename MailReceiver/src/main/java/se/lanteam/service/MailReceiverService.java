@@ -72,7 +72,7 @@ public class MailReceiverService {
 	    String mailPassword = propService.getString(PropertyConstants.MAIL_PASSWORD);
 	    String saveDirectory = propService.getString(PropertyConstants.FILE_IMAGE_FOLDER);
 		try {
-	        LOG.info("Going to check mails");
+	        LOG.debug("Going to check incoming mails");
 			// create properties field
 			Properties properties = new Properties();
 

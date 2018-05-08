@@ -28,7 +28,7 @@ public class OrderDeletionService {
     private static final Logger LOG = LoggerFactory.getLogger(OrderDeletionService.class);
     
 	public void deleteOrders() {
-        LOG.info("Looking for orders to delete!");
+        LOG.debug("Looking for orders to delete!");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR, -48);
         Date theDate = cal.getTime();

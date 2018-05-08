@@ -61,7 +61,7 @@ public class MailSenderService {
 	    String mailPassword = propService.getString(PropertyConstants.MAIL_PASSWORD);
 
 		List<Email> emails = emailRepo.findEmailsByStatus(StatusConstants.EMAIL_STATUS_NEW);
-		LOG.info("Check for emails to send");
+		LOG.debug("Check for emails to send");
 		for (Email email : emails) {
 			try {
 				LOG.debug("New mail to send");

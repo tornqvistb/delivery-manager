@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import se.lanteam.domain.ErrorRecord;
@@ -19,8 +21,11 @@ public class OrderImportJob implements Job {
     @Autowired
     private ErrorRepository errorRepo;
 
+    private static final Logger LOG = LoggerFactory.getLogger(OrderImportJob.class);
+    
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
+    	LOG.info("Running OrderImportJob");
         try {
 			service.moveFiles();
 		} catch (IOException e) {

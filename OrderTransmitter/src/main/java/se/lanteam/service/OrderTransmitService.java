@@ -71,7 +71,7 @@ public class OrderTransmitService {
 		String wsEndpointOrderDelivery = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_DELIVERY);
 		String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_GBCA);
 		String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_GBCA);
-        LOG.info("Looking for orders to transmit!");
+        LOG.debug("Looking for orders to transmit!");
         List<OrderHeader> orders = orderRepo.findOrdersByStatus(StatusConstants.ORDER_STATUS_SENT);
 		WSConfig config = new WSConfig(wsEndpointOrderDelivery, wsUserName, wsPassword);
 		WSClient wsClient = new WSClient();
@@ -124,11 +124,18 @@ public class OrderTransmitService {
 
 	private Email getDeliveryEmail(OrderHeader order) {
 		Email email = new Email();
-		email.setContent("-");
+		email.setContent("Hej!\n\n"
+				+ "Order " + order.getCustomerOrderNumber() + " är nu levererad.\n"
+				+ "Vi hoppas att du är nöjd med leveransen.\n\n"
+				+ "Med vänlig hälsning\n"
+				+ "LanTeam");
 		email.setSubject("HelpdeskID " + order.getCustomerOrderNumber());
 		email.setSender(propService.getString(PropertyConstants.MAIL_USERNAME));
 		email.setReplyTo(propService.getString(PropertyConstants.MAIL_REPLY_TO_ADDRESS));
 		email.setReceiver(order.getCustomerGroup().getDeliveryEmailAddress());
+		if (order.getAttachment() != null) {
+			email.setAttachmentRef(order.getAttachment().getId());
+		}
 		return email;
 	}
 	
@@ -188,7 +195,7 @@ public class OrderTransmitService {
 	}
 		
 	public void transmitOrderComments() {
-        LOG.info("Looking for order comments to transmit!");
+        LOG.debug("Looking for order comments to transmit!");
 		String wsEndpointOrderComment = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_COMMENT);
 		String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_GBCA);
 		String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_GBCA);

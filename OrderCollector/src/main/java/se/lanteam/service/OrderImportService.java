@@ -119,8 +119,7 @@ public class OrderImportService {
 	public void moveFiles() throws IOException {
 	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_INCOMING_FOLDER);	    
 	    String fileDestFolder = propService.getString(PropertyConstants.FILE_PROCESSED_FOLDER);	    
-	    String fileErrorFolder = propService.getString(PropertyConstants.FILE_ERROR_FOLDER);	    
-        LOG.debug("Looking for files to move!");
+	    String fileErrorFolder = propService.getString(PropertyConstants.FILE_ERROR_FOLDER);	            
 		final File inputFolder = new File(fileSourceFolder);
 		File[] filesInFolder = inputFolder.listFiles();
 		if (filesInFolder != null) {
