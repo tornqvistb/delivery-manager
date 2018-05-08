@@ -2,6 +2,8 @@ package se.lanteam.job;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import se.lanteam.service.MailReceiverService;
@@ -16,8 +18,11 @@ public class MailReceiverJob implements Job {
     @Autowired
     private MailSenderService senderService;
 
+    private static final Logger LOG = LoggerFactory.getLogger(MailReceiverJob.class);
+    
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
+    	LOG.info("Running MailReceiverJob");
     	receiverService.checkMails();
     	senderService.checkMailsToSend();
     }
