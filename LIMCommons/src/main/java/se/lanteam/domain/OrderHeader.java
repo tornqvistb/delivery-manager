@@ -480,7 +480,7 @@ public class OrderHeader {
 		}
 		return theClass;
 	}
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="orderHeader")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
 	@OrderBy("creationDate")
 	public List<OrderCustomField> getOrderCustomFields() {
 		return orderCustomFields;

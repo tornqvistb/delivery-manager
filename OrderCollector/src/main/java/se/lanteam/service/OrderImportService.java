@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -42,7 +40,6 @@ import se.lanteam.services.PropertyService;
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
  */
 @Service
-@Transactional
 public class OrderImportService {
 
 	private static final String GENERAL_FILE_ERROR = "Fel vid inläsning av fil. ";
