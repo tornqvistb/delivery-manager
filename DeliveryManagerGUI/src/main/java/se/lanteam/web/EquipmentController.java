@@ -98,8 +98,7 @@ public class EquipmentController extends BaseController {
 				equipment.setCustomAttribute8(reqAttr.getCustomAttribute8());
 				equipment.setCustomAttribute8Label(regConfig.getLabelAttribute8());
 			}
-			//valResult = equipmentValidator.validateEquipment(equipment, orderRepo.findOne(orderId), orderLine.getRestrictionCode());
-			valResult = RESULT_OK;
+			valResult = equipmentValidator.validateEquipment(equipment, orderRepo.findOne(orderId), orderLine.getRestrictionCode());
 			if (valResult.equals(RESULT_OK)) {
 				orderLine.getEquipments().add(equipment);
 				orderLine.updateEquipmentCounters();
