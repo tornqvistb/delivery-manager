@@ -7,6 +7,13 @@ public class Orderrad {
 	private int Orderrad;
 	private String Artikelnummer;
 	private List<String> Serienummer;
+	private String Leasingnummer;
+	public String getLeasingnummer() {
+		return Leasingnummer;
+	}
+	public void setLeasingnummer(String leasingnummer) {
+		Leasingnummer = leasingnummer;
+	}
 	public int getOrderrad() {
 		return Orderrad;
 	}

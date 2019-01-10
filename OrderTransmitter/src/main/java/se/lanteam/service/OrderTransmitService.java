@@ -178,6 +178,7 @@ public class OrderTransmitService {
 				vismaSnr.add(equipment.getSerialNo());        				
 			}
 			vismaRow.setSerienummer(vismaSnr);
+			vismaRow.setLeasingnummer(line.getLeasingNumber());
 			vismaRows.add(vismaRow);
 		}
 		vismaOrder.setOrderrader(vismaRows);

@@ -32,6 +32,7 @@ public class OrderLine {
 	private String organisationUnit;
 	private String installationType;
 	private String operatingSystem;
+	private String leasingNumber;
 	
 	@Id
 	@GeneratedValue
@@ -170,6 +171,12 @@ public class OrderLine {
 	public void updateEquipmentCounters() {
 		this.setRegistered(this.getEquipments().size());
 		this.setRemaining(this.getTotal() - this.getEquipments().size());
+	}
+	public String getLeasingNumber() {
+		return leasingNumber;
+	}
+	public void setLeasingNumber(String leasingNumber) {
+		this.leasingNumber = leasingNumber;
 	}
 
 	
