@@ -173,7 +173,11 @@ public class OrderTransmitService {
 			Orderrad vismaRow = new Orderrad();
 			vismaRow.setArtikelnummer(line.getArticleNumber());
 			vismaRow.setOrderrad(line.getRowNumber());
-			vismaRow.setKundradnummer(line.getCustomerRowNumber());
+			if (line.getCustomerRowNumber() != null) {
+				vismaRow.setKundradnummer(line.getCustomerRowNumber());	
+			} else {
+				vismaRow.setKundradnummer(0);
+			}
 			List<String> vismaSnr = new ArrayList<String>();
 			for (Equipment equipment : line.getEquipments()) {
 				vismaSnr.add(equipment.getSerialNo());        				
