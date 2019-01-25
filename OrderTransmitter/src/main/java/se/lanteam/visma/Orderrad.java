@@ -5,6 +5,7 @@ import java.util.List;
 public class Orderrad {
 	
 	private int Orderrad;
+	private int Kundradnummer;
 	private String Artikelnummer;
 	private List<String> Serienummer;
 	private String Leasingnummer;
@@ -31,6 +32,12 @@ public class Orderrad {
 	}
 	public void setSerienummer(List<String> serienummer) {
 		Serienummer = serienummer;
+	}
+	public int getKundradnummer() {
+		return Kundradnummer;
+	}
+	public void setKundradnummer(int kundradnummer) {
+		Kundradnummer = kundradnummer;
 	}
 	
 }
