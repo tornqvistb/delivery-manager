@@ -68,19 +68,17 @@ public class OrderTransmitService {
 	}
     
 	public void transmitOrders() {
-		String wsEndpointOrderDelivery = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_DELIVERY);
-		String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_GBCA);
-		String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_GBCA);
+		
         LOG.debug("Looking for orders to transmit!");
         List<OrderHeader> orders = orderRepo.findOrdersByStatus(StatusConstants.ORDER_STATUS_SENT);
-		WSConfig config = new WSConfig(wsEndpointOrderDelivery, wsUserName, wsPassword);
+		
 		WSClient wsClient = new WSClient();
         if (orders != null && orders.size() > 0) {
         	for (OrderHeader order : orders) {
         		// Create soap message and send to Intraservice
         		try {
         			if (order.getCustomerGroup().getSendDeliveryNotification() && isNumeric(order.getCustomerOrderNumber())) {
-						Header header = wsClient.sendOrderDelivery(order, config);
+						Header header = wsClient.sendOrderDelivery(order, getWSConfigOrderDelivery(order));
 						if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
 							throw new Exception(header.getKod() + " - " + header.getText());
 						}
@@ -107,6 +105,20 @@ public class OrderTransmitService {
 				}
         	}        
         }
+	}
+	
+	private WSConfig getWSConfigOrderDelivery(OrderHeader order) {
+		if (order.isOriginateFromServiceNow()) {
+			String wsEndpoint = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_DELIVERY_SN);
+			String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_SN);
+			String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_SN);
+			return new WSConfig(wsEndpoint, wsUserName, wsPassword);				
+		} else {
+			String wsEndpoint = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_DELIVERY);
+			String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_GBCA);
+			String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_GBCA);
+			return new WSConfig(wsEndpoint, wsUserName, wsPassword);	
+		}
 	}
 	
 	private void createMailToContactPersons(OrderHeader order) {
@@ -233,6 +245,20 @@ public class OrderTransmitService {
         }
 	}
 
+	private WSConfig getWSConfigOrderStatus(OrderHeader order) {
+		if (order.isOriginateFromServiceNow()) {
+			String wsEndpoint = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_COMMENT_SN);
+			String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_SN);
+			String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_SN);
+			return new WSConfig(wsEndpoint, wsUserName, wsPassword);				
+		} else {
+			String wsEndpoint = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_COMMENT);
+			String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_GBCA);
+			String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_GBCA);
+			return new WSConfig(wsEndpoint, wsUserName, wsPassword);	
+		}
+	}
+	
 	
 	private void saveError(String errorText) {
 		errorRepo.save(new ErrorRecord(errorText));

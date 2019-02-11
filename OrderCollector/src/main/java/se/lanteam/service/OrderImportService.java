@@ -144,6 +144,9 @@ public class OrderImportService {
 						orderHeader = fillEmptyRestrictionCodes(orderHeader);
 						orderRepo.save(orderHeader);
 						LOG.info("Saved order: " + orderHeader.getOrderNumber() + ", netset ordernumber: " + orderHeader.getNetsetOrderNumber());
+						
+						// 201902 Lägg till logik om samleverans för Intraserviceordrar
+						
 						checkThatOrderCreated(orderHeader.getOrderNumber());
 						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
 					} else {

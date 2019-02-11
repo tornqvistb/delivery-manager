@@ -34,5 +34,23 @@ public class OrderHeaderTest {
 		Integer daysLeft = order.getSlaDaysLeft();
 		assert(true);			
 	}
+	@Test
+	public void testIsOriginateFromServiceNow() {
+		OrderHeader order = new OrderHeader();
+		order.setCustomerOrderNumber("REQ1108594.RITM0010237.TASK0010239");
+		assert(order.isOriginateFromServiceNow());			
+	}
+	@Test
+	public void testIsNotOriginateFromServiceNow() {
+		OrderHeader order = new OrderHeader();
+		order.setCustomerOrderNumber("REQ1108594.RITM0010237");
+		assert(!order.isOriginateFromServiceNow());			
+	}
+	@Test
+	public void testGetRequestNumber() {
+		OrderHeader order = new OrderHeader();
+		order.setCustomerOrderNumber("REQ1108594.RITM0010237");
+		assert(order.getRequestNumber().equals("REQ1108594"));			
+	}
 
 }

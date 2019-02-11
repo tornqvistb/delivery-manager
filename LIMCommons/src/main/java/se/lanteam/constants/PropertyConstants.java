@@ -29,6 +29,10 @@ public class PropertyConstants {
 	public static final String MAIL_REPLY_TO_ADDRESS = "mail-reply-to-address";
 	public static final String CUSTOMER_GROUP_INTRASERVICE = "customer-group-intraservice";
 	public static final String NETSET_FILES_BASEDIR = "netset-files-basedir";
+	public static final String WS_ENDPOINT_ORDER_DELIVERY_SN = "ws-endpoint-order-delivery-sn";
+	public static final String WS_ENDPOINT_ORDER_COMMENT_SN = "ws-endpoint-order-comment-sn";
+	public static final String WS_USERNAME_SN = "ws-username-sn";
+	public static final String WS_PASSWORD_SN = "ws-password-sn";
 	// Archiving db
 	public static final String ARCHIVERJOB_FREQUENCY = "archiverjob-frequency";	
 

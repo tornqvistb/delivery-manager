@@ -615,5 +615,24 @@ public class OrderHeader {
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
+	@Transient
+	public boolean isOriginateFromServiceNow() {
+		return (customerOrderNumber != null
+				&& customerOrderNumber.contains("REQ")
+				&& customerOrderNumber.contains("RITM")
+				&& customerOrderNumber.contains("TASK"));
+	}
+	@Transient
+	public String getRequestNumber() {
+		String result = "";
+		if (customerOrderNumber != null
+				&& customerOrderNumber.startsWith("REQ")) {
+			int endpos = customerOrderNumber.indexOf(".");
+			if (endpos > 0) {
+				result = customerOrderNumber.substring(0, endpos);
+			}
+		}
+		return result;
+	}
 	
 }
