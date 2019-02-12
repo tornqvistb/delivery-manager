@@ -161,7 +161,7 @@ public class OrderImportService {
 	}
 
 	private OrderHeader checkIfSNOrderThatShouldBeJoined(OrderHeader order) {
-		if (order.isOriginateFromServiceNow()) {
+		if (order.isOriginateFromServiceNow() && order.getTotalItemsForSNOrder() > 1) {
 			String reqNumber = order.getRequestNumber();
 			List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(reqNumber);
 			if (orders.isEmpty()) {
