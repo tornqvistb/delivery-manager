@@ -142,10 +142,9 @@ public class OrderImportService {
 						orderHeader.getOrderComments().add(comment);
 						orderHeader.setReceivingStatus();
 						orderHeader = fillEmptyRestrictionCodes(orderHeader);
+						orderHeader = checkIfSNOrderThatShouldBeJoined(orderHeader); 
 						orderRepo.save(orderHeader);
 						LOG.info("Saved order: " + orderHeader.getOrderNumber() + ", netset ordernumber: " + orderHeader.getNetsetOrderNumber());
-						
-						// 201902 Lägg till logik om samleverans för Intraserviceordrar
 						
 						checkThatOrderCreated(orderHeader.getOrderNumber());
 						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
@@ -161,6 +160,19 @@ public class OrderImportService {
 		}
 	}
 
+	private OrderHeader checkIfSNOrderThatShouldBeJoined(OrderHeader order) {
+		if (order.isOriginateFromServiceNow()) {
+			String reqNumber = order.getRequestNumber();
+			List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(reqNumber);
+			if (orders.isEmpty()) {
+				order.setJointDelivery(CustomFieldConstants.VALUE_SAMLEVERANS_MASTER);
+			} else {
+				order.setJointDelivery(orders.get(0).getOrderNumber());
+			}
+		}
+		return order;
+	}
+	
 	private OrderHeader getOrderHeaderFromDB(String json) throws ReceiveOrderException {
 		JSONObject jsonOrder = new JSONObject(json);
 		String orderNumber = String.valueOf(jsonOrder.optInt("Ordernummer"));

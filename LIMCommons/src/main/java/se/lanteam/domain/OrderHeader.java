@@ -627,9 +627,24 @@ public class OrderHeader {
 		String result = "";
 		if (customerOrderNumber != null
 				&& customerOrderNumber.startsWith("REQ")) {
-			int endpos = customerOrderNumber.indexOf(".");
+			int endpos = customerOrderNumber.indexOf('.');
 			if (endpos > 0) {
 				result = customerOrderNumber.substring(0, endpos);
+			}
+		}
+		return result;
+	}
+	@Transient
+	public int getTotalItemsForSNOrder() {
+		int result = 1;
+		if (customerSalesOrder != null) {
+			int startPos = customerSalesOrder.lastIndexOf('/');
+			if (startPos > 0) {
+				try {
+					result = Integer.parseInt(customerSalesOrder.substring(startPos + 1));
+				} catch (NumberFormatException e) {
+					result = 1;
+				}
 			}
 		}
 		return result;

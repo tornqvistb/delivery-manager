@@ -52,5 +52,23 @@ public class OrderHeaderTest {
 		order.setCustomerOrderNumber("REQ1108594.RITM0010237");
 		assert(order.getRequestNumber().equals("REQ1108594"));			
 	}
+	@Test
+	public void testGetTotalItemsForSNOrder() {
+		OrderHeader order = new OrderHeader();
+		order.setCustomerSalesOrder("N060TRAE/3");
+		assert(order.getTotalItemsForSNOrder() == 3);			
+	}
+	@Test
+	public void testGetTotalItemsForSNOrderNotNumeric() {
+		OrderHeader order = new OrderHeader();
+		order.setCustomerSalesOrder("N060TRAE/W");
+		assert(order.getTotalItemsForSNOrder() == 1);			
+	}
+	@Test
+	public void testGetTotalItemsForSNOrderEmpty() {
+		OrderHeader order = new OrderHeader();
+		order.setCustomerSalesOrder("");
+		assert(order.getTotalItemsForSNOrder() == 1);			
+	}
 
 }
