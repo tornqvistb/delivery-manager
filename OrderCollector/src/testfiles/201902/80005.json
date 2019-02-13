@@ -1,0 +1,39 @@
+{
+	"Ordernummer": 80005,
+	"Netset_ordernummer": 90005,
+	"Orderdatum": "\/Date(1496008800000)\/",
+	"Kundnummer": "0450",
+	"Kundnamn": "Intraservice",
+	"Postadress1": "ZP1831",
+	"Postadress2": "Fack 760009, R067",
+	"Postnummer": "106 37",
+	"Ort": "Göteborg",
+	"Leveransadress_postadress1": "Adress",
+	"Leveransadress_postadress2": "",
+	"Leveransadress_postnummer": "433 33",
+	"Leveransadress_ort": "Ort",
+	"Leasingavtal": "N060AAA5",
+	"Intraservice_ordernummer": "REQ1108594.RITM0010237.TASK0010205",
+	"Intraservice_beställningsnummer": "N060AAA5/6",
+	"PartnerId": "",
+	"Kontakt1_namn": "Pelle Persson",
+	"Kontakt1_epost": "pelle@pelle.se",
+	"Kontakt1_telefon": "070-101010",
+	"Kontakt2_namn": "Kalle Karlsson",
+	"Kontakt2_epost": "kalle@kalle.se",
+	"Kontakt2_telefon": "080-292929",
+	"Orderrader": [
+		{
+			"Radnummer": 1,
+			"Artikelnummer": "GBG_LITEN_DATOR",
+			"Artikelbenämning": "Acer Aspire E5-573-37LC - 15.6\" - Core i3 4005U - Windows 8.",
+			"Antal": 1,
+			"Restriktionskod": "3",
+			"Instruktion_1": "",
+			"Instruktion_2": "",
+			"Instruktion_3": "",
+			"KundRadnummer": 1,
+			"Leasingnummer": "N060AAA5"
+		}
+	]
+}

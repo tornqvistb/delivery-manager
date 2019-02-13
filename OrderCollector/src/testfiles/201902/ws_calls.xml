@@ -1,0 +1,116 @@
+<!-- Master -->
+<root>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:net="http://lanteam.se/ws/netset">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <net:createOrderRequest>
+         <!--Optional:-->
+         <net:OrderData id="1">
+            <net:Header>
+               <net:OrderNumber>90000</net:OrderNumber>
+               <net:CustomerNumber>0600</net:CustomerNumber>
+               <net:CustomerGroupName>Intraservice</net:CustomerGroupName>
+            </net:Header>
+           <!--1 or more repetitions:-->
+          <net:InformationFields/>
+         </net:OrderData>
+      </net:createOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+<!-- Child 1 -->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:net="http://lanteam.se/ws/netset">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <net:createOrderRequest>
+         <!--Optional:-->
+         <net:OrderData id="1">
+            <net:Header>
+               <net:OrderNumber>90001</net:OrderNumber>
+               <net:CustomerNumber>0600</net:CustomerNumber>
+               <net:CustomerGroupName>Intraservice</net:CustomerGroupName>
+            </net:Header>
+           <!--1 or more repetitions:-->
+          <net:InformationFields/>
+         </net:OrderData>
+      </net:createOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+<!-- Child 2 -->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:net="http://lanteam.se/ws/netset">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <net:createOrderRequest>
+         <!--Optional:-->
+         <net:OrderData id="1">
+            <net:Header>
+               <net:OrderNumber>90002</net:OrderNumber>
+               <net:CustomerNumber>0600</net:CustomerNumber>
+               <net:CustomerGroupName>Intraservice</net:CustomerGroupName>
+            </net:Header>
+           <!--1 or more repetitions:-->
+          <net:InformationFields/>
+         </net:OrderData>
+      </net:createOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+<!-- Child 3 -->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:net="http://lanteam.se/ws/netset">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <net:createOrderRequest>
+         <!--Optional:-->
+         <net:OrderData id="1">
+            <net:Header>
+               <net:OrderNumber>90003</net:OrderNumber>
+               <net:CustomerNumber>0600</net:CustomerNumber>
+               <net:CustomerGroupName>Intraservice</net:CustomerGroupName>
+            </net:Header>
+           <!--1 or more repetitions:-->
+          <net:InformationFields/>
+         </net:OrderData>
+      </net:createOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+<!-- Child 4 -->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:net="http://lanteam.se/ws/netset">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <net:createOrderRequest>
+         <!--Optional:-->
+         <net:OrderData id="1">
+            <net:Header>
+               <net:OrderNumber>90004</net:OrderNumber>
+               <net:CustomerNumber>0600</net:CustomerNumber>
+               <net:CustomerGroupName>Intraservice</net:CustomerGroupName>
+            </net:Header>
+           <!--1 or more repetitions:-->
+          <net:InformationFields/>
+         </net:OrderData>
+      </net:createOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+<!-- Child 5 -->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:net="http://lanteam.se/ws/netset">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <net:createOrderRequest>
+         <!--Optional:-->
+         <net:OrderData id="1">
+            <net:Header>
+               <net:OrderNumber>90005</net:OrderNumber>
+               <net:CustomerNumber>0600</net:CustomerNumber>
+               <net:CustomerGroupName>Intraservice</net:CustomerGroupName>
+            </net:Header>
+           <!--1 or more repetitions:-->
+          <net:InformationFields/>
+         </net:OrderData>
+      </net:createOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+</root>

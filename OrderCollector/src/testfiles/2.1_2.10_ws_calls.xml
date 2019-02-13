@@ -7,7 +7,7 @@
          <!--Optional:-->
          <net:OrderData id="1">
             <net:Header>
-               <net:OrderNumber>60012</net:OrderNumber>
+               <net:OrderNumber>80000</net:OrderNumber>
                <net:CustomerNumber>0541</net:CustomerNumber>
                <net:CustomerGroupName>Partille Kommun</net:CustomerGroupName>
             </net:Header>
