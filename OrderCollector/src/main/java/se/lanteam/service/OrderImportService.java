@@ -163,11 +163,14 @@ public class OrderImportService {
 	private OrderHeader checkIfSNOrderThatShouldBeJoined(OrderHeader order) {
 		if (order.isOriginateFromServiceNow() && order.getTotalItemsForSNOrder() > 1) {
 			String reqNumber = order.getRequestNumber();
-			List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(reqNumber);
+			List<OrderHeader> orders = orderRepo.findOrdersByCustomerOrderNumber(reqNumber);
+			//order.setExcludeFromList(true);
 			if (orders.isEmpty()) {
 				order.setJointDelivery(CustomFieldConstants.VALUE_SAMLEVERANS_MASTER);
 			} else {
-				order.setJointDelivery(orders.get(0).getOrderNumber());
+				order.setJointDelivery(orders.get(0).getNetsetOrderNumber());
+				order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_CHILD, orders.get(0).getOrderNumber()));
+				order.setExcludeFromList(true);
 			}
 		}
 		return order;
