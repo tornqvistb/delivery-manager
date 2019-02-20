@@ -111,23 +111,66 @@
 				<version>2.1</version>
 				<executions>
 					<execution>
-						<id>basic</id>
+						<id>gen1</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>wsimport</goal>
 						</goals>
-						<!-- Following configuration will invoke wsimport once for each wsdl. -->
+						<configuration>
+							<forceRegenerate>true</forceRegenerate>
+							<packageName>se.goteborg.generated.ws.client.hamster.levstatus</packageName>
+							<wsdlUrls>
+								<wsdlUrl>http://esb.goteborg.se/Wsdl/GBCA002A_LeveransStatus_https_.wsdl</wsdlUrl>
+							</wsdlUrls>
+							<verbose>true</verbose>
+						</configuration>
+					</execution>
+					<execution>
+						<id>gen2</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<forceRegenerate>true</forceRegenerate>
+							<packageName>se.goteborg.generated.ws.client.hamster.levavisering</packageName>
+							<wsdlUrls>
+								<wsdlUrl>http://esb.goteborg.se/Wsdl/GBCA003A_LeveransAvisering_https_.wsdl</wsdlUrl>
+							</wsdlUrls>
+							<verbose>true</verbose>
+						</configuration>
+					</execution>
+					<execution>
+						<id>gen3</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<forceRegenerate>true</forceRegenerate>
+							<packageName>se.goteborg.generated.ws.client.servicenow.levstatus</packageName>
+							<wsdlUrls>
+								<wsdlUrl>http://esbst.goteborg.se/LanTeam_LevStatus?singleWsdl</wsdlUrl>
+							</wsdlUrls>
+							<verbose>true</verbose>
+						</configuration>
+					</execution>
+					<execution>
+						<id>gen4</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<forceRegenerate>true</forceRegenerate>
+							<packageName>se.goteborg.generated.ws.client.servicenow.levavisering</packageName>
+							<wsdlUrls>
+								<wsdlUrl>http://esbst.goteborg.se/LanTeam_LevAvisering?singleWsdl</wsdlUrl>
+							</wsdlUrls>
+							<verbose>true</verbose>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<forceRegenerate>true</forceRegenerate>
-					<!-- <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg> </vmArgs> <vmArgs> -->
-					<wsdlUrls>
-						<wsdlUrl>http://esb.goteborg.se/Wsdl/GBCA002A_LeveransStatus_https_.wsdl</wsdlUrl>
-						<wsdlUrl>http://esb.goteborg.se/Wsdl/GBCA003A_LeveransAvisering_https_.wsdl</wsdlUrl>
-					</wsdlUrls>
-					<verbose>true</verbose>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

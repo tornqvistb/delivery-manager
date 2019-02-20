@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import header.common.esb.staden._1.Header;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Email;
@@ -35,6 +34,7 @@ import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
 import se.lanteam.visma.Order;
 import se.lanteam.visma.Orderrad;
+import se.lanteam.ws.Header;
 import se.lanteam.ws.WSClient;
 import se.lanteam.ws.WSConfig;
 
@@ -49,6 +49,8 @@ public class OrderTransmitService {
 	private static final String FILE_EXPORT_ERROR = GENERAL_ERROR + "Ett fel uppstod när fil till Visma skulle lagras på disk, order: ";
 	private static final String WS_ERROR = GENERAL_ERROR + "Ett fel uppstod när leveransrapportering mot Intraservice: ";
 
+	private static final String GROUP_INTRASERVICE = "Intraservice";
+	
 	private static final Logger LOG = LoggerFactory.getLogger(OrderTransmitService.class);
 
     private OrderRepository orderRepo;
@@ -77,8 +79,14 @@ public class OrderTransmitService {
         	for (OrderHeader order : orders) {
         		// Create soap message and send to Intraservice
         		try {
-        			if (order.getCustomerGroup().getSendDeliveryNotification() && isNumeric(order.getCustomerOrderNumber())) {
-						Header header = wsClient.sendOrderDelivery(order, getWSConfigOrderDelivery(order));
+        			if (doWsCallForOrder(order)) {
+        				Header header = null;
+        				if (order.isOriginateFromServiceNow()) {
+        					header = wsClient.sendOrderDeliveryServiceNow(order, getWSConfigOrderDelivery(order));
+        				} else {
+        					header = wsClient.sendOrderDeliveryHamster(order, getWSConfigOrderDelivery(order));
+        				}
+        				LOG.info("Result from order sending: " + header.getKod() + " - " + header.getText());
 						if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
 							throw new Exception(header.getKod() + " - " + header.getText());
 						}
@@ -214,11 +222,8 @@ public class OrderTransmitService {
 		
 	public void transmitOrderComments() {
         LOG.debug("Looking for order comments to transmit!");
-		String wsEndpointOrderComment = propService.getString(PropertyConstants.WS_ENDPOINT_ORDER_COMMENT);
-		String wsUserName = propService.getString(PropertyConstants.WS_USERNAME_GBCA);
-		String wsPassword = propService.getString(PropertyConstants.WS_PASSWORD_GBCA);
         List<OrderComment> orderComments = orderCommentRepo.findOrderCommentsByStatus(StatusConstants.ORDER_STATUS_NEW);
-		WSConfig config = new WSConfig(wsEndpointOrderComment, wsUserName, wsPassword);
+		
 		WSClient wsClient = new WSClient();
         if (orderComments != null && orderComments.size() > 0) {
         	for (OrderComment comment : orderComments) {
@@ -226,13 +231,17 @@ public class OrderTransmitService {
         		try {
         			// Get ordergroup and check if customer has integration
         			OrderHeader order = comment.getOrderHeader();
-        			if (order.getCustomerGroup() != null) {
-	        			if (order.getCustomerGroup().getSendDeliveryNotification() && isNumeric(order.getCustomerOrderNumber())) {
-							Header header = wsClient.sendDeliveryStatus(comment, config);
-							if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
-								throw new Exception(header.getKod() + " - " + header.getText());
-							}
-	        			}
+        			if (doWsCallForOrder(order)) {
+        				WSConfig config = getWSConfigOrderStatus(order);
+        				Header header = null;
+        				if (order.isOriginateFromServiceNow()) {
+        					header = wsClient.sendDeliveryStatusServiceNow(comment, config);
+        				} else {
+        					header = wsClient.sendDeliveryStatusHamster(comment, config);
+        				}
+						if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
+							throw new Exception(header.getKod() + " - " + header.getText());
+						}
 						// Update order comment status
 						comment.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
 						orderCommentRepo.save(comment);
@@ -284,5 +293,13 @@ public class OrderTransmitService {
 	public void setEmailRepo(EmailRepository emailRepo) {
 		this.emailRepo = emailRepo;
 	}
-	
+	private boolean doWsCallForOrder(OrderHeader order) {
+		boolean result = false;
+		if (order.getCustomerGroup().getSendDeliveryNotification() && 
+				(isNumeric(order.getCustomerOrderNumber())
+				|| order.isOriginateFromServiceNow())) {
+					result = true;
+		}
+		return result;
+	}
 }
