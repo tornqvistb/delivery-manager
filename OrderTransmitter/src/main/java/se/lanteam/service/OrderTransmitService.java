@@ -49,8 +49,6 @@ public class OrderTransmitService {
 	private static final String FILE_EXPORT_ERROR = GENERAL_ERROR + "Ett fel uppstod när fil till Visma skulle lagras på disk, order: ";
 	private static final String WS_ERROR = GENERAL_ERROR + "Ett fel uppstod när leveransrapportering mot Intraservice: ";
 
-	private static final String GROUP_INTRASERVICE = "Intraservice";
-	
 	private static final Logger LOG = LoggerFactory.getLogger(OrderTransmitService.class);
 
     private OrderRepository orderRepo;
