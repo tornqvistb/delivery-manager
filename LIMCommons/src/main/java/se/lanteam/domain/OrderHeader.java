@@ -62,7 +62,7 @@ public class OrderHeader {
 	private String status;
 	private Set<OrderLine> orderLines = new HashSet<OrderLine>();
 	private Set<OrderComment> orderComments = new HashSet<OrderComment>();
-	private List<OrderCustomField> orderCustomFields = new ArrayList<OrderCustomField>();
+	private Set<OrderCustomField> orderCustomFields = new HashSet<OrderCustomField>();
 	private Attachment attachment;
 	private String transmitErrorMessage;
 	private Boolean toBeArchived = false;
@@ -482,10 +482,10 @@ public class OrderHeader {
 	}
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
 	@OrderBy("creationDate")
-	public List<OrderCustomField> getOrderCustomFields() {
+	public Set<OrderCustomField> getOrderCustomFields() {
 		return orderCustomFields;
 	}
-	public void setOrderCustomFields(List<OrderCustomField> orderCustomFields) {
+	public void setOrderCustomFields(Set<OrderCustomField> orderCustomFields) {
 		this.orderCustomFields = orderCustomFields;
 	}
 	public String getJointDelivery() {

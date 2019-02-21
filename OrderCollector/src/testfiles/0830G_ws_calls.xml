@@ -56,7 +56,7 @@
           <net:InformationField>
             <net:Identification>9</net:Identification>
             <net:Label>Samleverans</net:Label>
-            <net:Data>Ja</net:Data>
+            <net:Data></net:Data>
           </net:InformationField>
             </net:InformationFields>
          </net:OrderData>
