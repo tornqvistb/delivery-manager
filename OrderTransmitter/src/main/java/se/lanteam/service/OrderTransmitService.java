@@ -81,10 +81,11 @@ public class OrderTransmitService {
         				Header header = null;
         				if (order.isOriginateFromServiceNow()) {
         					header = wsClient.sendOrderDeliveryServiceNow(order, getWSConfigOrderDelivery(order));
+        					LOG.info("Sent order delivery to SN for order " + order.getOrderNumber() + " with result " + header.getKod() + " - " + header.getText());
         				} else {
         					header = wsClient.sendOrderDeliveryHamster(order, getWSConfigOrderDelivery(order));
+        					LOG.info("Sent order delivery to Hamster for order " + order.getOrderNumber() + " with result " + header.getKod() + " - " + header.getText());
         				}
-        				LOG.info("Result from order sending: " + header.getKod() + " - " + header.getText());
 						if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
 							throw new Exception(header.getKod() + " - " + header.getText());
 						}
@@ -234,8 +235,10 @@ public class OrderTransmitService {
         				Header header = null;
         				if (order.isOriginateFromServiceNow()) {
         					header = wsClient.sendDeliveryStatusServiceNow(comment, config);
+        					LOG.info("Sent order comment to SN for order " + order.getOrderNumber() + " with result " + header.getKod() + " - " + header.getText());
         				} else {
         					header = wsClient.sendDeliveryStatusHamster(comment, config);
+        					LOG.info("Sent order comment to Hamster for order " + order.getOrderNumber() + " with result " + header.getKod() + " - " + header.getText());
         				}
 						if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
 							throw new Exception(header.getKod() + " - " + header.getText());
