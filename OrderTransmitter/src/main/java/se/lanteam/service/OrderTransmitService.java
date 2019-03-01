@@ -296,10 +296,11 @@ public class OrderTransmitService {
 	}
 	private boolean doWsCallForOrder(OrderHeader order) {
 		boolean result = false;
-		if (order.getCustomerGroup().getSendDeliveryNotification() && 
-				(isNumeric(order.getCustomerOrderNumber())
-				|| order.isOriginateFromServiceNow())) {
-					result = true;
+		if (order.getCustomerGroup() != null && 
+			order.getCustomerGroup().getSendDeliveryNotification() && 
+			(isNumeric(order.getCustomerOrderNumber())
+			|| order.isOriginateFromServiceNow())) {
+				result = true;
 		}
 		return result;
 	}
