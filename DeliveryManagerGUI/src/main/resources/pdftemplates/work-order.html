@@ -64,9 +64,12 @@
 		#order-row-header {
 			page-break-before: always;
 		}
+		.following-item {
+    		page-break-before: always;
 	</style>
 </head>
 <body>
+<div th:each="order, iterStat : ${orders}" th:class="${iterStat.first}? 'first-item' : 'following-item'">
 	<div id="header">
 		<span	th:text="${'Arbetsorder för order ' + order.orderNumber}"></span>
 	</div>
@@ -115,7 +118,7 @@
 						<a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a>
 					</td>															
 				</tr>
-				<tr th:each="orderCustomField : ${orderCustomFields}">
+				<tr th:each="orderCustomField : ${order.customFieldsInDeliveryNote}">
 					<th th:text="${orderCustomField.label}" scope="row">Customfält</th>
 					<td th:text="${orderCustomField.value}">1</td>
 				</tr>
@@ -199,5 +202,6 @@
 			</tbody>
 		</table>
 	</div>
+</div>
 </body>
 </html>

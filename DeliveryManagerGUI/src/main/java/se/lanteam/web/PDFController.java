@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.util.ListUtils;
 
 import com.lowagie.text.DocumentException;
 
@@ -44,7 +45,6 @@ public class PDFController {
 		PDFGenerator gen = new PDFGenerator("pdftemplates/", ".html", propService.getString(PropertyConstants.PDF_IMAGES_FOLDER));
 		OrderHeader order = orderRepo.findOne(orderId);
 
-		model.put("order", order);
 		CustomerGroup customerGroup = customerRepo.getOne(order.getCustomerGroup().getId()); 
 		List<OrderCustomField> orderCustomFields = new ArrayList<OrderCustomField>();
 		for (OrderCustomField orderCustomField : order.getOrderCustomFields()) {
@@ -52,13 +52,37 @@ public class PDFController {
 				orderCustomFields.add(orderCustomField);
 			}
 		}
-		
-		model.put("orderCustomFields", orderCustomFields);
 
+		order.setCustomFieldsInDeliveryNote(orderCustomFields);
+		
+		List<OrderHeader> orders = new ArrayList<OrderHeader>();	
+		orders.add(order);				
+		
+		if (order.isMainOrderInJoint()) {
+			List<OrderHeader> childOrders = orderRepo.findOrdersByJointDelivery(order.getNetsetOrderNumber());
+			for (OrderHeader childOrder : childOrders) {
+				childOrder.setCustomFieldsInDeliveryNote(orderCustomFields);
+				orders.add(childOrder);
+			}
+		} else if (order.isChildOrderInJoint()) {
+			orders = new ArrayList<OrderHeader>();
+			List<OrderHeader> mainOrder = orderRepo.findOrdersByNetsetOrderNumber(order.getJointDelivery());
+			if (!ListUtils.isEmpty(mainOrder)) {
+				orders.add(mainOrder.get(0));
+				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDelivery(mainOrder.get(0).getNetsetOrderNumber());
+				for (OrderHeader childOrder : childOrders) {
+					childOrder.setCustomFieldsInDeliveryNote(orderCustomFields);
+					orders.add(childOrder);
+				}
+				
+			}
+		}
+		
+		model.put("orders", orders);
 		try {
 			String folder = propService.getString(PropertyConstants.WORK_ORDERS_FOLDER);
-			gen.generate(new File(folder + "work-order-" + order.getOrderNumber() + ".pdf"), "work-order", model);			
-			return new FileSystemResource(folder + "work-order-" + order.getOrderNumber() + ".pdf");
+			gen.generate(new File(folder + "work-order-" + DateUtil.getTodayAsString() + ".pdf"), "work-order", model);			
+			return new FileSystemResource(folder + "work-order-" + DateUtil.getTodayAsString() + ".pdf");
 		} catch (FileNotFoundException e) {
 		} catch (DocumentException e) {
 		}

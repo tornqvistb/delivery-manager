@@ -1,11 +1,11 @@
 package se.lanteam.ws;
 
 import java.io.File;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -30,7 +30,6 @@ import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCustomFieldRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.repository.PropertyRepository;
-import se.lanteam.services.PropertyService;
 import se.lanteam.ws.netset.CreateOrderRequest;
 import se.lanteam.ws.netset.CreateOrderResponse;
 import se.lanteam.ws.netset.InformationField;
@@ -107,7 +106,7 @@ public class NetsetOrderRepository {
 		if (request.getOrderData().getValue().getInformationFields() != null 
 				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null
 				&& !customerGroup.getName().equals(propertyRepo.findById(PropertyConstants.CUSTOMER_GROUP_INTRASERVICE).getStringValue())) {
-			List<OrderCustomField> orderCustomFields = new ArrayList<OrderCustomField>();
+			Set<OrderCustomField> orderCustomFields = new HashSet<OrderCustomField>();
 			for (InformationField infoField : request.getOrderData().getValue().getInformationFields().getInformationField()) {
 				OrderCustomField orderCustomField = new OrderCustomField();
 				orderCustomField.setCustomField(customFieldRepo.findOne(Long.valueOf(infoField.getIdentification())));

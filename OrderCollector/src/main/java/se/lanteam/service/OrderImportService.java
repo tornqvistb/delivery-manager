@@ -6,10 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -94,7 +94,7 @@ public class OrderImportService {
 						orderCustomFieldRepo.delete(field.getId());
 					}
 					order.setOrderCustomFields(null);
-					List<OrderCustomField> updatedCustomFields = new ArrayList<OrderCustomField>();
+					Set<OrderCustomField> updatedCustomFields = new HashSet<OrderCustomField>();
 					for (OrderCustomField customField : masterOrder.getOrderCustomFields()) {
 						LOG.debug("child, customField " + customField.getId() + ", " + customField.getValue());
 						String value = customField.getValue();
@@ -164,7 +164,6 @@ public class OrderImportService {
 		if (order.isOriginateFromServiceNow() && order.getTotalItemsForSNOrder() > 1) {
 			String reqNumber = order.getRequestNumber();
 			List<OrderHeader> orders = orderRepo.findOrdersByCustomerOrderNumber(reqNumber);
-			//order.setExcludeFromList(true);
 			if (orders.isEmpty()) {
 				order.setJointDelivery(CustomFieldConstants.VALUE_SAMLEVERANS_MASTER);
 			} else {
