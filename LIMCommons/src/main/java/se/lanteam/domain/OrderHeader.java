@@ -637,11 +637,11 @@ public class OrderHeader {
 	@Transient
 	public int getTotalItemsForSNOrder() {
 		int result = 1;
-		if (customerSalesOrder != null) {
-			int startPos = customerSalesOrder.lastIndexOf('/');
+		if (leasingNumber != null) {
+			int startPos = leasingNumber.lastIndexOf('/');
 			if (startPos > 0) {
 				try {
-					result = Integer.parseInt(customerSalesOrder.substring(startPos + 1));
+					result = Integer.parseInt(leasingNumber.substring(startPos + 1));
 				} catch (NumberFormatException e) {
 					result = 1;
 				}

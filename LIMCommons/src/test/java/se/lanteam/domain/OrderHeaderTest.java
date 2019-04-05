@@ -55,19 +55,19 @@ public class OrderHeaderTest {
 	@Test
 	public void testGetTotalItemsForSNOrder() {
 		OrderHeader order = new OrderHeader();
-		order.setCustomerSalesOrder("N060TRAE/3");
+		order.setLeasingNumber("N060TRAE/3");
 		assert(order.getTotalItemsForSNOrder() == 3);			
 	}
 	@Test
 	public void testGetTotalItemsForSNOrderNotNumeric() {
 		OrderHeader order = new OrderHeader();
-		order.setCustomerSalesOrder("N060TRAE/W");
+		order.setLeasingNumber("N060TRAE/W");
 		assert(order.getTotalItemsForSNOrder() == 1);			
 	}
 	@Test
 	public void testGetTotalItemsForSNOrderEmpty() {
 		OrderHeader order = new OrderHeader();
-		order.setCustomerSalesOrder("");
+		order.setLeasingNumber("");
 		assert(order.getTotalItemsForSNOrder() == 1);			
 	}
 
