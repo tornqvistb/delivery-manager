@@ -9,7 +9,7 @@ import javax.xml.ws.BindingProvider;
 import se.goteborg.generated.ws.client.servicenow.levstatus.GBCA002AExtLeveransStatus;
 import se.goteborg.generated.ws.client.servicenow.levstatus.GBCA002AExtLeveransStatus.Status;
 import se.goteborg.generated.ws.client.servicenow.levstatus.Header;
-import se.goteborg.generated.ws.client.servicenow.levstatus.Interface1;
+import se.goteborg.generated.ws.client.servicenow.levstatus.IVirtualInterface;
 import se.goteborg.generated.ws.client.servicenow.levstatus.LanTeam02LeveransStatusSOAP;
 import se.goteborg.generated.ws.client.servicenow.levstatus.ObjectFactory;
 import se.lanteam.domain.OrderComment;
@@ -45,7 +45,7 @@ public class LevStatusServiceNowClient {
 		
 		QName qName = new QName("http://schemas.nevatech.com/services/", "LanTeam02_LeveransStatus_SOAP");
 		LanTeam02LeveransStatusSOAP service = new LanTeam02LeveransStatusSOAP(url, qName);
-		Interface1 port = service.getLanTeam02LevStatus();
+		IVirtualInterface port = service.getLanTeam02LeveransStatus();
 		BindingProvider prov = (BindingProvider)port;
 		prov.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, config.getUserName());
 		prov.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, config.getPassword());

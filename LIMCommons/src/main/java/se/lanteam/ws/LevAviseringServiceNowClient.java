@@ -8,7 +8,7 @@ import javax.xml.ws.BindingProvider;
 
 import se.goteborg.generated.ws.client.servicenow.levavisering.GBCA003AExtLeveransAvisering;
 import se.goteborg.generated.ws.client.servicenow.levavisering.Header;
-import se.goteborg.generated.ws.client.servicenow.levavisering.Interface1;
+import se.goteborg.generated.ws.client.servicenow.levavisering.IVirtualInterface;
 import se.goteborg.generated.ws.client.servicenow.levavisering.ObjectFactory;
 import se.goteborg.generated.ws.client.servicenow.levavisering.LanTeam03LeveransAviseringSOAP;
 import se.lanteam.domain.Equipment;
@@ -95,7 +95,7 @@ public class LevAviseringServiceNowClient {
 		
 		QName qName = new QName("http://schemas.nevatech.com/services/", "LanTeam03_LeveransAvisering_SOAP");
 		LanTeam03LeveransAviseringSOAP service = new LanTeam03LeveransAviseringSOAP(url, qName);
-		Interface1 port = service.getLanTeam03LevAvisering();
+		IVirtualInterface port = service.getLanTeam03LevAvisering();
 		BindingProvider prov = (BindingProvider)port;
 		prov.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, config.getUserName());
 		prov.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, config.getPassword());

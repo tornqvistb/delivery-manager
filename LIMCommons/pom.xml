@@ -150,7 +150,7 @@
 							<forceRegenerate>true</forceRegenerate>
 							<packageName>se.goteborg.generated.ws.client.servicenow.levstatus</packageName>
 							<wsdlUrls>
-								<wsdlUrl>http://esbst.goteborg.se/LanTeam_LevStatus?singleWsdl</wsdlUrl>
+								<wsdlUrl>http://esb.goteborg.se/LanTeam_LevStatus?singleWsdl</wsdlUrl>
 							</wsdlUrls>
 							<verbose>true</verbose>
 						</configuration>
@@ -165,7 +165,7 @@
 							<forceRegenerate>true</forceRegenerate>
 							<packageName>se.goteborg.generated.ws.client.servicenow.levavisering</packageName>
 							<wsdlUrls>
-								<wsdlUrl>http://esbst.goteborg.se/LanTeam_LevAvisering?singleWsdl</wsdlUrl>
+								<wsdlUrl>http://esb.goteborg.se/LanTeam_LevAvisering?singleWsdl</wsdlUrl>
 							</wsdlUrls>
 							<verbose>true</verbose>
 						</configuration>
