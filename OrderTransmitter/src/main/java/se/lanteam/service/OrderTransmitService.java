@@ -302,6 +302,10 @@ public class OrderTransmitService {
 			|| order.isOriginateFromServiceNow())) {
 				result = true;
 		}
+		// Temporary fix 201904
+		if (order.isOriginateFromServiceNow()) {
+			result = false;
+		}
 		return result;
 	}
 }

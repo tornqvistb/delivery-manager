@@ -161,30 +161,55 @@ public class OrderImportService {
 	}
 
 	private OrderHeader checkIfSNOrderThatShouldBeJoined(OrderHeader order) {
-		if (order.isOriginateFromServiceNow() && order.getTotalItemsForSNOrder() > 1) {
+		// Från ServiceNow och samleverans?
+		if (order.isOriginateFromServiceNow() && order.getTotalItemsForSNOrder() > 1) {									
 			String reqNumber = order.getRequestNumber();
 			List<OrderHeader> orders = orderRepo.findOrdersByCustomerOrderNumber(reqNumber);
+			// Finns några ordrar för denna samleverans?			
 			if (orders.isEmpty()) {
+				// Master
 				order.setJointDelivery(CustomFieldConstants.VALUE_SAMLEVERANS_MASTER);
-			} else {
-				order.setJointDelivery(orders.get(0).getNetsetOrderNumber());
-				order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_CHILD, orders.get(0).getOrderNumber()));
 				order.setExcludeFromList(true);
-			}
+			} else {
+				// Hämta masterorder
+				OrderHeader masterOrder = getMasterOrder(orders);
+				if (masterOrder != null) {
+					order.setJointDelivery(masterOrder.getNetsetOrderNumber());
+					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_CHILD, masterOrder.getOrderNumber()));
+					order.setExcludeFromList(true);					
+					// Kolla om samleverans är komplett, i så fall gör den synlig
+					if (order.getTotalItemsForSNOrder() == orders.size() + 1) {
+						masterOrder = orderRepo.findOne(masterOrder.getId());
+						masterOrder.setExcludeFromList(false);
+						orderRepo.save(masterOrder);
+					}
+				}
+			}			
 		}
 		return order;
+	}
+
+	private OrderHeader getMasterOrder(List<OrderHeader> orders) {
+		OrderHeader masterOrder = null;
+		for (OrderHeader order : orders) {
+			if (CustomFieldConstants.VALUE_SAMLEVERANS_MASTER.equals(order.getJointDelivery())) {
+				masterOrder = order;
+				break;
+			}
+		}
+		return masterOrder;
 	}
 	
 	private OrderHeader getOrderHeaderFromDB(String json) throws ReceiveOrderException {
 		JSONObject jsonOrder = new JSONObject(json);
 		String orderNumber = String.valueOf(jsonOrder.optInt("Ordernummer"));
 		List<OrderHeader> orderHeaderList = orderRepo.findOrdersByOrderNumber(orderNumber);
-		if (orderHeaderList.size() > 0) {
+		if (!orderHeaderList.isEmpty()) {
 			throw new ReceiveOrderException(orderNumber, ERROR_ORDER_ALREADY_RECEIVED);
 		} else {
 			String netetOrderNumber = String.valueOf(jsonOrder.optInt("Netset_ordernummer"));
 			orderHeaderList = orderRepo.findOrdersByNetsetOrderNumber(netetOrderNumber);
-			if (orderHeaderList.size() > 0) {
+			if (!orderHeaderList.isEmpty()) {
 				return orderRepo.findOne(orderHeaderList.get(0).getId());
 			} else {
 				return null;
