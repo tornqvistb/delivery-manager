@@ -37,13 +37,13 @@ public class OrderHeaderTest {
 	@Test
 	public void testIsOriginateFromServiceNow() {
 		OrderHeader order = new OrderHeader();
-		order.setCustomerOrderNumber("REQ1108594.RITM0010237.TASK0010239");
+		order.setLeasingNumber("N0602010/3");
 		assert(order.isOriginateFromServiceNow());			
 	}
 	@Test
 	public void testIsNotOriginateFromServiceNow() {
 		OrderHeader order = new OrderHeader();
-		order.setCustomerOrderNumber("REQ1108594.RITM0010237");
+		order.setLeasingNumber("N0602010");
 		assert(!order.isOriginateFromServiceNow());			
 	}
 	@Test
