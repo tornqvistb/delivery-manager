@@ -86,31 +86,6 @@ public class BaseController {
 		return otherOrdersInDelivery;
 	}
 
-/*
-	private List<String> getRelatedOrderNumbers(OrderHeader order) {
-		List<String> otherOrdersInDelivery = new ArrayList<String>();
-		if (order.isPartOfJointdelivery()) {
-			if (order.isMainOrderInJoint()) {
-				if (!StringUtils.isEmpty(order.getJointDeliveryOrders())) {
-					otherOrdersInDelivery = Arrays.asList(order.getJointDeliveryOrders().split(","));
-				}
-			} else {
-				// child order
-				otherOrdersInDelivery.add(order.getJointDeliveryOrders());
-				List<OrderHeader> masterOrder = orderRepo.findOrdersByOrderNumber(order.getJointDeliveryOrders());
-				if (masterOrder.size() > 0) {
-					List<String> allChildren = Arrays.asList(masterOrder.get(0).getJointDeliveryOrders().split(","));
-					for (String child : allChildren) {
-						if (!order.getOrderNumber().equals(child)) {
-							otherOrdersInDelivery.add(child);
-						}
-					}
-				}
-			}
-		}
-		return otherOrdersInDelivery;
-	}
-*/	
 	protected List<CustomerCustomField> getCustomerCustomFields(String report) {
 		List<CustomerCustomField> result = new ArrayList<CustomerCustomField>();
 		if (searchBean.getCustomerGroupId() > 0) {

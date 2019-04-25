@@ -70,14 +70,16 @@ public class OrderTransmitService {
 	public void transmitOrders() {
 		
         LOG.debug("Looking for orders to transmit!");
-        List<OrderHeader> orders = orderRepo.findOrdersByStatus(StatusConstants.ORDER_STATUS_SENT);
-		
+        List<OrderHeader> orders = orderRepo.findOrdersByStatus(StatusConstants.ORDER_STATUS_SENT);        
 		WSClient wsClient = new WSClient();
         if (orders != null && orders.size() > 0) {
+        	LOG.info("transmitOrders: Found " + orders.size() + " orders to transmit");
         	for (OrderHeader order : orders) {
         		// Create soap message and send to Intraservice
+        		LOG.info("transmitOrders: Found order " + order.getOrderNumber());
         		try {
         			if (doWsCallForOrder(order)) {
+        				LOG.info("transmitOrders: Going to call WS for order " + order.getOrderNumber());
         				Header header = null;
         				if (order.isOriginateFromServiceNow()) {
         					header = wsClient.sendOrderDeliveryServiceNow(order, getWSConfigOrderDelivery(order));
@@ -304,7 +306,7 @@ public class OrderTransmitService {
 		}
 		// Temporary fix 201904
 		//if (order.isOriginateFromServiceNow()) {
-		//	result = false;
+			//result = false;
 		//}
 		return result;
 	}

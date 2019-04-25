@@ -26,8 +26,6 @@ public class FileController extends BaseController {
 	private static final String ATTACHMENT_MSG_FILE_MISSING = "Du måste välja en fil.";
 	private static final String ATTACHMENT_MSG_FAILED = "Det gick inte att bifoga dokumentet. ";
 
-	private OrderRepository orderRepo;
-
 	@RequestMapping(value = "order-list/view/attachFile/{orderId}", method = RequestMethod.POST)
 	public String attachFile(@RequestParam("attachment") MultipartFile attachment, @PathVariable Long orderId,
 			ModelMap model) {
@@ -94,10 +92,4 @@ public class FileController extends BaseController {
 		OrderHeader order = orderRepo.findOne(orderId);
 		return order.getAttachment().getFileContent();
 	}
-	
-	@Autowired
-	public void setOrderRepo(OrderRepository orderRepo) {
-		this.orderRepo = orderRepo;
-	}
-
 }
