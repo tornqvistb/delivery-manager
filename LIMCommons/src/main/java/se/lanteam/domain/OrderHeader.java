@@ -626,9 +626,19 @@ public class OrderHeader {
 	*/
 	@Transient
 	public boolean isOriginateFromServiceNow() {
-		return (leasingNumber != null
-				&& leasingNumber.lastIndexOf('/') > 0);
+		if (leasingNumber != null) {
+			int startPos = leasingNumber.lastIndexOf('/');
+			if (startPos > 0) {
+				try {
+					Integer.parseInt(leasingNumber.substring(startPos + 1));
+					return true;
+				} catch (NumberFormatException e) {
+				}
+			}
+		}
+		return false;
 	}
+	
 	@Transient
 	public String getRequestNumber() {
 		String result = "";
@@ -637,10 +647,13 @@ public class OrderHeader {
 			int endpos = customerOrderNumber.indexOf('.');
 			if (endpos > 0) {
 				result = customerOrderNumber.substring(0, endpos);
+			} else {
+				result = customerOrderNumber;
 			}
 		}
 		return result;
 	}
+	
 	@Transient
 	public int getTotalItemsForSNOrder() {
 		int result = 1;

@@ -39,7 +39,7 @@ public class OrderHeaderTest {
 		OrderHeader order = new OrderHeader();
 		order.setLeasingNumber("N0602010/3");
 		assert(order.isOriginateFromServiceNow());			
-	}
+	}	
 	@Test
 	public void testIsNotOriginateFromServiceNow() {
 		OrderHeader order = new OrderHeader();
@@ -47,9 +47,20 @@ public class OrderHeaderTest {
 		assert(!order.isOriginateFromServiceNow());			
 	}
 	@Test
+	public void testIsNotOriginateFromServiceNowEndNotNumeric() {
+		OrderHeader order = new OrderHeader();
+		order.setLeasingNumber("N0602010/ABC");
+		assert(!order.isOriginateFromServiceNow());			
+	}
+	@Test
 	public void testGetRequestNumber() {
 		OrderHeader order = new OrderHeader();
 		order.setCustomerOrderNumber("REQ1108594.RITM0010237");
+		assert(order.getRequestNumber().equals("REQ1108594"));			
+	}
+	public void testGetRequestNumberOnlyReqNumber() {
+		OrderHeader order = new OrderHeader();
+		order.setCustomerOrderNumber("REQ1108594");
 		assert(order.getRequestNumber().equals("REQ1108594"));			
 	}
 	@Test

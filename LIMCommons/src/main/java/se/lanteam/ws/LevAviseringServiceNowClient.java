@@ -36,6 +36,7 @@ public class LevAviseringServiceNowClient {
 		head.setOrderDate(orderHeader.getOrderDateAsString());
 		head.setOrderNumber(orderHeader.getOrderNumber());
 		head.setYourReference("");
+		// Eventuellt justera här
 		head.setYourPurchaseOrder(orderHeader.getCustomerOrderNumber());
 		head.setYourSalesOrder(orderHeader.getCustomerSalesOrder());
 		head.setOurReference(orderHeader.getOrderNumber());
