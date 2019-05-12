@@ -103,20 +103,18 @@ public class MailSenderService {
 				    (SMTPTransport)session.getTransport("smtps");
 				t.connect(mailSmtpHost, mailUsername, mailPassword);
 				t.sendMessage(msg, msg.getAllRecipients());
-				LOG.debug("Response: " + t.getLastServerResponse());
+				LOG.debug(String.format("Response: %s", t.getLastServerResponse()));
 				t.close();
 			} catch (AddressException e) {
-				saveError(GENERAL_EMAIL_ERROR + "AddressException");
+				LOG.error(String.format("Skicka epost, AddressException: %s", e.getMessage()));
 			} catch (NoSuchProviderException e) {
-				saveError(GENERAL_EMAIL_ERROR + "NoSuchProviderException");
+				LOG.error(String.format("Skicka epost, NoSuchProviderException: %s", e.getMessage()));
 			} catch (SendFailedException e) {
-				saveError(GENERAL_EMAIL_ERROR + "SendFailedException");
-				e.printStackTrace();
+				LOG.error(String.format("Skicka epost, SendFailedException: %s", e.getMessage()));
 			} catch (MessagingException e) {
-				saveError(GENERAL_EMAIL_ERROR + "MessagingException");
-				e.printStackTrace();
+				LOG.error(String.format("Skicka epost, MessagingException: %s", e.getMessage()));
 			} catch (UnsupportedEncodingException e) {
-				saveError(GENERAL_EMAIL_ERROR + "UnsupportedEncodingException");
+				LOG.error(String.format("Skicka epost, UnsupportedEncodingException: %s", e.getMessage()));				
 			}
 			email.setStatus(StatusConstants.EMAIL_STATUS_SENT);
 			emailRepo.save(email);
