@@ -659,7 +659,7 @@ public class OrderHeader {
 		int result = 1;
 		if (leasingNumber != null) {
 			int startPos = leasingNumber.lastIndexOf('/');
-			if (startPos > 0) {
+			if (startPos > -1) {
 				try {
 					result = Integer.parseInt(leasingNumber.substring(startPos + 1));
 				} catch (NumberFormatException e) {
