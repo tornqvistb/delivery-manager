@@ -73,12 +73,6 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
   		</dependency>
-  		<!-- 
-		<dependency>
-            <groupId>org.springframework.ws</groupId>
-            <artifactId>spring-ws-core</artifactId>
-        </dependency>
-         -->
 		<dependency>
 			<groupId>com.sun.xml.ws</groupId>
 			<artifactId>jaxws-rt</artifactId>
@@ -98,30 +92,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- 
-			<plugin>
-				<groupId>org.jvnet.jax-ws-commons</groupId>
-				<artifactId>jaxws-maven-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>basic</id>
-						<phase>generate-sourcese</phase>
-						<goals>
-							<goal>wsimport</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<forceRegenerate>true</forceRegenerate>
-					<wsdlUrls>
-						<wsdlUrl>http://esbat.goteborg.se/Wsdl/GBCA002A_LeveransStatus_https_.wsdl</wsdlUrl>
-						<wsdlUrl>http://esbat.goteborg.se/Wsdl/GBCA003A_LeveransAvisering_https_.wsdl</wsdlUrl>
-					</wsdlUrls>
-					<verbose>true</verbose>
-				</configuration>
-			</plugin>
-			 -->
 		</plugins>
 	</build>
 	

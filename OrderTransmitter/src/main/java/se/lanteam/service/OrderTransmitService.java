@@ -76,7 +76,11 @@ public class OrderTransmitService {
         	LOG.info("transmitOrders: Found " + orders.size() + " orders to transmit");
         	for (OrderHeader order : orders) {
         		// Create soap message and send to Intraservice
-        		LOG.info("transmitOrders: Found order " + order.getOrderNumber());
+        		//LOG.info("transmitOrders: Found order " + order.getOrderNumber());
+        		if (order.isOriginateFromServiceNow()) {
+        			//LOG.info("transmitOrders: Skipping SN order now " + order.getOrderNumber());
+        		}
+        		else {
         		try {
         			if (doWsCallForOrder(order)) {
         				LOG.info("transmitOrders: Going to call WS for order " + order.getOrderNumber());
@@ -89,6 +93,7 @@ public class OrderTransmitService {
         					LOG.info("Sent order delivery to Hamster for order " + order.getOrderNumber() + " with result " + header.getKod() + " - " + header.getText());
         				}
 						if (!WSClient.WS_RETURN_CODE_OK.equals(header.getKod())) {
+							LOG.error("Order delivery web service call returned error: " + header.getKod() + " - " + header.getText());
 							throw new Exception(header.getKod() + " - " + header.getText());
 						}
         			}
@@ -109,9 +114,11 @@ public class OrderTransmitService {
 					order.setDeliveryDate(new Date());
 					orderRepo.save(order);
 				} catch (Exception e) {
-					saveError(WS_ERROR + e.getMessage());
+					LOG.error("Exception thrown at web service call: " + e.getMessage());
+					//saveError(WS_ERROR + e.getMessage());
 					e.printStackTrace();
 				}
+        		}
         	}        
         }
 	}
@@ -222,7 +229,7 @@ public class OrderTransmitService {
 	}
 		
 	public void transmitOrderComments() {
-        LOG.debug("Looking for order comments to transmit!");
+        LOG.info("Looking for order comments to transmit!");
         List<OrderComment> orderComments = orderCommentRepo.findOrderCommentsByStatus(StatusConstants.ORDER_STATUS_NEW);
 		
 		WSClient wsClient = new WSClient();
@@ -233,6 +240,7 @@ public class OrderTransmitService {
         			// Get ordergroup and check if customer has integration
         			OrderHeader order = comment.getOrderHeader();
         			if (doWsCallForOrder(order)) {
+        				if (!order.isOriginateFromServiceNow()) {
         				WSConfig config = getWSConfigOrderStatus(order);
         				Header header = null;
         				if (order.isOriginateFromServiceNow()) {
@@ -248,6 +256,7 @@ public class OrderTransmitService {
 						// Update order comment status
 						comment.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
 						orderCommentRepo.save(comment);
+        				}
         			}
 				} catch (Exception e) {
 					saveError(WS_ERROR + e.getMessage());
