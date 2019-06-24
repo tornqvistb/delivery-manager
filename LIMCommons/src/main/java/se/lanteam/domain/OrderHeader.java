@@ -617,10 +617,14 @@ public class OrderHeader {
 	}
 	@Transient
 	public boolean isOriginateFromServiceNow() {
-		return (customerOrderNumber != null
-				&& customerOrderNumber.contains("REQ")
-				&& customerOrderNumber.contains("RITM")
-				&& customerOrderNumber.contains("TASK"));
+		if (customerOrderNumber != null) {
+			boolean condition1 = customerOrderNumber.contains("REQ")
+					&& customerOrderNumber.contains("RITM")
+					&& customerOrderNumber.contains("TASK");
+			boolean condition2 = customerOrderNumber.startsWith("RPO");
+			return condition1 || condition2;
+		}
+		return false;
 	}
 	/*
 	@Transient

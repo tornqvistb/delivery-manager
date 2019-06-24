@@ -6,6 +6,9 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import se.goteborg.generated.ws.client.servicenow.levavisering.GBCA003AExtLeveransAvisering;
 import se.goteborg.generated.ws.client.servicenow.levavisering.Header;
 import se.goteborg.generated.ws.client.servicenow.levavisering.IVirtualInterface;
@@ -18,6 +21,8 @@ import se.lanteam.domain.OrderLine;
 public class LevAviseringServiceNowClient {
 	
 	public static final String WS_RETURN_CODE_OK = "0";
+	
+	private static final Logger LOG = LoggerFactory.getLogger(LevAviseringServiceNowClient.class);
 	
 	public se.lanteam.ws.Header sendOrderDelivery(OrderHeader orderHeader, WSConfig config) throws MalformedURLException {
 		ObjectFactory factory = new ObjectFactory();
@@ -38,7 +43,11 @@ public class LevAviseringServiceNowClient {
 		head.setYourReference("");
 		// Eventuellt justera här
 		head.setYourPurchaseOrder(orderHeader.getCustomerOrderNumber());
-		head.setYourSalesOrder(orderHeader.getLeasingNumber());
+		if (("RPO").startsWith(orderHeader.getCustomerOrderNumber())) {
+			head.setYourSalesOrder(orderHeader.getCustomerSalesOrder());
+		} else {
+			head.setYourSalesOrder(orderHeader.getLeasingNumber());
+		}
 		head.setOurReference(orderHeader.getOrderNumber());
 		head.setTermsPay("");
 		head.setTermsDel("");
@@ -78,7 +87,7 @@ public class LevAviseringServiceNowClient {
 				line.setDescription2("");
 				line.setSpecification2("");
 				line.setActualDelDate(""); // Värde här? finns från Atea - Datumet när detta skickas
-				line.setOrderLineComment("");			
+				line.setOrderLineComment(orderLine.getLeasingNumber()); // SN 2.1			
 				
 				for (Equipment equipment : orderLine.getEquipments()) {
 					info = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLineInfo();
@@ -89,6 +98,7 @@ public class LevAviseringServiceNowClient {
 				avisering.getLine().add(line);
 			}
 		}
+		LOG.debug("Avisering to SN: " + avisering.toString());
 		body.setLeveransAvisering(avisering);
 		delivery.setBody(body);
 		
