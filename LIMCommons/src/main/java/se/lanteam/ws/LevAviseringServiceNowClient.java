@@ -6,9 +6,11 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 
+import org.codehaus.groovy.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import antlr.StringUtils;
 import se.goteborg.generated.ws.client.servicenow.levavisering.GBCA003AExtLeveransAvisering;
 import se.goteborg.generated.ws.client.servicenow.levavisering.Header;
 import se.goteborg.generated.ws.client.servicenow.levavisering.IVirtualInterface;
@@ -87,7 +89,11 @@ public class LevAviseringServiceNowClient {
 				line.setDescription2("");
 				line.setSpecification2("");
 				line.setActualDelDate(""); // Värde här? finns från Atea - Datumet när detta skickas
-				line.setOrderLineComment(orderLine.getLeasingNumber()); // SN 2.1			
+				String olc = orderLine.getLeasingNumber();
+				if (orderLine.getRequestItemNumber() != null && orderLine.getRequestItemNumber().length() > 0) {
+					olc = olc + "/" + orderLine.getRequestItemNumber();
+				}
+				line.setOrderLineComment(olc); // SN 2.1			
 				
 				for (Equipment equipment : orderLine.getEquipments()) {
 					info = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLineInfo();

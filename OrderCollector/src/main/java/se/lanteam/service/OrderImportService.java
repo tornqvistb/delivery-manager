@@ -266,6 +266,7 @@ public class OrderImportService {
 			orderLine.setInstallationType(jsonOrderLine.optString("Instruktion_2"));
 			orderLine.setOperatingSystem(jsonOrderLine.optString("Instruktion_3"));
 			orderLine.setLeasingNumber(jsonOrderLine.optString("Leasingnummer"));
+			orderLine.setRequestItemNumber(jsonOrderLine.optString("Requestitemnummer"));
 			orderLine.setOrderHeader(orderHeader);
 			if (i == 0) {
 				orderHeader.setOrderLines(new HashSet<OrderLine>());

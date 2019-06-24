@@ -33,6 +33,7 @@ public class OrderLine {
 	private String installationType;
 	private String operatingSystem;
 	private String leasingNumber;
+	private String requestItemNumber;
 	
 	@Id
 	@GeneratedValue
@@ -177,6 +178,12 @@ public class OrderLine {
 	}
 	public void setLeasingNumber(String leasingNumber) {
 		this.leasingNumber = leasingNumber;
+	}
+	public String getRequestItemNumber() {
+		return requestItemNumber;
+	}
+	public void setRequestItemNumber(String requestItemNumber) {
+		this.requestItemNumber = requestItemNumber;
 	}
 
 	
