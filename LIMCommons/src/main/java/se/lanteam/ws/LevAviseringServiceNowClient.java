@@ -101,7 +101,6 @@ public class LevAviseringServiceNowClient {
 				avisering.getLine().add(line);
 			}
 		}
-		LOG.debug("Avisering to SN: " + avisering.toString());
 		body.setLeveransAvisering(avisering);
 		delivery.setBody(body);
 		
