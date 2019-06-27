@@ -43,13 +43,9 @@ public class LevAviseringServiceNowClient {
 		head.setOrderDate(orderHeader.getOrderDateAsString());
 		head.setOrderNumber(orderHeader.getOrderNumber());
 		head.setYourReference("");
-		// Eventuellt justera här
-		head.setYourPurchaseOrder(orderHeader.getCustomerOrderNumber());
-		if (("RPO").startsWith(orderHeader.getCustomerOrderNumber())) {
-			head.setYourSalesOrder(orderHeader.getCustomerSalesOrder());
-		} else {
-			head.setYourSalesOrder(orderHeader.getLeasingNumber());
-		}
+		// Sales Order och Order Number kastas om här. Beror på att de kommer så från Visma.
+		head.setYourPurchaseOrder(orderHeader.getCustomerSalesOrder());
+		head.setYourSalesOrder(orderHeader.getCustomerOrderNumber());
 		head.setOurReference(orderHeader.getOrderNumber());
 		head.setTermsPay("");
 		head.setTermsDel("");

@@ -104,8 +104,7 @@ public class NetsetOrderRepository {
 		order.setCustomerGroup(customerGroup);
 		order.setJointInvoicing(getJointInvoicing(request.getOrderData().getValue().getHeader().getCustomerNumber()));
 		if (request.getOrderData().getValue().getInformationFields() != null 
-				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null
-				&& !customerGroup.getName().equals(propertyRepo.findById(PropertyConstants.CUSTOMER_GROUP_INTRASERVICE).getStringValue())) {
+				&& request.getOrderData().getValue().getInformationFields().getInformationField() != null)	 {
 			Set<OrderCustomField> orderCustomFields = new HashSet<OrderCustomField>();
 			for (InformationField infoField : request.getOrderData().getValue().getInformationFields().getInformationField()) {
 				OrderCustomField orderCustomField = new OrderCustomField();
@@ -115,7 +114,8 @@ public class NetsetOrderRepository {
 				orderCustomFields.add(orderCustomField);
 				if (customerGroup.getGetContactInfoFromNetset()) {
 					order = checkForMatchingField(order, infoField);
-				}				
+				}
+				order = checkForJointDelivery(order, infoField);
 			}
 			order.setOrderCustomFields(orderCustomFields);
 		}
@@ -138,7 +138,12 @@ public class NetsetOrderRepository {
     		order.setContact1Email(infoField.getData());
     	} else if (infoField.getIdentification() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_PHONE) {
         	order.setContact1Phone(infoField.getData());
-    	} else if (infoField.getIdentification() == CustomFieldConstants.CUSTOM_FIELD_JOINT_DELIVERY) {
+    	}
+    	return order;
+    }
+
+    private OrderHeader checkForJointDelivery(OrderHeader order, InformationField infoField) {
+    	if (infoField.getIdentification() == CustomFieldConstants.CUSTOM_FIELD_JOINT_DELIVERY) {
     		order.setJointDelivery(infoField.getData());
     		if (CustomFieldConstants.VALUE_SAMLEVERANS_MASTER.equalsIgnoreCase(infoField.getData())) {
     			order.setJointDelivery(CustomFieldConstants.VALUE_SAMLEVERANS_MASTER);
@@ -146,6 +151,7 @@ public class NetsetOrderRepository {
     	}
     	return order;
     }
+
     
     private int getJointInvoicing (String customerNo) {
     	int result = 0;

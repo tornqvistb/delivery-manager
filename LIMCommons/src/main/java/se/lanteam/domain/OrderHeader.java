@@ -618,9 +618,7 @@ public class OrderHeader {
 	@Transient
 	public boolean isOriginateFromServiceNow() {
 		if (customerOrderNumber != null) {
-			boolean condition1 = customerOrderNumber.contains("REQ")
-					&& customerOrderNumber.contains("RITM")
-					&& customerOrderNumber.contains("TASK");
+			boolean condition1 = customerOrderNumber.startsWith("REQ");
 			boolean condition2 = customerOrderNumber.startsWith("RPO");
 			return condition1 || condition2;
 		}
