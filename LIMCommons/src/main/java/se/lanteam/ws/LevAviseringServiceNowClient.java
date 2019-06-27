@@ -43,9 +43,14 @@ public class LevAviseringServiceNowClient {
 		head.setOrderDate(orderHeader.getOrderDateAsString());
 		head.setOrderNumber(orderHeader.getOrderNumber());
 		head.setYourReference("");
-		// Sales Order och Order Number kastas om här. Beror på att de kommer så från Visma.
-		head.setYourPurchaseOrder(orderHeader.getCustomerSalesOrder());
-		head.setYourSalesOrder(orderHeader.getCustomerOrderNumber());
+		if (snOrderWithRPO(orderHeader)) {
+			// Sales Order och Order Number kastas om här. Beror på att de kommer så från Visma.
+			head.setYourPurchaseOrder(orderHeader.getCustomerSalesOrder());
+			head.setYourSalesOrder(orderHeader.getCustomerOrderNumber());
+		} else {
+			head.setYourPurchaseOrder(orderHeader.getCustomerOrderNumber());
+			head.setYourSalesOrder(orderHeader.getLeasingNumber());			
+		}
 		head.setOurReference(orderHeader.getOrderNumber());
 		head.setTermsPay("");
 		head.setTermsDel("");
@@ -68,8 +73,9 @@ public class LevAviseringServiceNowClient {
 		avisering.setTransactionId("");
 		// orderlines
 		for (OrderLine orderLine : orderHeader.getOrderLines()) {
-			//if (orderLine.getCustomerRowNumber() != null && orderLine.getCustomerRowNumber() > 0) {
-			if (orderLine.getRequestItemNumber() != null && orderLine.getRequestItemNumber().length() > 0) {
+			boolean hasCustomerRowNumber = orderLine.getCustomerRowNumber() != null && orderLine.getCustomerRowNumber() > 0;
+			boolean hasRITM = orderLine.getRequestItemNumber() != null && orderLine.getRequestItemNumber().length() > 0;
+			if (hasCustomerRowNumber || hasRITM) {
 				line = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLine();
 				line.setLineId(String.valueOf(orderLine.getRowNumber()));
 				line.setLineStatus("");
@@ -118,5 +124,10 @@ public class LevAviseringServiceNowClient {
 	}
 	private se.lanteam.ws.Header toCommonHeader(Header header){
 		return new se.lanteam.ws.Header(header.getKod(), header.getText());
-	}		
+	}	
+	private boolean snOrderWithRPO(OrderHeader orderHeader) {		
+		boolean coHasRPO = orderHeader.getCustomerOrderNumber() != null && orderHeader.getCustomerOrderNumber().startsWith("RPO");
+		boolean csoHasRPO = orderHeader.getCustomerSalesOrder() != null && orderHeader.getCustomerSalesOrder().startsWith("RPO");
+		return coHasRPO || csoHasRPO;
+	}
 }

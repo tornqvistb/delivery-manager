@@ -142,7 +142,7 @@ public class OrderImportService {
 						orderHeader.getOrderComments().add(comment);
 						orderHeader.setReceivingStatus();
 						orderHeader = fillEmptyRestrictionCodes(orderHeader);
-						//orderHeader = checkIfSNOrderThatShouldBeJoined(orderHeader); 
+						orderHeader = checkIfSNOrderThatShouldBeJoined(orderHeader); 
 						orderRepo.save(orderHeader);
 						LOG.info("Saved order: " + orderHeader.getOrderNumber() + ", netset ordernumber: " + orderHeader.getNetsetOrderNumber());
 						
@@ -159,7 +159,7 @@ public class OrderImportService {
 			}
 		}
 	}
-/*
+
 	private OrderHeader checkIfSNOrderThatShouldBeJoined(OrderHeader order) {
 		// Från ServiceNow och samleverans?
 		if (order.isOriginateFromServiceNow() && order.getTotalItemsForSNOrder() > 1) {									
@@ -188,8 +188,6 @@ public class OrderImportService {
 		}
 		return order;
 	}
-*/
-/*	
 	private OrderHeader getMasterOrder(List<OrderHeader> orders) {
 		OrderHeader masterOrder = null;
 		for (OrderHeader order : orders) {
@@ -200,7 +198,6 @@ public class OrderImportService {
 		}
 		return masterOrder;
 	}
-*/	
 	private OrderHeader getOrderHeaderFromDB(String json) throws ReceiveOrderException {
 		JSONObject jsonOrder = new JSONObject(json);
 		String orderNumber = String.valueOf(jsonOrder.optInt("Ordernummer"));
