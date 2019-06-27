@@ -68,7 +68,8 @@ public class LevAviseringServiceNowClient {
 		avisering.setTransactionId("");
 		// orderlines
 		for (OrderLine orderLine : orderHeader.getOrderLines()) {
-			if (orderLine.getCustomerRowNumber() != null && orderLine.getCustomerRowNumber() > 0) {
+			//if (orderLine.getCustomerRowNumber() != null && orderLine.getCustomerRowNumber() > 0) {
+			if (orderLine.getRequestItemNumber() != null && orderLine.getRequestItemNumber().length() > 0) {
 				line = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLine();
 				line.setLineId(String.valueOf(orderLine.getRowNumber()));
 				line.setLineStatus("");
