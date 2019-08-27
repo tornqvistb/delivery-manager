@@ -22,7 +22,7 @@ public class LevStatusServiceNowClient {
 	protected se.lanteam.ws.Header sendDeliveryStatus(OrderComment orderComment, WSConfig config) throws MalformedURLException {
 		ObjectFactory factory = new ObjectFactory();
 		GBCA002AExtLeveransStatus deliveryStatus = factory.createGBCA002AExtLeveransStatus();
-		deliveryStatus.setArendeId(orderComment.getOrderHeader().getCustomerOrderNumber());
+		deliveryStatus.setArendeId(orderComment.getOrderHeader().getCustomerSalesOrder());
 		Status statusRow = factory.createGBCA002AExtLeveransStatusStatus();
 		statusRow.setComment(orderComment.getMessage());
 		statusRow.setDeliveryDate(""); // Skall vi sätta värde här? Inmatas via GUI?
