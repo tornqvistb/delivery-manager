@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -248,7 +249,7 @@ public class OrderImportService {
 		orderHeader.setContact2Phone(jsonOrder.optString("Kontakt2_telefon"));
 		orderHeader.setStatus(StatusConstants.ORDER_STATUS_NEW);
 		JSONArray jsonOrderLines = jsonOrder.getJSONArray("Orderrader");
-		StringBuffer articleNumbers = new StringBuffer();
+		List<String> articleNumbers = new ArrayList<String>();
 		for (int i = 0; i < jsonOrderLines.length(); i++) {			
 			JSONObject jsonOrderLine = jsonOrderLines.getJSONObject(i);
 			OrderLine orderLine = new OrderLine();
@@ -270,9 +271,10 @@ public class OrderImportService {
 				orderHeader.setOrderLines(new HashSet<OrderLine>());
 			}
 			orderHeader.getOrderLines().add(orderLine);
-			articleNumbers.append(orderLine.getArticleNumber() + ";");
-		}
-		orderHeader.setArticleNumbers(articleNumbers.toString());
+			articleNumbers.add(orderLine.getArticleNumber());
+		}		
+		articleNumbers = removeDuplicates(articleNumbers);
+		orderHeader.setArticleNumbers(listToSeparatedString(articleNumbers));
 		orderHeader.setReceivedFromERP(true);
 		// check if webshop integration is active
 		Long wsIntegrationActivated = propService.getLong(PROPERTY_WEBSHOP_INTEGRATION_ACTIVATED);
@@ -367,6 +369,28 @@ public class OrderImportService {
 		}
 		return oh;
 	}
+	
+	private List<String> removeDuplicates(List<String> list) 
+    {   
+		ArrayList<String> newList = new ArrayList<String>(); 
+        for (String element : list) { 
+            if (!newList.contains(element)) {   
+                newList.add(element); 
+            } 
+        } 
+        return newList; 
+    } 
+
+	private String listToSeparatedString(List<String> list) 
+    {
+		StringBuffer buffer = new StringBuffer();
+        for (String element : list) { 
+        	buffer.append(element + ";");
+        } 
+        return buffer.toString(); 
+    } 
+
+	
 	@Autowired
 	public void setOrderCustomFieldRepo(OrderCustomFieldRepository orderCustomFieldRepo) {
 		this.orderCustomFieldRepo = orderCustomFieldRepo;
