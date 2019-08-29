@@ -34,6 +34,7 @@ public class OrderLine {
 	private String operatingSystem;
 	private String leasingNumber;
 	private String requestItemNumber;
+	private boolean autoRegistered = false;
 	
 	@Id
 	@GeneratedValue
@@ -184,6 +185,12 @@ public class OrderLine {
 	}
 	public void setRequestItemNumber(String requestItemNumber) {
 		this.requestItemNumber = requestItemNumber;
+	}
+	public boolean isAutoRegistered() {
+		return autoRegistered;
+	}
+	public void setAutoRegistered(boolean autoRegistered) {
+		this.autoRegistered = autoRegistered;
 	}
 
 	

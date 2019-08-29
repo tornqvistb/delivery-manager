@@ -180,7 +180,7 @@
 														</tr>
 													</thead>
 													<tbody>
-														<tr th:each="orderLine : ${order.orderLines}"
+														<tr th:each="orderLine : ${order.orderLinesToRegister}"
 															th:remove="tag">
 															<tr th:class="${orderLine.rowClass}">
 																<td th:text="${orderLine.rowNumber}">1</td>

@@ -289,6 +289,18 @@ public class OrderHeader {
 		}
 		return result;
 	}
+
+	@Transient
+	public List<OrderLine> getOrderLinesToRegister() {
+		List<OrderLine> result = new ArrayList<OrderLine>();
+		for (OrderLine ol : this.orderLines) {
+			if (!ol.isAutoRegistered()) {
+				result.add(ol);
+			}
+		}
+		return result;
+	}
+
 	
 	@Transient
 	public void setOrderStatusByProgress(boolean workToDoOnRelatedOrders) {

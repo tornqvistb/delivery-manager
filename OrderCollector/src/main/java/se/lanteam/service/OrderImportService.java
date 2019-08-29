@@ -51,9 +51,7 @@ public class OrderImportService {
 	private static final String ERROR_ROW_NUMBER_MISSING = GENERAL_FILE_ERROR + "Orderradnummer saknas på orderrad i fil: ";
 	private static final String ERROR_TOTAL_MISSING = GENERAL_FILE_ERROR + "Antal saknas på orderrad i fil: ";
 	private static final String ERROR_ORDER_ALREADY_RECEIVED = GENERAL_FILE_ERROR + "Order har redan tagits emot";
-	
-	private static final String PROPERTY_WEBSHOP_INTEGRATION_ACTIVATED = "webshop-integration-activated";
-	
+		
 	private static final Logger LOG = LoggerFactory.getLogger(OrderImportService.class);
 
     private OrderRepository orderRepo;
@@ -61,6 +59,9 @@ public class OrderImportService {
     private PropertyService propService;
     private CustomerGroupRepository customerGroupRepo;
     private OrderCustomFieldRepository orderCustomFieldRepo;
+    
+    @Autowired
+    private CommonOrderService commonOrderService;
     
     public void addJointDeliveryInfo() {
     	List<OrderHeader> unJoinedOrders = orderRepo.findOrdersJointDeliveryUnjoined(StatusConstants.ORDER_STATUS_NEW);
@@ -144,6 +145,7 @@ public class OrderImportService {
 						orderHeader.setReceivingStatus();
 						orderHeader = fillEmptyRestrictionCodes(orderHeader);
 						orderHeader = checkIfSNOrderThatShouldBeJoined(orderHeader); 
+						orderHeader = commonOrderService.doAutoRegistrationIfNeeded(orderHeader);
 						orderRepo.save(orderHeader);
 						LOG.info("Saved order: " + orderHeader.getOrderNumber() + ", netset ordernumber: " + orderHeader.getNetsetOrderNumber());
 						
@@ -258,8 +260,10 @@ public class OrderImportService {
 			orderLine.setArticleNumber(jsonOrderLine.optString("Artikelnummer"));
 			orderLine.setArticleDescription(jsonOrderLine.optString("Artikelbenämning"));
 			orderLine.setTotal(jsonOrderLine.optInt("Antal"));
+			
 			orderLine.setRemaining(jsonOrderLine.optInt("Antal"));
 			orderLine.setRegistered(0);
+			
 			orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod"));
 			orderLine.setOrganisationUnit(jsonOrderLine.optString("Instruktion_1"));
 			orderLine.setInstallationType(jsonOrderLine.optString("Instruktion_2"));
@@ -276,15 +280,6 @@ public class OrderImportService {
 		articleNumbers = removeDuplicates(articleNumbers);
 		orderHeader.setArticleNumbers(listToSeparatedString(articleNumbers));
 		orderHeader.setReceivedFromERP(true);
-		// check if webshop integration is active
-		Long wsIntegrationActivated = propService.getLong(PROPERTY_WEBSHOP_INTEGRATION_ACTIVATED);
-		if (wsIntegrationActivated == 0) {
-			// Not acticated
-			orderHeader.setReceivedFromWebshop(true);
-			String intraGroupName = propService.getString(PropertyConstants.CUSTOMER_GROUP_INTRASERVICE);
-			orderHeader.setCustomerGroup(customerGroupRepo.findByName(intraGroupName));
-			orderHeader.setStatus(StatusConstants.ORDER_STATUS_NEW);
-		}
 		orderHeader.setSlaDays(getSlaDays(orderHeader));
 		return orderHeader;
 	}

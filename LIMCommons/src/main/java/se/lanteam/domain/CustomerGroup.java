@@ -31,6 +31,7 @@ public class CustomerGroup {
 	private Boolean deliveryFlagToERP;
 	private String deliveryEmailAddress;
 	private Boolean sendDeliveryMailToContacts;
+	private Boolean autoRegisterInternalOrderLines;
 
 	public String getDeliveryEmailAddress() {
 		return deliveryEmailAddress;
@@ -152,6 +153,14 @@ public class CustomerGroup {
 
 	public void setSendDeliveryMailToContacts(Boolean sendDeliveryMailToContacts) {
 		this.sendDeliveryMailToContacts = sendDeliveryMailToContacts;
+	}
+
+	public Boolean getAutoRegisterInternalOrderLines() {
+		return autoRegisterInternalOrderLines;
+	}
+
+	public void setAutoRegisterInternalOrderLines(Boolean autoRegisterInternalOrderLines) {
+		this.autoRegisterInternalOrderLines = autoRegisterInternalOrderLines;
 	}
 
 	

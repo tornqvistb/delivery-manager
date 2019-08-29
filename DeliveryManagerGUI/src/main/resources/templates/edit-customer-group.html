@@ -81,6 +81,10 @@
 															<td><input type="checkbox" name="sendDeliveryMailToContacts" th:field="${customerGroup.sendDeliveryMailToContacts}" th:checked="${customerGroup.sendDeliveryMailToContacts}" /></td>
 														</tr>
 														<tr>
+															<th scope="row">Autoregistrera interna orderrader</th>
+															<td><input type="checkbox" name="autoRegisterInternalOrderLines" th:field="${customerGroup.autoRegisterInternalOrderLines}" th:checked="${customerGroup.autoRegisterInternalOrderLines}" /></td>
+														</tr>
+														<tr>
 															<th scope="row">Epost-adress för leveransmeddelande</th>
 															<td><input class="large-field" th:field="${customerGroup.deliveryEmailAddress}"
 																type="text" id="deliveryEmailAddress" /></td>

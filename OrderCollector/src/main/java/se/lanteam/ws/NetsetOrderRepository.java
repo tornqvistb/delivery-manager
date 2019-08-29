@@ -23,13 +23,16 @@ import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.domain.OrderLine;
 import se.lanteam.domain.SystemProperty;
 import se.lanteam.repository.CustomFieldRepository;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCustomFieldRepository;
+import se.lanteam.repository.OrderLineRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.repository.PropertyRepository;
+import se.lanteam.service.CommonOrderService;
 import se.lanteam.ws.netset.CreateOrderRequest;
 import se.lanteam.ws.netset.CreateOrderResponse;
 import se.lanteam.ws.netset.InformationField;
@@ -39,11 +42,15 @@ import se.lanteam.ws.netset.ObjectFactory;
 public class NetsetOrderRepository {
 
 	private OrderRepository orderRepo;
+	private OrderLineRepository orderLineRepo;
     private ErrorRepository errorRepo;
     private CustomerGroupRepository customerGroupRepo;
     private CustomFieldRepository customFieldRepo;
     private OrderCustomFieldRepository orderCustomFieldRepo;
     private PropertyRepository propertyRepo;
+    
+    @Autowired
+    private CommonOrderService commonOrderService;
 	
     private static final int RESULT_CODE_CREATED_OK = 0;
     private static final int RESULT_CODE_UPDATED_OK = 1;
@@ -125,6 +132,8 @@ public class NetsetOrderRepository {
 		if (order.getOrderDate() == null) {
 			order.setOrderDate(new Date());
 		}		
+		order.setOrderLines(orderLineRepo.findByOrderId(order.getId())); 
+		order = commonOrderService.doAutoRegistrationIfNeeded(order);
 		orderRepo.save(order);
 		saveOrderToXMLFile(request, baseDir + PROCESSED_FILES_DIR);
 		return getResponse(returnCode, description);
@@ -237,6 +246,10 @@ public class NetsetOrderRepository {
 	@Autowired
 	public void setOrderRepo(OrderRepository orderRepo) {
 		this.orderRepo = orderRepo;
+	}
+	@Autowired
+	public void setOrderLineRepo(OrderLineRepository orderLineRepo) {
+		this.orderLineRepo = orderLineRepo;
 	}
 	@Autowired
 	public void setErrorRepo(ErrorRepository errorRepo) {
