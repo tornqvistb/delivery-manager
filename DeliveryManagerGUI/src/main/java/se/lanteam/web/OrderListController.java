@@ -119,6 +119,9 @@ public class OrderListController extends BaseController {
 		} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
 			stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
 			orderDate = DateUtil.getStartDateForInactiveOrders(propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue());
+		} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_ALL)) {
+			stati = Arrays.asList(StatusConstants.ALL_STATI);
+			orderDate = DateUtil.getStartDateForInactiveOrders(propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue());
 		} else {
 			stati.add(orderListSearchBean.getStatus());
 		}

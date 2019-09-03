@@ -16,6 +16,32 @@ import se.lanteam.domain.OrderHeader;
 @Repository
 public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 
+	static final String LIKE_CONDITION_ORDER_HEADER = 
+			 "(LOWER(o.orderNumber) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.customerOrderNumber) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.customerSalesOrder) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.netsetOrderNumber) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.customerNumber) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.customerName) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.postalAddress1) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.postalAddress2) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.postalCode) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.city) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.deliveryAddressName) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.deliveryPostalAddress1) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.deliveryPostalAddress2) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.deliveryPostalCode) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.deliveryCity) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.leasingNumber) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.contact1Name) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.contact1Email) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.contact1Phone) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.contact2Name) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.contact2Email) LIKE LOWER(:searchString) OR "
+			+ "LOWER(o.contact2Phone) LIKE LOWER(:searchString) OR "						
+			+ "LOWER(o.articleNumbers) LIKE LOWER(:searchString))";
+
+	
 	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.customerGroup.id = :customerGroupId")
     public List<OrderHeader> findOrdersByStatusList(@Param("statusList") List<String> statusList, @Param("customerGroupId") Long customerGroupId);
 	
@@ -28,10 +54,14 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 	@Query("SELECT o FROM OrderHeader o WHERE o.customerSalesOrder LIKE %:customerSalesOrder%")
     public List<OrderHeader> findOrdersByCustomerSalesOrder(@Param("customerSalesOrder") String customerSalesOrder);
 
-	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND (LOWER(o.orderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerOrderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerSalesOrder) LIKE LOWER(:searchString) OR LOWER(o.articleNumbers) LIKE LOWER(:searchString)) AND o.customerGroup.id = :customerGroupId AND excludeFromList = false")
+	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND "
+			+ LIKE_CONDITION_ORDER_HEADER
+			+ " AND o.customerGroup.id = :customerGroupId AND excludeFromList = false")
     public List<OrderHeader> findDeliveredOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("orderDate") Date orderDate, @Param("searchString") String searchString, @Param("deliveryStartDate") Date deliveryStartDate, @Param("deliveryEndDate") Date deliveryEndDate, @Param("customerGroupId") Long customerGroupId);
 
-	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND (LOWER(o.orderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerOrderNumber) LIKE LOWER(:searchString) OR LOWER(o.customerSalesOrder) LIKE LOWER(:searchString) OR LOWER(o.articleNumbers) LIKE LOWER(:searchString)) AND o.customerGroup.id = :customerGroupId AND excludeFromList = false")
+	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND "
+			+ LIKE_CONDITION_ORDER_HEADER
+			+ " AND o.customerGroup.id = :customerGroupId AND excludeFromList = false")
     public List<OrderHeader> findOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("orderDate") Date orderDate, @Param("searchString") String searchString, @Param("customerGroupId") Long customerGroupId);
 
 	// SLA queries
