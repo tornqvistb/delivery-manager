@@ -3,12 +3,13 @@ package se.lanteam.web;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
-import se.lanteam.constants.StatusUtil;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.OrderListSearchBean;
 import se.lanteam.model.RequestAttributes;
@@ -87,13 +87,15 @@ public class OrderListController extends BaseController {
 			orderListSearchBean.setFromDate(reqAttr.getFromDate());
 			orderListSearchBean.setToDate(reqAttr.getToDate());
 			orderListSearchBean.setStatus(reqAttr.getOrderStatus());
-			
+			if (!datesAreEmpty()) {
+				reqAttr.setInfoMessage("Då ni angav leveransdatum, så visas endast levererade ordrar, oavsett vilken status ni valt i sökfiltret.");				
+			}
 			model.put("orders", search());
+			reqAttr.setFromDate(orderListSearchBean.getFromDate());
+			reqAttr.setToDate(orderListSearchBean.getToDate());
+			reqAttr.setOrderStatus(orderListSearchBean.getStatus());
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
-		}		
-		if (reqAttr.getOrderStatus().equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
-			reqAttr.setInfoMessage("De ordrar som visas är skapta " + propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue() + " dagar tillbaks i tiden fram tills idag. För att se äldre inaktiva ordrar, sök på specifik status.");
 		}
 		model.put("reqAttr", reqAttr);
 		return "order-list";
@@ -101,36 +103,42 @@ public class OrderListController extends BaseController {
 
 	
 	private List<OrderHeader> search() throws ParseException {
-		Date fromDate = DateUtil.getDefaultStartDate();
-		if (!StringUtils.isEmpty(orderListSearchBean.getFromDate())) {
-			fromDate = DateUtil.stringToDate(orderListSearchBean.getFromDate());
-		}
-		
-		Date toDate = DateUtil.getTomorrow();
-		if (!StringUtils.isEmpty(orderListSearchBean.getToDate())) {
-			toDate = DateUtil.stringToDate(orderListSearchBean.getToDate());
-		}
-		List<OrderHeader> orders;
-		Date orderDate = DateUtil.getDefaultStartDate();
 		String query = "%" + orderListSearchBean.getQuery() + "%";
+		populateDatesInBean();
 		List<String> stati = new ArrayList<String>();
-		if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_ACTIVE)){
-			stati = Arrays.asList(StatusConstants.ACTIVE_STATI);
-		} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
+		Pageable maxRows = new PageRequest(0, propService.getLong(PropertyConstants.MAX_ORDERS_IN_SEARCH).intValue());
+		if (datesAreEmpty()) {			
+			if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_ACTIVE)){
+				stati = Arrays.asList(StatusConstants.ACTIVE_STATI);
+			} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
+				stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
+			} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_ALL)) {
+				stati = Arrays.asList(StatusConstants.ALL_STATI);
+			} else {
+				stati.add(orderListSearchBean.getStatus());
+			}			
+			return orderRepo.findOrdersFromSearch(stati, query, sessionBean.getCustomerGroup().getId(), maxRows);
+		} else {						
+			orderListSearchBean.setStatus(StatusConstants.ORDER_STATUS_GROUP_INACTIVE);
 			stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
-			orderDate = DateUtil.getStartDateForInactiveOrders(propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue());
-		} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_ALL)) {
-			stati = Arrays.asList(StatusConstants.ALL_STATI);
-			orderDate = DateUtil.getStartDateForInactiveOrders(propService.getLong(PropertyConstants.MAX_DAYS_INACTIVE_ORDERS_SEARCH).intValue());
-		} else {
-			stati.add(orderListSearchBean.getStatus());
+			return orderRepo.findDeliveredOrdersFromSearch(stati, query, DateUtil.stringToDate(orderListSearchBean.getFromDate()), DateUtil.stringToDate(orderListSearchBean.getToDate()), sessionBean.getCustomerGroup().getId(), maxRows);
 		}
-		if (StatusUtil.isActiveStatus(orderListSearchBean.getStatus())) {
-			orders = orderRepo.findOrdersFromSearch(stati, orderDate, query, sessionBean.getCustomerGroup().getId());
-		} else {
-			orders = orderRepo.findDeliveredOrdersFromSearch(stati, orderDate, query, fromDate, toDate, sessionBean.getCustomerGroup().getId());
+	}
+	
+	private void populateDatesInBean() {
+		if (!datesAreEmpty()) {
+			if (StringUtils.isEmpty(orderListSearchBean.getFromDate())) {
+				orderListSearchBean.setFromDate(DateUtil.getDefaultStartDateAsString());
+			}
+			if (StringUtils.isEmpty(orderListSearchBean.getToDate())) {
+				orderListSearchBean.setToDate(DateUtil.getTomorrowAsString());
+			}
 		}
-		return orders;
+	}
+	
+	private boolean datesAreEmpty() {
+		return StringUtils.isEmpty(orderListSearchBean.getFromDate())
+				&& StringUtils.isEmpty(orderListSearchBean.getToDate());
 	}
 	
 	@Autowired

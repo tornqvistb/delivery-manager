@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -54,15 +55,15 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 	@Query("SELECT o FROM OrderHeader o WHERE o.customerSalesOrder LIKE %:customerSalesOrder%")
     public List<OrderHeader> findOrdersByCustomerSalesOrder(@Param("customerSalesOrder") String customerSalesOrder);
 
-	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND "
+	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND "
 			+ LIKE_CONDITION_ORDER_HEADER
 			+ " AND o.customerGroup.id = :customerGroupId AND excludeFromList = false")
-    public List<OrderHeader> findDeliveredOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("orderDate") Date orderDate, @Param("searchString") String searchString, @Param("deliveryStartDate") Date deliveryStartDate, @Param("deliveryEndDate") Date deliveryEndDate, @Param("customerGroupId") Long customerGroupId);
+    public List<OrderHeader> findDeliveredOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("searchString") String searchString, @Param("deliveryStartDate") Date deliveryStartDate, @Param("deliveryEndDate") Date deliveryEndDate, @Param("customerGroupId") Long customerGroupId, Pageable pageable);
 
-	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND "
+	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND "
 			+ LIKE_CONDITION_ORDER_HEADER
 			+ " AND o.customerGroup.id = :customerGroupId AND excludeFromList = false")
-    public List<OrderHeader> findOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("orderDate") Date orderDate, @Param("searchString") String searchString, @Param("customerGroupId") Long customerGroupId);
+    public List<OrderHeader> findOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("searchString") String searchString, @Param("customerGroupId") Long customerGroupId, Pageable pageable);
 
 	// SLA queries
 	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND o.customerGroup.id = :customerGroupId")

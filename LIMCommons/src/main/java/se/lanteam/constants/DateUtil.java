@@ -47,6 +47,10 @@ public class DateUtil {
 		return new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
 	}
 
+	public static String getTomorrowAsString() { 
+		return dateToString(getTomorrow());
+	}
+	
 	public static String getTodayAsString() { 
 		return dateToString(new Date());
 	}
