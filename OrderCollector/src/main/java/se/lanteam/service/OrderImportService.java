@@ -31,7 +31,6 @@ import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.exceptions.ReceiveOrderException;
-import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCustomFieldRepository;
 import se.lanteam.repository.OrderRepository;
@@ -51,13 +50,13 @@ public class OrderImportService {
 	private static final String ERROR_ROW_NUMBER_MISSING = GENERAL_FILE_ERROR + "Orderradnummer saknas på orderrad i fil: ";
 	private static final String ERROR_TOTAL_MISSING = GENERAL_FILE_ERROR + "Antal saknas på orderrad i fil: ";
 	private static final String ERROR_ORDER_ALREADY_RECEIVED = GENERAL_FILE_ERROR + "Order har redan tagits emot";
+	private static final String ANOTHER_ORDER_CONNECTED_TO_THIS_NETSET_ORDER = GENERAL_FILE_ERROR + "Netsetordernummer i filen är redan kopplad till en annan order";
 		
 	private static final Logger LOG = LoggerFactory.getLogger(OrderImportService.class);
 
     private OrderRepository orderRepo;
     private ErrorRepository errorRepo;
     private PropertyService propService;
-    private CustomerGroupRepository customerGroupRepo;
     private OrderCustomFieldRepository orderCustomFieldRepo;
     
     @Autowired
@@ -211,7 +210,12 @@ public class OrderImportService {
 			String netetOrderNumber = String.valueOf(jsonOrder.optInt("Netset_ordernummer"));
 			orderHeaderList = orderRepo.findOrdersByNetsetOrderNumber(netetOrderNumber);
 			if (!orderHeaderList.isEmpty()) {
-				return orderRepo.findOne(orderHeaderList.get(0).getId());
+				OrderHeader order = orderRepo.findOne(orderHeaderList.get(0).getId());
+				if (StringUtils.isEmpty(order.getArticleNumbers())) {
+					return order;
+				} else {
+					throw new ReceiveOrderException(orderNumber, order.getNetsetOrderNumber(), order.getOrderNumber(), ANOTHER_ORDER_CONNECTED_TO_THIS_NETSET_ORDER);
+				}
 			} else {
 				return null;
 			}
@@ -402,9 +406,5 @@ public class OrderImportService {
 	public void setPropService(PropertyService propService) {
 		this.propService = propService;
 	}	
-	@Autowired
-	public void setCustomerGroupRepo(CustomerGroupRepository customerGroupRepo) {
-		this.customerGroupRepo = customerGroupRepo;
-	}
 
 }
