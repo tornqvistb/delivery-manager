@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -77,11 +79,11 @@ public class ArchivingController {
 				toDate = DateUtil.stringToDate(reqAttr.getToDate());
 			}
 			
-			Date orderDate = DateUtil.getDefaultStartDate();
 			List<OrderHeader> orders;
 			List<String> stati = new ArrayList<String>();
 			stati.add(StatusConstants.ORDER_STATUS_TRANSFERED);
-			orders = orderRepo.findDeliveredOrdersFromSearch(stati, orderDate, query, fromDate, toDate, reqAttr.getCustomerGroupId());
+			Pageable maxRows = new PageRequest(0, 500);
+			orders = orderRepo.findDeliveredOrdersFromSearch(stati, query, fromDate, toDate, reqAttr.getCustomerGroupId(), maxRows);
 			model.put("orders", orders);
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
