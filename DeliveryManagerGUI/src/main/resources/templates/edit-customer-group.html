@@ -281,6 +281,100 @@
 																<input type="hidden" name="identification" th:field="*{customerCustomFields[__${loop.index}__].customField.identification}" value="*{customerCustomFields[__${loop.index}__].customField.identification}" />
 															</td>
 														</tr>
+														<tr>
+															<td colspan="6">
+																<strong>Fält för utförda leveranser</strong>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Ordernummer
+															</td>
+															<td>
+																<input type="checkbox" name="showOrderNumber" th:field="${customerGroup.reportsConfig.showOrderNumber}" th:checked="${customerGroup.reportsConfig.showOrderNumber}" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Web-ordernummer
+															</td>
+															<td>
+																<input type="checkbox" name="showNetsetOrderNumber" th:field="${customerGroup.reportsConfig.showNetsetOrderNumber}" th:checked="${customerGroup.reportsConfig.showNetsetOrderNumber}" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Kundens stad
+															</td>
+															<td>
+																<input type="checkbox" name="showCustomerCity" th:field="${customerGroup.reportsConfig.showCustomerCity}" th:checked="${customerGroup.reportsConfig.showCustomerCity}" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Kontaktperson 1
+															</td>
+															<td>
+																<input type="checkbox" name="showContactPerson1" th:field="${customerGroup.reportsConfig.showContactPerson1}" th:checked="${customerGroup.reportsConfig.showContactPerson1}" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Kontaktperson 2
+															</td>
+															<td>
+																<input type="checkbox" name="showContactPerson2" th:field="${customerGroup.reportsConfig.showContactPerson2}" th:checked="${customerGroup.reportsConfig.showContactPerson2}" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Kundens namn
+															</td>
+															<td>
+																<input type="checkbox" name="showCustomerName" th:field="${customerGroup.reportsConfig.showCustomerName}" th:checked="${customerGroup.reportsConfig.showCustomerName}" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Kundnummer
+															</td>
+															<td>
+																<input type="checkbox" name="showCustomerNumber" th:field="${customerGroup.reportsConfig.showCustomerNumber}" th:checked="${customerGroup.reportsConfig.showCustomerNumber}" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Kundens ordernummer
+															</td>
+															<td>
+																<input type="checkbox" name="showCustomerOrderNumber" th:field="${customerGroup.reportsConfig.showCustomerOrderNumber}" th:checked="${customerGroup.reportsConfig.showCustomerOrderNumber}" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Kundens säljordernummer
+															</td>
+															<td>
+																<input type="checkbox" name="showCustomerSalesOrder" th:field="${customerGroup.reportsConfig.showCustomerSalesOrder}" th:checked="${customerGroup.reportsConfig.showCustomerSalesOrder}" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Kundens leveransadress
+															</td>
+															<td>
+																<input type="checkbox" name="showDeliveryAddress" th:field="${customerGroup.reportsConfig.showDeliveryAddress}" th:checked="${customerGroup.reportsConfig.showDeliveryAddress}" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																Leasingnummer
+															</td>
+															<td>
+																<input type="checkbox" name="showLeasingNumber" th:field="${customerGroup.reportsConfig.showLeasingNumber}" th:checked="${customerGroup.reportsConfig.showLeasingNumber}" />
+															</td>
+														</tr>
+
 													</tbody>
 												</table>
 											</div>											
