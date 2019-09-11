@@ -21,6 +21,8 @@ public class ReportsConfig {
 	private Boolean showCustomerSalesOrder;
 	private Boolean showDeliveryAddress;
 	private Boolean showLeasingNumber;
+	private Boolean showOrderDate;
+	private Boolean showDeliveryDate;
 		
 	@Id
 	@GeneratedValue
@@ -104,6 +106,18 @@ public class ReportsConfig {
 	}
 	public void setShowLeasingNumber(Boolean showLeasingNumber) {
 		this.showLeasingNumber = showLeasingNumber;
+	}
+	public Boolean getShowOrderDate() {
+		return showOrderDate;
+	}
+	public void setShowOrderDate(Boolean showOrderDate) {
+		this.showOrderDate = showOrderDate;
+	}
+	public Boolean getShowDeliveryDate() {
+		return showDeliveryDate;
+	}
+	public void setShowDeliveryDate(Boolean showDeliveryDate) {
+		this.showDeliveryDate = showDeliveryDate;
 	}
 	
 }

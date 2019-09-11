@@ -64,7 +64,7 @@
 																th:field="${reqAttr.customerId}"
 																id="customerGroupId" name="customerGroupId"
 																>
-																<option th:value="${reqAttr.zeroValue}">Alla</option>
+																<!-- <option th:value="${reqAttr.zeroValue}">Alla</option> -->
 																<option th:each="customerGroup : ${customerGroups}" th:value="${customerGroup.id}" th:text="${customerGroup.name}"></option>
 		
 															</select>

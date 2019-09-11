@@ -30,6 +30,7 @@ import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.domain.RegistrationConfig;
+import se.lanteam.domain.ReportsConfig;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.AttachmentRepository;
 import se.lanteam.repository.EmailRepository;
@@ -157,13 +158,54 @@ public class DeliveryReportController extends BaseController{
         model.put("sheetname", "Leveransrapport");
         //Headers List
         List<String> headers = new ArrayList<String>();
-		
-        headers.add("Ordernummer");
-        headers.add("Web-ordernummer");
-        headers.add("Leveransnummer kund");
-        headers.add("Kund");
-        headers.add("Orderdatum");
-        headers.add("Leveransdatum");
+
+        ReportsConfig reportsConfig = getReportsConfig();
+        if (reportsConfig.getShowOrderNumber()) {
+        	headers.add("Ordernummer");
+        }
+        if (reportsConfig.getShowNetsetOrderNumber()) {
+        	headers.add("Web-ordernummer");
+        }
+        if (reportsConfig.getShowCustomerOrderNumber()) {
+        	headers.add("Kundens ordernummer");
+        }
+        if (reportsConfig.getShowCustomerSalesOrder()) {
+        	headers.add("Kundens leveransnummer");
+        }
+        if (reportsConfig.getShowLeasingNumber()) {
+        	headers.add("Leasingnummer");
+        }
+        if (reportsConfig.getShowOrderDate()) {
+        	headers.add("Orderdatum");
+        }
+        if (reportsConfig.getShowDeliveryDate()) {
+        	headers.add("Leveransdatum");
+        }
+        if (reportsConfig.getShowCustomerName()) {
+        	headers.add("Kundens namn");
+        }
+        if (reportsConfig.getShowCustomerNumber()) {
+        	headers.add("Kundnummer");
+        }
+        if (reportsConfig.getShowCustomerCity()) {
+        	headers.add("Stad");
+        }
+        if (reportsConfig.getShowDeliveryAddress()) {
+        	headers.add("Leveransadress namn");
+        	headers.add("Leveransadress 1");
+        	headers.add("Leveransadress 2");
+        }
+        if (reportsConfig.getShowContactPerson1()) {
+        	headers.add("Kontaktperson 1 namn");
+        	headers.add("Kontaktperson 1 epost");
+        	headers.add("Kontaktperson 1 telefon");
+        }
+        if (reportsConfig.getShowContactPerson2()) {
+        	headers.add("Kontaktperson 2 namn");
+        	headers.add("Kontaktperson 2 epost");
+        	headers.add("Kontaktperson 2 telefon");
+        }
+        
         // Lägg till Order customattribut
         for (CustomerCustomField customField : getCheckedCustomFields(searchBean.getCustomerCustomFields())) {
         	headers.add(customField.getLabel());
@@ -182,26 +224,66 @@ public class DeliveryReportController extends BaseController{
 	        }
         }
         model.put("headers", headers);
-        
+/*        
         List<String> numericColumns = new ArrayList<String>();
         numericColumns.add("Ordernummer");
         model.put("numericcolumns", numericColumns);
-
+*/
         List<List<String>> results = new ArrayList<List<String>>();
         
         for (OrderHeader order: orders) {
         	order = orderRepo.getOne(order.getId());
+        	CustomerGroup customer = customerRepo.getOne(order.getCustomerGroup().getId());
         	for (OrderLine line : order.getOrderLines()) {
         		if (line.getHasSerialNo()) {
             		for (Equipment equipment : line.getEquipments()) {
             			List<String> orderCols = new ArrayList<String>();
-                    	orderCols.add(order.getOrderNumber());
-                    	orderCols.add(order.getNetsetOrderNumber());
-                    	orderCols.add(order.getCustomerSalesOrder());                    	
-                    	orderCols.add(order.getCustomerName());
-                    	orderCols.add(order.getOrderDateAsString());
-                    	orderCols.add(order.getDeliveryDateDisplay());
-                    	//for (CustomerCustomField customField : getCustomerCustomFields(DELIVERY_REPORT)) {
+            	        if (reportsConfig.getShowOrderNumber()) {
+            	        	orderCols.add(order.getOrderNumber());
+            	        }
+            	        if (reportsConfig.getShowNetsetOrderNumber()) {
+            	        	orderCols.add(order.getNetsetOrderNumber());
+            	        }
+            	        if (reportsConfig.getShowCustomerOrderNumber()) {
+            	        	orderCols.add(order.getCustomerOrderNumber());
+            	        }
+            	        if (reportsConfig.getShowCustomerSalesOrder()) {
+            	        	orderCols.add(order.getCustomerSalesOrder());
+            	        }
+            	        if (reportsConfig.getShowLeasingNumber()) {
+            	        	orderCols.add(order.getLeasingNumber());
+            	        }
+            	        if (reportsConfig.getShowOrderDate()) {
+            	        	orderCols.add(order.getOrderDateAsString());
+            	        }
+            	        if (reportsConfig.getShowDeliveryDate()) {
+            	        	orderCols.add(order.getDeliveryDateDisplay());
+            	        }
+            	        if (reportsConfig.getShowCustomerName()) {
+            	        	orderCols.add(order.getCustomerName());
+            	        }
+            	        if (reportsConfig.getShowCustomerNumber()) {
+            	        	orderCols.add(order.getCustomerNumber());
+            	        }
+            	        if (reportsConfig.getShowCustomerCity()) {
+            	        	orderCols.add(order.getCity());
+            	        }
+            	        if (reportsConfig.getShowDeliveryAddress()) {
+            	        	orderCols.add(order.getDeliveryAddressName());
+            	        	orderCols.add(order.getDeliveryPostalAddress1());
+            	        	orderCols.add(order.getDeliveryPostalAddress2());
+            	        }
+            	        if (reportsConfig.getShowContactPerson1()) {
+            	        	orderCols.add(order.getContact1Name());
+            	        	orderCols.add(order.getContact1Email());
+            	        	orderCols.add(order.getContact1Phone());
+            	        }
+            	        if (reportsConfig.getShowContactPerson2()) {
+            	        	orderCols.add(order.getContact2Name());
+            	        	orderCols.add(order.getContact2Email());
+            	        	orderCols.add(order.getContact2Phone());
+            	        }
+
                     	for (CustomerCustomField customField : getCheckedCustomFields(searchBean.getCustomerCustomFields())) {
                     		orderCols.add(getOrderCustomFieldValue(customField, order));
                     	}
@@ -226,6 +308,17 @@ public class DeliveryReportController extends BaseController{
 		
 	}
 
+	private ReportsConfig getReportsConfig() {
+		ReportsConfig config = new ReportsConfig();
+		if (searchBean.getCustomerGroupId() > 0) {
+			CustomerGroup customerGroup = customerRepo.getOne(searchBean.getCustomerGroupId());
+			if (customerGroup != null && customerGroup.getReportsConfig() != null) {
+				return config;
+			}
+		}
+		return config;
+	}
+	
 	private List<String> getCustomerEquipmentFields() {
 		List<String> list = new ArrayList<String>();
 		if (searchBean.getCustomerGroupId() > 0) {
