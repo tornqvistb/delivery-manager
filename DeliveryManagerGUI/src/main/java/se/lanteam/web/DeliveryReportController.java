@@ -8,6 +8,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,6 +33,7 @@ import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.domain.ReportsConfig;
+import se.lanteam.exceptions.MissingInputException;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.repository.AttachmentRepository;
 import se.lanteam.repository.EmailRepository;
@@ -48,6 +51,7 @@ public class DeliveryReportController extends BaseController{
 	
 	private static final String EXCEL_EXPORT_FILE_NAME = "Leveransrapport-#customer-" + DateUtil.dateToString(new Date()) + FileConstants.FILE_ENDING_EXCEL;
 	private static final String MAIL_SUBJECT = "Leveransrapport från LanTeam";
+	private static final Logger LOG = LoggerFactory.getLogger(DeliveryReportController.class);
 	
 	@RequestMapping("reports/delivery")
 	public String showDeliveryReport(ModelMap model) {
@@ -71,6 +75,10 @@ public class DeliveryReportController extends BaseController{
 	public String searchOrdersDelivery(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {
 
 		try {
+			if (reqAttr.getCustomerId() == 0) {
+				throw new MissingInputException("Du måste välja kundgrupp");
+			}
+			
 			Date fromDate = DateUtil.stringToDate(LimStringUtil.NVL(reqAttr.getFromDate(), DateUtil.getDefaultStartDateAsString()));
 			Date toDate = DateUtil.stringToDateMidnight(LimStringUtil.NVL(reqAttr.getToDate(), DateUtil.getTodayAsString()));
 			String fromOrderNo = LimStringUtil.NVL(reqAttr.getFromOrderNo(), LimStringUtil.firstOrderNo);
@@ -94,6 +102,12 @@ public class DeliveryReportController extends BaseController{
 			searchBean.populate(orders, reqAttr.getCustomerId(), fromDate, toDate, fromOrderNo, toOrderNo, reqAttr.getCustomerCustomFields());
 		} catch (ParseException e) {
 			reqAttr.setErrorMessage("Felaktigt inmatade datum");
+			model.put("reqAttr", reqAttr);
+		} catch (MissingInputException e) {
+			model.put("customerGroups", customerRepo.findAll());
+			reqAttr = new RequestAttributes();
+			reqAttr.setErrorMessage(e.getMessage());
+			model.put("reqAttr", reqAttr);
 		}
 		return "delivery-report";
 	}
@@ -224,16 +238,11 @@ public class DeliveryReportController extends BaseController{
 	        }
         }
         model.put("headers", headers);
-/*        
-        List<String> numericColumns = new ArrayList<String>();
-        numericColumns.add("Ordernummer");
-        model.put("numericcolumns", numericColumns);
-*/
+
         List<List<String>> results = new ArrayList<List<String>>();
         
         for (OrderHeader order: orders) {
         	order = orderRepo.getOne(order.getId());
-        	CustomerGroup customer = customerRepo.getOne(order.getCustomerGroup().getId());
         	for (OrderLine line : order.getOrderLines()) {
         		if (line.getHasSerialNo()) {
             		for (Equipment equipment : line.getEquipments()) {
@@ -310,10 +319,12 @@ public class DeliveryReportController extends BaseController{
 
 	private ReportsConfig getReportsConfig() {
 		ReportsConfig config = new ReportsConfig();
+		LOG.debug("searchBean.getCustomerGroupId(): " + searchBean.getCustomerGroupId());
 		if (searchBean.getCustomerGroupId() > 0) {
 			CustomerGroup customerGroup = customerRepo.getOne(searchBean.getCustomerGroupId());
+			LOG.debug("customerGroup.getName(): " + customerGroup.getName());
 			if (customerGroup != null && customerGroup.getReportsConfig() != null) {
-				return config;
+				return customerGroup.getReportsConfig();
 			}
 		}
 		return config;
