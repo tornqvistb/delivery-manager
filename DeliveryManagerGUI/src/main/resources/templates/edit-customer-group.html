@@ -85,6 +85,10 @@
 															<td><input type="checkbox" name="autoRegisterInternalOrderLines" th:field="${customerGroup.autoRegisterInternalOrderLines}" th:checked="${customerGroup.autoRegisterInternalOrderLines}" /></td>
 														</tr>
 														<tr>
+															<th scope="row">Tillåt leveransavisering före leverans</th>
+															<td><input type="checkbox" name="allowPreDeliveryInfo" th:field="${customerGroup.allowPreDeliveryInfo}" th:checked="${customerGroup.allowPreDeliveryInfo}" /></td>
+														</tr>
+														<tr>
 															<th scope="row">Epost-adress för leveransmeddelande</th>
 															<td><input class="large-field" th:field="${customerGroup.deliveryEmailAddress}"
 																type="text" id="deliveryEmailAddress" /></td>

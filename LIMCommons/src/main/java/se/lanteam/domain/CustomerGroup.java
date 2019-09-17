@@ -32,6 +32,7 @@ public class CustomerGroup {
 	private String deliveryEmailAddress;
 	private Boolean sendDeliveryMailToContacts;
 	private Boolean autoRegisterInternalOrderLines;
+	private Boolean allowPreDeliveryInfo;
 
 	public String getDeliveryEmailAddress() {
 		return deliveryEmailAddress;
@@ -161,6 +162,14 @@ public class CustomerGroup {
 
 	public void setAutoRegisterInternalOrderLines(Boolean autoRegisterInternalOrderLines) {
 		this.autoRegisterInternalOrderLines = autoRegisterInternalOrderLines;
+	}
+
+	public Boolean getAllowPreDeliveryInfo() {
+		return allowPreDeliveryInfo;
+	}
+
+	public void setAllowPreDeliveryInfo(Boolean allowPreDeliveryInfo) {
+		this.allowPreDeliveryInfo = allowPreDeliveryInfo;
 	}
 
 	
