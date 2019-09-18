@@ -79,6 +79,7 @@ public class OrderHeader {
 	private Integer slaDays;
 	private Boolean excludeFromList = false;
 	private Date creationDate = new Date();
+	private Date transferDate;
 	@Transient
 	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
 	
@@ -391,6 +392,10 @@ public class OrderHeader {
 			result.append("Ordern är ruttplanerad och inväntar nu leveransdokument.");
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_NOT_ACCEPTED)) {
 			result.append("Orderleveransen har ej accepterats av kunden.");
+		} else if (this.status.equals(StatusConstants.ORDER_STATUS_SENT_CUSTOMER)) {
+			result.append("Registrering klar. Leveransrapportering pågår. Inväntar leveransdokument.");			
+		} else if (this.status.equals(StatusConstants.ORDER_STATUS_TRANSFERED_CUSTOMER)) {
+			result.append("Leveransrapportering klar och överförd till kund. Inväntar leveransdokument.");			
 		}
 		return result.toString();
 	}
@@ -595,6 +600,16 @@ public class OrderHeader {
 		return result;
 	}
 	@Transient
+	public Boolean getOkToSendDeliveryReport() {
+		Boolean result = false;
+		if (this.customerGroup.getAllowPreDeliveryInfo() 
+			&& (this.status.equals(StatusConstants.ORDER_STATUS_REGISTRATION_DONE) || this.status.equals(StatusConstants.ORDER_STATUS_ROUTE_PLANNED))) {
+			result = true;
+		}
+		return result;
+	}
+
+	@Transient
 	public boolean isPartOfJointdelivery() {
 		boolean result = false;
 		if (!StringUtils.isEmpty(this.jointDelivery)) {
@@ -682,6 +697,12 @@ public class OrderHeader {
 			}
 		}
 		return result;
+	}
+	public Date getTransferDate() {
+		return transferDate;
+	}
+	public void setTransferDate(Date transferDate) {
+		this.transferDate = transferDate;
 	}
 	
 }

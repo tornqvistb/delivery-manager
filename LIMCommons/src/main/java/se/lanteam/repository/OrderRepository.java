@@ -43,8 +43,8 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 			+ "LOWER(o.articleNumbers) LIKE LOWER(:searchString))";
 
 	
-	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.customerGroup.id = :customerGroupId")
-    public List<OrderHeader> findOrdersByStatusList(@Param("statusList") List<String> statusList, @Param("customerGroupId") Long customerGroupId);
+	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList")
+    public List<OrderHeader> findOrdersByStatusList(@Param("statusList") List<String> statusList);
 	
 	@Query("SELECT o FROM OrderHeader o WHERE o.status = :status")
     public List<OrderHeader> findOrdersByStatus(@Param("status") String status);

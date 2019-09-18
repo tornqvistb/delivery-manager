@@ -70,7 +70,10 @@ public class OrderTransmitService {
 	public void transmitOrders() {
 		
         LOG.debug("Looking for orders to transmit!");
-        List<OrderHeader> orders = orderRepo.findOrdersByStatus(StatusConstants.ORDER_STATUS_SENT);        
+        List<String> statusList = new ArrayList<String>();
+        statusList.add(StatusConstants.ORDER_STATUS_SENT);
+        statusList.add(StatusConstants.ORDER_STATUS_SENT_CUSTOMER);
+        List<OrderHeader> orders = orderRepo.findOrdersByStatusList(statusList);        
 		WSClient wsClient = new WSClient();
         if (orders != null && orders.size() > 0) {
         	LOG.info("transmitOrders: Found " + orders.size() + " orders to transmit");
@@ -94,7 +97,7 @@ public class OrderTransmitService {
 						}
         			}
 					// Create message to Visma and store on disk. Only if joint invoicing (samfakturering) is not true.
-					if (order.getJointInvoicing() == 0) {
+					if (order.getJointInvoicing() == 0 && StatusConstants.ORDER_STATUS_SENT.equals(order.getStatus())) {
 						createFileToBusinessSystem(order);
 					}
 					// Create delivery mail to customer group mail address
@@ -106,8 +109,14 @@ public class OrderTransmitService {
 						createMailToContactPersons(order);
 					}
 					// Update order status
-					order.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
-					order.setDeliveryDate(new Date());
+					if (StatusConstants.ORDER_STATUS_SENT.equals(order.getStatus())) {
+						order.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
+						order.setDeliveryDate(new Date());
+					} else if (StatusConstants.ORDER_STATUS_SENT_CUSTOMER.equals(order.getStatus())) {
+						// Fråga till Magnus leveransdatum sätts när fotot kommer??
+						order.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED_CUSTOMER);
+					}
+					order.setTransferDate(new Date());					
 					orderRepo.save(order);
 				} catch (Exception e) {
 					LOG.error("Exception thrown at web service call: " + e.getMessage());
