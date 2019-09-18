@@ -45,6 +45,7 @@ import se.lanteam.domain.OrderHeader;
 import se.lanteam.repository.EmailRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
+import se.lanteam.services.ERPIntegrationService;
 import se.lanteam.services.PropertyService;
 
 /**
@@ -65,6 +66,7 @@ public class MailReceiverService {
     private ErrorRepository errorRepo;
     private PropertyService propService;
     private EmailRepository emailRepo;
+    private ERPIntegrationService erpService;
         
 	public void checkMails() {		
 		String mailHost = propService.getString(PropertyConstants.MAIL_HOST);    
@@ -187,7 +189,7 @@ public class MailReceiverService {
 		String resultText = "";
 		if (orders != null && orders.size() > 0) {
 			OrderHeader order = orderRepo.findOne(orders.get(0).getId());
-			if (order.getEditable()) {
+			if (order.getEditable() || order.getTransferringToCustomer()) {
 				Attachment attachment = new Attachment();
 				attachment.setOrderHeader(order);
 				attachment.setFileName(fileName);
@@ -195,9 +197,13 @@ public class MailReceiverService {
 				attachment.setFileSize(Long.valueOf(fileContent.length));
 				attachment.setContentType("image/jpeg");
 				order.setAttachment(attachment);
+				boolean transferringToCutomer = order.getTransferringToCustomer();
 				order.setOrderStatusByProgress(false);
 				orderRepo.save(order);
 				resultText = String.format(THANKS_MAIL_REPLY, fileName, orderNumber);
+				if (transferringToCutomer) {
+					erpService.createFileToBusinessSystem(order);
+				}
 			} else {
 				resultText = ERROR_INVALID_ORDER_STATUS + orderNumber + ", " + fileName;
 				saveError(resultText);
@@ -242,4 +248,10 @@ public class MailReceiverService {
 	public void setPropService(PropertyService propService) {
 		this.propService = propService;
 	}
+	@Autowired
+	public void setERPService(ERPIntegrationService erpService) {
+		this.erpService = erpService;
+	}
 }
+
+

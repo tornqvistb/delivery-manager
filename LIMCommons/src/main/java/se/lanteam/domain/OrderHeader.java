@@ -315,7 +315,13 @@ public class OrderHeader {
 					this.status = StatusConstants.ORDER_STATUS_REGISTRATION_DONE;
 				}
 			} else {
-				this.status = StatusConstants.ORDER_STATUS_SENT;
+				if (StatusConstants.ORDER_STATUS_TRANSFERED_CUSTOMER.equals(this.status)) {
+					this.status = StatusConstants.ORDER_STATUS_TRANSFERED;
+				} else if (StatusConstants.ORDER_STATUS_SENT_CUSTOMER.equals(this.status)) {
+					// Do nothing
+				} else {
+					this.status = StatusConstants.ORDER_STATUS_SENT;
+				}
 			}
 		}
 	}
@@ -323,6 +329,14 @@ public class OrderHeader {
 	public Boolean getEditable() {
 		Boolean result = false;
 		if (ArrayUtils.contains(StatusConstants.ACTIVE_STATI, status)) {
+			result = true;
+		}
+		return result;
+	}
+	@Transient
+	public Boolean getTransferringToCustomer() {
+		Boolean result = false;
+		if (StatusConstants.ORDER_STATUS_SENT_CUSTOMER.equals(status) || StatusConstants.ORDER_STATUS_TRANSFERED_CUSTOMER.equals(status)) {
 			result = true;
 		}
 		return result;

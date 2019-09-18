@@ -1,10 +1,5 @@
 package se.lanteam.service;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,23 +12,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Email;
-import se.lanteam.domain.Equipment;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderHeader;
-import se.lanteam.domain.OrderLine;
 import se.lanteam.repository.EmailRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCommentRepository;
 import se.lanteam.repository.OrderRepository;
+import se.lanteam.services.ERPIntegrationService;
 import se.lanteam.services.PropertyService;
-import se.lanteam.visma.Order;
-import se.lanteam.visma.Orderrad;
 import se.lanteam.ws.Header;
 import se.lanteam.ws.WSClient;
 import se.lanteam.ws.WSConfig;
@@ -46,7 +36,6 @@ import se.lanteam.ws.WSConfig;
 public class OrderTransmitService {
 
 	private static final String GENERAL_ERROR = "Fel vid överföring av orderleverans till kund. ";
-	private static final String FILE_EXPORT_ERROR = GENERAL_ERROR + "Ett fel uppstod när fil till Visma skulle lagras på disk, order: ";
 	private static final String WS_ERROR = GENERAL_ERROR + "Ett fel uppstod när leveransrapportering mot Intraservice: ";
 
 	private static final Logger LOG = LoggerFactory.getLogger(OrderTransmitService.class);
@@ -55,6 +44,7 @@ public class OrderTransmitService {
     private ErrorRepository errorRepo;
     private OrderCommentRepository orderCommentRepo;
     private PropertyService propService;
+    private ERPIntegrationService erpService;
     private EmailRepository emailRepo;
     
 	private boolean isNumeric(String s) {
@@ -98,7 +88,7 @@ public class OrderTransmitService {
         			}
 					// Create message to Visma and store on disk. Only if joint invoicing (samfakturering) is not true.
 					if (order.getJointInvoicing() == 0 && StatusConstants.ORDER_STATUS_SENT.equals(order.getStatus())) {
-						createFileToBusinessSystem(order);
+						erpService.createFileToBusinessSystem(order);
 					}
 					// Create delivery mail to customer group mail address
 					if (StringUtils.isNotEmpty(order.getCustomerGroup().getDeliveryEmailAddress())) {
@@ -187,51 +177,6 @@ public class OrderTransmitService {
 		return email;
 	}
 	
-	private Integer getLeveransflaggaForOrder(OrderHeader order) {
-		Integer result = 0;
-		if (order.getCustomerGroup().getDeliveryFlagToERP()) {
-			result = 1;
-		}
-		return result;
-	}
-	
-	private void createFileToBusinessSystem(OrderHeader order) {
-		String fileTransmitFolder = propService.getString(PropertyConstants.FILE_OUTGOING_FOLDER);
-		Order vismaOrder = new Order();
-		vismaOrder.setOrdernummer(Integer.parseInt(order.getOrderNumber()));
-		vismaOrder.setLeveransflagga(getLeveransflaggaForOrder(order));
-		List<Orderrad> vismaRows = new ArrayList<Orderrad>();
-		for (OrderLine line : order.getOrderLines()) {
-			Orderrad vismaRow = new Orderrad();
-			vismaRow.setArtikelnummer(line.getArticleNumber());
-			vismaRow.setOrderrad(line.getRowNumber());
-			if (line.getCustomerRowNumber() != null) {
-				vismaRow.setKundradnummer(line.getCustomerRowNumber());	
-			} else {
-				vismaRow.setKundradnummer(0);
-			}
-			List<String> vismaSnr = new ArrayList<String>();
-			for (Equipment equipment : line.getEquipments()) {
-				vismaSnr.add(equipment.getSerialNo());        				
-			}
-			vismaRow.setSerienummer(vismaSnr);
-			vismaRow.setLeasingnummer(line.getLeasingNumber());
-			vismaRows.add(vismaRow);
-		}
-		vismaOrder.setOrderrader(vismaRows);
-		Gson gson = new Gson();
-		String json = gson.toJson(vismaOrder);
-		try {
-			Path path = Paths.get(fileTransmitFolder + "/" + order.getOrderNumber() + ".json");
-			Files.deleteIfExists(path);
-			FileWriter writer = new FileWriter(fileTransmitFolder + "/" + order.getOrderNumber() + ".json");
-			writer.write(json);
-			writer.close();
-		} catch (IOException e) {
-			saveError(FILE_EXPORT_ERROR + order.getOrderNumber());
-		}		
-	}
-		
 	public void transmitOrderComments() {
         LOG.info("Looking for order comments to transmit!");
         List<OrderComment> orderComments = orderCommentRepo.findOrderCommentsByStatus(StatusConstants.ORDER_STATUS_NEW);
@@ -306,6 +251,10 @@ public class OrderTransmitService {
 	@Autowired
 	public void setEmailRepo(EmailRepository emailRepo) {
 		this.emailRepo = emailRepo;
+	}
+	@Autowired
+	public void setERPServiceRepo(ERPIntegrationService erpService) {
+		this.erpService = erpService;
 	}
 	private boolean doWsCallForOrder(OrderHeader order) {
 		boolean result = false;
