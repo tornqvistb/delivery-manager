@@ -20,7 +20,7 @@ public class MailComposer {
 			Email email = new Email();
 			StringBuffer sb = new StringBuffer();
 			sb.append("Hej!\n\n");
-			sb.append("Följande beställning har korrigerats hos leverantör LanTeam:\n");
+			sb.append("Följande beställning har korrigerats hos leverantör Visolit:\n");
 			sb.append("Order: " + mailInfo.getOrderHeader().getCustomerSalesOrder() + "\n\n");
 			sb.append("Lista på justerad utrustning:\n\n");
 			for (Equipment equip : mailInfo.getModifiedEquipment()) {
@@ -28,7 +28,7 @@ public class MailComposer {
 				sb.append("Före detta serienummer/stöld-id: " + equip.getPreviousSerialNo() + " / " + equip.getPreviousStealingTag() + "\n");
 				sb.append("Nytt serienummer/stöld-id: " + equip.getSerialNo() + " / " + equip.getStealingTag() + "\n\n");
 			}
-			sb.append("Med vänlig hälsning \nLanTeam");
+			sb.append("Med vänlig hälsning \nVisolit");
 			email.setContent(sb.toString());
 			email.setSubject("Korrigerat serie- och/eller stöldskyddsnummer i beställning");
 			email.setSender(propService.getString(PropertyConstants.ORDER_CORRECTION_MAIL_SENDER));

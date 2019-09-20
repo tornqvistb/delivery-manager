@@ -151,7 +151,7 @@ public class OrderTransmitService {
 				+ "Order " + order.getCustomerOrderNumber() + " är nu levererad.\n"
 				+ "Vi hoppas att du är nöjd med leveransen.\n\n"
 				+ "Med vänlig hälsning\n"
-				+ "LanTeam");
+				+ "Visolit");
 		email.setSubject("HelpdeskID " + order.getCustomerOrderNumber());
 		email.setSender(propService.getString(PropertyConstants.MAIL_USERNAME));
 		email.setReplyTo(propService.getString(PropertyConstants.MAIL_REPLY_TO_ADDRESS));
@@ -164,12 +164,12 @@ public class OrderTransmitService {
 	
 	private Email getOrderDeliveredMail(OrderHeader order) {
 		Email email = new Email();
-		email.setSubject("Order levererad från Lanteam");
+		email.setSubject("Order levererad från Visolit");
 		email.setContent("Hej!\n\n"
 				+ "Order " + order.getCustomerSalesOrder() + " är nu levererad.\n"
 				+ "Vi hoppas att du är nöjd med leveransen.\n\n"
 				+ "Med vänlig hälsning\n"
-				+ "LanTeam");
+				+ "Visolit");
 		email.setSender(propService.getString(PropertyConstants.MAIL_USERNAME));
 		email.setReplyTo(propService.getString(PropertyConstants.MAIL_REPLY_TO_ADDRESS));
 		if (order.getAttachment() != null) {
