@@ -64,6 +64,7 @@ public class OrderListController extends BaseController {
 		OrderHeader order = orderRepo.findOne(orderId);
 		RequestAttributes reqAttr = new RequestAttributes();
 		reqAttr = addRelatedOrders(reqAttr, order);
+		reqAttr = addThanksMessage(reqAttr, order);
 		model.put("reqAttr", reqAttr);
 		model.put("order", order);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
@@ -139,6 +140,13 @@ public class OrderListController extends BaseController {
 	private boolean datesAreEmpty() {
 		return StringUtils.isEmpty(orderListSearchBean.getFromDate())
 				&& StringUtils.isEmpty(orderListSearchBean.getToDate());
+	}
+	
+	private RequestAttributes addThanksMessage(RequestAttributes reqAttr, OrderHeader order) {
+		if (order.getStatus().equals(StatusConstants.ORDER_STATUS_SENT_CUSTOMER)) {
+			reqAttr.setThanksMessage("Orderinfo kommer att skickas till kund. Inväntar leveransdokument.");
+		}
+		return reqAttr;
 	}
 	
 	@Autowired

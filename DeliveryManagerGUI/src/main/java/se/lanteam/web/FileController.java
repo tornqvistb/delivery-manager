@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import se.lanteam.domain.Attachment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
-import se.lanteam.repository.OrderRepository;
+import se.lanteam.services.ERPIntegrationService;
 
 @Controller
 public class FileController extends BaseController {
@@ -25,6 +25,8 @@ public class FileController extends BaseController {
 	private static final String ATTACHMENT_MSG_DELETE_OK = "Leveransdokument borttaget.";
 	private static final String ATTACHMENT_MSG_FILE_MISSING = "Du måste välja en fil.";
 	private static final String ATTACHMENT_MSG_FAILED = "Det gick inte att bifoga dokumentet. ";
+	
+	private ERPIntegrationService erpService;
 
 	@RequestMapping(value = "order-list/view/attachFile/{orderId}", method = RequestMethod.POST)
 	public String attachFile(@RequestParam("attachment") MultipartFile attachment, @PathVariable Long orderId,
@@ -33,6 +35,9 @@ public class FileController extends BaseController {
 		RequestAttributes reqAttr = new RequestAttributes();
 		if (!attachment.isEmpty()) {
 			try {
+				if (order.getTransferringToCustomer()) {
+					erpService.createFileToBusinessSystem(order);
+				}
 				Attachment attEntity = new Attachment();
 				attEntity.setOrderHeader(order);
 				attEntity.setFileContent(attachment.getBytes());
@@ -91,5 +96,9 @@ public class FileController extends BaseController {
 			@PathVariable Long orderId) throws IOException {
 		OrderHeader order = orderRepo.findOne(orderId);
 		return order.getAttachment().getFileContent();
+	}
+	@Autowired
+	public void setERPService(ERPIntegrationService erpService) {
+		this.erpService = erpService;
 	}
 }
