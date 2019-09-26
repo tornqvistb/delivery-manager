@@ -71,7 +71,7 @@ public class MailSenderService {
 				//props.put("mail.smtps.port", "465"); Exchange
 				Session session = Session.getInstance(props, null);
 				Message msg = new MimeMessage(session);
-				msg.setFrom(new InternetAddress(mailUsername, "LanTeam"));
+				msg.setFrom(new InternetAddress(mailUsername, "Visolit"));
 				if (!StringUtils.isEmpty(email.getReplyTo())) {
 					msg.setReplyTo(InternetAddress.parse(email.getReplyTo(), false));
 				} else {
@@ -81,7 +81,7 @@ public class MailSenderService {
 						InternetAddress.parse(email.getReceiver(), false));
 				msg.setSubject(email.getSubject());
 				msg.setText(email.getContent());
-				msg.setHeader("LIM - LanTeam", "E-post från LIM");
+				msg.setHeader("LIM - Visolit", "E-post från LIM");
 				msg.setSentDate(new Date());
 				if (email.getAttachmentRef() != null && email.getAttachmentRef() > 0) {
 					Attachment attachment = attachmentRepo.findOne(email.getAttachmentRef());

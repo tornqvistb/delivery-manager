@@ -50,7 +50,7 @@ public class DeliveryReportController extends BaseController{
 	private PropertyRepository propertyRepo;
 	
 	private static final String EXCEL_EXPORT_FILE_NAME = "Leveransrapport-#customer-" + DateUtil.dateToString(new Date()) + FileConstants.FILE_ENDING_EXCEL;
-	private static final String MAIL_SUBJECT = "Leveransrapport från LanTeam";
+	private static final String MAIL_SUBJECT = "Leveransrapport från Visolit";
 	private static final Logger LOG = LoggerFactory.getLogger(DeliveryReportController.class);
 	
 	@RequestMapping("reports/delivery")
@@ -141,9 +141,9 @@ public class DeliveryReportController extends BaseController{
 				email.setSubject(MAIL_SUBJECT);
 				StringBuffer sb = new StringBuffer();
 				sb.append("Hej!\n\n");
-				sb.append("Bifogat finner ni en rapport med utförda leveranser från LanTeam till " + getCustomerNameFromsession() + ".\n\n");
+				sb.append("Bifogat finner ni en rapport med utförda leveranser från Visloit till " + getCustomerNameFromsession() + ".\n\n");
 				sb.append("Med vänlig hälsning\n");
-				sb.append("LanTeam");								
+				sb.append("Visolit");								
 				email.setContent(sb.toString());
 				email.setSender(propertyRepo.findById(PropertyConstants.MAIL_USERNAME).getStringValue());
 				email.setReceiver(getCustomerEmailFromsession());

@@ -23,13 +23,13 @@ public class MailTester {
 			props.put("mail.smtp.port", "25");
 			Session session = Session.getInstance(props, null);
 			Message msg = new MimeMessage(session);
-			msg.setFrom(new InternetAddress("lim@lanteam.se", "LanTeam"));
+			msg.setFrom(new InternetAddress("lim@lanteam.se", "Visolit"));
 			msg.setReplyTo(InternetAddress.parse("bjorn.tornqvist@intraservice.goteborg.se", false));
 			msg.setRecipients(Message.RecipientType.TO,
 					InternetAddress.parse("tornqvistb@gmail.com", false));
 			msg.setSubject("Ett ämne");
 			msg.setText("Här kommer ett testmail");
-			msg.setHeader("LIM - LanTeam", "E-post från LIM");
+			msg.setHeader("LIM - Visolit", "E-post från LIM");
 			msg.setSentDate(new Date());
 			SMTPTransport t =
 			    (SMTPTransport)session.getTransport("smtp");
