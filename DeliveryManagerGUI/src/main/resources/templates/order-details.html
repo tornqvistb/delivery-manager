@@ -520,6 +520,7 @@
 												<div class="cf">
 													<a class="button" th:href="@{/generate-work-order/} + ${order.id}" target="_blank">Skapa arbetsorder/plocklista</a>
 													<a class="button" th:href="@{/generate-delivery-note/} + ${order.id}" target="_blank">Skapa följesedel</a>
+													<a th:if="${order.okToSendDeliveryReport}" class="button" th:href="@{/order-list/send-delivery-info/} + ${order.id}" target="_blank">Skicka leveransavisering till kund</a>
 												</div>
 											</div>
 										</div>

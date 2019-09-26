@@ -194,6 +194,22 @@ public class OrderDetailsController extends BaseController{
 		order.setDeliveryPlan(null);
 		orderRepo.save(order);
 	}
+
+	@RequestMapping(value = "order-list/send-delivery-info/{orderId}", method = RequestMethod.GET)
+	public String sendDeliveryInfo(@PathVariable Long orderId, ModelMap model) {		
+		OrderHeader order = orderRepo.findOne(orderId);
+		setOrderForCustomerDelivery(order);
+		// Kolla med Magnus om samlevererade ordrar också skall uppdateras
+		for (OrderHeader relOrder : getRelatedOrders(order)) {
+			setOrderForCustomerDelivery(relOrder);
+		}
+		return "redirect:/order-list/view/{orderId}";
+	}
+	
+	private void setOrderForCustomerDelivery(OrderHeader order) {
+		order.setStatus(StatusConstants.ORDER_STATUS_SENT_CUSTOMER);
+		orderRepo.save(order);
+	}	
 	
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {
