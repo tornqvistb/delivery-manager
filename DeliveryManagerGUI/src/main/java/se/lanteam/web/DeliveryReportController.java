@@ -227,7 +227,7 @@ public class DeliveryReportController extends BaseController{
         headers.add("Orderrad");
         headers.add("Artikelnr");
         headers.add("Artikelbeskrivning");
-        headers.add("Leasingavtal orderrad");
+        headers.add("Leasingnummer orderrad");
         headers.add("Antal");
         headers.add("Registrerat");
         headers.add("Serienummer");
