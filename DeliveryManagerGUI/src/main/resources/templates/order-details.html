@@ -263,7 +263,6 @@
 												</div>
 												
 												<form
-													th:if="${order.plannable}"
 													th:action="@{/order-list/view/planroute/} + ${order.id} + '#route-planning-header'"
 													th:object="${reqAttr}" method="post">
 													<table class="small-table fluffy">
@@ -278,10 +277,21 @@
 																			th:text="${deliveryArea.name}" />
 																</select></td>
 															</tr>
+															<!-- 
 															<tr>
 																<th scope="row">Välj leveransdag</th>
 																<td><select th:field="${reqAttr.deliveryDayId}"
 																	id="deliveryDayId" name="deliveryDayId">																	
+																</select></td>
+															</tr>
+															 -->
+															<tr>
+																<th scope="row">Välj leveransdag</th>
+																<td><select th:field="${reqAttr.deliveryDayId}"
+																	id="deliveryDayId" name="deliveryDayId">	
+																	<option th:each="deliveryDay : ${reqAttr.deliveryDays}"
+																			th:value="${deliveryDay.dateAsString}"
+																			th:text="${deliveryDay.dayAndDate}" />																
 																</select></td>
 															</tr>
 															<tr>

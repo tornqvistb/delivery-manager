@@ -1,6 +1,9 @@
 package se.lanteam.web;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,13 +13,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
+import se.lanteam.constants.DateUtil;
 import se.lanteam.domain.CustomerCustomField;
 import se.lanteam.domain.CustomerGroup;
+import se.lanteam.domain.DeliveryArea;
+import se.lanteam.domain.DeliveryWeekDay;
 import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.model.DeliveryDay;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SearchBean;
 import se.lanteam.repository.CustomerGroupRepository;
+import se.lanteam.repository.DeliveryAreaRepository;
 import se.lanteam.repository.OrderRepository;
 
 @Controller
@@ -111,6 +119,31 @@ public class BaseController {
 			}
 		}
 		return value;
+	}
+
+	protected List<DeliveryDay> getDeliveryDaysForArea(Long areaId, DeliveryAreaRepository deliveryAreaRepo) {
+	
+		DeliveryArea area = deliveryAreaRepo.getOne(areaId);
+		StringBuffer sb = new StringBuffer();
+		List<DeliveryDay> deliveryDays = new ArrayList<DeliveryDay>();
+		for (DeliveryWeekDay day : area.getDeliveryWeekDays()) {
+			Date lastDate = new Date();
+			for (int i = 0; i < 10; i++) {
+				Date nextDate = DateUtil.getNextDateByWeekday(lastDate, day.getDayOfWeek());
+				deliveryDays.add(new DeliveryDay(nextDate, day.getName()));
+				lastDate = DateUtil.addDaysToDate(nextDate, 1);
+			}
+		}
+		// sort
+		Collections.sort(deliveryDays, new Comparator<DeliveryDay>() {
+			@Override
+			public int compare(DeliveryDay d1, DeliveryDay d2) {
+				String date1 = DateUtil.dateToString(d1.getDate());
+				String date2 = DateUtil.dateToString(d2.getDate());
+				return date1.compareTo(date2);
+			}
+		});
+		return deliveryDays;
 	}
 
 	

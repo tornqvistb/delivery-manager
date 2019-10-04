@@ -65,6 +65,7 @@ public class OrderListController extends BaseController {
 		RequestAttributes reqAttr = new RequestAttributes();
 		reqAttr = addRelatedOrders(reqAttr, order);
 		reqAttr = addThanksMessage(reqAttr, order);
+		reqAttr = addRoutePlanning(reqAttr, order);
 		model.put("reqAttr", reqAttr);
 		model.put("order", order);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
@@ -145,6 +146,17 @@ public class OrderListController extends BaseController {
 	private RequestAttributes addThanksMessage(RequestAttributes reqAttr, OrderHeader order) {
 		if (order.getStatus().equals(StatusConstants.ORDER_STATUS_SENT_CUSTOMER)) {
 			reqAttr.setThanksMessage("Orderinfo kommer att skickas till kund. Inväntar leveransdokument.");
+		}
+		return reqAttr;
+	}
+
+	private RequestAttributes addRoutePlanning(RequestAttributes reqAttr, OrderHeader order) {
+		if (order.getDeliveryPlan() != null) {
+			reqAttr.setDeliveryAreaId(String.valueOf(order.getDeliveryPlan().getDeliveryArea().getId()));
+			reqAttr.setDeliveryDayId(DateUtil.dateToString(order.getDeliveryPlan().getPlannedDeliveryDate()));
+			reqAttr.setDeliveryDays(getDeliveryDaysForArea(order.getDeliveryPlan().getDeliveryArea().getId(), deliveryAreaRepo));
+			reqAttr.setDeliveryDate(DateUtil.dateToString(order.getDeliveryPlan().getPlannedDeliveryDate()));
+			reqAttr.setComment(order.getDeliveryPlan().getComment());
 		}
 		return reqAttr;
 	}

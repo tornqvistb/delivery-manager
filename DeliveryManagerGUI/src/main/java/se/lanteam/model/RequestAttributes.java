@@ -61,6 +61,7 @@ public class RequestAttributes {
 	private String informByEmail = "Spara ändringarna och informera kunden via epost";
 	private String doNewDelivery = "Spara ändringarna och anropa leveransaviseringstjänst hos kund på nytt";
 	private String saveOrder = "Spara ändringarna";
+	private List<DeliveryDay> deliveryDays;
 	
 	public String getSaveOrder() {
 		return saveOrder;
@@ -450,6 +451,14 @@ public class RequestAttributes {
 
 	public String getDoNewDelivery() {
 		return doNewDelivery;
+	}
+
+	public List<DeliveryDay> getDeliveryDays() {
+		return deliveryDays;
+	}
+
+	public void setDeliveryDays(List<DeliveryDay> deliveryDays) {
+		this.deliveryDays = deliveryDays;
 	}
 	
 }

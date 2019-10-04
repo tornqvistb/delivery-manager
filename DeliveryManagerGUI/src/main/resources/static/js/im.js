@@ -87,6 +87,7 @@ $(function() {
 		});
 	});
 });
+
 $(function() {
 	$("#deliveryDayId").change(function() {
 		$('#dateToDeliver').val($(this).find(":selected").val());
