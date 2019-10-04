@@ -187,7 +187,7 @@ public class DeliveryReportController extends BaseController{
         	headers.add("Kundens leveransnummer");
         }
         if (reportsConfig.getShowLeasingNumber()) {
-        	headers.add("Leasingnummer");
+        	headers.add("Leasingnummer order");
         }
         if (reportsConfig.getShowOrderDate()) {
         	headers.add("Orderdatum");
@@ -227,6 +227,7 @@ public class DeliveryReportController extends BaseController{
         headers.add("Orderrad");
         headers.add("Artikelnr");
         headers.add("Artikelbeskrivning");
+        headers.add("Leasingnummer orderrad");
         headers.add("Antal");
         headers.add("Registrerat");
         headers.add("Serienummer");
@@ -299,6 +300,7 @@ public class DeliveryReportController extends BaseController{
                     	orderCols.add(String.valueOf(line.getRowNumber()));
                     	orderCols.add(line.getArticleNumber());
                     	orderCols.add(line.getArticleDescription());
+                    	orderCols.add(line.getLeasingNumber());
                     	orderCols.add(String.valueOf(line.getTotal()));
                     	orderCols.add(String.valueOf(line.getRegistered()));
                     	orderCols.add(equipment.getSerialNo());
