@@ -29,7 +29,6 @@ import se.lanteam.model.DeliveryDay;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
 import se.lanteam.repository.DeliveryAreaRepository;
-import se.lanteam.repository.OrderRepository;
 
 @Controller
 public class OrderDetailsController extends BaseController{
@@ -41,8 +40,6 @@ public class OrderDetailsController extends BaseController{
 	private static final String STATUS_ROUTE_PLAN_NOK = "Ruttplanering av ordern misslyckades. Alla obligatoriska fält ej ifyllda.";
 
 	private SessionBean sessionBean;
-	private DeliveryAreaRepository deliveryAreaRepo;
-
 
 	@RequestMapping(value = "order-list/view/registerComment/{orderId}", method = RequestMethod.POST)
 	public String registerMessage(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
@@ -142,6 +139,7 @@ public class OrderDetailsController extends BaseController{
 			order = orderRepo.findOne(orderId);
 			model.put("order", order);
 			reqAttr = new RequestAttributes();
+			reqAttr = addRoutePlanning(reqAttr, order);
 			reqAttr.setStatusRouteplanSuccess(STATUS_ROUTE_PLAN_OK);
 		} else {
 			model.put("order", order);
@@ -214,10 +212,6 @@ public class OrderDetailsController extends BaseController{
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {
 		this.sessionBean = sessionBean;
-	}
-	@Autowired
-	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
-		this.deliveryAreaRepo = deliveryAreaRepo;
 	}
 
 }

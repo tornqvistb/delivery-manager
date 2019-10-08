@@ -40,6 +40,7 @@ public class BaseController {
 	protected OrderRepository orderRepo;
 	protected CustomerGroupRepository customerRepo;
 	protected SearchBean searchBean;
+	protected DeliveryAreaRepository deliveryAreaRepo;
 	
 	protected static final String SLA_REPORT = "SLA_REPORT";
 	protected static final String DELIVERY_REPORT = "DELIVERY_REPORT";
@@ -121,7 +122,18 @@ public class BaseController {
 		return value;
 	}
 
-	protected List<DeliveryDay> getDeliveryDaysForArea(Long areaId, DeliveryAreaRepository deliveryAreaRepo) {
+	protected RequestAttributes addRoutePlanning(RequestAttributes reqAttr, OrderHeader order) {
+		if (order.getDeliveryPlan() != null) {
+			reqAttr.setDeliveryAreaId(String.valueOf(order.getDeliveryPlan().getDeliveryArea().getId()));
+			reqAttr.setDeliveryDayId(DateUtil.dateToString(order.getDeliveryPlan().getPlannedDeliveryDate()));
+			reqAttr.setDeliveryDays(getDeliveryDaysForArea(order.getDeliveryPlan().getDeliveryArea().getId()));
+			reqAttr.setDeliveryDate(DateUtil.dateToString(order.getDeliveryPlan().getPlannedDeliveryDate()));
+			reqAttr.setComment(order.getDeliveryPlan().getComment());
+		}
+		return reqAttr;
+	}
+	
+	protected List<DeliveryDay> getDeliveryDaysForArea(Long areaId) {
 	
 		DeliveryArea area = deliveryAreaRepo.getOne(areaId);
 		StringBuffer sb = new StringBuffer();
@@ -161,4 +173,10 @@ public class BaseController {
 		this.searchBean = searchBean;
 	}
 
+	@Autowired
+	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
+		this.deliveryAreaRepo = deliveryAreaRepo;
+	}
+
+	
 }

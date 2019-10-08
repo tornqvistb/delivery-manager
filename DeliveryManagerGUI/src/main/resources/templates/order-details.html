@@ -259,12 +259,14 @@
 												<!-- Info message for route planned order -->
 												<div th:if="${not #strings.isEmpty(order.routePlanSummary)}" class="information-text system-info help-message">
 													<p th:utext="${order.routePlanSummary}"></p>
-													<p th:if="${order.routePlanEditable}">För att göra om ruttplanering på denna order, klicka <a th:href="@{/order-list/new-routeplan/} + ${order.id}"><strong>HÄR =></strong></a></p>
+													<!-- <p th:if="${order.routePlanEditable}">För att göra om ruttplanering på denna order, klicka <a id="change-route-plan" href="#route-planning-header"><strong>HÄR =></strong></a></p> -->
 												</div>
 												
 												<form
 													th:action="@{/order-list/view/planroute/} + ${order.id} + '#route-planning-header'"
-													th:object="${reqAttr}" method="post">
+													th:object="${reqAttr}" method="post"
+													id="route-plan-form"
+													th:if="${order.plannable}">
 													<table class="small-table fluffy">
 														<tbody>
 															<tr>
@@ -277,14 +279,6 @@
 																			th:text="${deliveryArea.name}" />
 																</select></td>
 															</tr>
-															<!-- 
-															<tr>
-																<th scope="row">Välj leveransdag</th>
-																<td><select th:field="${reqAttr.deliveryDayId}"
-																	id="deliveryDayId" name="deliveryDayId">																	
-																</select></td>
-															</tr>
-															 -->
 															<tr>
 																<th scope="row">Välj leveransdag</th>
 																<td><select th:field="${reqAttr.deliveryDayId}"
@@ -313,6 +307,7 @@
 													<div class="row cf action-area">
 														<input class="backend-operation" type="submit"
 															value="Spara" name="store-route-plan" id="store-route-plan" />
+														<a th:if="${reqAttr.deliveryDayId}" th:href="@{/order-list/new-routeplan/} + ${order.id}"><strong>&nbsp;&nbsp;Ta bort ruttplaneringen</strong></a>															
 													</div>
 												</form>
 												<h3 id="contact-persons">Kontaktpersoner</h3>

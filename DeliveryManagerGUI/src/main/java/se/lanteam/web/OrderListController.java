@@ -34,7 +34,6 @@ public class OrderListController extends BaseController {
 	
 	private PropertyService propService;
 	private SessionBean sessionBean;
-	private DeliveryAreaRepository deliveryAreaRepo;
 	private OrderListSearchBean orderListSearchBean;
 
 	
@@ -75,10 +74,6 @@ public class OrderListController extends BaseController {
 	@Autowired
 	public void setPropertyService(PropertyService propService) {
 		this.propService = propService;
-	}
-	@Autowired
-	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
-		this.deliveryAreaRepo = deliveryAreaRepo;
 	}
 	@RequestMapping(value="order-list/search", method=RequestMethod.GET)
 	public String searchOrders(ModelMap model, @ModelAttribute RequestAttributes reqAttr) {		
@@ -146,17 +141,6 @@ public class OrderListController extends BaseController {
 	private RequestAttributes addThanksMessage(RequestAttributes reqAttr, OrderHeader order) {
 		if (order.getStatus().equals(StatusConstants.ORDER_STATUS_SENT_CUSTOMER)) {
 			reqAttr.setThanksMessage("Orderinfo kommer att skickas till kund. Inväntar leveransdokument.");
-		}
-		return reqAttr;
-	}
-
-	private RequestAttributes addRoutePlanning(RequestAttributes reqAttr, OrderHeader order) {
-		if (order.getDeliveryPlan() != null) {
-			reqAttr.setDeliveryAreaId(String.valueOf(order.getDeliveryPlan().getDeliveryArea().getId()));
-			reqAttr.setDeliveryDayId(DateUtil.dateToString(order.getDeliveryPlan().getPlannedDeliveryDate()));
-			reqAttr.setDeliveryDays(getDeliveryDaysForArea(order.getDeliveryPlan().getDeliveryArea().getId(), deliveryAreaRepo));
-			reqAttr.setDeliveryDate(DateUtil.dateToString(order.getDeliveryPlan().getPlannedDeliveryDate()));
-			reqAttr.setComment(order.getDeliveryPlan().getComment());
 		}
 		return reqAttr;
 	}

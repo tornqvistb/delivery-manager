@@ -46,6 +46,11 @@ $(function() { // Makes sure the code contained doesn't run until
 	    }
 	});
 	
+	$("#change-route-plan").click(function(){
+		$("#route-plan-form").toggle();
+	});
+
+	
 });
 
 function PrintLabels()

@@ -370,7 +370,7 @@ public class OrderHeader {
 	@Transient
 	public Boolean getPlannable() {
 		Boolean result = false;
-		if (StatusConstants.ORDER_STATUS_REGISTRATION_DONE.equals(status)
+		if (StatusConstants.ORDER_STATUS_REGISTRATION_DONE.equals(status) || StatusConstants.ORDER_STATUS_ROUTE_PLANNED.equals(status)
 				|| (StatusConstants.ORDER_STATUS_NEW.equals(status) && this.customerGroup.getBookOrderBeforeRegistration())) {
 			result = true;			
 		}
