@@ -62,8 +62,8 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 
 	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND "
 			+ LIKE_CONDITION_ORDER_HEADER
-			+ " AND o.customerGroup.id = :customerGroupId AND excludeFromList = false")
-    public List<OrderHeader> findOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("searchString") String searchString, @Param("customerGroupId") Long customerGroupId, Pageable pageable);
+			+ " AND o.customerGroup.id = :customerGroupId AND excludeFromList in :excludeList")
+    public List<OrderHeader> findOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("searchString") String searchString, @Param("customerGroupId") Long customerGroupId, @Param("excludeList") List<Boolean> excludeList, Pageable pageable);
 
 	// SLA queries
 	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.orderDate > :orderDate AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND o.customerGroup.id = :customerGroupId")

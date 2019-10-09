@@ -50,6 +50,7 @@ $(function() { // Makes sure the code contained doesn't run until
 		$("#route-plan-form").toggle();
 	});
 
+	$(".hidden-form").hide();
 	
 });
 

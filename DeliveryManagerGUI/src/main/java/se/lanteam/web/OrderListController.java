@@ -103,18 +103,21 @@ public class OrderListController extends BaseController {
 		String query = "%" + orderListSearchBean.getQuery() + "%";
 		populateDatesInBean();
 		List<String> stati = new ArrayList<String>();
-		Pageable maxRows = new PageRequest(0, propService.getLong(PropertyConstants.MAX_ORDERS_IN_SEARCH).intValue());
-		if (datesAreEmpty()) {			
+		Pageable maxRows = new PageRequest(0, propService.getLong(PropertyConstants.MAX_ORDERS_IN_SEARCH).intValue());		
+		if (datesAreEmpty()) {
+			List<Boolean> excludeList = new ArrayList<Boolean>();
+			excludeList.add(false);
 			if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_ACTIVE)){
 				stati = Arrays.asList(StatusConstants.ACTIVE_STATI);
 			} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
 				stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
 			} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_ALL)) {
 				stati = Arrays.asList(StatusConstants.ALL_STATI);
+				excludeList.add(true);
 			} else {
 				stati.add(orderListSearchBean.getStatus());
 			}			
-			return orderRepo.findOrdersFromSearch(stati, query, sessionBean.getCustomerGroup().getId(), maxRows);
+			return orderRepo.findOrdersFromSearch(stati, query, sessionBean.getCustomerGroup().getId(), excludeList, maxRows);
 		} else {						
 			orderListSearchBean.setStatus(StatusConstants.ORDER_STATUS_GROUP_INACTIVE);
 			stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
