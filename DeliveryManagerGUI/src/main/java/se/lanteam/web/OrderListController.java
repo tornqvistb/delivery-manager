@@ -35,6 +35,8 @@ public class OrderListController extends BaseController {
 	private PropertyService propService;
 	private SessionBean sessionBean;
 	private OrderListSearchBean orderListSearchBean;
+	private static final Boolean SHOW_MAIN_ORDERS = false;
+	private static final Boolean SHOW_SUB_ORDERS = true;
 
 	
 	@RequestMapping("/")
@@ -105,24 +107,40 @@ public class OrderListController extends BaseController {
 		List<String> stati = new ArrayList<String>();
 		Pageable maxRows = new PageRequest(0, propService.getLong(PropertyConstants.MAX_ORDERS_IN_SEARCH).intValue());		
 		if (datesAreEmpty()) {
-			List<Boolean> excludeList = new ArrayList<Boolean>();
-			excludeList.add(false);
+			Boolean showSubOrders = false;
 			if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_ACTIVE)){
 				stati = Arrays.asList(StatusConstants.ACTIVE_STATI);
 			} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_INACTIVE)) {
 				stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
+				showSubOrders = true;
 			} else if (orderListSearchBean.getStatus().equals(StatusConstants.ORDER_STATUS_GROUP_ALL)) {
 				stati = Arrays.asList(StatusConstants.ALL_STATI);
-				excludeList.add(true);
+				showSubOrders = true;
 			} else {
 				stati.add(orderListSearchBean.getStatus());
+				if (Arrays.asList(StatusConstants.ALL_STATI).contains(orderListSearchBean.getStatus())) {
+					showSubOrders = true;
+				}
 			}			
-			return orderRepo.findOrdersFromSearch(stati, query, sessionBean.getCustomerGroup().getId(), excludeList, maxRows);
-		} else {						
-			orderListSearchBean.setStatus(StatusConstants.ORDER_STATUS_GROUP_INACTIVE);
-			stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
+			return orderRepo.findOrdersFromSearch(stati, query, sessionBean.getCustomerGroup().getId(), getFlagValuesForMainAndSuborders(showSubOrders), maxRows);
+		} else {
+			if (!Arrays.asList(StatusConstants.INACTIVE_STATI).contains(orderListSearchBean.getStatus())) {
+				orderListSearchBean.setStatus(StatusConstants.ORDER_STATUS_GROUP_INACTIVE);
+				stati = Arrays.asList(StatusConstants.INACTIVE_STATI);
+			} else {
+				stati.add(orderListSearchBean.getStatus());
+			}
 			return orderRepo.findDeliveredOrdersFromSearch(stati, query, DateUtil.stringToDate(orderListSearchBean.getFromDate()), DateUtil.stringToDate(orderListSearchBean.getToDate()), sessionBean.getCustomerGroup().getId(), maxRows);
 		}
+	}
+	
+	private List<Boolean> getFlagValuesForMainAndSuborders(Boolean showSubOrders) {
+		List<Boolean> includeList = new ArrayList<Boolean>();
+		includeList.add(SHOW_MAIN_ORDERS);
+		if (showSubOrders) {
+			includeList.add(SHOW_SUB_ORDERS);
+		}
+		return includeList;
 	}
 	
 	private void populateDatesInBean() {

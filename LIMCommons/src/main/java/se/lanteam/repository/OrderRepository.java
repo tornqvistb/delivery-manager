@@ -57,7 +57,7 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 
 	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND "
 			+ LIKE_CONDITION_ORDER_HEADER
-			+ " AND o.customerGroup.id = :customerGroupId AND excludeFromList = false")
+			+ " AND o.customerGroup.id = :customerGroupId")
     public List<OrderHeader> findDeliveredOrdersFromSearch(@Param("statusList") List<String> statusList, @Param("searchString") String searchString, @Param("deliveryStartDate") Date deliveryStartDate, @Param("deliveryEndDate") Date deliveryEndDate, @Param("customerGroupId") Long customerGroupId, Pageable pageable);
 
 	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND "
