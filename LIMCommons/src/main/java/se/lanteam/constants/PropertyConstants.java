@@ -7,7 +7,7 @@ public class PropertyConstants {
 	public static final String MAIL_USERNAME = "mail-username";
 	public static final String MAIL_PASSWORD = "mail-password";
 	public static final String FILE_IMAGE_FOLDER = "file-image-folder";
-	public static final String MAIL_SMTPS_HOST = "mail-smtps-host";
+	public static final String MAIL_SMTPS_HOST = "mail-smtps-host";	
 	public static final String ORDERJOB_FREQUENCY = "orderjob-frequency";
 	public static final String FILE_INCOMING_FOLDER = "file-incoming-folder";
 	public static final String FILE_PROCESSED_FOLDER = "file-processed-folder";

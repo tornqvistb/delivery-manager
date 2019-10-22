@@ -66,9 +66,10 @@ public class MailSenderService {
 			try {
 				LOG.debug("New mail to send");
 				Properties props = System.getProperties();
-				props.put("mail.smtps.host",mailSmtpHost);
-				props.put("mail.smtps.auth","true");
-				//props.put("mail.smtps.port", "465"); Exchange
+				props.put("mail.smtp.starttls.enable", "true");
+				props.put("mail.smtp.port", "587");
+				props.put("mail.smtp.host", mailSmtpHost);
+				props.put("mail.smtp.auth", "true");        
 				Session session = Session.getInstance(props, null);
 				Message msg = new MimeMessage(session);
 				msg.setFrom(new InternetAddress(mailUsername, "Visolit"));
@@ -100,7 +101,7 @@ public class MailSenderService {
 					}
 				}
 				SMTPTransport t =
-				    (SMTPTransport)session.getTransport("smtps");
+					(SMTPTransport)session.getTransport("smtp");	
 				t.connect(mailSmtpHost, mailUsername, mailPassword);
 				t.sendMessage(msg, msg.getAllRecipients());
 				LOG.debug(String.format("Response: %s", t.getLastServerResponse()));
