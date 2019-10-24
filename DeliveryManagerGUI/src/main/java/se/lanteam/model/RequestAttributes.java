@@ -62,6 +62,8 @@ public class RequestAttributes {
 	private String doNewDelivery = "Spara ändringarna och anropa leveransaviseringstjänst hos kund på nytt";
 	private String saveOrder = "Spara ändringarna";
 	private List<DeliveryDay> deliveryDays;
+	private String userName;
+	private String password;
 	
 	public String getSaveOrder() {
 		return saveOrder;
@@ -459,6 +461,22 @@ public class RequestAttributes {
 
 	public void setDeliveryDays(List<DeliveryDay> deliveryDays) {
 		this.deliveryDays = deliveryDays;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 }

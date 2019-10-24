@@ -46,28 +46,28 @@
 													<colgroup>
 														<col style="width:30%"/>
 														<col style="width:25%"/>
-														<col style="width:25%"/>
-														<col style="width:15%"/>
+														<col th:if="${session.systemUser.admin}" style="width:25%"/>
+														<col th:if="${session.systemUser.admin}" style="width:15%"/>
 													</colgroup>
 													<thead>
 														<tr>
 															<th scope="col">Namn</th>
 															<th scope="col">Aktivera</th>
-															<th scope="col">Inställningar</th>
-															<th scope="col">Ta bort</th>
+															<th th:if="${session.systemUser.admin}" scope="col">Inställningar</th>
+															<th th:if="${session.systemUser.admin}" scope="col">Ta bort</th>
 														</tr>
 													</thead>
 													<tbody>
 														<tr th:each="customerGroup : ${customerGroups}">
 															<td th:text="${customerGroup.name}">Något gick fel</td>															
 															<td><a th:href="@{/customer-groups/activate/} + ${customerGroup.id} + '/no'">Sätt som aktiv</a></td>
-															<td><a th:href="@{/customer-groups/settings/} + ${customerGroup.id}">Ändra inställningar</a></td>
-															<td><a th:href="@{/customer-groups/delete/} + ${customerGroup.id}" onclick="return confirm('Vill du verkligen ta bort kundgruppen?');">Ta bort</a></td>
+															<td th:if="${session.systemUser.admin}"><a th:href="@{/customer-groups/settings/} + ${customerGroup.id}">Ändra inställningar</a></td>
+															<td th:if="${session.systemUser.admin}"><a th:href="@{/customer-groups/delete/} + ${customerGroup.id}" onclick="return confirm('Vill du verkligen ta bort kundgruppen?');">Ta bort</a></td>
 														</tr>
 													</tbody>
 												</table>
 											</div>
-											<div class="submit-area">
+											<div th:if="${session.systemUser.admin}" class="submit-area">
 												<input class="button" type="submit" value="Skapa ny kundgrupp"></input>
 											</div>																					
 										</form>									

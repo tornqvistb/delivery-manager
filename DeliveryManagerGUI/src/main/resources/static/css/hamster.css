@@ -14,7 +14,7 @@
 	}
 }
 
-/* E-tjänsteplattform-modifieringar */
+/* E-tjÃ¤nsteplattform-modifieringar */
 .hamster .form-section > table:first-child {
 	margin-top:0;
 }
@@ -205,7 +205,8 @@
 #service-portal .hamster .row .col .select,
 #service-portal .hamster .row .col .text,
 #service-portal .hamster .row .col textarea,
-#service-portal .hamster .row .col input[type="text"] {
+#service-portal .hamster .row .col input[type="text"],
+#service-portal .hamster .row .col input[type="password"] {
 	width:100% !important;
 	box-sizing:border-box;
 }

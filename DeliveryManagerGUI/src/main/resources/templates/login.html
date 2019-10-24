@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="utf-8" />
+<head th:include="head" th:remove="tag" />
+
+<body class="layout-2">
+	<div id="body">
+		<!-- <div class="include" data-include="header"></div> -->
+		<div th:include="header" th:remove="tag"></div>
+		<div id="main" class="cf">
+			<div id="content">
+				<div id="service-portal" class="sp-layout-4">
+					<div class="content-1">
+						<div class="m m-1 m-page cf">
+							<div class="m-h main-header cf">
+								<div class="page-heading">
+									<h2>Logga in</h2>
+								</div>
+							</div>
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div class="form-step">
+										<form class="form-general" th:action= "@{/login/confirm}" th:object="${reqAttr}" method="post">
+											<div class="form-section">
+
+												<div class="information-text system-info help-message">
+													<p>Logga in i LIM....</p>
+												</div>
+												<div
+													th:if="${not #strings.isEmpty(reqAttr.errorMessage)}"
+													class="information-text system-info error-message side-margin">
+													<p th:utext="${reqAttr.errorMessage}"></p>
+												</div>
+												<div class="row cols-1 cf">
+													<div class="col col-1">
+														<label for="userName">Användare</label>
+														<div class="text">															
+															<input type="text" th:field="${reqAttr.userName}" value="" name="userName" class="small" id="userName"/>
+														</div>
+													 </div> 
+												</div>
+												<div class="row cols-1 cf">
+													<div class="col col-1">
+														<label for="password">Lösenord</label>
+														<div class="text">															
+															<input type="password" th:field="${reqAttr.password}" value="" name="password" class="small" id="password"/>
+														</div>
+													</div>
+												</div>
+												<div class="row cols-1 cf">
+													<div class="col">
+														<div class="select">
+															<label for="status">Välj kundgrupp</label> 
+															
+															<select
+																th:field="${reqAttr.customerId}"
+																id="loginCustomerGroupId" name="loginCustomerGroupId"
+																>
+																<option th:value="${reqAttr.zeroValue}">Välj kundgrupp</option>
+																<option th:each="customerGroup : ${customerGroups}" th:value="${customerGroup.id}" th:text="${customerGroup.name}"></option>
+		
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<input class="btn" type="submit" value="Logga in" id="ActionSearch" name="ActionSearch"/>
+												</div>		
+												
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:include="footer" th:remove="tag"></div>
+	</div>
+</body>
+</html>

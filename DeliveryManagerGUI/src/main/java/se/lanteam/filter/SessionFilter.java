@@ -17,6 +17,7 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import se.lanteam.constants.SessionConstants;
 import se.lanteam.domain.CustomerGroup;
+import se.lanteam.domain.SystemUser;
 import se.lanteam.repository.ErrorRepository;
 
 public class SessionFilter implements Filter {
@@ -38,27 +39,48 @@ public class SessionFilter implements Filter {
         HttpSession session = request.getSession(); 
         String errors = String.valueOf(errorRepo.findErrorsByArchived(false).size());        
         session.setAttribute(SessionConstants.ERROR_COUNT, errors);
+        
+        SystemUser user = (SystemUser) session.getAttribute(SessionConstants.SYSTEM_USER);        
+        if (user == null && redirectPatternInUriUser(uri)) {
+        	HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+        	httpResponse.sendRedirect(contextPath + "/login");
+        	return;        	
+        }        
+        
         CustomerGroup customerGroup = (CustomerGroup) session.getAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP);        
-        if (customerGroup == null && redirectPatternInUri(uri)) {
+        if (customerGroup == null && redirectPatternInUriCustomer(uri)) {
         	HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         	httpResponse.sendRedirect(contextPath + "/choose-customer-group");
-        	return;
         } else {        
 	        filterChain.doFilter(servletRequest, servletResponse);
         }
     }
 
-    private boolean redirectPatternInUri(String uri) {
+    private boolean redirectPatternInUriCustomer(String uri) {
     	boolean result = false;
     	if (!uri.contains("choose-customer-group")
     			&& !uri.contains("/css/")
     			&& !uri.contains("/js/")
     			&& !uri.contains("/img/")
-    			&& !uri.contains("customer-groups/activate")) {
+    			&& !uri.contains("customer-groups/activate")
+    			&& !uri.contains("login")) {
     		result = true;
     	}
     	return result;
     }
+
+    private boolean redirectPatternInUriUser(String uri) {
+    	boolean result = false;
+    	if (!uri.contains("login")
+    			&& !uri.contains("login/confirm")
+    			&& !uri.contains("/css/")
+    			&& !uri.contains("/js/")
+    			&& !uri.contains("/img/")) {
+    		result = true;
+    	}
+    	return result;
+    }
+
     
     @Override
     public void destroy() {
