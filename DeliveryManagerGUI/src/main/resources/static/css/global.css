@@ -2040,10 +2040,10 @@ a.move-up {
 .nav-supp li {
 	display:inline;
 }
-.nav-supp li + li a {
+.nav-supp li + li a, span {
 	border-left:1px solid #dedede;
 }
-.nav-supp li a {
+.nav-supp li a, span {
 	float:left;
 	padding:0 10px;
 }
@@ -2670,7 +2670,7 @@ ul.search-results {
 /* =============================================================================
  * FOS
  *
- * Sida för frågor och svar
+ * Sida fï¿½r frï¿½gor och svar
 ============================================================================= */
 
 .fos .search-results li {
@@ -2699,7 +2699,7 @@ ul.search-results {
 .fos #content-primary + #content-secondary {
 	margin-top:1em;
 }
-/* Rating för svar */
+/* Rating fï¿½r svar */
 .fos .answer-rating {
 	margin-right:15px;
 	float:right;

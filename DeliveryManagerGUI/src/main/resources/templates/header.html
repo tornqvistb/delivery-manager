@@ -18,12 +18,14 @@
 				
 		<h2 class="structural">Hjälplänkar</h2>
 		<ul>
-		
-			<li th:if="${session.systemUser.admin}">		
+		 
+			<li th:if="${session.systemUser} and ${session.systemUser.admin}">		
 				<a th:href="@{/settings}">Inställningar</a>	
 			</li>
-			
-			<li th:if="${session.systemUser}"><strong><a th:href="@{/login}" th:text="${session.systemUser.firstName} + ' ' + ${session.systemUser.lastName}"> </a></strong></li>
+					
+			<!-- <li th:if="${session.systemUser}"><strong><a th:href="@{/login}" th:text="${session.systemUser.firstName} + ' ' + ${session.systemUser.lastName}"> </a></strong></li> -->
+			<li th:if="${session.systemUser}"><span th:text="${session.systemUser.firstName} + ' ' + ${session.systemUser.lastName}"></span></li>
+			<li th:if="${session.systemUser}"><a th:href="@{/login}">Logga ut</a></li>
 			<li th:if="${session.customerGroup}">(Aktiv)<strong><a th:href="@{/customer-groups}" th:text="${session.customerGroup.name}"></a></strong></li>
 			<li th:if="!${session.customerGroup}" ><strong><a style="color:red" th:href="@{/choose-customer-group}">OBS: Ingen aktiv kundgrupp</a></strong></li>
 		</ul>

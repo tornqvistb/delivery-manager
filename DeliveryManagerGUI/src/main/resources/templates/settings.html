@@ -9,7 +9,7 @@
 	<div id="body">
 		<!-- <div class="include" data-include="header"></div> -->
 		<div th:include="header" th:remove="tag"></div>
-		<div id="main" class="cf">
+		<div th:if="${session.systemUser.admin}" id="main" class="cf">
 			<div id="content">
 				<div th:include="sub-header" th:remove="tag"></div>
 				<!-- <div class="include" data-include="sub-header"></div> -->

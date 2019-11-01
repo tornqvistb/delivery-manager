@@ -24,9 +24,13 @@ public class LoginController extends BaseController{
 	private SessionBean sessionBean;
 	
 	@RequestMapping("login")
-	public String login(ModelMap model) {
+	public String login(ModelMap model, HttpServletRequest request) {
 		model.put("customerGroups", customerRepo.findAll());
 		model.put("reqAttr", new RequestAttributes());
+		request.getSession().setAttribute(SessionConstants.SYSTEM_USER, null);
+		request.getSession().setAttribute(SessionConstants.CURRENT_CUSTOMER_GROUP, null);
+		sessionBean.setSystemUser(null);
+		sessionBean.setCustomerGroup(null);
 		return "login";
 	}
 	@RequestMapping(value = "login/confirm", method = RequestMethod.POST)
@@ -71,6 +75,7 @@ public class LoginController extends BaseController{
 	public void setSystemUserRepo(SystemUserRepository userRepo) {
 		this.userRepo = userRepo;
 	}
+	
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {
 		this.sessionBean = sessionBean;
