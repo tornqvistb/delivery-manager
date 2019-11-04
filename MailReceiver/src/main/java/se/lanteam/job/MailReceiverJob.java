@@ -23,7 +23,7 @@ public class MailReceiverJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
     	LOG.info("Running MailReceiverJob");
-    	//receiverService.checkMails();
+    	receiverService.checkMails();
     	senderService.checkMailsToSend();
     }
 }

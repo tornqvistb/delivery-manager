@@ -2040,10 +2040,18 @@ a.move-up {
 .nav-supp li {
 	display:inline;
 }
-.nav-supp li + li a, span {
+.nav-supp li + li a {
 	border-left:1px solid #dedede;
 }
-.nav-supp li a, span {
+.nav-supp li a {
+	float:left;
+	padding:0 10px;
+}
+
+.nav-supp li span {
+	border-left:1px solid #dedede;
+}
+.nav-supp li span {
 	float:left;
 	padding:0 10px;
 }

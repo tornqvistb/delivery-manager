@@ -119,7 +119,6 @@ public class MailReceiverService {
 				String contentType = message.getContentType();
 				LOG.debug("Contenttype: " + contentType);
 				if (contentType.contains("multipart")) {
-					System.out.println("Got mail: " + message.getSubject());
 					LOG.debug("Got mail: " + message.getSubject());					
                     // content may contain attachments
                     Multipart multiPart = (Multipart) message.getContent();
@@ -145,108 +144,6 @@ public class MailReceiverService {
                 	LOG.debug("No attachment in mail: " + message.getSubject());
                 }
 				message.setFlag(Flags.Flag.DELETED, true);
-				
-			}
-			// close the store and folder objects
-			emailFolder.close(true);
-			store.close();
-
-		} catch (NoSuchProviderException e) {
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}    
-
-    
-	public void checkMailsPop() {		
-		String mailHost = propService.getString(PropertyConstants.MAIL_HOST);    
-	    String mailUsername = propService.getString(PropertyConstants.MAIL_USERNAME);
-	    String mailPassword = propService.getString(PropertyConstants.MAIL_PASSWORD);
-	    String saveDirectory = propService.getString(PropertyConstants.FILE_IMAGE_FOLDER);
-		try {
-	        LOG.debug("Going to check incoming mails");
-			// create properties field
-			Properties properties = new Properties();
-
-			properties.put("mail.pop3.host", mailHost);
-			properties.put("mail.pop3.port", "995");
-			properties.put("mail.pop3.starttls.enable", "true");
-			Session emailSession = Session.getInstance(properties, new javax.mail.Authenticator() {
-			    protected PasswordAuthentication getPasswordAuthentication() {
-			        return new PasswordAuthentication(mailUsername, mailPassword);
-			    }
-			});
-
-			// create the POP3 store object and connect with the pop server
-			Store store = emailSession.getStore("pop3s");
-
-			store.connect(mailHost, mailUsername, mailPassword);
-
-			Folder[] folders = store.getDefaultFolder().list();
-			for (Folder folder : folders) {
-				LOG.debug("folder: " + folder.getFullName());
-			}
-			
-			// create the folder object and open it
-			Folder emailFolder = store.getFolder("INBOX");
-			emailFolder.open(Folder.READ_WRITE);
-			
-			// retrieve the messages from the folder in an array and print it
-			Message[] messages = emailFolder.getMessages();
-			int count = emailFolder.getNewMessageCount();
-			LOG.debug("Got " + count + " new mails!");
-			//Message[] messages = emailFolder.search(
-			//            new FlagTerm(new Flags(Flags.Flag.SEEN), false));
-			
-			LOG.debug("Got " + messages.length + " mails!");
-			
-			// Copy messages to archive folder
-			/*
-			Folder processedFolder = store.getFolder("LIMProcessed");
-			if (processedFolder != null) {
-				System.out.println("Hittade under STORE");
-				emailFolder.copyMessages(messages, processedFolder);
-			}
-			*/
-			
-			for (int i = 0, n = messages.length; i < n; i++) {
-				boolean hasImage = false;
-				Message message = messages[i];
-				String contentType = message.getContentType();
-				LOG.debug("Contenttype: " + contentType);
-				if (contentType.contains("multipart")) {
-					System.out.println("Got mail: " + message.getSubject());
-					LOG.debug("Got mail: " + message.getSubject());					
-                    // content may contain attachments
-                    Multipart multiPart = (Multipart) message.getContent();
-                    int numberOfParts = multiPart.getCount();
-                    for (int partCount = 0; partCount < numberOfParts; partCount++) {                    	
-                        MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(partCount);
-                        LOG.debug("Disposition: " + part.getDisposition());
-                        if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()) || Part.INLINE.equalsIgnoreCase(part.getDisposition())) {                        	
-                            // this part is attachment
-                            String fileName = part.getFileName();
-                        	if (isImage(fileName)) {
-                        		hasImage = true;
-	                            String fileNameWithPath = saveDirectory + File.separator + fileName;
-	                            part.saveFile(fileNameWithPath);
-	                            File origFile = new File(fileNameWithPath);
-	                            String compressedFileNameWithPath = fileNameWithPath + ".comp.jpg";
-	                            compressFile(origFile, compressedFileNameWithPath);                            
-	                            byte[] array = Files.readAllBytes(new File(compressedFileNameWithPath).toPath());
-	                            storeAttachmentOnOrder(array, message.getSubject(), fileName, message);
-                        	}
-                        }
-                    }
-                } else {
-                	LOG.debug("No attachment in mail: " + message.getSubject());
-                }
-				if (!hasImage) {
-					message.setFlag(Flags.Flag.DELETED, true);
-				}
 				
 			}
 			// close the store and folder objects

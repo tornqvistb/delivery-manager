@@ -26,11 +26,11 @@
 											<div class="form-section">
 
 												<div class="information-text system-info help-message">
-													<p>Logga in i LIM....</p>
+													<p>Logga in i LIM genom att ange användare. lösenord samt kundgrupp.</p>
 												</div>
 												<div
 													th:if="${not #strings.isEmpty(reqAttr.errorMessage)}"
-													class="information-text system-info error-message side-margin">
+													class="information-text system-info error-message">
 													<p th:utext="${reqAttr.errorMessage}"></p>
 												</div>
 												<div class="row cols-1 cf">
