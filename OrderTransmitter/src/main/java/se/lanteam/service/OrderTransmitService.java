@@ -164,8 +164,12 @@ public class OrderTransmitService {
 	private Email getOrderDeliveredMail(OrderHeader order) {
 		Email email = new Email();
 		email.setSubject("Order levererad från Visolit");
+		String orderNumber = order.getCustomerSalesOrder();
+		if (order.isOriginatedFromHamster()) {
+			orderNumber = order.getCustomerOrderNumber();
+		}
 		email.setContent("Hej!\n\n"
-				+ "Order " + order.getCustomerSalesOrder() + " är nu levererad.\n"
+				+ "Order " + orderNumber + " är nu levererad.\n"
 				+ "Vi hoppas att du är nöjd med leveransen.\n\n"
 				+ "Med vänlig hälsning\n"
 				+ "Visolit");
