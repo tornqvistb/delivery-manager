@@ -13,4 +13,15 @@ public class LimStringUtil {
 		return result;
 	}
 
+	public static boolean isNumeric(String s) {
+		boolean result = true;
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException nfe) {
+			result = false;
+		}
+		return result;
+	}
+
+	
 }

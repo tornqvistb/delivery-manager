@@ -26,6 +26,7 @@ import org.thymeleaf.util.ArrayUtils;
 
 import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.constants.DateUtil;
+import se.lanteam.constants.LimStringUtil;
 import se.lanteam.constants.SLAConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
@@ -665,22 +666,16 @@ public class OrderHeader {
 		}
 		return false;
 	}
-	/*
 	@Transient
-	public boolean isOriginateFromServiceNow() {
-		if (leasingNumber != null) {
-			int startPos = leasingNumber.lastIndexOf('/');
-			if (startPos > 0) {
-				try {
-					Integer.parseInt(leasingNumber.substring(startPos + 1));
-					return true;
-				} catch (NumberFormatException e) {
-				}
-			}
+	public boolean isOriginatedFromHamster() {
+		if (customerOrderNumber != null) {
+			boolean condition1 = LimStringUtil.isNumeric(customerOrderNumber);
+			boolean condition2 = customerOrderNumber.startsWith("LE") && customerOrderNumber.contains("REQ");
+			boolean condition3 = customerOrderNumber.startsWith("KO") && customerOrderNumber.contains("REQ");
+			return condition1 || condition2 || condition3;
 		}
 		return false;
 	}
-	*/
 	
 	@Transient
 	public String getRequestNumber() {

@@ -260,7 +260,7 @@ public class OrderTransmitService {
 		boolean result = false;
 		if (order.getCustomerGroup() != null && 
 			order.getCustomerGroup().getSendDeliveryNotification() && 
-			(isNumeric(order.getCustomerOrderNumber())
+			(order.isOriginatedFromHamster()
 			|| order.isOriginateFromServiceNow())) {
 				result = true;
 		}

@@ -36,8 +36,10 @@ public class LevAviseringHamsterClient {
 		head.setOrderDate(orderHeader.getOrderDateAsString());
 		head.setOrderNumber(orderHeader.getOrderNumber());
 		head.setYourReference("");
-		head.setYourPurchaseOrder(orderHeader.getCustomerOrderNumber());
-		head.setYourSalesOrder(orderHeader.getCustomerSalesOrder());
+		//head.setYourPurchaseOrder(orderHeader.getCustomerOrderNumber());
+		//head.setYourSalesOrder(orderHeader.getCustomerSalesOrder());
+		head.setYourPurchaseOrder(orderHeader.getCustomerSalesOrder());
+		head.setYourSalesOrder(orderHeader.getCustomerOrderNumber());
 		head.setOurReference(orderHeader.getOrderNumber());
 		head.setTermsPay("");
 		head.setTermsDel("");
