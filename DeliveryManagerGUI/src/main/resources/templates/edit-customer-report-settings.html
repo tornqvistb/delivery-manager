@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="utf-8"/>
+<head th:include="head" th:remove="tag" />
+
+<body class="layout-2">
+	<div id="body">
+		<div th:include="header" th:remove="tag"></div>
+		<div id="main" class="cf">
+			<div id="content">
+				<div th:include="sub-header-custgroups" th:remove="tag"></div>
+				<div id="service-portal" class="sp-layout-4">
+					<div class="content-1">
+						<div class="m m-1 m-page cf">
+							<div class="m-h main-header cf">
+								<div class="page-heading">
+									<h2	th:text="${'Redigera kundgrupp'}"></h2>
+								</div>
+							</div>
+							<div class="tab-navigation">
+								<ul class="tabs cf">
+									<li>
+										<a th:href="@{/customer-groups/settings/} + ${customerGroup.id}" rel="nofollow">Kundgruppsinställningar
+										</a>			
+									</li>									
+									<li class="sel">
+										<a th:href="@{/customer-groups/report-settings/} + ${customerGroup.id}" rel="nofollow">Leveransrapportinställningar
+										</a>			
+									</li>
+								</ul>
+							</div>
+							<div class="form-section case-listing"></div>							
+							<!-- Här kan man lägga på en vänster meny -->
+							<div class="back-link side-margin">
+								<a th:href="@{/customer-groups}">Till kundgruppsöversikt</a>
+							</div>							
+							<div class="m-form">
+								<div class="content e-tjansteplattform hamster">
+									<div class="form-step">																		
+										<form
+												th:action="@{/customer-groups/save-delivery-report-settings}"
+												th:object="${reqAttr}" method="post"
+												id="reportFieldsForm">
+											<input th:field="${reqAttr.customerId}"	type="hidden" id="customerId" />
+											<input th:field="${reqAttr.listValues}"	type="hidden" id="listValues" />
+											<div class="report-config-header-section">
+												<span class="report-config-header report-config-header-left">Tillgängliga fält</span>
+												<span class="report-config-header">Fält i rapport</span>
+											</div>
+											<div class="form-section" id="search-results">
+												<ul id="sortable1" class="connectedSortable">
+												  <li th:each="field : ${reqAttr.inactiveReportFields}" th:class="${field.styleClass}" th:text="${field.label}" th:attr="data-field-name=${field.fieldName}"> item </li> 
+												</ul>
+												<ul id="sortable2" class="connectedSortable">
+												  <li th:each="field : ${reqAttr.activeReportFields}" th:class="${field.styleClass}" th:text="${field.label}" th:attr="data-field-name=${field.fieldName}"> item </li> 
+												</ul>
+
+												<div class="clear-floats">
+													<strong>Välj kolumn för sortering</strong> 
+													
+													<select
+														th:field="${reqAttr.sortByColumn}"
+														id="columnToSortBy" name="columnToSortBy"
+														>
+														<option th:each="field : ${reqAttr.allReportFields}" th:value="${field.fieldName}" th:text="${field.label}"></option>
+
+													</select>											
+												</div>
+
+												<div class="submit-area clear-floats">
+													<input class="button" type="button" value="Spara ändringar" onclick="getListValuesAndSubmit();"/>
+												</div>
+
+											</div>																																
+											
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:include="footer" th:remove="tag"></div>
+	</div>
+</body>
+</html>

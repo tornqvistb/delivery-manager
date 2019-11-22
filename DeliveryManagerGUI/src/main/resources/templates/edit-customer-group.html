@@ -19,9 +19,22 @@
 									<h2	th:text="${'Redigera kundgrupp'}"></h2>
 								</div>
 							</div>
+							<div class="tab-navigation">
+								<ul class="tabs cf">
+									<li class="sel">
+										<a th:href="@{/customer-groups/settings/} + ${customerGroup.id}" rel="nofollow">Kundgruppsinställningar
+										</a>			
+									</li>
+									<li>
+										<a th:href="@{/customer-groups/report-settings/} + ${customerGroup.id}" rel="nofollow">Leveransrapportinställningar
+										</a>			
+									</li>
+								</ul>
+							</div>
+							<div class="form-section case-listing"></div>							
 							<!-- Här kan man lägga på en vänster meny -->
 							<div class="back-link side-margin">
-								<a th:href="@{/customer-groups}">Tillbaka</a>
+								<a th:href="@{/customer-groups}">Till kundgruppsöversikt</a>
 							</div>							
 							<div class="m-form">
 								<div class="content e-tjansteplattform hamster">

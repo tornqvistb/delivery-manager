@@ -5,6 +5,7 @@ import java.util.List;
 
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.CustomerCustomField;
+import se.lanteam.domain.DeliveryReportField;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
@@ -64,6 +65,11 @@ public class RequestAttributes {
 	private List<DeliveryDay> deliveryDays;
 	private String userName;
 	private String password;
+	private List<DeliveryReportField> activeReportFields;
+	private List<DeliveryReportField> inactiveReportFields;
+	private List<DeliveryReportField> allReportFields;
+	private String listValues;
+	private String sortByColumn;
 	
 	public String getSaveOrder() {
 		return saveOrder;
@@ -478,5 +484,46 @@ public class RequestAttributes {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public List<DeliveryReportField> getActiveReportFields() {
+		return activeReportFields;
+	}
+
+	public void setActiveReportFields(List<DeliveryReportField> activeReportFields) {
+		this.activeReportFields = activeReportFields;
+	}
+
+	public List<DeliveryReportField> getInactiveReportFields() {
+		return inactiveReportFields;
+	}
+
+	public void setInactiveReportFields(List<DeliveryReportField> inactiveReportFields) {
+		this.inactiveReportFields = inactiveReportFields;
+	}
+
+	public String getListValues() {
+		return listValues;
+	}
+
+	public void setListValues(String listValues) {
+		this.listValues = listValues;
+	}
+
+	public List<DeliveryReportField> getAllReportFields() {
+		return allReportFields;
+	}
+
+	public void setAllReportFields(List<DeliveryReportField> allReportFields) {
+		this.allReportFields = allReportFields;
+	}
+
+	public String getSortByColumn() {
+		return sortByColumn;
+	}
+
+	public void setSortByColumn(String sortByColumn) {
+		this.sortByColumn = sortByColumn;
+	}
+
 	
 }

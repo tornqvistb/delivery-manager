@@ -107,3 +107,30 @@ $(function () {
     	//}
     })
 });
+
+$( function() {
+    $( "#sortable1, #sortable2" ).sortable({
+    	connectWith: ".connectedSortable"
+    }).disableSelection();
+});
+
+$(function() {
+    $("#sortable1, #sortable2").fixedsortable({
+        fixed: "> .static"
+    });
+
+});
+
+function getListValuesAndSubmit() {
+	const listItems = document.querySelectorAll('#sortable2 li');
+	var itemValues = "";
+	for (let i = 0; i < listItems.length; i++) {
+		if (i > 0) {
+			itemValues = itemValues.concat(";");
+		}		
+		itemValues = itemValues.concat(listItems[i].getAttribute('data-field-name'));
+	}
+	var listValuesInput = document.getElementById("listValues"); 
+	listValuesInput.value = itemValues;
+	document.getElementById("reportFieldsForm").submit();
+}

@@ -1,7 +1,10 @@
 package se.lanteam.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,18 +21,21 @@ import se.lanteam.constants.SessionConstants;
 import se.lanteam.domain.CustomField;
 import se.lanteam.domain.CustomerCustomField;
 import se.lanteam.domain.CustomerGroup;
+import se.lanteam.domain.DeliveryReportField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
 import se.lanteam.repository.CustomFieldRepository;
 import se.lanteam.repository.CustomerGroupRepository;
+import se.lanteam.repository.ReportsConfigRepository;
 
 @Controller
 public class CustomerGroupController extends BaseController{
 	
 	private CustomFieldRepository customFieldRepo;
 	private CustomerGroupRepository customerRepo;
+	private ReportsConfigRepository reportsConfigRepo;
 	private SessionBean sessionBean;
 	
 	@RequestMapping("customer-groups")
@@ -73,6 +79,36 @@ public class CustomerGroupController extends BaseController{
 		return "edit-customer-group";
 	}
 
+	@RequestMapping(value="customer-groups/report-settings/{customerId}", method=RequestMethod.GET)
+	public String editCustomerGroupReportSettings(@PathVariable Long customerId, ModelMap model, HttpServletRequest request) {			
+		CustomerGroup customerGroup = customerRepo.findOne(customerId);
+		RequestAttributes reqAttr = new RequestAttributes();
+		if (customerGroup.getRegistrationConfig() == null) {
+			customerGroup.setRegistrationConfig(new RegistrationConfig());
+		}		
+		List<DeliveryReportField> activeFields = new ArrayList<DeliveryReportField>();
+		List<DeliveryReportField> inactiveFields = new ArrayList<DeliveryReportField>();
+		for (DeliveryReportField field : customerGroup.getReportsConfig().getReportFields()) {
+			if (field.getShowInReport()) {
+				activeFields.add(field);
+			} else {
+				inactiveFields.add(field);
+			}
+		}			
+		reqAttr.setActiveReportFields(activeFields);
+		reqAttr.setInactiveReportFields(inactiveFields);
+		List<DeliveryReportField> allFields = new ArrayList<DeliveryReportField>();
+		allFields.addAll(activeFields);
+		allFields.addAll(inactiveFields);
+		reqAttr.setAllReportFields(allFields);
+		reqAttr.setCustomerId(customerId);
+		
+		reqAttr.setSortByColumn(customerGroup.getReportsConfig().getSortColumnDeliverReport());
+		model.put("customerGroup", customerGroup);
+		model.put("reqAttr", reqAttr);
+		return "edit-customer-report-settings";
+	}
+	
 	@RequestMapping(value="customer-groups/delete/{customerId}", method=RequestMethod.GET)
 	public String deleteCustomerGroup(@PathVariable Long customerId, ModelMap model, HttpServletRequest request) {
 		RequestAttributes reqAttr = new RequestAttributes();
@@ -136,6 +172,41 @@ public class CustomerGroupController extends BaseController{
 		return "customer-groups";
 	}
 
+	@RequestMapping(value = "customer-groups/save-delivery-report-settings", method = RequestMethod.POST)
+	public String saveDeliveryReportSettings(@ModelAttribute RequestAttributes reqAttr,
+			ModelMap model) {
+		CustomerGroup customerGroup = customerRepo.findOne(reqAttr.getCustomerId());
+		
+		Set<DeliveryReportField> deliveryReportFields = new HashSet<DeliveryReportField>();
+		List<String> listFromForm = new ArrayList<String>();
+		String[] arrFromForm = reqAttr.getListValues().split(";");
+		if (arrFromForm != null) {
+			listFromForm = Arrays.asList(arrFromForm);
+		}
+		for (DeliveryReportField field : customerGroup.getReportsConfig().getReportFields()) {
+			deliveryReportFields.add(getField(listFromForm, field));
+		}		
+		customerGroup.getReportsConfig().setReportFields(deliveryReportFields);
+		customerGroup.getReportsConfig().setSortColumnDeliverReport(reqAttr.getSortByColumn());
+		customerRepo.save(customerGroup);		
+		return "redirect:/customer-groups/report-settings/" + reqAttr.getCustomerId();
+	}
+
+	private DeliveryReportField getField(List<String> formList, DeliveryReportField field) {
+		Long columnIdx = 1L;
+		for (String fieldName : formList) {
+			if (fieldName.equals(field.getFieldName())) {
+				field.setShowInReport(true);
+				field.setColumnNumber(columnIdx);
+				return field;
+			}
+			columnIdx++;
+		}
+		field.setShowInReport(false);
+		field.setColumnNumber(0L);
+		return field;
+	}
+	
 	@Autowired
 	public void setCustomerGroupRepo(CustomerGroupRepository customerRepo) {
 		this.customerRepo = customerRepo;
@@ -143,6 +214,10 @@ public class CustomerGroupController extends BaseController{
 	@Autowired
 	public void setCustomFieldRepo(CustomFieldRepository customFieldRepo) {
 		this.customFieldRepo = customFieldRepo;
+	}
+	@Autowired
+	public void setReportsConfigRepo(ReportsConfigRepository reportsConfigRepo) {
+		this.reportsConfigRepo = reportsConfigRepo;
 	}
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {

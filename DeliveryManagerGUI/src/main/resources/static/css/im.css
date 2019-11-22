@@ -87,3 +87,52 @@
 #service-portal p.important-message {
     font-weight: bold;
 }
+#sortable1, #sortable2 {
+    border: 1px solid #eee;
+    width: 322px;
+    min-height: 20px;
+    list-style-type: none;    
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    
+}
+  #sortable1 li, #sortable2 li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 1.2em;
+    width: 300px;
+}
+.clear-floats {
+    clear: both;
+}
+  
+.pink-box {
+	background: #EF9A9A !important;
+}
+
+.yellow-box {
+	background: #FFE082 !important;
+}
+
+.green-box {
+	background: #A5D6A7 !important;
+}
+
+.report-config-header-section {
+	margin-top: 20px;
+	clear: both;
+	padding-left: 30px;
+}
+
+.report-config-header {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.report-config-header-left {
+	width: 333px;
+	float: left;
+}

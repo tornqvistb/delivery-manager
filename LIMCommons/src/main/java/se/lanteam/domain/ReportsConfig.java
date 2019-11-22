@@ -1,9 +1,16 @@
 package se.lanteam.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 
 @Entity
 public class ReportsConfig {
@@ -23,6 +30,8 @@ public class ReportsConfig {
 	private Boolean showLeasingNumber;
 	private Boolean showOrderDate;
 	private Boolean showDeliveryDate;
+	private Set<DeliveryReportField> reportFields = new HashSet<DeliveryReportField>();
+	private String sortColumnDeliverReport;
 		
 	@Id
 	@GeneratedValue
@@ -118,6 +127,23 @@ public class ReportsConfig {
 	}
 	public void setShowDeliveryDate(Boolean showDeliveryDate) {
 		this.showDeliveryDate = showDeliveryDate;
+	}
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="reportsConfig")
+	@OrderBy("columnNumber,originColumnNumber")
+	public Set<DeliveryReportField> getReportFields() {
+		return reportFields;
+	}
+	public void setReportFields(Set<DeliveryReportField> reportFields) {
+		this.reportFields = reportFields;
+	}
+	public String getSortColumnDeliverReport() {
+		if (sortColumnDeliverReport == null) {
+			return "";
+		} else 
+			return sortColumnDeliverReport;
+	}
+	public void setSortColumnDeliverReport(String sortColumnDeliverReport) {
+		this.sortColumnDeliverReport = sortColumnDeliverReport;
 	}
 	
 }
