@@ -19,22 +19,17 @@ public class SearchBean {
 	private Long customerGroupId;
 	private Date fromDate;
 	private Date toDate;
-	private String fromOrderNo;
-	private String toOrderNo;
 	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
 
 	public List<OrderHeader> getOrderList() {
 		return orderList;
 	}
 
-	public void populate(List<OrderHeader> orderList, Long customerGroupId, Date fromDate, Date toDate, String fromOrderNo,
-			String toOrderNo, List<CustomerCustomField> customerCustomFields) {
+	public void populate(List<OrderHeader> orderList, Long customerGroupId, Date fromDate, Date toDate, List<CustomerCustomField> customerCustomFields) {
 		this.orderList = orderList;
 		this.customerGroupId = customerGroupId;
 		this.fromDate = fromDate;
 		this.toDate = toDate;
-		this.fromOrderNo = fromOrderNo;
-		this.toOrderNo = toOrderNo;
 		this.customerCustomFields = customerCustomFields;
 	}
 
@@ -64,22 +59,6 @@ public class SearchBean {
 
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
-	}
-
-	public String getFromOrderNo() {
-		return fromOrderNo;
-	}
-
-	public void setFromOrderNo(String fromOrderNo) {
-		this.fromOrderNo = fromOrderNo;
-	}
-
-	public String getToOrderNo() {
-		return toOrderNo;
-	}
-
-	public void setToOrderNo(String toOrderNo) {
-		this.toOrderNo = toOrderNo;
 	}
 
 	public List<CustomerCustomField> getCustomerCustomFields() {

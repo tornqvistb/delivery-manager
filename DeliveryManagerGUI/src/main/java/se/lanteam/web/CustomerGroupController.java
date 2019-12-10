@@ -86,15 +86,8 @@ public class CustomerGroupController extends BaseController{
 		if (customerGroup.getRegistrationConfig() == null) {
 			customerGroup.setRegistrationConfig(new RegistrationConfig());
 		}		
-		List<DeliveryReportField> activeFields = new ArrayList<DeliveryReportField>();
-		List<DeliveryReportField> inactiveFields = new ArrayList<DeliveryReportField>();
-		for (DeliveryReportField field : customerGroup.getReportsConfig().getReportFields()) {
-			if (field.getShowInReport()) {
-				activeFields.add(field);
-			} else {
-				inactiveFields.add(field);
-			}
-		}			
+		List<DeliveryReportField> activeFields = customerGroup.getReportsConfig().getActiveReportFields();
+		List<DeliveryReportField> inactiveFields = customerGroup.getReportsConfig().getInactiveReportFields();
 		reqAttr.setActiveReportFields(activeFields);
 		reqAttr.setInactiveReportFields(inactiveFields);
 		List<DeliveryReportField> allFields = new ArrayList<DeliveryReportField>();

@@ -70,23 +70,46 @@
 		
 															</select>
 														</div>
-													</div>
-												</div>
-												<div class="information-text system-info help-message">
-													<p>Om ni vill kan ni ange en lägre resp. högre gräns för ordernummer.<br />Detsamma gäller för leveransdatum.</p>
-												</div>
-												<div class="row cols-3 cf">
-													<div class="col col-1">
-														<div class="text">
-															<label for="fromOrderNo">Från ordernummer</label>
-															<input type="number" th:field="${reqAttr.fromOrderNo}" maxlength="10" value="" name="fromOrderNo" class="small" id="fromOrderNo"/>
+
+														<div class="select">
+															<label for="kundNummer">Välj kundnummer</label> 
+															
+															<select
+																th:field="${reqAttr.customerNumber}"
+																id="customerNumber" name="customerNumber"
+																>
+																<option th:value="${reqAttr.emptyValue}">Välj kundnummer</option>
+																<option th:each="customerNumber : ${reqAttr.customerNumbers}" th:value="${customerNumber.number}" th:text="${customerNumber.label}"></option>
+		
+															</select>
 														</div>
-													 </div> 
-													<div class="col col-2">
-														<div class="text">
-															<label for="toOrderNo">Till ordernummer</label>
-															<input type="number" th:field="${reqAttr.toOrderNo}" maxlength="10" value="" name="toOrderNo" class="small" id="toOrderNo"/>
+														
+														<div class="select">
+															<label for="status">Välj status</label> 
+															<select
+																th:field="${reqAttr.orderStatus}"
+																id="orderStatus" name="orderStatus"
+																>
+																<option value="active">Aktiva</option>
+																<option value="receiving">&nbsp;&nbsp;- Delvis mottagen</option>
+																<option value="new">&nbsp;&nbsp;- Ny</option>
+																<option value="booked">&nbsp;&nbsp;- Bokad</option>
+																<option value="started">&nbsp;&nbsp;- Påbörjad</option>
+																<option value="registration_done">&nbsp;&nbsp;- Registrering klar</option>
+																<option value="routeplanned">&nbsp;&nbsp;- Ruttplanerad</option>
+																<option value="not_accepted">&nbsp;&nbsp;- Ej
+																	accepterad</option>
+																<option value="inactive">Ej aktiva (även samleveranser)</option>
+																<option value="sent_customer">&nbsp;&nbsp;- Leveransavisering skickad</option>
+																<option value="transferred_customer">&nbsp;&nbsp;- Överförd - inväntar leveranssedel</option>
+																<option value="sent">&nbsp;&nbsp;- Skickad</option>
+																<option value="transferred">&nbsp;&nbsp;- Överförd
+																	till kund</option>
+																<option value="all">Alla status (även samleveranser)</option>
+															</select>
 														</div>
+														
+														
 													</div>
 												</div>
 												<div class="row cols-3 cf">													
@@ -104,33 +127,10 @@
 													</div>
 												</div>
 												
-												<h3>Fält att visa i rapporten (endast aktuellt om man valt kundgrupp ovan)</h3>
-
-												<table>
-													<colgroup>
-														<col style="width: 50%" />
-														<col style="width: 50%" />
-													</colgroup>
-													<thead>
-														<tr>
-															<th scope="col">Fält</th>
-															<th scope="col">Visa</th>
-														</tr>
-													</thead>
-													<tbody>													
-														<tr th:each="customerCustomField, loop : *{customerCustomFields}">
-															<td th:text="${customerCustomField.label}">Rubriken</td>
-															<td>
-																<input type="hidden" name="show1" th:field="*{customerCustomFields[__${loop.index}__].id}"/>
-																<input type="hidden" name="show2" th:field="*{customerCustomFields[__${loop.index}__].label}"/>
-																<input type="checkbox" name="showInDeliveryReport" th:field="*{customerCustomFields[__${loop.index}__].showInDeliveryReport}" th:checked="*{customerCustomFields[__${loop.index}__].showInDeliveryReport}" />
-															</td>
-														</tr>
-													</tbody>
-												</table>
-												
-												<div class="row">
-													<input class="btn" type="submit" value="Sök" id="ActionSearch" name="ActionSearch"/>
+												<div class="search-wide">
+													<label for="query">Ange sökord</label>
+													<input class="keywords" th:field="${reqAttr.query}" type="search" id="query" value="${reqAttr.query}" placeholder="Ange ordernummer eller något av kundens ordernummer"/>
+													<input class="btn" type="submit" value="Sök" id="ActionSearchFreetext" name="ActionSearchFreetext"/>
 												</div>													
 											</div>
 										</form>

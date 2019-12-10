@@ -1,12 +1,14 @@
 package se.lanteam.model;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
-import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.StatusConstants;
 
 @Component
@@ -17,6 +19,11 @@ public class OrderListSearchBean {
 	private String fromDate;
 	private String toDate;
 	private String status;
+	private Long customerGroupId;
+	private String customerNumber;
+	private List<String> stati = new ArrayList<String>();
+	private Pageable maxRows;
+	
 	public String getQuery() {
 		return query;
 	}
@@ -54,6 +61,37 @@ public class OrderListSearchBean {
 		this.fromDate = "";
 		this.toDate = "";
 		this.status = StatusConstants.ORDER_STATUS_GROUP_ACTIVE;
+	}
+	public Long getCustomerGroupId() {
+		return customerGroupId;
+	}
+	public void setCustomerGroupId(Long customerGroupId) {
+		this.customerGroupId = customerGroupId;
+	}
+	public String getCustomerNumber() {
+		return customerNumber;
+	}
+	public void setCustomerNumber(String customerNumber) {
+		this.customerNumber = customerNumber;
+	}
+	public List<String> getStati() {
+		return stati;
+	}
+	public void setStati(List<String> stati) {
+		this.stati = stati;
+	}
+	public Pageable getMaxRows() {
+		return maxRows;
+	}
+	public void setMaxRows(Pageable maxRows) {
+		this.maxRows = maxRows;
+	}
+	public String getQueryWithWildcards() {
+		if (StringUtils.isEmpty(query)) {
+			return "%";
+		} else {
+			return "%" + query + "%";
+		}
 	}
 	
 }

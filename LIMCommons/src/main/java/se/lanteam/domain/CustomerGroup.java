@@ -2,7 +2,9 @@ package se.lanteam.domain;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,7 +25,7 @@ public class CustomerGroup {
 	private String backgroundColor;
 	private RegistrationConfig registrationConfig;
 	private ReportsConfig reportsConfig;
-	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
+	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();	
 	private String ourReference;
 	private Boolean sendDeliveryNotification;
 	private Boolean getContactInfoFromNetset;
@@ -33,7 +35,8 @@ public class CustomerGroup {
 	private Boolean sendDeliveryMailToContacts;
 	private Boolean autoRegisterInternalOrderLines;
 	private Boolean allowPreDeliveryInfo;
-
+	private Set<CustomerNumber> customerNumbers = new HashSet<CustomerNumber>();
+	
 	public String getDeliveryEmailAddress() {
 		return deliveryEmailAddress;
 	}
@@ -170,6 +173,15 @@ public class CustomerGroup {
 
 	public void setAllowPreDeliveryInfo(Boolean allowPreDeliveryInfo) {
 		this.allowPreDeliveryInfo = allowPreDeliveryInfo;
+	}
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="customerGroup")
+	@OrderBy("id")
+	public Set<CustomerNumber> getCustomerNumbers() {
+		return customerNumbers;
+	}
+
+	public void setCustomerNumbers(Set<CustomerNumber> customerNumbers) {
+		this.customerNumbers = customerNumbers;
 	}
 
 	

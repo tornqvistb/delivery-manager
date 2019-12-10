@@ -5,6 +5,7 @@ import java.util.List;
 
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.CustomerCustomField;
+import se.lanteam.domain.CustomerNumber;
 import se.lanteam.domain.DeliveryReportField;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
@@ -69,7 +70,10 @@ public class RequestAttributes {
 	private List<DeliveryReportField> inactiveReportFields;
 	private List<DeliveryReportField> allReportFields;
 	private String listValues;
-	private String sortByColumn;
+	private String sortByColumn;	
+	private String customerNumber;
+	private List<CustomerNumber> customerNumbers = new ArrayList<CustomerNumber>();
+	private String emptyValue = "";
 	
 	public String getSaveOrder() {
 		return saveOrder;
@@ -523,6 +527,30 @@ public class RequestAttributes {
 
 	public void setSortByColumn(String sortByColumn) {
 		this.sortByColumn = sortByColumn;
+	}
+
+	public String getCustomerNumber() {
+		return customerNumber;
+	}
+
+	public void setCustomerNumber(String customerNumber) {
+		this.customerNumber = customerNumber;
+	}
+
+	public List<CustomerNumber> getCustomerNumbers() {
+		return customerNumbers;
+	}
+
+	public void setCustomerNumbers(List<CustomerNumber> customerNumbers) {
+		this.customerNumbers = customerNumbers;
+	}
+
+	public String getEmptyValue() {
+		return emptyValue;
+	}
+
+	public void setEmptyValue(String emptyValue) {
+		this.emptyValue = emptyValue;
 	}
 
 	

@@ -126,4 +126,19 @@ public interface OrderRepository extends JpaRepository<OrderHeader, Long> {
 	@Query("SELECT o FROM OrderHeader o WHERE o.customerOrderNumber LIKE %:customerOrderNumber%")
     public List<OrderHeader> findOrdersByCustomerOrderNumber(@Param("customerOrderNumber") String customerOrderNumber);
 
+	@Query("SELECT o FROM OrderHeader o WHERE o.customerGroup.id = :customerGroupId GROUP BY o.customerNumber, o.customerName")
+    public List<OrderHeader> findOrdersDistinctCustomer(@Param("customerGroupId") Long customerGroupId);
+	
+	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND o.deliveryDate >= :deliveryStartDate AND o.deliveryDate <= :deliveryEndDate AND "
+			+ LIKE_CONDITION_ORDER_HEADER
+			+ " AND o.customerGroup.id = :customerGroupId"
+			+ " AND (:customerNumber is null or o.customerNumber = :customerNumber)")
+    public List<OrderHeader> findDeliveredOrdersFromSearchDeliveryReport(@Param("statusList") List<String> statusList, @Param("searchString") String searchString, @Param("deliveryStartDate") Date deliveryStartDate, @Param("deliveryEndDate") Date deliveryEndDate, @Param("customerGroupId") Long customerGroupId, @Param("customerNumber") String customerNumber, Pageable pageable);
+
+	@Query("SELECT o FROM OrderHeader o WHERE o.status in :statusList AND "
+			+ LIKE_CONDITION_ORDER_HEADER
+			+ " AND o.customerGroup.id = :customerGroupId"
+			+ " AND (:customerNumber is null or o.customerNumber = :customerNumber)")
+    public List<OrderHeader> findOrdersFromSearchDeliveryReport(@Param("statusList") List<String> statusList, @Param("searchString") String searchString, @Param("customerGroupId") Long customerGroupId, @Param("customerNumber") String customerNumber, Pageable pageable);
+
 }

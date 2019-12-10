@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import se.lanteam.service.CustomerNumberService;
 import se.lanteam.service.OrderDeletionService;
 import se.lanteam.service.OrderTransmitService;
 
@@ -17,14 +18,16 @@ public class OrderTransmitJob implements Job {
     private OrderTransmitService service;
     @Autowired
     private OrderDeletionService deletionService;
-
+    @Autowired
+    private CustomerNumberService customerNumberService;
     private static final Logger LOG = LoggerFactory.getLogger(OrderTransmitJob.class);
     
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
     	LOG.info("Running OrderTransmitJob");
-        service.transmitOrders();
-        service.transmitOrderComments();
-        deletionService.deleteOrders();
+        //service.transmitOrders();
+        //service.transmitOrderComments();
+        //deletionService.deleteOrders();
+        customerNumberService.collectCustomerNumbers();
     }
 }
