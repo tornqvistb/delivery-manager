@@ -8,6 +8,6 @@ public class SortByEQCustomLabel1 implements Comparator<DeliveryReportLine>
 { 
     public int compare(DeliveryReportLine a, DeliveryReportLine b) 
     { 
-        return a.getEqCustomLabel1().compareTo(b.getEqCustomLabel1()); 
+        return a.getEqCustomAttribute1().compareTo(b.getEqCustomAttribute1()); 
     } 
 }
