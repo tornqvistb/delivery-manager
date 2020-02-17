@@ -101,7 +101,7 @@ public class DeliveryReportController extends BaseController{
 			orderListSearchBean.setCustomerNumber(reqAttr.getCustomerNumber());			
 			List<OrderHeader> orders = search();
 			if (!orders.isEmpty()) {
-				reqAttr.setResultNotEmptyMsg("Sökningen gav " + orders.size() + " träff(ar)");
+				reqAttr.setResultNotEmptyMsg("Sökningen gav träff på " + orders.size() + " ordrar");
 			} else {
 				reqAttr.setResultEmptyMsg("Sökningen gav inga träffar");
 			}

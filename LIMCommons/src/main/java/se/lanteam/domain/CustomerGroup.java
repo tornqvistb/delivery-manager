@@ -174,7 +174,7 @@ public class CustomerGroup {
 	public void setAllowPreDeliveryInfo(Boolean allowPreDeliveryInfo) {
 		this.allowPreDeliveryInfo = allowPreDeliveryInfo;
 	}
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="customerGroup")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="customerGroup", orphanRemoval=true)
 	@OrderBy("id")
 	public Set<CustomerNumber> getCustomerNumbers() {
 		return customerNumbers;

@@ -79,15 +79,7 @@ import se.lanteam.domain.OrderLine;
 import se.lanteam.domain.ReportsConfig;
 import se.lanteam.model.DeliveryReportLine;
 import se.lanteam.model.SearchBean;
-import se.lanteam.model.comparator.SortByEQCustomLabel1;
-import se.lanteam.model.comparator.SortByEQSerialNo;
-import se.lanteam.model.comparator.SortByEQStealingTag;
-import se.lanteam.model.comparator.SortByOHCustomerOrderNumber;
-import se.lanteam.model.comparator.SortByOHCustomerSalesOrder;
-import se.lanteam.model.comparator.SortByOHOrderNumber;
-import se.lanteam.model.comparator.SortByOLArticleNumber;
-import se.lanteam.model.comparator.SortByOLCustomerRowNumber;
-import se.lanteam.model.comparator.SortByOLTotal;
+import se.lanteam.model.comparator.DeliveryReportSorter;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.OrderRepository;
 
@@ -130,7 +122,7 @@ public class ReportExcelDataBuilder {
         		}
         	}        	
         }        
-		reportLines = sort(reportLines, reportsConfig);
+		Collections.sort(reportLines, new DeliveryReportSorter(reportsConfig.getSortColumnDeliverReport()));
         List<List<String>> results = new ArrayList<List<String>>();
 		List<String> orderCols = new ArrayList<String>();
 		results.add(orderCols);
@@ -329,32 +321,7 @@ public class ReportExcelDataBuilder {
 		}
 		return results;
 	}
-	
-	private List<DeliveryReportLine> sort(List<DeliveryReportLine> lines, ReportsConfig reportsConfig) {
 		
-		if (COL_ORDER_NUMBER.equals(reportsConfig.getSortColumnDeliverReport())) {
-			Collections.sort(lines, new SortByOHOrderNumber());
-		} else if (COL_CUSTOMER_ORDER_NUMBER.equals(reportsConfig.getSortColumnDeliverReport())) {
-			Collections.sort(lines, new SortByOHCustomerOrderNumber());
-		} else if (COL_CUSTOMER_SALES_ORDER.equals(reportsConfig.getSortColumnDeliverReport())) {
-			Collections.sort(lines, new SortByOHCustomerSalesOrder());
-		} else if (COL_ARTICLE_NUMBER.equals(reportsConfig.getSortColumnDeliverReport())) {
-			Collections.sort(lines, new SortByOLArticleNumber());
-		} else if (COL_TOTAL.equals(reportsConfig.getSortColumnDeliverReport())) {
-			Collections.sort(lines, new SortByOLTotal());
-		} else if (COL_CUSTUMER_ROW_NUMBER.equals(reportsConfig.getSortColumnDeliverReport())) {
-			Collections.sort(lines, new SortByOLCustomerRowNumber());
-		} else if (COL_SERIAL_NO.equals(reportsConfig.getSortColumnDeliverReport())) {
-			Collections.sort(lines, new SortByEQSerialNo());
-		} else if (COL_STEALING_TAG.equals(reportsConfig.getSortColumnDeliverReport())) {
-			Collections.sort(lines, new SortByEQStealingTag());
-		} else if (COL_EQ_CUST_ATTRIBUTE_1.equals(reportsConfig.getSortColumnDeliverReport())) {
-			Collections.sort(lines, new SortByEQCustomLabel1());
-		}
-		 
-		return lines;
-	}	
-	
 	private DeliveryReportLine getReportLine(OrderHeader order, OrderLine orderLine, Equipment equipment) {
 		DeliveryReportLine line = new DeliveryReportLine();
 

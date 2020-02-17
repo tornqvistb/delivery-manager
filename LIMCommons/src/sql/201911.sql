@@ -25,7 +25,7 @@ VALUES (12,12,'ohDeliveryPostalAddress2',b'1',3, 'Leveransadress 2', 12);
 INSERT INTO delivery_report_field (id,column_number,field_name,show_in_report,reports_config_id, label, origin_column_number)
 VALUES (13,13,'ohDeliveryPostalCode',b'1',3, 'Leverans postnummer', 13);
 INSERT INTO delivery_report_field (id,column_number,field_name,show_in_report,reports_config_id, label, origin_column_number)
-VALUES (14,14,'ohCity',b'1',3, 'Leveransort', 14);
+VALUES (14,14,'ohCity',b'1',3, 'Postort', 14);
 INSERT INTO delivery_report_field (id,column_number,field_name,show_in_report,reports_config_id, label, origin_column_number)
 VALUES (15,15,'ohPostalAddress1',b'1',3, 'Postadress 1', 15);
 INSERT INTO delivery_report_field (id,column_number,field_name,show_in_report,reports_config_id, label, origin_column_number)
