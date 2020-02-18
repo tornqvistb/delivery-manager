@@ -25,9 +25,9 @@ public class OrderTransmitJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
     	LOG.info("Running OrderTransmitJob");
-        //service.transmitOrders();
-        //service.transmitOrderComments();
-        //deletionService.deleteOrders();
+        service.transmitOrders();
+        service.transmitOrderComments();
+        deletionService.deleteOrders();
         customerNumberService.collectCustomerNumbers();
     }
 }
