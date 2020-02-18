@@ -61,7 +61,7 @@ function PrintLabels()
      var extOrderNo =  retrieve("ext-sales-no");     
      WinPrint.document.write("<html><head></head><body>");
      WinPrint.document.write("<div>");
-     WinPrint.document.write("Lanteam order:<br />");
+     WinPrint.document.write("Visolit order:<br />");
      WinPrint.document.write("<span style='font-weight:bold;font-size:larger'>" + intOrderNo + "</span>");
      WinPrint.document.write("<br /><br />");
      WinPrint.document.write("Kundens order:<br />");
