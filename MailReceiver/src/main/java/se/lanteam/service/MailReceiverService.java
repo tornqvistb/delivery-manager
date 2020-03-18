@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -110,8 +111,10 @@ public class MailReceiverService {
 			// Copy messages to archive folder
 
 			Folder processedFolder = store.getFolder(PROCESSED_FOLDER);
+			
 			if (processedFolder != null) {
-				emailFolder.copyMessages(messages, processedFolder);
+				Message[] messagesToCopy = getMessagesToCopy(messages);
+				emailFolder.copyMessages(messagesToCopy, processedFolder);
 			}
 			
 			for (int i = 0, n = messages.length; i < n; i++) {
@@ -158,6 +161,40 @@ public class MailReceiverService {
 			e.printStackTrace();
 		}
 	}    
+	
+	private Message[] getMessagesToCopy(Message[] messages) {
+		List<Message> messageList = new ArrayList<Message>();
+		if (messages != null && messages.length > 0) {
+			for (Message message : messages) {
+				if (messageIsValid(message)) {
+					messageList.add(message);
+				}
+			}
+		}
+		return messageList.toArray(new Message[messageList.size()]);
+	}
+	
+	private boolean messageIsValid(Message message) {
+		try {
+			if (message != null && message.getFrom() != null && message.getFrom().length > 0) {
+				String fromAdress = message.getFrom()[0].toString().toLowerCase();
+				LOG.debug("Mail sender: " + fromAdress);
+				String[] validDomains = propService.getString(PropertyConstants.VALID_EMAIL_DOMAINS_FOR_REPLY).split(",");
+				for (String domain : validDomains) {
+					domain = domain.trim().toLowerCase();
+					if (fromAdress.contains(domain.trim().toLowerCase())) {
+						LOG.debug("From adress: " + fromAdress + " contains domain " + domain);
+						return true;
+					}
+				}
+			} else {
+				LOG.debug("Sender is empty in mail!");
+			}
+		} catch (MessagingException e) {			
+			LOG.error("MessagingException: " + e.getMessage());
+		}
+		return false;
+	}
 	
 	private boolean isImage(String fileName) {
 		boolean result = false;
@@ -229,7 +266,9 @@ public class MailReceiverService {
 			resultText = ERROR_INVALID_SUBJECT + orderNumber + ", filnamn: " + fileName;
 			saveError(resultText);
 		}
-		createMail(resultText, message);
+		if (messageIsValid(message)) {
+			createMail(resultText, message);
+		}
 		
 	}
 	

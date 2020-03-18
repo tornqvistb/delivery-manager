@@ -33,6 +33,7 @@ public class PropertyConstants {
 	public static final String WS_USERNAME_SN = "ws-username-sn";
 	public static final String WS_PASSWORD_SN = "ws-password-sn";
 	public static final String MAX_ORDERS_IN_SEARCH = "max-orders-in-search";
+	public static final String VALID_EMAIL_DOMAINS_FOR_REPLY = "valid-email-domains-for-reply";
 	// Archiving db
 	public static final String ARCHIVERJOB_FREQUENCY = "archiverjob-frequency";	
 
