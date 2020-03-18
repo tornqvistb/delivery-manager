@@ -513,7 +513,7 @@ public class OrderHeader {
 		return theClass;
 	}
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="orderHeader")
-	@OrderBy("creationDate")
+	@OrderBy("customField.id")
 	public Set<OrderCustomField> getOrderCustomFields() {
 		return orderCustomFields;
 	}
