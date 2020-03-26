@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -112,16 +111,9 @@ public class MailReceiverService {
 
 			Folder processedFolder = store.getFolder(PROCESSED_FOLDER);
 			
-			if (processedFolder != null) {
-				Message[] messagesToCopy = getMessagesToCopy(messages);
-				emailFolder.copyMessages(messagesToCopy, processedFolder);
-			}
-			
 			for (int i = 0, n = messages.length; i < n; i++) {
 				Message message = messages[i];
-				String contentType = message.getContentType();
-				LOG.debug("Contenttype: " + contentType);
-				if (contentType.contains("multipart")) {
+				if (messageIsValid(message)) {
 					LOG.debug("Got mail: " + message.getSubject());					
                     // content may contain attachments
                     Multipart multiPart = (Multipart) message.getContent();
@@ -133,6 +125,7 @@ public class MailReceiverService {
                             // this part is attachment
                             String fileName = part.getFileName();
                         	if (isImage(fileName)) {
+                        		LOG.debug("Contains image");	
 	                            String fileNameWithPath = saveDirectory + File.separator + fileName;
 	                            part.saveFile(fileNameWithPath);
 	                            File origFile = new File(fileNameWithPath);
@@ -143,6 +136,7 @@ public class MailReceiverService {
                         	}
                         }
                     }
+                    emailFolder.copyMessages(new Message[]{message}, processedFolder);
                 } else {
                 	LOG.debug("No attachment in mail: " + message.getSubject());
                 }
@@ -154,29 +148,18 @@ public class MailReceiverService {
 			store.close();
 
 		} catch (NoSuchProviderException e) {
-			e.printStackTrace();
+			LOG.error("NoSuchProviderException: " + e.getMessage(), e);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			LOG.error("MessagingException: " + e.getMessage(), e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Exception: " + e.getMessage(), e);
 		}
 	}    
-	
-	private Message[] getMessagesToCopy(Message[] messages) {
-		List<Message> messageList = new ArrayList<Message>();
-		if (messages != null && messages.length > 0) {
-			for (Message message : messages) {
-				if (messageIsValid(message)) {
-					messageList.add(message);
-				}
-			}
-		}
-		return messageList.toArray(new Message[messageList.size()]);
-	}
-	
 	private boolean messageIsValid(Message message) {
 		try {
 			if (message != null && message.getFrom() != null && message.getFrom().length > 0) {
+				boolean domainOK = false;
+				boolean contentOK = false;
 				String fromAdress = message.getFrom()[0].toString().toLowerCase();
 				LOG.debug("Mail sender: " + fromAdress);
 				String[] validDomains = propService.getString(PropertyConstants.VALID_EMAIL_DOMAINS_FOR_REPLY).split(",");
@@ -184,9 +167,17 @@ public class MailReceiverService {
 					domain = domain.trim().toLowerCase();
 					if (fromAdress.contains(domain.trim().toLowerCase())) {
 						LOG.debug("From adress: " + fromAdress + " contains domain " + domain);
-						return true;
+						domainOK = true;
+						break;
 					}
 				}
+				if (domainOK) {
+					String contentType = message.getContentType();
+					if (contentType.contains("multipart")) {
+						contentOK = true;
+					}					
+				}
+				return domainOK && contentOK;
 			} else {
 				LOG.debug("Sender is empty in mail!");
 			}
