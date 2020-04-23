@@ -94,16 +94,18 @@ public class LevAviseringHamsterClient {
 		delivery.setBody(body);
 		
 		URL url = new URL(config.getEndPoint());
-		
 		QName qName = new QName("http://staden.esb.GBCA003A_LeveransAvisering", "GBCA003A_LeveransAvisering");
 		GBCA003ALeveransAvisering_Service service = new GBCA003ALeveransAvisering_Service(url, qName);
 		GBCA003ALeveransAvisering port = service.getBasicHttpBindingGBCA003ALeveransAvisering();
 		BindingProvider prov = (BindingProvider)port;
 		prov.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, config.getUserName());
 		prov.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, config.getPassword());
-
+	
+		SSLUtilities.trustAllHostnames();
+		SSLUtilities.trustAllHttpsCertificates();
+		
 		return toCommonHeader(port.gbca003ALeveransAvisering(delivery));
-
+		
 	}
 	
 	private se.lanteam.ws.Header toCommonHeader(Header header){

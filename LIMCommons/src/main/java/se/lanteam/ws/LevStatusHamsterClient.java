@@ -51,6 +51,9 @@ public class LevStatusHamsterClient {
 		prov.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, config.getUserName());
 		prov.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, config.getPassword());
 		
+		SSLUtilities.trustAllHostnames();
+		SSLUtilities.trustAllHttpsCertificates();
+		
 		return toCommonHeader(port.gbca002ALeveransStatus(deliveryStatus));
 	}
 	private se.lanteam.ws.Header toCommonHeader(Header header){
