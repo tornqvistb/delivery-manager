@@ -336,20 +336,20 @@ public class ReportExcelDataBuilder {
 		line.setOhCustomerNumber(order.getCustomerNumber());
 		line.setOhCustomerOrderNumber(order.getCustomerOrderNumber());
 		line.setOhCustomerSalesOrder(order.getCustomerSalesOrder());
-		if (order.getOrderCustomFields() != null && order.getOrderCustomFields().size() == 10) {
-			ArrayList<OrderCustomField> list = new ArrayList<>(order.getOrderCustomFields());			
-			line.setOhCustomField1(list.get(0).getValue());
-			line.setOhCustomField2(list.get(1).getValue());
-			line.setOhCustomField3(list.get(2).getValue());
-			line.setOhCustomField4(list.get(3).getValue());
-			line.setOhCustomField5(list.get(4).getValue());
-			line.setOhCustomField6(list.get(5).getValue());
-			line.setOhCustomField7(list.get(6).getValue());
-			line.setOhCustomField8(list.get(7).getValue());
-			line.setOhCustomField9(list.get(8).getValue());
-			line.setOhCustomField10(list.get(9).getValue());
-		}
-		line.setOhCustomField1(order.getCity());
+		
+		List<String> customFieldValues = order.getAllCustomFieldValuesForReport();
+		line.setOhCustomField1(customFieldValues.get(0));
+		line.setOhCustomField2(customFieldValues.get(1));
+		line.setOhCustomField3(customFieldValues.get(2));
+		line.setOhCustomField4(customFieldValues.get(3));
+		line.setOhCustomField5(customFieldValues.get(4));
+		line.setOhCustomField6(customFieldValues.get(5));
+		line.setOhCustomField7(customFieldValues.get(6));
+		line.setOhCustomField8(customFieldValues.get(7));
+		line.setOhCustomField9(customFieldValues.get(8));
+		line.setOhCustomField10(customFieldValues.get(9));
+		
+		line.setOhDeliveryCity(order.getCity());
 		line.setOhDeliveryAddress(order.getDeliveryAddressName());
 		line.setOhDeliveryCity(order.getDeliveryCity());
 		line.setOhDeliveryDate(order.getDeliveryDateDisplay());

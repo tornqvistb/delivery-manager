@@ -154,8 +154,8 @@ public class DeliveryReportController extends BaseController{
 			orderListSearchBean.setStati(stati);
 			return orderRepo.findDeliveredOrdersFromSearchDeliveryReport(orderListSearchBean.getStati(), 
 					orderListSearchBean.getQueryWithWildcards(), 
-					DateUtil.stringToDate(orderListSearchBean.getFromDate()),
-					DateUtil.stringToDate(orderListSearchBean.getToDate()),
+					DateUtil.stringToDateAfterMidnight(orderListSearchBean.getFromDate()),
+					DateUtil.stringToDateMidnight(orderListSearchBean.getToDate()),
 					orderListSearchBean.getCustomerGroupId(), 
 					getNullIfEmpty(orderListSearchBean.getCustomerNumber()),
 					orderListSearchBean.getMaxRows());
