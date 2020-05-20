@@ -73,6 +73,15 @@ public class DateUtil {
 		
 	}
 
+	public static Date stringToDateAfterMidnight(String dateString) throws ParseException  {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date date = new Date();	
+		date = formatter.parse(dateString + " 00:00");
+	    
+	    return date;
+		
+	}	
+	
 	public static String dateToString(Date date) {
 		
 		if (date == null) return ""; 

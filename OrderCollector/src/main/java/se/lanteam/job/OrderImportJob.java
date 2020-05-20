@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.service.OrderImportService;
+import se.lanteam.services.ReportConsolidationService;
 
 /**
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
@@ -20,6 +21,8 @@ public class OrderImportJob implements Job {
     private OrderImportService service;
     @Autowired
     private ErrorRepository errorRepo;
+    @Autowired
+    private ReportConsolidationService consolidationService;
 
     private static final Logger LOG = LoggerFactory.getLogger(OrderImportJob.class);
     
@@ -28,6 +31,7 @@ public class OrderImportJob implements Job {
     	LOG.info("Running OrderImportJob");
         try {
 			service.moveFiles();
+			consolidationService.updateAllReportLabels();
 		} catch (IOException e) {
 			e.printStackTrace();
 			errorRepo.save(new ErrorRecord("IOException vid inläsning av filer från Visma."));
