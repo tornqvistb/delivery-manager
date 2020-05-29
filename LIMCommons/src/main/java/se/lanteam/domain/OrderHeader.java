@@ -713,5 +713,31 @@ public class OrderHeader {
 	public void setTransferDate(Date transferDate) {
 		this.transferDate = transferDate;
 	}
-	
+	@Transient
+    public List<String> getAllCustomFieldValuesForReport() {
+        final List<String> values = new ArrayList<String>();
+        values.add(this.getCustomFieldValueByIdentification(1L));
+        values.add(this.getCustomFieldValueByIdentification(2L));
+        values.add(this.getCustomFieldValueByIdentification(3L));
+        values.add(this.getCustomFieldValueByIdentification(4L));
+        values.add(this.getCustomFieldValueByIdentification(5L));
+        values.add(this.getCustomFieldValueByIdentification(6L));
+        values.add(this.getCustomFieldValueByIdentification(7L));
+        values.add(this.getCustomFieldValueByIdentification(8L));
+        values.add(this.getCustomFieldValueByIdentification(9L));
+        values.add(this.getCustomFieldValueByIdentification(10L));
+        return values;
+    }
+    
+    private String getCustomFieldValueByIdentification(final long identification) {
+        final String result = "";
+        if (this.orderCustomFields != null && this.orderCustomFields.size() > 0) {
+            for (final OrderCustomField field : this.orderCustomFields) {
+                if (field.getCustomField() != null && field.getCustomField().getIdentification() == identification) {
+                    return field.getValue();
+                }
+            }
+        }
+        return result;
+    }
 }
