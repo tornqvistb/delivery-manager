@@ -52,6 +52,17 @@ $(function() { // Makes sure the code contained doesn't run until
 
 	$(".hidden-form").hide();
 	
+
+	$("#serienr").blur(function() {
+		// Get input string into var
+		var serialNr = document.getElementById("serienr").value;
+		var array = serialNr.split(';');
+		if (array.length > 2) {
+			$('#serienr').val(array[2]);
+		}
+	});
+
+	
 });
 
 function PrintLabels()
@@ -134,3 +145,4 @@ function getListValuesAndSubmit() {
 	listValuesInput.value = itemValues;
 	document.getElementById("reportFieldsForm").submit();
 }
+
