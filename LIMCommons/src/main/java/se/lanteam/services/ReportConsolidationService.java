@@ -2,6 +2,8 @@ package se.lanteam.services;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -12,8 +14,10 @@ import se.lanteam.domain.DeliveryReportField;
 import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.domain.ReportsConfig;
 import se.lanteam.repository.CustomerGroupRepository;
+import se.lanteam.repository.ReportsConfigRepository;
 
 @Service
+@Transactional
 public class ReportConsolidationService {
 	
 	private static final String ORDER_CUSTOM_FIELD_PREFIX = "ohCustomField";
@@ -22,6 +26,10 @@ public class ReportConsolidationService {
 
 	@Autowired
 	private CustomerGroupRepository custGroupRepo;
+	
+	@Autowired
+	private ReportsConfigRepository reportsConfigRepo;
+	
 	
 	public void updateAllReportLabels() {
 		List<CustomerGroup> allGroups = custGroupRepo.findAll();
@@ -33,7 +41,10 @@ public class ReportConsolidationService {
 	public void updateDeliveryReportLabels(CustomerGroup customerGroup) {
 		customerGroup = custGroupRepo.findOne(customerGroup.getId());
 		ReportsConfig reportsConfig = customerGroup.getReportsConfig();
+		System.out.println("TESTPRINT");
+		//ReportsConfig reportsConfig = reportsConfigRepo.findOne(customerGroup.getReportsConfig().getId());
 		for (DeliveryReportField reportField : reportsConfig.getReportFields()) {
+			System.out.println("TESTPRINT2");
 			if (reportField.getFieldName().startsWith(ORDER_CUSTOM_FIELD_PREFIX)) {
 				int fieldNumber = Integer.parseInt(reportField.getFieldName().substring(ORDER_CUSTOM_FIELD_PREFIX.length()));
 				reportField.setLabel(getLabelFromCustomField(customerGroup, fieldNumber, reportField.getLabel()));
