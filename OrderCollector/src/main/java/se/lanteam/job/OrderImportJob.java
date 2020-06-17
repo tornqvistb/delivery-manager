@@ -31,7 +31,7 @@ public class OrderImportJob implements Job {
     	LOG.info("Running OrderImportJob");
         try {
 			service.moveFiles();
-			consolidationService.updateAllReportLabels();
+			//consolidationService.updateAllReportLabels();
 		} catch (IOException e) {
 			e.printStackTrace();
 			errorRepo.save(new ErrorRecord("IOException vid inläsning av filer från Visma."));
