@@ -2,6 +2,16 @@
 
 <html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
 
+<script th:inline="javascript">
+
+    /*<![CDATA[*/	    
+        var serialNumberPosition = /*[[${session.customerGroup.serialNumberPosition}]]*/ 0;
+        var serialNumberSeparator = /*[[${session.customerGroup.serialNumberSeparator}]]*/ ','';
+	/*]]>*/
+	
+</script>
+
+
 <meta charset="utf-8" />
 <head th:include="head" th:remove="tag" />
 

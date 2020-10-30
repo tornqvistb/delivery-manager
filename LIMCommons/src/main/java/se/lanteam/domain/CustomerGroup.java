@@ -36,6 +36,8 @@ public class CustomerGroup {
 	private Boolean autoRegisterInternalOrderLines;
 	private Boolean allowPreDeliveryInfo;
 	private Set<CustomerNumber> customerNumbers = new HashSet<CustomerNumber>();
+	private Integer serialNumberPosition;
+	private String serialNumberSeparator;
 	
 	public String getDeliveryEmailAddress() {
 		return deliveryEmailAddress;
@@ -182,6 +184,22 @@ public class CustomerGroup {
 
 	public void setCustomerNumbers(Set<CustomerNumber> customerNumbers) {
 		this.customerNumbers = customerNumbers;
+	}
+
+	public Integer getSerialNumberPosition() {
+		return serialNumberPosition;
+	}
+
+	public void setSerialNumberPosition(Integer serialNumberPosition) {
+		this.serialNumberPosition = serialNumberPosition;
+	}
+
+	public String getSerialNumberSeparator() {
+		return serialNumberSeparator;
+	}
+
+	public void setSerialNumberSeparator(String serialNumberSeparator) {
+		this.serialNumberSeparator = serialNumberSeparator;
 	}
 
 	

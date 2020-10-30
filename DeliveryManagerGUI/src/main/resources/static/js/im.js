@@ -54,11 +54,10 @@ $(function() { // Makes sure the code contained doesn't run until
 	
 
 	$("#serienr").blur(function() {
-		// Get input string into var
 		var serialNr = document.getElementById("serienr").value;
-		var array = serialNr.split(',');
+		var array = serialNr.split(serialNumberSeparator);
 		if (array.length > 1) {
-			$('#serienr').val(array[0]);
+			$('#serienr').val(array[serialNumberPosition]);
 		}
 	});
 
