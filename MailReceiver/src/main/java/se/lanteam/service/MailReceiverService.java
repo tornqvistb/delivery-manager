@@ -87,6 +87,9 @@ public class MailReceiverService {
 	        props.setProperty("mail.imaps.socketFactory.port", "993");
 	        props.put("mail.imaps.host", mailHost);
 	        
+	        props.setProperty("mail.imaps.partialfetch", "false");
+	        props.setProperty("mail.imaps.fetchsize", "2000000");	        
+	        
 			Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
 			    protected PasswordAuthentication getPasswordAuthentication() {
 			        return new PasswordAuthentication(mailUsername, mailPassword);
@@ -127,12 +130,19 @@ public class MailReceiverService {
                         	if (isImage(fileName)) {
                         		LOG.debug("Contains image");	
 	                            String fileNameWithPath = saveDirectory + File.separator + fileName;
+                        		LOG.debug("Before save file");	
 	                            part.saveFile(fileNameWithPath);
+                        		LOG.debug("Before new file");	
 	                            File origFile = new File(fileNameWithPath);
+                        		LOG.debug("Before compressed file name");	
 	                            String compressedFileNameWithPath = fileNameWithPath + ".comp.jpg";
+                        		LOG.debug("Before compressFile");	
 	                            compressFile(origFile, compressedFileNameWithPath);                            
+                        		LOG.debug("Before readBytes");	
 	                            byte[] array = Files.readAllBytes(new File(compressedFileNameWithPath).toPath());
+                        		LOG.debug("Before storeAttachmentOnOrder");	
 	                            storeAttachmentOnOrder(array, message.getSubject(), fileName, message);
+                        		LOG.debug("Contains image");	
                         	}
                         }
                     }
