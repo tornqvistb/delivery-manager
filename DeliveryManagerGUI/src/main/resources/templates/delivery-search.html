@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="head-mobile" th:remove="tag" />
+
+<body>
+	<div th:include="header-mobile" th:remove="tag"></div>
+	<div class="container" style="">		
+		<div th:if="${not #strings.isEmpty(deliveryForm.errorMessage)}"
+			class="alert alert-danger">
+			<p th:utext="${deliveryForm.errorMessage}" th:remove="tag" />
+		</div>
+
+		<div th:if="${not #strings.isEmpty(deliveryForm.infoMessage)}"
+			class="alert alert-success">
+			<p th:utext="${deliveryForm.infoMessage}" th:remove="tag" />
+		</div>
+
+
+		<form th:action="@{/delivery-mobile/search}"
+			th:object="${deliveryForm}" method="get">
+
+			<div class="input-group mb-3">
+				<input type="number" th:field="${deliveryForm.query}" id="query"
+					value="${deliveryForm.query}" class="form-control"
+					placeholder="Sök ordernummer" />
+				<div class="input-group-append">
+					<button class="btn btn-primary" type="submit">Sök</button>
+				</div>
+				<input type="hidden" th:field="${deliveryForm.orderNumbersConcat}" />
+			</div>
+
+		</form>
+		<div th:if="${not #strings.isEmpty(deliveryForm.orderNumbersConcat)}" id="delivery-order-table">
+			<h4>Ordrar i denna leverans</h4>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Ordernummer</th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+				<tbody>										
+					<tr th:each="order : ${deliveryForm.ordersAsList}">
+						<th scope="row" th:text="${order}">12345</th>
+						<td>
+						    <a class="delete-bin" title="Delete" th:href="@{/delivery-mobile/del-order/} + ${order}  + '/' + ${deliveryForm.orderNumbersConcat}"><i class="material-icons">&#xE872;</i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<a th:href="@{/delivery-mobile/to-confirmation/} + ${deliveryForm.orderNumbersConcat}" class="btn btn-primary" th:utext="${'Gå vidare >>'}"></a>
+		</div>
+
+	</div>
+</body>
+</html>

@@ -2,6 +2,8 @@ package se.lanteam.web;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,8 @@ public class FileController extends BaseController {
 	private static final String ATTACHMENT_MSG_DELETE_OK = "Leveransdokument borttaget.";
 	private static final String ATTACHMENT_MSG_FILE_MISSING = "Du måste välja en fil.";
 	private static final String ATTACHMENT_MSG_FAILED = "Det gick inte att bifoga dokumentet. ";
+	
+	private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 	
 	private ERPIntegrationService erpService;
 
@@ -76,19 +80,6 @@ public class FileController extends BaseController {
 		return "order-details";
 	}
 
-	/*
-	@RequestMapping(value="order-list/view/viewfile/{orderId}", method=RequestMethod.GET)
-	public ResponseEntity<byte[]> downloadFile(
-			@PathVariable Long orderId) throws IOException {
-
-		OrderHeader order = orderRepo.findOne(orderId);
-	    byte[] documentBody = order.getAttachment().getFileContent();
-
-	    HttpHeaders header = new HttpHeaders();
-	    header.setContentType(MediaType.IMAGE_JPEG);
-	    return new ResponseEntity<byte[]>(documentBody, header, HttpStatus.CREATED);
-	}
-	*/
 	// If different file types in attachments, maybe use method above instead
 	@ResponseBody
 	@RequestMapping(value="order-list/view/viewfile/{orderId}", method=RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
@@ -97,6 +88,16 @@ public class FileController extends BaseController {
 		OrderHeader order = orderRepo.findOne(orderId);
 		return order.getAttachment().getFileContent();
 	}
+
+	@ResponseBody
+	@RequestMapping(value="order-list/view/viewsignature/{orderId}", method=RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+	public byte[] viewSignature(
+			@PathVariable Long orderId) throws IOException {
+		OrderHeader order = orderRepo.findOne(orderId);
+		logger.debug("Signature: " + order.getDeliverySignature());
+		return order.getDeliverySignature().getBytes();
+	}
+
 	@Autowired
 	public void setERPService(ERPIntegrationService erpService) {
 		this.erpService = erpService;

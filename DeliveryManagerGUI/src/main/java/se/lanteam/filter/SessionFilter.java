@@ -40,7 +40,15 @@ public class SessionFilter implements Filter {
         String errors = String.valueOf(errorRepo.findErrorsByArchived(false).size());        
         session.setAttribute(SessionConstants.ERROR_COUNT, errors);
         
-        SystemUser user = (SystemUser) session.getAttribute(SessionConstants.SYSTEM_USER);        
+        SystemUser user = (SystemUser) session.getAttribute(SessionConstants.SYSTEM_USER);
+        
+        // Mobile login
+        if (user == null && redirectPatternInUriMobile(uri)) {
+        	HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+        	httpResponse.sendRedirect(contextPath + "/login-mobile");
+        	return;        	
+        }        
+        
         if (user == null && redirectPatternInUriUser(uri)) {
         	HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         	httpResponse.sendRedirect(contextPath + "/login");
@@ -81,6 +89,16 @@ public class SessionFilter implements Filter {
     	return result;
     }
 
+    private boolean redirectPatternInUriMobile(String uri) {
+    	boolean result = false;
+    	if (!uri.contains("mobile")
+    			&& !uri.contains("/css/")
+    			&& !uri.contains("/js/")
+    			&& !uri.contains("/img/")) {
+    		result = true;
+    	}
+    	return result;
+    }
     
     @Override
     public void destroy() {

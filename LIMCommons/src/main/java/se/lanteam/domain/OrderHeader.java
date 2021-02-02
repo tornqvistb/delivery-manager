@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -81,6 +82,10 @@ public class OrderHeader {
 	private Boolean excludeFromList = false;
 	private Date creationDate = new Date();
 	private Date transferDate;
+	private String deliverySignature;
+	private String deliveryComment;
+	private String deliveryReceiverName;
+	private String deliveryStatus;
 	@Transient
 	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
 	
@@ -740,4 +745,33 @@ public class OrderHeader {
         }
         return result;
     }
+	public String getDeliverySignature() {
+		return deliverySignature;
+	}
+	@Lob()
+	public void setDeliverySignature(String deliverySignature) {
+		this.deliverySignature = deliverySignature;
+	}
+	public String getDeliveryComment() {
+		return deliveryComment;
+	}
+	public void setDeliveryComment(String deliveryComment) {
+		this.deliveryComment = deliveryComment;
+	}
+	public String getDeliveryStatus() {
+		return deliveryStatus;
+	}
+	public void setDeliveryStatus(String deliveryStatus) {
+		this.deliveryStatus = deliveryStatus;
+	}
+	public String getDeliveryReceiverName() {
+		return deliveryReceiverName;
+	}
+	public void setDeliveryReceiverName(String deliveryReceiverName) {
+		this.deliveryReceiverName = deliveryReceiverName;
+	}
+	@Transient
+	public String getFullContactPersonString() {
+		return (contact1Name + contact2Name).toLowerCase();
+	}
 }

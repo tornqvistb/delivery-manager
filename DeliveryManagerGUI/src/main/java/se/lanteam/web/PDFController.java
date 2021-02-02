@@ -143,7 +143,17 @@ public class PDFController {
 		
 		return generateDeliveryNotes(model);
 	}
-	
+
+	@RequestMapping(value = "generate-delivery-note-by-on/{orderNumber}", method = RequestMethod.GET, produces = "application/pdf")
+	@ResponseBody
+	public FileSystemResource generateDeliveryNoteByON(@PathVariable String orderNumber, ModelMap model) {
+		
+		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderNumber);
+		searchBean.setOrderList(orders);
+		
+		return generateDeliveryNotes(model);
+	}
+
 	
 	private Boolean showInDeliveryNote(CustomerGroup customerGroup, OrderCustomField orderCustomField) {
 		for (CustomerCustomField customerCustomfield : customerGroup.getCustomerCustomFields()) {

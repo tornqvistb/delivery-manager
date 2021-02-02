@@ -73,6 +73,16 @@ public class OrderListController extends BaseController {
 		model.put("deliveryAreas", deliveryAreaRepo.findAll(new Sort(Sort.Direction.ASC, "name")));
 		return "order-details";
 	}
+	@RequestMapping(value="order-list/viewbyon/{orderNumber}", method=RequestMethod.GET)
+	public String showOrderViewByON(@PathVariable String orderNumber, ModelMap model) {
+		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderNumber);
+		if (orders != null && orders.size() > 0) {
+			return showOrderView(orders.get(0).getId(), model);
+		} else {
+			return "error";
+		}
+	}
+
 	@Autowired
 	public void setPropertyService(PropertyService propService) {
 		this.propService = propService;

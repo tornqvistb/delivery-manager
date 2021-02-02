@@ -1,0 +1,23 @@
+<div th:if="${session.systemUser}" class="top-section alert fixed-top" id="mobile-top">
+	<span th:if="${session.customerGroup}"
+		th:text="${session.customerGroup.nameShort}"></span> &nbsp;|&nbsp; <a
+		th:if="${session.systemUser}" th:href="@{/login-mobile}">Byt kund</a>
+</div>
+<div class="container" style="">
+
+	<div class="logo-section row">
+		<div class="col">
+			<img src="/img/logo-visolit.png" th:src="@{/img/logo-visolit.png}"
+				alt="Visolit LIM" />
+		</div>
+		<div class="col">
+			<h4>LIM Leverans</h4>
+		</div>
+	</div>
+ 
+</div>
+<script th:inline="javascript" th:if="${session.customerGroup}">
+	/*<![CDATA[*/
+	document.getElementById('mobile-top').style.background = /*[[${session.customerGroup.backgroundColor}]]*/'white';
+	/*]]>*/
+</script>

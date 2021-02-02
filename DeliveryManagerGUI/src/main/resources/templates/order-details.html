@@ -376,7 +376,7 @@
 														</tr>
 													</tbody>
 												</table>
-												<h3 id="additional-order-info">Övrig orderinformation</h3>
+												<h3 id="additional-delivery-info">Leveransinformation</h3>
 												<!-- Success or error message for file upload -->
 												<div th:if="${reqAttr.statusAttachmentSuccess != null}"
 													class="information-text system-info thanks-message">
@@ -386,6 +386,64 @@
 													class="system-info error-message">
 													<span th:text="${reqAttr.statusAttachmentFailed}">Fil kunde ej laddas upp</span>
 												</div>
+												<table class="small-table">
+													<colgroup>
+														<col style="width: 30%" />
+														<col style="width: 70%" />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th scope="row">Leveransdatum</th>
+															<td th:text="${order.deliveryTimeDisplay}">2016-02-02</td>
+														</tr>
+														<tr th:if="${order.deliveryStatus != null}">
+															<th scope="row">Leveransstatus</th>
+															<td th:text="${order.deliveryStatus}" id="delivery-status">Levererad</td>
+														</tr>
+														<tr th:if="${order.deliveryComment != null}">
+															<th scope="row">Leveranskommentar</th>
+															<td th:text="${order.deliveryComment}" id="delivery-comment">Kommentar</td>
+														</tr>
+														<tr th:if="${order.deliveryReceiverName != null}">
+															<th scope="row">Mottagarens namn</th>
+															<td th:text="${order.deliveryReceiverName}" id="delivery-receiver-name">Kalle Kula</td>
+														</tr>
+														<tr th:if="${order.deliverySignature != null}">
+															<th scope="row">Signatur</th>
+															<td>
+																<a href="#additional-delivery-info" id="toogle-signature">Visa signatur</a>
+															</td>															
+														</tr>
+														<tr th:if="${order.deliverySignature != null}" style="display: none;" id="signature-row">
+															<th scope="row"></th>
+															<td>
+																<img th:src="${order.deliverySignature}" />
+															</td>															
+														</tr>
+														
+														<tr th:if="${order.attachment != null}">
+															<th scope="row">Leveransdokument</th>
+															<td>
+																<a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a>
+																<span th:if="${order.editable}"><strong><a th:href="@{/order-list/view/delfile/} + ${order.id} + '#additional-order-info'">Ta bort</a></strong></span>
+															</td>															
+														</tr>
+													</tbody>
+												</table>
+												<div th:if="${order.attachment == null}">
+													<label class="strong-title" for="bifogad_fil">Bifoga leveransdokument</label>
+													 <form action="upload" th:action="@{/order-list/view/attachFile/} + ${order.id} + '#additional-order-info'" method="post" enctype="multipart/form-data">
+														<div class="attachment-area">
+															<div class="cloneable">
+																<input type="file" name="attachment"
+																	class="filesize" id="attachment" />
+																<button>Bifoga</button>
+															</div>
+														</div>
+													</form>
+												</div>
+												
+												<h3 id="additional-order-info">Övrig orderinformation</h3>
 												
 												<table class="small-table">
 													<colgroup>
@@ -419,21 +477,11 @@
 															<td th:text="${order.orderDateAsString}">2016-02-02</td>
 														</tr>
 														<tr>
-															<th scope="row">Leveransdatum</th>
-															<td th:text="${order.deliveryTimeDisplay}">2016-02-02</td>
-														</tr>
-														<tr>
 															<th scope="row">Status</th>
 															<td th:text="${order.statusDisplay}">Ny</td>
 														</tr>
-														<tr th:if="${order.attachment != null}">
-															<th scope="row">Leveransdokument</th>
-															<td>
-																<a th:href="@{/order-list/view/viewfile/} + ${order.id}" th:text="${order.attachment.fileName}">Hämta fil</a>
-																<span th:if="${order.editable}"><strong><a th:href="@{/order-list/view/delfile/} + ${order.id} + '#additional-order-info'">Ta bort</a></strong></span>
-															</td>															
-														</tr>
-														<tr>
+														
+														<tr id="signature-row" >
 															<th scope="row">Samleverans med ordrar</th>
 															<td th:text="${order.jointDeliveryOrders}">00000</td>
 														</tr>
@@ -445,18 +493,6 @@
 														</tr>		
 													</tbody>
 												</table>
-												<div th:if="${order.attachment == null}">
-													<label class="strong-title" for="bifogad_fil">Bifoga leveransdokument</label>
-													 <form action="upload" th:action="@{/order-list/view/attachFile/} + ${order.id} + '#additional-order-info'" method="post" enctype="multipart/form-data">
-														<div class="attachment-area">
-															<div class="cloneable">
-																<input type="file" name="attachment"
-																	class="filesize" id="attachment" />
-																<button>Bifoga</button>
-															</div>
-														</div>
-													</form>
-												</div>
 												<h3 id="order-comments-header">Statusmeddelanden</h3>
 												<!-- Success or error message for order commen t creation -->
 												<div th:if="${reqAttr.statusMessageCreationSuccess != null}"

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="head-mobile" th:remove="tag" />
+
+<body>
+	<div th:include="header-mobile" th:remove="tag"></div>
+	<div class="container" style="">
+		<div id="error-client"
+			class="alert alert-danger" style="display: none;">
+		</div>	
+	
+		<div
+			th:if="${not #strings.isEmpty(deliveryForm.errorMessage)}"
+			class="alert alert-danger">
+			<p th:utext="${deliveryForm.errorMessage}" th:remove="tag" />
+		</div>	
+		<div
+			th:if="${not #strings.isEmpty(deliveryForm.infoMessage)}"
+			class="alert alert-success">
+			<p th:utext="${deliveryForm.infoMessage}" th:remove="tag" />
+		</div>	
+		<form id="confirmation-form" th:action= "@{/delivery-mobile/confirm}" th:object="${deliveryForm}" method="post" enctype="multipart/form-data">
+			<div class="form-group">
+				<label for="Inputselect">Ny status</label> 
+				<select class="form-control" th:field="${deliveryForm.deliveryStatus}"
+					id="status" name="status">
+					<option
+						th:each="statusRec : ${deliveryForm.deliveryStati}"
+							th:value="${statusRec.status}"
+							th:text="${statusRec.description}"
+					 />
+				</select>
+			</div>
+			<div class="form-group" id="receiver-section">
+				<label for="receiver">Mottagen av</label> 
+				
+				<select class="form-control" th:field="${deliveryForm.receiver}"
+					id="receiver" name="receiver">
+					<option
+						th:each="receiverName : ${deliveryForm.receiverList}"
+							th:value="${receiverName}"
+							th:text="${receiverName}"
+					 />
+				</select>
+				
+			</div>
+
+			<div class="form-group" id="signature-section">
+				<label for="signature">Underskrift</label> 
+				<div id="signature" style=''>
+				 	<canvas id="signature-pad" class="signature-pad" width="350px" height="100px"></canvas>
+				</div>
+				<input type="button" id="clear-signature" value="Rensa underskrift" class="btn btn-link top-space"/>
+			</div>
+			
+			
+			<div class="form-group" id="clearify-section">
+				<label for="Inputselect">Namnförtydligande</label> 
+				<input type="text" id="name-clarification" class="form-control" th:field="${deliveryForm.nameClarification}" />
+			</div>			
+			
+			
+			<div class="form-group" id="comment-section">
+				<label for="Inputselect">Kommentar</label> 
+				<textarea class="form-control" th:field="${deliveryForm.comment}"></textarea>
+			</div>
+
+			<div class="form-group">
+				<div class="custom-file">
+				    <input type="file" class="custom-file-input" id="file-input" name="file" /> 
+				    <label class="custom-file-label" for="file-input">Ladda upp fil</label>
+				</div>
+			</div>
+			<div id="submit-section" class="form-group">		
+				<input type="button" class="btn btn-primary" id="confirm-btn" value="Bekräfta"/>
+				<a class="btn btn-secondary" href="#" onclick="history.go(-1)">Tillbaka</a>
+				<a class="btn btn-secondary" title="Back" th:href="@{/delivery-mobile/back-to-search/} + ${deliveryForm.orderNumbersConcat}">Tillbaka till sök</a>
+			</div>
+			<div th:if="${not #strings.isEmpty(deliveryForm.orderNumbersConcat)}" id="delivery-order-table">
+				<h4>Ordrar i denna leverans</h4>
+				<table class="table">
+					<tbody>										
+						<tr th:each="order : ${deliveryForm.ordersAsList}">
+							<th scope="row">							
+								<a th:href="@{/generate-delivery-note-by-on/} + ${order}" target="_blank" th:text="${order}"></a>
+							</th>
+							<td>
+							    <a class="delete-bin" title="Delete" th:href="@{/delivery-mobile/del-order-confirm/} + ${order}  + '/' + ${deliveryForm.orderNumbersConcat}"><i class="material-icons">&#xE872;</i></a>
+							</td>							
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<input type="hidden" id="signature-data" th:field="${deliveryForm.signature}" />			
+			<input type="hidden" id="order-numbers" th:field="${deliveryForm.orderNumbersConcat}" />
+							
+		</form>
+	</div>
+	<script>
+	    bsCustomFileInput.init();
+	</script>
+</body>
+
+</html>
+
+

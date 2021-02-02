@@ -1,0 +1,1 @@
+ALTER TABLE `lanteam`.`order_header` CHANGE COLUMN `delivery_signature` `delivery_signature` BLOB NULL DEFAULT NULL ;

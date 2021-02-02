@@ -60,6 +60,15 @@ $(function() { // Makes sure the code contained doesn't run until
 			$('#serienr').val(array[serialNumberPosition]);
 		}
 	});
+	
+	$("#toogle-signature").click(function(){
+		$("#signature-row").toggle();
+		if($('#signature-row').is(':visible')){
+	          $(this).text('Dölj signatur');
+	    }else{
+	          $(this).text('Visa signatur');
+	    }
+	});
 
 	
 });

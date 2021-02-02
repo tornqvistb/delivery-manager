@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.Transient;
 
 @Entity
 public class CustomerGroup {
@@ -201,6 +202,16 @@ public class CustomerGroup {
 	public void setSerialNumberSeparator(String serialNumberSeparator) {
 		this.serialNumberSeparator = serialNumberSeparator;
 	}
-
+	@Transient
+	public String getNameShort() {
+		String result = "";
+		if (name != null) {
+			result = name;
+			if (name.length() > 25) {
+				result = name.substring(0, 24) + "...";
+			}
+		}
+		return result;
+	}
 	
 }

@@ -1,0 +1,44 @@
+<html lang="sv" class="js" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="head-mobile" th:remove="tag" />
+
+<body>
+	<div th:include="header-mobile" th:remove="tag"></div>
+	<div class="container" style="">
+		<div
+			th:if="${not #strings.isEmpty(reqAttr.errorMessage)}"
+			class="alert alert-danger">
+			<p th:utext="${reqAttr.errorMessage}" th:remove="tag" />
+		</div>	
+		<form class="form-general" th:action= "@{/login-mobile/confirm}" th:object="${reqAttr}" method="post">
+
+			<div class="form-group" id="userName-section">
+				<label for="userName">Användare</label>
+				<input type="text" th:field="${reqAttr.userName}" value="" name="userName" class="form-control" id="userName"/> 
+			</div>		
+			<div class="form-group" id="password-section">
+				<label for="password">Lösenord</label>
+				<input type="password" th:field="${reqAttr.password}" value="" name="password" class="form-control" id="password"/> 
+			</div>
+			
+			
+			<div class="form-group" id="custgroup-section">
+				<label for="custgroup">Välj kundgrupp</label> 
+				
+				<select
+					th:field="${reqAttr.customerId}"
+					id="custgroup" name="custgroup" class="form-control">
+					<option th:value="${reqAttr.zeroValue}">Välj kundgrupp</option>
+					<option th:each="customerGroup : ${customerGroups}" th:value="${customerGroup.id}" th:text="${customerGroup.name}"></option>
+				</select>
+				
+			</div>
+			
+			<div id="submit-section">		
+				<input type="submit" class="btn btn-primary" id="ActionSearch" name="ActionSearch" value="Logga in" />
+			</div>		
+		</form>
+
+	</div>
+</body>
+</html>
