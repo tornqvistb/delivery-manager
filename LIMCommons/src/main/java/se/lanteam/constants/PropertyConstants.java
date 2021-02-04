@@ -13,6 +13,12 @@ public class PropertyConstants {
 	public static final String FILE_PROCESSED_FOLDER = "file-processed-folder";
 	public static final String FILE_ERROR_FOLDER = "file-error-folder";
 	public static final String FILE_OUTGOING_FOLDER = "file-outgoing-folder";
+	
+	public static final String FILE_INCOMING_WH_FOLDER = "file-incoming-wh-folder";
+	public static final String FILE_PROCESSED_WH_FOLDER = "file-processed-wh-folder";
+	public static final String FILE_ERROR_WH_FOLDER = "file-error-wh-folder";
+	public static final String FILE_OUTGOING_WH_FOLDER = "file-outgoing-wh-folder";	
+	
 	public static final String ORDER_TRANSMITJOB_FREQUENCY = "order-transmitjob-frequency";
 	public static final String WS_ENDPOINT_ORDER_DELIVERY = "ws-endpoint-order-delivery";
 	public static final String WS_ENDPOINT_ORDER_COMMENT = "ws-endpoint-order-comment";
