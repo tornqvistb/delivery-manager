@@ -87,7 +87,9 @@ public class OrderTransmitService {
 						}
         			}
 					// Create message to Visma and store on disk. Only if joint invoicing (samfakturering) is not true.
+        			LOG.info("Status for order " + order.getOrderNumber() + ":" + order.getStatus());
 					if (order.getJointInvoicing() == 0 && StatusConstants.ORDER_STATUS_SENT.equals(order.getStatus())) {
+						LOG.info("Sending delivery info to business system for order " + order.getOrderNumber());
 						erpService.createFileToBusinessSystem(order);
 					}
 					// Create delivery mail to customer group mail address

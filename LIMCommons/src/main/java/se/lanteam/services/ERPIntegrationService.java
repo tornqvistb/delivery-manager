@@ -1,5 +1,8 @@
 package se.lanteam.services;
 
+import static se.lanteam.constants.PropertyConstants.FILE_OUTGOING_COPY_FOLDER;
+import static se.lanteam.constants.PropertyConstants.FILE_OUTGOING_FOLDER;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,6 +13,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.google.gson.Gson;
 
@@ -33,7 +37,8 @@ public class ERPIntegrationService {
 	private PropertyService propService;
 	
 	public void createFileToBusinessSystem(OrderHeader order) {
-		String fileTransmitFolder = propService.getString(PropertyConstants.FILE_OUTGOING_FOLDER);
+		String fileTransmitFolder = propService.getString(FILE_OUTGOING_FOLDER);
+		String fileTransmitCopyFolder = propService.getString(FILE_OUTGOING_COPY_FOLDER);
 		Order vismaOrder = new Order();
 		vismaOrder.setOrdernummer(Integer.parseInt(order.getOrderNumber()));
 		vismaOrder.setLeveransflagga(getLeveransflaggaForOrder(order));
@@ -64,6 +69,15 @@ public class ERPIntegrationService {
 			FileWriter writer = new FileWriter(fileTransmitFolder + "/" + order.getOrderNumber() + ".json");
 			writer.write(json);
 			writer.close();
+			// Save copy
+			if (!StringUtils.isEmpty(fileTransmitCopyFolder)) {
+				Path pathCopy = Paths.get(fileTransmitCopyFolder + "/" + order.getOrderNumber() + ".json");
+				Files.deleteIfExists(pathCopy);
+				FileWriter writerCopy = new FileWriter(fileTransmitCopyFolder + "/" + order.getOrderNumber() + ".json");
+				writerCopy.write(json);
+				writerCopy.close();
+			}
+
 		} catch (IOException e) {
 			saveError(FILE_EXPORT_ERROR + order.getOrderNumber());
 		}		
