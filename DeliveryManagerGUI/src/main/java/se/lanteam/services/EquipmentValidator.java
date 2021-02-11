@@ -58,8 +58,12 @@ public class EquipmentValidator {
 	}
 	
 	
-	public String validateEquipment(Equipment equipment, OrderHeader order, String restrictionCode) {
-		String result = validateSerialNo(equipment, order);
+	public String validateEquipment(Equipment equipment, OrderHeader order, String restrictionCode, boolean isUpdate) {
+				
+		String result = RESULT_OK;
+		if (!isUpdate) {
+			result = validateSerialNo(equipment, order);
+		}
 		
 		RegistrationConfig regConfig = sessionBean.getCustomerGroup().getRegistrationConfig();
 		if (RESULT_OK.equals(result) && !RestrictionCodes.NO_SLA_SERIALN0_NO_STEALING_TAG.equals(restrictionCode)) {
@@ -129,14 +133,14 @@ public class EquipmentValidator {
 			return INVALID_STEALING_TAG;
 		}
 		*/		
-		if (equipment.getStealingTag() == null) {
+		if (equipment.getStealingTag() == null || StringUtils.isEmpty(equipment.getStealingTag())) {
 			return STEALING_TAG_EMPTY;
 		}
 
 		// - stealing tag not registered on current order
 		for (OrderLine line : order.getOrderLines()) {
 			for (Equipment equip : line.getEquipments()) {
-				if (equip.getStealingTag().equals(equipment.getStealingTag())) {
+				if (equip.getId() != equipment.getId() && equip.getStealingTag().equals(equipment.getStealingTag())) {
 					return STEALING_TAG_ON_CURRENT_ORDER + " (" + equipment.getStealingTag() + ")";
 				}
 			}
@@ -145,7 +149,7 @@ public class EquipmentValidator {
 		List<Equipment> equipments = equipmentRepo.findByStealingTag(equipment.getStealingTag());
 		if (equipments != null && equipments.size() > 0) {
 			Equipment equip = equipments.get(0);
-			if (equip.getOrderLine() != null && equip.getOrderLine().getOrderHeader() != null) {
+			if (equip.getOrderLine() != null && equip.getOrderLine().getOrderHeader() != null && equip.getOrderLine().getOrderHeader().getId() != order.getId()) {
 				return STEALING_TAG_ON_OTHER_ORDER + equip.getOrderLine().getOrderHeader().getOrderNumber() + " (" + equipment.getStealingTag() + ")";
 			}
 		}

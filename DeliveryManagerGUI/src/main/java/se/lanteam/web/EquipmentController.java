@@ -59,7 +59,7 @@ public class EquipmentController extends BaseController {
 		String valResult = "";
 		OrderLine orderLine = orderLineRepo.findOne(reqAttr.getOrderLineId());
 		if (orderLine.getHasSerialNo()) {
-			Equipment equipment = new Equipment();
+			Equipment equipment = getEquipmentRecord(reqAttr);
 			equipment.setCreationDate(new Date());
 			equipment.setOrderLine(orderLine);
 			equipment.setSerialNo(reqAttr.getSerialNo());
@@ -98,7 +98,7 @@ public class EquipmentController extends BaseController {
 				equipment.setCustomAttribute8(reqAttr.getCustomAttribute8());
 				equipment.setCustomAttribute8Label(regConfig.getLabelAttribute8());
 			}
-			valResult = equipmentValidator.validateEquipment(equipment, orderRepo.findOne(orderId), orderLine.getRestrictionCode());
+			valResult = equipmentValidator.validateEquipment(equipment, orderRepo.findOne(orderId), orderLine.getRestrictionCode(), reqAttr.isUpdateEquipment());
 			if (valResult.equals(RESULT_OK)) {
 				orderLine.getEquipments().add(equipment);
 				orderLine.updateEquipmentCounters();
@@ -116,14 +116,18 @@ public class EquipmentController extends BaseController {
 		
 		boolean workToDoOnRelatedOrders = workToDoOnRelatedOrders(order);
 			
-		order.setOrderStatusByProgress(workToDoOnRelatedOrders);
-		orderRepo.save(order);
-		model.put("order", order);
-		updateRelatedOrders(order, workToDoOnRelatedOrders);
 		if (RESULT_OK.equals(valResult)) {
+			order.setOrderStatusByProgress(workToDoOnRelatedOrders);
+			orderRepo.save(order);
+			updateRelatedOrders(order, workToDoOnRelatedOrders);
 			reqAttr = new RequestAttributes();
 		}
-		reqAttr.setRegEquipmentResult(valResult);
+		model.put("order", order);
+		if (reqAttr.isUpdateEquipment()) {
+			reqAttr.setUpdateEquipmentResult(valResult);
+		} else {
+			reqAttr.setRegEquipmentResult(valResult);
+		}
 		reqAttr = addRelatedOrders(reqAttr, order);
 		reqAttr = setInfoMessageForRelatedOrders(reqAttr, order, workToDoOnRelatedOrders);
 		
@@ -133,6 +137,15 @@ public class EquipmentController extends BaseController {
 		return "order-details";
 	}
 
+	private Equipment getEquipmentRecord(RequestAttributes reqAttr) {
+		Equipment eq;
+		if (reqAttr.isUpdateEquipment()) {
+			eq = equipmentRepo.findBySerialNo(reqAttr.getSerialNo()).get(0);
+		} else {
+			eq = new Equipment();
+		}
+		return eq;
+	}
 
 	@RequestMapping(value = "order-list/view/deleq/{orderId}/{orderLineId}/{equipmentId}", method = RequestMethod.GET)
 	public String deleteEquipment(@PathVariable Long orderId, @PathVariable Long orderLineId,
@@ -267,7 +280,18 @@ public class EquipmentController extends BaseController {
 		return reqAttr;
 	}
 	
+
 	
+	@Transactional
+	@RequestMapping(value = "order-list/view/updateEquipment/{orderId}", method = RequestMethod.POST)
+	public String updateEquipment(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
+			ModelMap model) {
+		LOG.info("Uppdatering - serienummer: " + reqAttr.getSerialNo());
+		reqAttr.setUpdateEquipment(true);		
+		return registerEquipment(reqAttr, orderId, model);
+	}
+
+
 	@Autowired
 	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
 		this.deliveryAreaRepo = deliveryAreaRepo;
@@ -276,12 +300,6 @@ public class EquipmentController extends BaseController {
 	public void setEquipmentRepo(EquipmentRepository equipmentRepo) {
 		this.equipmentRepo = equipmentRepo;
 	}
-	/*
-	@Autowired
-	public void setOrderRepo(OrderRepository orderRepo) {
-		this.orderRepo = orderRepo;
-	}
-	*/
 	@Autowired
 	public void setOrderLineRepo(OrderLineRepository orderLineRepo) {
 		this.orderLineRepo = orderLineRepo;

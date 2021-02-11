@@ -74,6 +74,8 @@ public class RequestAttributes {
 	private String customerNumber;
 	private List<CustomerNumber> customerNumbers = new ArrayList<CustomerNumber>();
 	private String emptyValue = "";
+	private boolean updateEquipment = false;
+	private String updateEquipmentResult;
 	
 	public String getSaveOrder() {
 		return saveOrder;
@@ -551,6 +553,22 @@ public class RequestAttributes {
 
 	public void setEmptyValue(String emptyValue) {
 		this.emptyValue = emptyValue;
+	}
+
+	public boolean isUpdateEquipment() {
+		return updateEquipment;
+	}
+
+	public void setUpdateEquipment(boolean updateEquipment) {
+		this.updateEquipment = updateEquipment;
+	}
+
+	public String getUpdateEquipmentResult() {
+		return updateEquipmentResult;
+	}
+
+	public void setUpdateEquipmentResult(String updateEquipmentResult) {
+		this.updateEquipmentResult = updateEquipmentResult;
 	}
 
 	

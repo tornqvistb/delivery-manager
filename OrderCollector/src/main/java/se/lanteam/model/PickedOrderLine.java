@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PickedOrderLine {
-	String lineId;
+	int lineId;
 	String articleId;
 	int amount;
 	List<String> serialNumbers = new ArrayList<String>();
@@ -26,10 +26,10 @@ public class PickedOrderLine {
 	public void setSerialNumbers(List<String> serialNumbers) {
 		this.serialNumbers = serialNumbers;
 	}
-	public String getLineId() {
+	public int getLineId() {
 		return lineId;
 	}
-	public void setLineId(String lineId) {
+	public void setLineId(int lineId) {
 		this.lineId = lineId;
 	}
 	@Override

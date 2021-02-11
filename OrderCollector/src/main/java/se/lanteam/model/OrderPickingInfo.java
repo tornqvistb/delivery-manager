@@ -4,15 +4,13 @@ import java.util.List;
 
 public class OrderPickingInfo {
 
-	public static final int STATUS_PARTLY_PICKED = 1;
-	public static final int STATUS_FULLY_PICKED = 2;
 	public static final String ROW_TYPE_HEADER = "H";
-	public static final String ROW_TYPE_LINE = "L";
+	public static final String ROW_TYPE_LINE = "T";
 	public static final String FIELD_SEPARATOR = ";";
 	
 	String orderNumber;
 	int status;
-	String restOrderNumber;
+	String originalOrderNumber;
 	List<PickedOrderLine> pickedLines;
 	
 	public String getOrderNumber() {
@@ -21,11 +19,11 @@ public class OrderPickingInfo {
 	public void setOrderNumber(String orderNumber) {
 		this.orderNumber = orderNumber;
 	}
-	public String getRestOrderNumber() {
-		return restOrderNumber;
+	public String getOriginalOrderNumber() {
+		return originalOrderNumber;
 	}
-	public void setRestOrderNumber(String restOrderNumber) {
-		this.restOrderNumber = restOrderNumber;
+	public void setOriginalOrderNumber(String restOrderNumber) {
+		this.originalOrderNumber = restOrderNumber;
 	}
 	public List<PickedOrderLine> getPickedLines() {
 		return pickedLines;
@@ -42,7 +40,7 @@ public class OrderPickingInfo {
 	@Override
 	public String toString() {
 		return "OrderPickingInfo [orderNumber=" + orderNumber + ", status=" + status + ", restOrderNumber="
-				+ restOrderNumber + ", pickedLines=" + pickedLines + "]";
+				+ originalOrderNumber + ", pickedLines=" + pickedLines + "]";
 	}
 	
 }

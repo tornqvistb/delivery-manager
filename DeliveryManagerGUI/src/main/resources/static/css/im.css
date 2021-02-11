@@ -136,3 +136,6 @@
 	width: 333px;
 	float: left;
 }
+.lim-modal {
+	position: fixed;
+}

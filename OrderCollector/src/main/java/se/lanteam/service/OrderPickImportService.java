@@ -17,12 +17,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import se.lanteam.constants.PropertyConstants;
+import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.domain.OrderLine;
 import se.lanteam.exceptions.PickImportException;
+import se.lanteam.helpers.OrderCloneHelper;
 import se.lanteam.model.OrderPickingInfo;
 import se.lanteam.model.PickedOrderLine;
 import se.lanteam.repository.ErrorRepository;
@@ -45,6 +49,7 @@ public class OrderPickImportService {
 	@Autowired
     private PropertyService propService;
 
+	@Transactional
     public void manageOrderPickFiles() throws IOException{
 	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_INCOMING_WH_FOLDER);	    
 	    String fileDestFolder = propService.getString(PropertyConstants.FILE_PROCESSED_WH_FOLDER);	    
@@ -60,7 +65,10 @@ public class OrderPickImportService {
 				try {
 					List<String> rows = Files.readAllLines(source);
 					OrderPickingInfo pickingInfo = getPickingInfo(rows, fileEntry.getName());
-					updateOrder(pickingInfo);
+					if (!StringUtils.isEmpty(pickingInfo.getOriginalOrderNumber())) {
+						createRestOrder(pickingInfo);
+					}
+					updateOrder(pickingInfo);						
 					logger.info(pickingInfo.toString());
 					Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
 				} catch (PickImportException e) {
@@ -71,8 +79,39 @@ public class OrderPickImportService {
 		}
     }
     
+    private void createRestOrder(OrderPickingInfo pickingInfo) {
+    	List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(pickingInfo.getOriginalOrderNumber());
+    	if (!orderList.isEmpty()) {
+    		OrderHeader originalOrder = orderList.get(0);
+    		OrderHeader restOrder = OrderCloneHelper.cloneOrder(originalOrder, pickingInfo);
+    		orderRepo.save(restOrder);
+    	}    	
+    }	
+	
     private void updateOrder(OrderPickingInfo pickingInfo) {
-    	//OrderHeader order = orderRepo.findOrdersByOrderNumber(pickingInfo)
+    	List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(pickingInfo.getOrderNumber());
+    	if (!orderList.isEmpty()) {
+    		OrderHeader order = orderList.get(0);
+    		//Check status, maybe change this condition later!!
+    		if (order.getEditable()) {
+    			for (OrderLine line : order.getOrderLines()) {
+    				for (PickedOrderLine pickedLine : pickingInfo.getPickedLines()) {
+    					if (line.getRowNumber() == pickedLine.getLineId()) {
+    						if (pickedLine.getSerialNumbers().isEmpty()) {
+    							line.addPickedQuantity(pickedLine.getAmount());
+    						} else {
+    							line.addPickedSerialNumbers(pickedLine.getSerialNumbers());
+    						}
+    						break;
+    					}
+    				}
+    			}
+    		}
+    		order.setPickStatus(pickingInfo.getStatus());
+    		//TODO Change logic for setting order status later
+    		order.setStatus(StatusConstants.ORDER_STATUS_STARTED);
+    		orderRepo.save(order);
+    	}    	
     }
     
     private OrderPickingInfo getPickingInfo(List<String> rows, String fileName) throws PickImportException{
@@ -86,7 +125,7 @@ public class OrderPickImportService {
 						pickingInfo.setOrderNumber(fields[1]);
 						pickingInfo.setStatus(Integer.parseInt(fields[2]));
 						if (fields.length >= 4) {
-							pickingInfo.setRestOrderNumber(fields[3]);
+							pickingInfo.setOriginalOrderNumber(fields[3]);
 						}
 					}
 				} else if (row.startsWith(ROW_TYPE_LINE)) {
@@ -94,12 +133,12 @@ public class OrderPickImportService {
 					if (line == null) {
 						line = new PickedOrderLine();
 					}					
-					line.setLineId(fields[2]);
-					line.setArticleId(fields[3]);
-					if (fields.length > 5 && !StringUtils.isEmpty(fields[5])) {
-						line.getSerialNumbers().add(fields[5]);
+					line.setLineId(Integer.parseInt(fields[1]));
+					line.setArticleId(fields[2]);
+					if (fields.length > 4 && !StringUtils.isEmpty(fields[4])) {
+						line.getSerialNumbers().add(fields[4]);
 					} else {
-						line.setAmount(Integer.parseInt(fields[4]));
+						line.setAmount(Integer.parseInt(fields[3]));
 					}
 					orderLines = updateList(orderLines, line);
 				}
@@ -113,7 +152,7 @@ public class OrderPickImportService {
 
     private List<PickedOrderLine> updateList(List<PickedOrderLine> lines, PickedOrderLine line) {
     	for (PickedOrderLine currLine : lines) {
-    		if (currLine.getLineId().equals(line.getLineId())) {
+    		if (currLine.getLineId() == line.getLineId()) {
     			currLine = line;
     			return lines;
     		}
@@ -123,9 +162,9 @@ public class OrderPickImportService {
     }
     
     private PickedOrderLine getLineById(List<PickedOrderLine> orderLines, String line) {
-    	String lineId = line.split(FIELD_SEPARATOR)[2];
+    	int lineId = Integer.parseInt(line.split(FIELD_SEPARATOR)[1]);
     	for (PickedOrderLine orderLine : orderLines) {
-    		if (orderLine.getLineId().equals(lineId)) {
+    		if (orderLine.getLineId() == lineId) {
     			return orderLine;
     		}
     	}

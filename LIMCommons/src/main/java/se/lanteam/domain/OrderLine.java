@@ -1,6 +1,8 @@
 package se.lanteam.domain;
 
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,7 +18,7 @@ import javax.persistence.Transient;
 import se.lanteam.constants.RestrictionCodes;
 
 @Entity
-public class OrderLine {
+public class OrderLine implements Cloneable{
 
 	private Long id;
 	private Integer rowNumber;
@@ -35,6 +37,22 @@ public class OrderLine {
 	private String leasingNumber;
 	private String requestItemNumber;
 	private boolean autoRegistered = false;
+	
+	@Override
+	@Transient
+    public OrderLine clone() {		
+		try {
+			OrderLine clone = (OrderLine) super.clone();
+			clone.setId(null);
+			clone.setEquipments(new HashSet<Equipment>());
+			clone.setRegistered(0);
+			clone.setRemaining(this.getRemaining());
+			clone.setOrderHeader(null);
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
 	
 	@Id
 	@GeneratedValue
@@ -192,6 +210,21 @@ public class OrderLine {
 	public void setAutoRegistered(boolean autoRegistered) {
 		this.autoRegistered = autoRegistered;
 	}
-
-	
+	@Transient
+	public void addPickedQuantity(int qty) {
+		this.registered = this.registered + qty;
+		this.remaining = this.remaining - qty;
+	}
+	@Transient
+	public void addPickedSerialNumbers(List<String> serialNos) {
+		for (String serialNo : serialNos) {
+			Equipment eq = new Equipment();
+			eq.setSerialNo(serialNo);
+			eq.setCreationDate(new Date());
+			eq.setOrderLine(this);
+			this.getEquipments().add(eq);
+		}
+		this.registered = this.registered + serialNos.size();
+		this.remaining = this.remaining - serialNos.size();
+	}
 }

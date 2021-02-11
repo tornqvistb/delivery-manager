@@ -2,6 +2,10 @@ package se.lanteam.constants;
 
 public class StatusConstants {
 
+	public static final int PICK_STATUS_NOT_PICKED = 0;
+	public static final int PICK_STATUS_PARTLY_PICKED = 1;
+	public static final int PICK_STATUS_FULLY_PICKED = 2;
+	
 	public static final String ORDER_STATUS_RECEIVING = "receiving";
 	public static final String ORDER_STATUS_NEW = "new";
 	public static final String ORDER_STATUS_BOOKED = "booked";

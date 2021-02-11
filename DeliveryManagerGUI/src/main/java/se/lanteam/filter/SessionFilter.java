@@ -67,11 +67,9 @@ public class SessionFilter implements Filter {
     private boolean redirectPatternInUriCustomer(String uri) {
     	boolean result = false;
     	if (!uri.contains("choose-customer-group")
-    			&& !uri.contains("/css/")
-    			&& !uri.contains("/js/")
-    			&& !uri.contains("/img/")
     			&& !uri.contains("customer-groups/activate")
-    			&& !uri.contains("login")) {
+    			&& !uri.contains("login")
+    			&& !isResourceUri(uri)) {
     		result = true;
     	}
     	return result;
@@ -81,9 +79,7 @@ public class SessionFilter implements Filter {
     	boolean result = false;
     	if (!uri.contains("login")
     			&& !uri.contains("login/confirm")
-    			&& !uri.contains("/css/")
-    			&& !uri.contains("/js/")
-    			&& !uri.contains("/img/")) {
+    			&& !isResourceUri(uri)) {
     		result = true;
     	}
     	return result;
@@ -91,15 +87,18 @@ public class SessionFilter implements Filter {
 
     private boolean redirectPatternInUriMobile(String uri) {
     	boolean result = false;
-    	if (!uri.contains("mobile")
-    			&& !uri.contains("/css/")
-    			&& !uri.contains("/js/")
-    			&& !uri.contains("/img/")) {
+    	if (uri.contains("mobile")
+    			&& !uri.contains("login-mobile")
+    			&& !isResourceUri(uri)) {
     		result = true;
     	}
     	return result;
     }
     
+    
+    private boolean isResourceUri(String uri) {
+    	return (uri.contains("/css/") || uri.contains("/js/") || uri.contains("/img/"));  
+    }
     @Override
     public void destroy() {
     }

@@ -33,7 +33,7 @@ import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
 
 @Entity
-public class OrderHeader {
+public class OrderHeader implements Cloneable {
 
 	private Long id;
 	private String orderNumber;
@@ -86,8 +86,35 @@ public class OrderHeader {
 	private String deliveryComment;
 	private String deliveryReceiverName;
 	private String deliveryStatus;
+	private int pickStatus;
 	@Transient
 	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
+	
+	@Override
+	@Transient
+    public OrderHeader clone() {		
+		try {
+			OrderHeader clone = (OrderHeader) super.clone();
+			clone.setId(null);
+			clone.setDeliveryDate(null);
+			clone.setOrderLines(new HashSet<OrderLine>());
+			clone.setOrderComments(new HashSet<OrderComment>());
+			clone.setOrderCustomFields(new HashSet<OrderCustomField>());
+			clone.setAttachment(null);
+			clone.setTransmitErrorMessage(null);
+			clone.setCustomerGroup(this.customerGroup);
+			clone.setDeliveryPlan(null);
+			clone.setCreationDate(new Date());
+			clone.setTransferDate(null);
+			clone.setDeliverySignature(null);
+			clone.setDeliveryComment(null);
+			clone.setDeliveryReceiverName(null);
+			clone.setDeliveryStatus(null);			
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
 	
 	@Id
 	@GeneratedValue
@@ -311,6 +338,7 @@ public class OrderHeader {
 	
 	@Transient
 	public void setOrderStatusByProgress(boolean workToDoOnRelatedOrders) {
+		//TODO Anpassa till plockstatus från Lexit
 		if (getUnCompletedOrderLines().size() > 0) {
 			this.status = StatusConstants.ORDER_STATUS_STARTED;
 		} else if (!workToDoOnRelatedOrders) {
@@ -773,5 +801,11 @@ public class OrderHeader {
 	@Transient
 	public String getFullContactPersonString() {
 		return (contact1Name + contact2Name).toLowerCase();
+	}
+	public int getPickStatus() {
+		return pickStatus;
+	}
+	public void setPickStatus(int pickStatus) {
+		this.pickStatus = pickStatus;
 	}
 }
