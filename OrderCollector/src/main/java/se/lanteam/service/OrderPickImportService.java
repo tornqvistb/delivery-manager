@@ -50,7 +50,7 @@ public class OrderPickImportService {
     private PropertyService propService;
 
 	@Transactional
-    public void manageOrderPickFiles() throws IOException{
+    public void importFiles() throws IOException{
 	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_INCOMING_WH_FOLDER);	    
 	    String fileDestFolder = propService.getString(PropertyConstants.FILE_PROCESSED_WH_FOLDER);	    
 	    String fileErrorFolder = propService.getString(PropertyConstants.FILE_ERROR_WH_FOLDER);	            

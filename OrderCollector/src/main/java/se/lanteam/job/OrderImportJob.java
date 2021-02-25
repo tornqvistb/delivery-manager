@@ -12,6 +12,7 @@ import se.lanteam.domain.ErrorRecord;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.service.OrderImportService;
 import se.lanteam.service.OrderPickImportService;
+import se.lanteam.service.ShopOrderImportService;
 import se.lanteam.services.ReportConsolidationService;
 
 /**
@@ -26,6 +27,8 @@ public class OrderImportJob implements Job {
     private ReportConsolidationService consolidationService;
     @Autowired
     private OrderPickImportService pickService;
+    @Autowired
+    private ShopOrderImportService shopService;
 
     private static final Logger LOG = LoggerFactory.getLogger(OrderImportJob.class);
     
@@ -33,12 +36,15 @@ public class OrderImportJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) {
     	LOG.info("Running OrderImportJob");
         try {
-			service.moveFiles();
+			//service.moveFiles();
 			//consolidationService.updateAllReportLabels();
-        	pickService.manageOrderPickFiles();
+        	pickService.importFiles();
+        	shopService.importFiles();
 		} catch (IOException e) {
 			e.printStackTrace();
 			errorRepo.save(new ErrorRecord("IOException vid inläsning av filer från Visma."));
+		} catch (Exception e) {
+			errorRepo.save(new ErrorRecord("Exception vid inläsning av fil."));
 		}
         service.addJointDeliveryInfo();
     }

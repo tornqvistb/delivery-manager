@@ -18,6 +18,11 @@ public class PropertyConstants {
 	public static final String FILE_PROCESSED_WH_FOLDER = "file-processed-wh-folder";
 	public static final String FILE_ERROR_WH_FOLDER = "file-error-wh-folder";
 	public static final String FILE_OUTGOING_WH_FOLDER = "file-outgoing-wh-folder";	
+
+	public static final String FILE_INCOMING_SHOP_FOLDER = "file-incoming-shop-folder";
+	public static final String FILE_PROCESSED_SHOP_FOLDER = "file-processed-shop-folder";
+	public static final String FILE_ERROR_SHOP_FOLDER = "file-error-shop-folder";
+	public static final String FILE_OUTGOING_SHOP_FOLDER = "file-outgoing-shop-folder";	
 	
 	public static final String ORDER_TRANSMITJOB_FREQUENCY = "order-transmitjob-frequency";
 	public static final String WS_ENDPOINT_ORDER_DELIVERY = "ws-endpoint-order-delivery";

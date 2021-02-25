@@ -808,4 +808,33 @@ public class OrderHeader implements Cloneable {
 	public void setPickStatus(int pickStatus) {
 		this.pickStatus = pickStatus;
 	}
+
+	@Override
+	@Transient
+	public String toString() {
+		return "OrderHeader [id=" + id + ", orderNumber=" + orderNumber + ", netsetOrderNumber=" + netsetOrderNumber
+				+ ", orderDate=" + orderDate + ", customerNumber=" + customerNumber + ", customerName=" + customerName
+				+ ", postalAddress1=" + postalAddress1 + ", postalAddress2=" + postalAddress2 + ", postalCode="
+				+ postalCode + ", city=" + city + ", deliveryAddressName=" + deliveryAddressName
+				+ ", deliveryPostalAddress1=" + deliveryPostalAddress1 + ", deliveryPostalAddress2="
+				+ deliveryPostalAddress2 + ", deliveryPostalCode=" + deliveryPostalCode + ", deliveryCity="
+				+ deliveryCity + ", deliveryDate=" + deliveryDate + ", leasingNumber=" + leasingNumber
+				+ ", customerOrderNumber=" + customerOrderNumber + ", customerSalesOrder=" + customerSalesOrder
+				+ ", partnerId=" + partnerId + ", contact1Name=" + contact1Name + ", contact1Email=" + contact1Email
+				+ ", contact1Phone=" + contact1Phone + ", contact2Name=" + contact2Name + ", contact2Email="
+				+ contact2Email + ", contact2Phone=" + contact2Phone + ", status=" + status + ", orderLines="
+				+ orderLines + ", orderComments=" + orderComments + ", orderCustomFields=" + orderCustomFields
+				+ ", attachment=" + attachment + ", transmitErrorMessage=" + transmitErrorMessage + ", toBeArchived="
+				+ toBeArchived + ", customerGroup=" + customerGroup + ", deliveryPlan=" + deliveryPlan
+				+ ", jointDelivery=" + jointDelivery + ", jointDeliveryText=" + jointDeliveryText
+				+ ", jointDeliveryOrders=" + jointDeliveryOrders + ", jointInvoicing=" + jointInvoicing
+				+ ", articleNumbers=" + articleNumbers + ", receivedFromWebshop=" + receivedFromWebshop
+				+ ", receivedFromERP=" + receivedFromERP + ", contactInfoFromNetset=" + contactInfoFromNetset
+				+ ", slaDays=" + slaDays + ", excludeFromList=" + excludeFromList + ", creationDate=" + creationDate
+				+ ", transferDate=" + transferDate + ", deliverySignature=" + deliverySignature + ", deliveryComment="
+				+ deliveryComment + ", deliveryReceiverName=" + deliveryReceiverName + ", deliveryStatus="
+				+ deliveryStatus + ", pickStatus=" + pickStatus + ", customFieldsInDeliveryNote="
+				+ customFieldsInDeliveryNote + "]";
+	}
+	
 }
