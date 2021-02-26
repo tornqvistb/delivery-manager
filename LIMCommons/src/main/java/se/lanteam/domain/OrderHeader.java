@@ -416,7 +416,7 @@ public class OrderHeader implements Cloneable {
 		if (this.status.equals(StatusConstants.ORDER_STATUS_RECEIVING)) {
 			result.append("Ordern är delvis mottagen i LIM. Registrering kan påbörjas först när ordern har tagit emot information från samtliga system.");
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_NEW)) {
-			result.append("Registrering ej påbörjad.");
+			result.append("Registrering ej påbörjad. Inväntar plockinfo från lagersystem.");
 			if (this.getCustomerGroup().getBookOrderBeforeRegistration()) {
 				result.append("<br>Ordern måste bokas innan registrering kan påbörjas. Bokning sker genom ruttplanering.");
 			}
@@ -629,6 +629,9 @@ public class OrderHeader implements Cloneable {
 	}
 	@Transient
 	public Boolean getOkToRegister() {
+		/** Som det ser ut just nu skall man inte kunna registrera själva utan detta sker helt och hållet från Lexit*/
+		return false;
+		/*
 		Boolean result = false;
 		if (this.getUnCompletedOrderLines().size() > 0
 				&& this.receivedFromWebshop != null && this.receivedFromWebshop
@@ -646,6 +649,7 @@ public class OrderHeader implements Cloneable {
 			result = false;
 		}
 		return result;
+		*/
 	}
 	@Transient
 	public Boolean getOkToSendDeliveryReport() {

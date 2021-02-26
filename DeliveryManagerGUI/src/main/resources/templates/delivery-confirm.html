@@ -76,7 +76,7 @@
 			<div id="submit-section" class="form-group">		
 				<input type="button" class="btn btn-primary" id="confirm-btn" value="Bekräfta"/>
 				<a class="btn btn-secondary" href="#" onclick="history.go(-1)">Tillbaka</a>
-				<a class="btn btn-secondary" title="Back" th:href="@{/delivery-mobile/back-to-search/} + ${deliveryForm.orderNumbersConcat}">Tillbaka till sök</a>
+				<!-- <a class="btn btn-secondary" title="Back" th:href="@{/delivery-mobile/back-to-search/} + ${deliveryForm.orderNumbersConcat}">Tillbaka till sök</a> -->
 			</div>
 			<div th:if="${not #strings.isEmpty(deliveryForm.orderNumbersConcat)}" id="delivery-order-table">
 				<h4>Ordrar i denna leverans</h4>

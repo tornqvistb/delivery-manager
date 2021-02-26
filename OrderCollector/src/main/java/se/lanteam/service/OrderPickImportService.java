@@ -49,6 +49,8 @@ public class OrderPickImportService {
 	@Autowired
     private PropertyService propService;
 
+	private static final String FILE_ENDING_WH = ".txt";
+	
 	@Transactional
     public void importFiles() throws IOException{
 	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_INCOMING_WH_FOLDER);	    
@@ -58,27 +60,33 @@ public class OrderPickImportService {
 		File[] filesInFolder = inputFolder.listFiles();
 		if (filesInFolder != null) {
 			for (final File fileEntry : filesInFolder) {
-				logger.info("Found file: " + fileEntry.getName());
-				Path source = Paths.get(fileSourceFolder + "/" + fileEntry.getName());
-				Path target = Paths.get(fileDestFolder + "/" + fileEntry.getName());
-				Path errorTarget = Paths.get(fileErrorFolder + "/" + fileEntry.getName());
-				try {
-					List<String> rows = Files.readAllLines(source);
-					OrderPickingInfo pickingInfo = getPickingInfo(rows, fileEntry.getName());
-					if (!StringUtils.isEmpty(pickingInfo.getOriginalOrderNumber())) {
-						createRestOrder(pickingInfo);
+				if (fileNamePatternMatches(fileEntry.getName())) {
+					logger.info("Found file: " + fileEntry.getName());
+					Path source = Paths.get(fileSourceFolder + "/" + fileEntry.getName());
+					Path target = Paths.get(fileDestFolder + "/" + fileEntry.getName());
+					Path errorTarget = Paths.get(fileErrorFolder + "/" + fileEntry.getName());
+					try {
+						List<String> rows = Files.readAllLines(source);
+						OrderPickingInfo pickingInfo = getPickingInfo(rows, fileEntry.getName());
+						if (!StringUtils.isEmpty(pickingInfo.getOriginalOrderNumber())) {
+							createRestOrder(pickingInfo);
+						}
+						updateOrder(pickingInfo);						
+						logger.info(pickingInfo.toString());
+						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+					} catch (PickImportException e) {
+						errorRepo.save(new ErrorRecord(e.getMessage()));
+						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					}
-					updateOrder(pickingInfo);						
-					logger.info(pickingInfo.toString());
-					Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-				} catch (PickImportException e) {
-					errorRepo.save(new ErrorRecord(e.getMessage()));
-					Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 				}
 			}
 		}
     }
     
+    private boolean fileNamePatternMatches(String fileName) {
+    	return fileName != null && fileName.endsWith(FILE_ENDING_WH);
+    }
+	
     private void createRestOrder(OrderPickingInfo pickingInfo) {
     	List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(pickingInfo.getOriginalOrderNumber());
     	if (!orderList.isEmpty()) {
