@@ -134,6 +134,7 @@ public class ShopOrderImportService {
         	Element e = (Element) node;
         	String orderNumber = getTagValue(e, "OrderNumber");
         	if (orderExists(orderNumber)) {
+        		LOG.debug("Incoming order already exists: " + orderNumber);
         		cancelOrderIfNeeded(orderNumber, getTagValue(e, "Status"));
         		return;
         	}
