@@ -79,6 +79,9 @@ public class ShopOrderImportService {
 	private static final String ERROR_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Ordernummer saknas i fil: ";
 	private static final String ERROR_CUSTOMER_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Kundens ordernummer saknas i fil: ";
 	private static final String ERROR_NO_ORDER_LINES = GENERAL_FILE_ERROR + "Inga orderrader att leveransrapportera (kundradnummer eller restriktionskod saknas) i fil: ";
+	private static final String FILE_ENDING_SHOP = ".xml";
+	private static final String SHOP_STATUS_CANCEL_ORDER = "600";
+	private static final String EXTRINSIC_FIELD_RESTRICTION_CODE = "VLCdata";
     
     public void importFiles() throws IOException  {
 	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_INCOMING_SHOP_FOLDER);	    
@@ -89,29 +92,35 @@ public class ShopOrderImportService {
 		if (filesInFolder != null) {
 			for (final File fileEntry : filesInFolder) {
 				LOG.info("Found file: " + fileEntry.getName());
-				//Process and create order
-				Path source = Paths.get(fileSourceFolder + "/" + fileEntry.getName());
-				Path target = Paths.get(fileDestFolder + "/" + fileEntry.getName());
-				Path errorTarget = Paths.get(fileErrorFolder + "/" + fileEntry.getName());
-				try {
-					parseFile(fileEntry);
-					Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-				} catch (SAXException e) {
-					LOG.error("SAXException", e);
-					Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
-				} catch (ParserConfigurationException e) {
-					LOG.error("ParserConfigurationException", e);
-					Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
-				} catch (ReceiveOrderException e) {
-					LOG.error("ReceiveOrderException", e);
-					saveError(e.getMessage());
-					Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
+				if (fileNamePatternMatches(fileEntry.getName())) {
+					//Process and create order
+					Path source = Paths.get(fileSourceFolder + "/" + fileEntry.getName());
+					Path target = Paths.get(fileDestFolder + "/" + fileEntry.getName());
+					Path errorTarget = Paths.get(fileErrorFolder + "/" + fileEntry.getName());
+					try {
+						parseFile(fileEntry);
+						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+					} catch (SAXException e) {
+						LOG.error("SAXException", e);
+						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
+					} catch (ParserConfigurationException e) {
+						LOG.error("ParserConfigurationException", e);
+						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
+					} catch (ReceiveOrderException e) {
+						LOG.error("ReceiveOrderException", e);
+						saveError(e.getMessage());
+						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
+					}
 				}
 			}
 		}
     }
     
-    private OrderHeader parseFile(File file) throws SAXException, IOException, ParserConfigurationException, ReceiveOrderException {
+    private boolean fileNamePatternMatches(String fileName) {
+    	return fileName != null && fileName.endsWith(FILE_ENDING_SHOP);
+    }
+    
+    private void parseFile(File file) throws SAXException, IOException, ParserConfigurationException, ReceiveOrderException {
     	OrderHeader orderHeader = new OrderHeader();
     	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -124,6 +133,10 @@ public class ShopOrderImportService {
         	node = nList.item(0);
         	Element e = (Element) node;
         	String orderNumber = getTagValue(e, "OrderNumber");
+        	if (orderExists(orderNumber)) {
+        		cancelOrderIfNeeded(orderNumber, getTagValue(e, "Status"));
+        		return;
+        	}
         	orderHeader.setCustomerGroup(getCustomerGroup(getTagValue(e,"CustomerGroupName"), orderNumber));
         	orderHeader.setOrderNumber(orderNumber);
     		orderHeader.setNetsetOrderNumber(orderNumber);
@@ -152,7 +165,7 @@ public class ShopOrderImportService {
     		orderHeader.setStatus(StatusConstants.ORDER_STATUS_NEW);
     		
     		NodeList orderLineNodes = doc.getElementsByTagName("OrderLines");
-    		List<String> articleNumbers = new ArrayList<String>();
+    		List<String> articleNumbers = new ArrayList<>();
     		Set<OrderLine> orderLines = new HashSet<>();
     		if (orderLineNodes.getLength() > 0) {
     			e = (Element) orderLineNodes.item(0);
@@ -169,10 +182,7 @@ public class ShopOrderImportService {
     				orderLine.setRemaining(quantity);
     				orderLine.setRegistered(0);
     				getInstallationAndFinancialInfo(orderLine, getTagValue(lineEl,"Comment"));
-    				orderLine.setRestrictionCode("1"); //for test
-    				/*    				
-    				orderLine.setRestrictionCode(jsonOrderLine.optString("Restriktionskod"));  // KOlla tag för restriktionskod!!
-    				*/
+    				orderLine.setRestrictionCode(getRestrictionCode(lineEl));
     				orderLine.setOrderHeader(orderHeader);
     				orderLines.add(orderLine);
     				articleNumbers.add(orderLine.getArticleNumber());
@@ -190,11 +200,41 @@ public class ShopOrderImportService {
     		if (validate(orderHeader, file.getName())) {
     			orderRepo.save(orderHeader);
     		}
-            LOG.info("Netset order: " + orderHeader.toString());        	
+            LOG.debug("Netset order: " + orderHeader.toString());        	
         } else {
         	throw new ReceiveOrderException("0", "No order in file");
         }
-        return orderHeader;
+    }
+    
+    private String getRestrictionCode(Element lineElement)  {
+		
+		NodeList extrinsicFields = lineElement.getElementsByTagName("ExtrinsicFields");
+		if (extrinsicFields.getLength() > 0) {
+			Element extFieldsEl = (Element) extrinsicFields.item(0);
+			NodeList fields = extFieldsEl.getElementsByTagName("Extrinsic");
+			for (int i = 0; i < fields.getLength(); i++) {    				
+				Element field = (Element) fields.item(i);
+				String name = field.getAttribute("name");
+				if (name != null && EXTRINSIC_FIELD_RESTRICTION_CODE.equals(name)) {
+					return field.getTextContent();
+				}
+			}
+		}
+		return "";
+	}
+    
+    private void cancelOrderIfNeeded(String orderNumber, String status) {
+    	if (SHOP_STATUS_CANCEL_ORDER.equals(status)) {
+    		List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(orderNumber);    		
+    		OrderHeader order = orderList.get(0);
+    		orderRepo.delete(order.getId());
+    		LOG.debug("Netset order: " + orderNumber + " cancelled with status " + status);  
+    	}
+    }
+    
+    private boolean orderExists(String orderNumber) {
+    	List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(orderNumber);
+    	return orderList != null && !orderList.isEmpty(); 
     }
     
     private int getJointInvoicing (String customerNo) {
