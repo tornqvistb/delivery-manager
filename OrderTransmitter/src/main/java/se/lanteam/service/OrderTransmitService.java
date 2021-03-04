@@ -22,8 +22,8 @@ import se.lanteam.repository.EmailRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderCommentRepository;
 import se.lanteam.repository.OrderRepository;
-import se.lanteam.services.ERPIntegrationService;
 import se.lanteam.services.PropertyService;
+import se.lanteam.services.WHIntegrationService;
 import se.lanteam.ws.Header;
 import se.lanteam.ws.WSClient;
 import se.lanteam.ws.WSConfig;
@@ -44,7 +44,8 @@ public class OrderTransmitService {
     private ErrorRepository errorRepo;
     private OrderCommentRepository orderCommentRepo;
     private PropertyService propService;
-    private ERPIntegrationService erpService;
+    //private ERPIntegrationService erpService;
+    private WHIntegrationService whService;
     private EmailRepository emailRepo;
     
 	private boolean isNumeric(String s) {
@@ -88,9 +89,10 @@ public class OrderTransmitService {
         			}
 					// Create message to Visma and store on disk. Only if joint invoicing (samfakturering) is not true.
         			LOG.info("Status for order " + order.getOrderNumber() + ":" + order.getStatus());
-					if (order.getJointInvoicing() == 0 && StatusConstants.ORDER_STATUS_SENT.equals(order.getStatus())) {
-						LOG.info("Sending delivery info to business system for order " + order.getOrderNumber());
-						erpService.createFileToBusinessSystem(order);
+					if (StatusConstants.ORDER_STATUS_SENT.equals(order.getStatus())) {
+						whService.createFileToWarehouseSystem(order);
+						LOG.info("Sending delivery info to warehouse system for order " + order.getOrderNumber());
+						
 					}
 					// Create delivery mail to customer group mail address
 					if (StringUtils.isNotEmpty(order.getCustomerGroup().getDeliveryEmailAddress())) {
@@ -259,8 +261,8 @@ public class OrderTransmitService {
 		this.emailRepo = emailRepo;
 	}
 	@Autowired
-	public void setERPServiceRepo(ERPIntegrationService erpService) {
-		this.erpService = erpService;
+	public void setWHServiceRepo(WHIntegrationService whService) {
+		this.whService = whService;
 	}
 	private boolean doWsCallForOrder(OrderHeader order) {
 		boolean result = false;

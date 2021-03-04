@@ -12,7 +12,7 @@ import se.lanteam.model.OrderPickingInfo;
 import se.lanteam.model.PickedOrderLine;
 
 public class OrderCloneHelper {
-
+	
 	public static OrderHeader cloneOrder(OrderHeader originalOrder, OrderPickingInfo pickingInfo) {
 		
 		OrderHeader clone = originalOrder.clone();

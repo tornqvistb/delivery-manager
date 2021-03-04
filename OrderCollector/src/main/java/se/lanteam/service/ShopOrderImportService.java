@@ -88,6 +88,7 @@ public class ShopOrderImportService {
 	    String fileDestFolder = propService.getString(PropertyConstants.FILE_PROCESSED_SHOP_FOLDER);	    
 	    String fileErrorFolder = propService.getString(PropertyConstants.FILE_ERROR_SHOP_FOLDER);	            
 		final File inputFolder = new File(fileSourceFolder);
+		LOG.info("Folder for Shop files: " + fileSourceFolder);
 		File[] filesInFolder = inputFolder.listFiles();
 		if (filesInFolder != null) {
 			for (final File fileEntry : filesInFolder) {
@@ -193,7 +194,6 @@ public class ShopOrderImportService {
     		orderHeader.setOrderLines(orderLines);
     		// Add extra fields
     		addCustomFields(orderHeader, e);
-    		orderHeader.setJointInvoicing(getJointInvoicing(orderHeader.getCustomerNumber()));  // Behövs detta nu?
     		orderHeader.setSlaDays(getSlaDays(orderHeader));
     		orderHeader.setArticleNumbers(formatArticleNumbers(articleNumbers));
     		orderHeader.setReceivedFromERP(true);
@@ -236,17 +236,6 @@ public class ShopOrderImportService {
     private boolean orderExists(String orderNumber) {
     	List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(orderNumber);
     	return orderList != null && !orderList.isEmpty(); 
-    }
-    
-    private int getJointInvoicing (String customerNo) {
-    	int result = 0;
-    	SystemProperty jointInvProp = propertyRepo.findById(PropertyConstants.JOINT_INVOICING_CUST_NUMBERS);
-    	if (jointInvProp != null && jointInvProp.getStringValue() != null) {
-    		if (Arrays.asList(jointInvProp.getStringValue().split(";")).contains(customerNo)) {
-    			result = 1;
-    		}
-    	}    	
-    	return result;
     }
     
     private String getTagValue(Element e, String path) {

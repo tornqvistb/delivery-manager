@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,9 +118,36 @@ public class OrderPickImportService {
     		}
     		order.setPickStatus(pickingInfo.getStatus());
     		//TODO Change logic for setting order status later
-    		order.setStatus(StatusConstants.ORDER_STATUS_STARTED);
+    		updateOrderStatusByPickStatus(order);
     		orderRepo.save(order);
     	}    	
+    }
+    
+    private void updateOrderStatusByPickStatus(OrderHeader order) {
+    	if (StatusConstants.PICK_STATUS_PARTLY_PICKED == order.getPickStatus() && StatusConstants.ORDER_STATUS_NEW.equals(order.getStatus())) {
+    		order.setStatus(StatusConstants.ORDER_STATUS_STARTED);
+    	}
+    	if (StatusConstants.PICK_STATUS_FULLY_PICKED == order.getPickStatus()) {
+    		boolean manualRegistrationLeft = false;
+    		List<OrderLine> uncompletedLines = order.getUnCompletedOrderLines();
+    		Set<OrderLine> allLines = order.getOrderLines();
+    		for (OrderLine line : allLines) {
+    			if (line.isManualRegistrationLeft()) {
+    				manualRegistrationLeft = true;
+    			}
+    			for (OrderLine ucLine : uncompletedLines) {
+    				if (ucLine.getRowNumber() == line.getRowNumber()) {
+    					line.setRested(true);
+    				}
+    			}
+    		}
+    		if (!manualRegistrationLeft) {
+    			order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE); // Kanske setStatusByProgress
+    		}
+    		if (manualRegistrationLeft && StatusConstants.ORDER_STATUS_NEW.equals(order.getStatus())) {
+    			order.setStatus(StatusConstants.ORDER_STATUS_STARTED);
+    		}
+    	}
     }
     
     private OrderPickingInfo getPickingInfo(List<String> rows, String fileName) throws PickImportException{

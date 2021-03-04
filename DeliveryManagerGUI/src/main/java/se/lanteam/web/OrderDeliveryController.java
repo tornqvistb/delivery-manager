@@ -56,7 +56,7 @@ public class OrderDeliveryController extends BaseController {
 			form.setErrorMessage("Ordern tillhör inte aktuell kundgrupp, tillhör " + order.getCustomerGroup().getName() + ".");
 			return DELIVERY_SEARCH_VIEW;			
 		}
-		if (!order.getOkToSendDeliveryReport()) {
+		if (!order.getOkToDeliverWithApp()) {
 			form.setErrorMessage("Ordern har fel status för leverans: " + order.getStatusDisplay() + ".");
 			return DELIVERY_SEARCH_VIEW;			
 		}

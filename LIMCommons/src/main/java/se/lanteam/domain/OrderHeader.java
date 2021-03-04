@@ -662,6 +662,12 @@ public class OrderHeader implements Cloneable {
 	}
 
 	@Transient
+	public Boolean getOkToDeliverWithApp() {
+		return (this.status.equals(StatusConstants.ORDER_STATUS_REGISTRATION_DONE) || this.status.equals(StatusConstants.ORDER_STATUS_ROUTE_PLANNED));
+	}
+
+	
+	@Transient
 	public boolean isPartOfJointdelivery() {
 		boolean result = false;
 		if (!StringUtils.isEmpty(this.jointDelivery)) {

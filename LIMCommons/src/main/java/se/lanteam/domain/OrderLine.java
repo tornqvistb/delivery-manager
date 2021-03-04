@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
+import org.springframework.util.StringUtils;
+
 import se.lanteam.constants.RestrictionCodes;
 
 @Entity
@@ -37,6 +39,7 @@ public class OrderLine implements Cloneable{
 	private String leasingNumber;
 	private String requestItemNumber;
 	private boolean autoRegistered = false;
+	private boolean rested = false;
 	
 	@Override
 	@Transient
@@ -162,6 +165,16 @@ public class OrderLine implements Cloneable{
 		}
 		return result;
 	}
+	@Transient
+	public Boolean isManualRegistrationLeft() {
+		for (Equipment equip : equipments) {
+			if (StringUtils.isEmpty(equip.getStealingTag())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public Integer getCustomerRowNumber() {
 		return customerRowNumber;
 	}
@@ -226,5 +239,13 @@ public class OrderLine implements Cloneable{
 		}
 		this.registered = this.registered + serialNos.size();
 		this.remaining = this.remaining - serialNos.size();
+	}
+
+	public boolean isRested() {
+		return rested;
+	}
+
+	public void setRested(boolean rested) {
+		this.rested = rested;
 	}
 }
