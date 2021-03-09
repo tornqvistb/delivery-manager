@@ -22,6 +22,7 @@ public class DeliveryForm {
 	private String comment = "";
 	private String orderNumber = "";
 	private String orderNumbersConcat = "";
+	private List<OrderHeader> plannedOrders = new ArrayList<>();
 	
 	protected final static String ORDER_SEPARATOR = "_";
 	
@@ -130,6 +131,7 @@ public class DeliveryForm {
 		}
 		orderNumbersConcat = newValue;
 	}
+
 	public List<String> getOrdersAsList() {
 		List<String> list = new ArrayList<>();
 		if (!StringUtils.isEmpty(orderNumbersConcat)) {
@@ -175,6 +177,12 @@ public class DeliveryForm {
 		} else {
 			this.deliveryStati = DeliveryStatus.getDefaultList();				
 		}		
+	}
+	public List<OrderHeader> getPlannedOrders() {
+		return plannedOrders;
+	}
+	public void setPlannedOrders(List<OrderHeader> plannedOrders) {
+		this.plannedOrders = plannedOrders;
 	}	
 	
 }

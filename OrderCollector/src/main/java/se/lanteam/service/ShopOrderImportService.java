@@ -164,7 +164,7 @@ public class ShopOrderImportService {
     		orderHeader.setContact2Name(getTagValue(e,"InvoiceContactInformation/Name"));
     		orderHeader.setContact2Email(getTagValue(e,"InvoiceContactInformation/Email"));
     		orderHeader.setContact2Phone(getTagValue(e,"InvoiceContactInformation/Phone"));
-    		orderHeader.setStatus(StatusConstants.ORDER_STATUS_NEW);
+    		orderHeader.setStatus(StatusConstants.ORDER_STATUS_NOT_PICKED);
     		
     		NodeList orderLineNodes = doc.getElementsByTagName("OrderLines");
     		List<String> articleNumbers = new ArrayList<>();

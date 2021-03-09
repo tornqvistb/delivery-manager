@@ -156,4 +156,14 @@ public class DateUtil {
 		return result;
 	}
 
+	public static Date getTodayAtMidnight() {
+		
+		try {
+			return stringToDateAfterMidnight(dateToString(new Date()));
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+
+	
 }

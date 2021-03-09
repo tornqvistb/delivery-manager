@@ -17,7 +17,6 @@
 			<p th:utext="${deliveryForm.infoMessage}" th:remove="tag" />
 		</div>
 
-
 		<form th:action="@{/delivery-mobile/search}"
 			th:object="${deliveryForm}" method="get">
 
@@ -32,8 +31,29 @@
 			</div>
 
 		</form>
+		<!-- Ny sektion -->
+		<div th:if="${not #lists.isEmpty(deliveryForm.plannedOrders)}">
+			<h5>Leveransplanerade ordrar</h5>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Ordernummer</th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+				<tbody>										
+					<tr th:each="order : ${deliveryForm.plannedOrders}">
+						<th scope="row" th:text="${order.orderNumber}">12345</th>
+						<td>
+							<a class="add-icon" title="Add" th:href="@{/delivery-mobile/add-order/} + ${order.orderNumber}  + '/' + ${deliveryForm.orderNumbersConcat}"><i class="material-icons">add_circle</i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
 		<div th:if="${not #strings.isEmpty(deliveryForm.orderNumbersConcat)}" id="delivery-order-table">
-			<h4>Ordrar i denna leverans</h4>
+			<h5>Ordrar att leverera</h5>
 			<table class="table">
 				<thead>
 					<tr>
@@ -45,7 +65,7 @@
 					<tr th:each="order : ${deliveryForm.ordersAsList}">
 						<th scope="row" th:text="${order}">12345</th>
 						<td>
-						    <a class="delete-bin" title="Delete" th:href="@{/delivery-mobile/del-order/} + ${order}  + '/' + ${deliveryForm.orderNumbersConcat}"><i class="material-icons">&#xE872;</i></a>
+						    <a class="delete-bin" title="Delete" th:href="@{/delivery-mobile/del-order/} + ${order}  + '/' + ${deliveryForm.orderNumbersConcat}"><i class="material-icons">delete</i></a>
 						</td>
 					</tr>
 				</tbody>

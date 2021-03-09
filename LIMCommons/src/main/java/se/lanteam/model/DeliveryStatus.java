@@ -8,9 +8,11 @@ public class DeliveryStatus {
 	public static final String STATUS_DELIVERED = "delivered";
 	public static final String STATUS_ERR_BROKEN = "error_broken";
 	public static final String STATUS_ERR_MISSING = "error_missing";
+	public static final String STATUS_ERR_NO_PICKUP = "error_no_pickup";
 	public static final String STATUS_DELIVERED_DESC = "Levererad";
 	public static final String STATUS_ERR_BROKEN_DESC = "Fel - trasig";
 	public static final String STATUS_ERR_MISSING_DESC = "Fel - saknas";
+	public static final String STATUS_ERR_NO_PICKUP_DESC = "Fel - bomkörning";
 	
 	private String status;
 	private String description;
@@ -38,6 +40,7 @@ public class DeliveryStatus {
 		list.add(new DeliveryStatus(STATUS_DELIVERED, STATUS_DELIVERED_DESC));
 		list.add(new DeliveryStatus(STATUS_ERR_BROKEN, STATUS_ERR_BROKEN_DESC));
 		list.add(new DeliveryStatus(STATUS_ERR_MISSING, STATUS_ERR_MISSING_DESC));
+		list.add(new DeliveryStatus(STATUS_ERR_NO_PICKUP, STATUS_ERR_NO_PICKUP_DESC));
 		return list;
 	}
 

@@ -29,6 +29,9 @@ public class OrderDeletionService {
     
 	public void deleteOrders() {
         LOG.info("Looking for orders to delete!");
+        /* 
+         * Not relevant anymore
+         * 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR, -48);
         Date theDate = cal.getTime();
@@ -37,6 +40,7 @@ public class OrderDeletionService {
         	LOG.info("Deleting order with status receiving after 48 hours: " + order.getOrderNumber());
         	orderRepo.delete(order.getId());
         }
+        */
 	}
 
 	

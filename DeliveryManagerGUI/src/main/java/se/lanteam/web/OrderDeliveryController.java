@@ -2,6 +2,7 @@ package se.lanteam.web;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.util.ListUtils;
 
+import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Attachment;
 import se.lanteam.domain.OrderHeader;
@@ -39,8 +42,30 @@ public class OrderDeliveryController extends BaseController {
 	@RequestMapping("delivery-mobile")
 	public String showOrderList(ModelMap model, HttpServletRequest request) {
 		DeliveryForm form = new DeliveryForm();
+		form.setPlannedOrders(getPlannedOrders(form.getOrdersAsList()));
 		model.put(DELIVERY_FORM_BEAN, form);
 		return DELIVERY_SEARCH_VIEW;
+	}
+	
+	private List<OrderHeader> getPlannedOrders(List<String> selectedOrders) {
+		List<String> stati = new ArrayList<>();
+		stati.add(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);
+		stati.add(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);
+		List<OrderHeader> plannedOrdersToday = orderRepo.findOrdersByPlanDateAndStatus(stati, DateUtil.getTodayAtMidnight(), sessionBean.getCustomerGroup().getId());
+		if (!ListUtils.isEmpty(selectedOrders)) {
+			Iterator<OrderHeader> it = plannedOrdersToday.iterator();
+			while (it.hasNext()) {
+				OrderHeader oh = it.next();
+				for (String selectedOrder : selectedOrders) {
+					if (oh.getOrderNumber().equals(selectedOrder)) {
+					   it.remove();
+					   break;
+					}
+				}
+				
+			}			
+		}
+		return plannedOrdersToday;
 	}
 	
 	@RequestMapping(value="delivery-mobile/search", method=RequestMethod.GET)
@@ -48,40 +73,60 @@ public class OrderDeliveryController extends BaseController {
 		logger.debug("Search string: " + form.getQuery());
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(form.getQuery());
 		if (orders.isEmpty()) {
-			form.setErrorMessage("Ordern hittades inte");
-			return DELIVERY_SEARCH_VIEW;
+			return toSearchWithError(form, "Ordern hittades inte");
 		}		
 		OrderHeader order = orders.get(0);
 		if (order.getCustomerGroup().getId() != sessionBean.getCustomerGroup().getId()) {
-			form.setErrorMessage("Ordern tillhör inte aktuell kundgrupp, tillhör " + order.getCustomerGroup().getName() + ".");
-			return DELIVERY_SEARCH_VIEW;			
+			return toSearchWithError(form, "Ordern tillhör inte aktuell kundgrupp, tillhör " + order.getCustomerGroup().getName() + ".");
 		}
 		if (!order.getOkToDeliverWithApp()) {
-			form.setErrorMessage("Ordern har fel status för leverans: " + order.getStatusDisplay() + ".");
-			return DELIVERY_SEARCH_VIEW;			
+			return toSearchWithError(form, "Ordern har fel status för leverans: " + order.getStatusDisplay() + ".");
 		}
 		if (form.getOrderNumbersConcat().contains(order.getOrderNumber())) {
-			form.setErrorMessage("Ordern är redan tillagd i listan.");
-			return DELIVERY_SEARCH_VIEW;			
+			return toSearchWithError(form, "Ordern är redan tillagd i listan.");
 		}		
 		// All OK
 		form.setOrderNumber(order.getOrderNumber());
 		form.addOrderNumber(order.getOrderNumber());
+		form.setPlannedOrders(getPlannedOrders(form.getOrdersAsList()));
 		form.setInfoMessage("Ordern hittades och lades till i listan.");
 		form.setQuery("");
 		return DELIVERY_SEARCH_VIEW;
 	}
 
+	private String toSearchWithError(DeliveryForm form, String msg) {
+		form.setPlannedOrders(getPlannedOrders(form.getOrdersAsList()));
+		form.setErrorMessage(msg);
+		return DELIVERY_SEARCH_VIEW;
+	}
+	
 	@RequestMapping(value="delivery-mobile/del-order/{orderNumber}/{orderNumbersConcat}", method=RequestMethod.GET)
 	public String deleteOrder(@PathVariable String orderNumber, @PathVariable String orderNumbersConcat, ModelMap model) {
 		DeliveryForm form = new DeliveryForm();
 		form.setOrderNumbersConcat(orderNumbersConcat);
 		form.removeOrderNumber(orderNumber);
-		form.setInfoMessage("Order togs bort från listan");
+		form.setPlannedOrders(getPlannedOrders(form.getOrdersAsList()));
+		form.setInfoMessage("Order " + orderNumber + " togs bort från listan");
 		model.put(DELIVERY_FORM_BEAN, form);
 		return DELIVERY_SEARCH_VIEW;
 	}
 
+	@RequestMapping(value="delivery-mobile/add-order/{orderNumber}", method=RequestMethod.GET)
+	public String addOrder(@PathVariable String orderNumber, ModelMap model) {
+		return addOrder(orderNumber, "", model);
+	}
+	
+	@RequestMapping(value="delivery-mobile/add-order/{orderNumber}/{orderNumbersConcat}", method=RequestMethod.GET)
+	public String addOrder(@PathVariable String orderNumber, @PathVariable String orderNumbersConcat, ModelMap model) {
+		DeliveryForm form = new DeliveryForm();
+		form.setOrderNumbersConcat(orderNumbersConcat);
+		form.addOrderNumber(orderNumber);
+		form.setPlannedOrders(getPlannedOrders(form.getOrdersAsList()));
+		form.setInfoMessage("Order " + orderNumber + " lades till i listan");
+		model.put(DELIVERY_FORM_BEAN, form);
+		return DELIVERY_SEARCH_VIEW;
+	}
+	
 	@RequestMapping(value="delivery-mobile/del-order-confirm/{orderNumber}/{orderNumbersConcat}", method=RequestMethod.GET)
 	public String deleteOrderConfirmDlg(@PathVariable String orderNumber, @PathVariable String orderNumbersConcat, ModelMap model) {
 		DeliveryForm form = new DeliveryForm();
@@ -163,6 +208,7 @@ public class OrderDeliveryController extends BaseController {
 		//
 		form = new DeliveryForm();
 		form.setInfoMessage("Leverans OK");
+		form.setPlannedOrders(getPlannedOrders(null));
 		model.put(DELIVERY_FORM_BEAN, form);
 		return DELIVERY_SEARCH_VIEW;
 	}

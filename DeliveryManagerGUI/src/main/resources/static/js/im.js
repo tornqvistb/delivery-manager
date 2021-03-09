@@ -30,13 +30,14 @@ $(function() { // Makes sure the code contained doesn't run until
 			$(this).load(file);
 		});
 	});
+	/*
 	if ($("#serienr").length) {
 		$("#serienr").focus();
 		 $('html, body').animate({
              scrollTop: $("#registration-area").offset().top
          }, 500);
 	}
-	
+	*/
 	$('input.trig-enter').keydown(function(e) {
 	    var code = e.keyCode || e.which;
 
