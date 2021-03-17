@@ -113,6 +113,10 @@ public class ShopOrderImportService {
 						LOG.error("ReceiveOrderException", e);
 						saveError(e.getMessage());
 						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
+					} catch (Exception e) {
+						LOG.error("Exception", e);
+						saveError(e.getMessage());
+						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					}
 				}
 			}
@@ -158,7 +162,7 @@ public class ShopOrderImportService {
     		orderHeader.setDeliveryCity(getTagValue(e,"AddressingInformation/ShipToAddress/City"));
     		orderHeader.setLeasingNumber(getTagValue(e,"InvoiceReference"));
     		orderHeader.setCustomerOrderNumber(getTagValue(e,"CustomerPO"));
-    		orderHeader.setCustomerSalesOrder(getTagValue(e,"CustomerPO"));
+    		orderHeader.setCustomerSalesOrder(getTagValue(e,"ExternalOrderNumber"));
     		orderHeader.setPartnerId("");                                                                            // Alltid tomt i tidigare Visma-filer
 			orderHeader.setContact1Name(getTagValue(e,"ContactInformation/Contact"));
 			orderHeader.setContact1Email(getTagValue(e,"ContactInformation/Email"));

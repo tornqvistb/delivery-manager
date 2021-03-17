@@ -243,6 +243,10 @@ public class OrderDeliveryController extends BaseController {
 				}
 				oh.setStatus(StatusConstants.ORDER_STATUS_SENT);
 			} else {
+				if (DeliveryStatus.STATUS_ERR_NO_PICKUP.equals(form.getDeliveryStatus())) {
+					oh.increaseNoPickUpCount();
+				}
+				oh.setDeliveryPlan(null);
 				oh.setStatus(StatusConstants.ORDER_STATUS_DELIVERY_ERROR);
 				oh.setDeliveryComment(form.getComment());
 			}

@@ -31,6 +31,7 @@ import se.lanteam.constants.LimStringUtil;
 import se.lanteam.constants.SLAConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
+import se.lanteam.model.DeliveryStatus;
 
 @Entity
 public class OrderHeader implements Cloneable {
@@ -87,6 +88,7 @@ public class OrderHeader implements Cloneable {
 	private String deliveryReceiverName;
 	private String deliveryStatus;
 	private int pickStatus;
+	private int noPickUpCount = 0;
 	@Transient
 	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
 	
@@ -419,7 +421,9 @@ public class OrderHeader implements Cloneable {
 	@Transient
 	public Boolean getPlannable() {
 		Boolean result = false;
-		if (StatusConstants.ORDER_STATUS_REGISTRATION_DONE.equals(status) || StatusConstants.ORDER_STATUS_ROUTE_PLANNED.equals(status)
+		if (StatusConstants.ORDER_STATUS_REGISTRATION_DONE.equals(status) 
+				|| StatusConstants.ORDER_STATUS_ROUTE_PLANNED.equals(status)
+				|| (StatusConstants.ORDER_STATUS_DELIVERY_ERROR.equals(status) && DeliveryStatus.STATUS_ERR_NO_PICKUP.equals(deliveryStatus))
 				|| ((StatusConstants.ORDER_STATUS_NOT_PICKED.equals(status) || StatusConstants.ORDER_STATUS_STARTED.equals(status)	|| StatusConstants.ORDER_STATUS_BOOKED.equals(status)) 
 						&& this.customerGroup.getBookOrderBeforeRegistration())) {
 			result = true;			
@@ -863,5 +867,17 @@ public class OrderHeader implements Cloneable {
 			orders = Arrays.asList(this.getJointDeliveryOrders().split(","));
 		}
 		return orders;
+	}
+
+	public int getNoPickUpCount() {
+		return noPickUpCount;
+	}
+
+	public void setNoPickUpCount(int noPickUpCount) {
+		this.noPickUpCount = noPickUpCount;
+	}
+	@Transient
+	public void increaseNoPickUpCount() {
+		this.noPickUpCount++;
 	}
 }

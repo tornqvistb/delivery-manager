@@ -147,9 +147,23 @@ public class PDFController {
 	@RequestMapping(value = "generate-delivery-note-by-on/{orderNumber}", method = RequestMethod.GET, produces = "application/pdf")
 	@ResponseBody
 	public FileSystemResource generateDeliveryNoteByON(@PathVariable String orderNumber, ModelMap model) {
-		
+		// Add main order and possible sub-orders
+		List<OrderHeader> ordersForDeliveryNote = new ArrayList<OrderHeader>();
 		List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderNumber);
-		searchBean.setOrderList(orders);
+		if (!orders.isEmpty()) {
+			OrderHeader mainOrder = orders.get(0);
+			ordersForDeliveryNote.add(mainOrder);
+			if (mainOrder.isMainOrderInJoint()) {
+				List<String> subOrderNumbers = mainOrder.getJoinedOrdersAsList();
+				for (String subOrderNo : subOrderNumbers) {
+					List<OrderHeader> subOrders = orderRepo.findOrdersByOrderNumber(subOrderNo);
+					if (!subOrders.isEmpty()) {
+						ordersForDeliveryNote.add(subOrders.get(0));
+					}
+				}
+			}
+		}
+		searchBean.setOrderList(ordersForDeliveryNote);
 		
 		return generateDeliveryNotes(model);
 	}

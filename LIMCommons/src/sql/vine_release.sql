@@ -13,8 +13,16 @@ insert into system_property (id, string_value, number_value) values ('file-error
 insert into system_property (id, string_value, number_value) values ('file-outgoing-shop-folder', '//ltvisma1/vine/Test/Netset', 0);
 
 insert into custom_field (identification, label) values (0, 'Användare i klartext');
+update custom_field set label = 'Mailadress' where identification = 1;
+update custom_field set label = 'Telefonnummer' where identification = 2;
+update custom_field set label = 'Ekonomisk leveransadress' where identification = 3;
+update custom_field set label = 'Förvalting' where identification = 4;
+update custom_field set label = 'OU/image' where identification = 5;
+update custom_field set label = 'Extra program' where identification = 6;
+update custom_field set label = 'Gammalt datornamn' where identification = 7;
+update custom_field set label = 'Samleverans' where identification = 8;
+update custom_field set label = 'Övrigt' where identification = 9;
 
---TODO
---update all custom_field, one step ahead CH uppdatera customercustomfield;
--- update customer_custom_field
 update customer_custom_field set custom_field_identification = custom_field_identification -1;
+
+-- update corresponding on all orders.
