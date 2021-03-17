@@ -76,6 +76,8 @@ public class RequestAttributes {
 	private String emptyValue = "";
 	private boolean updateEquipment = false;
 	private String updateEquipmentResult;
+	private Long orderLineIdToUpdate;
+	private String serialNoToUpdate;
 	
 	public String getSaveOrder() {
 		return saveOrder;
@@ -570,6 +572,23 @@ public class RequestAttributes {
 	public void setUpdateEquipmentResult(String updateEquipmentResult) {
 		this.updateEquipmentResult = updateEquipmentResult;
 	}
+
+	public Long getOrderLineIdToUpdate() {
+		return orderLineIdToUpdate;
+	}
+
+	public void setOrderLineIdToUpdate(Long orderLineIdToUpdate) {
+		this.orderLineIdToUpdate = orderLineIdToUpdate;
+	}
+
+	public String getSerialNoToUpdate() {
+		return serialNoToUpdate;
+	}
+
+	public void setSerialNoToUpdate(String serialNoToUpdate) {
+		this.serialNoToUpdate = serialNoToUpdate;
+	}
+
 
 	
 }

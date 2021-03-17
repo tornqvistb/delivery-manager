@@ -19,7 +19,7 @@ public class OrderCloneHelper {
 		
 		clone.setOrderNumber(pickingInfo.getOrderNumber());
 		
-		clone.setStatus(StatusConstants.ORDER_STATUS_NEW);
+		clone.setStatus(StatusConstants.ORDER_STATUS_NOT_PICKED);
 		clone.setPickStatus(StatusConstants.PICK_STATUS_NOT_PICKED);
 		
 		Set<OrderLine> orderLines = new HashSet<OrderLine>();

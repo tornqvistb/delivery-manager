@@ -124,7 +124,7 @@ public class OrderPickImportService {
     }
     
     private void updateOrderStatusByPickStatus(OrderHeader order) {
-    	if (StatusConstants.PICK_STATUS_PARTLY_PICKED == order.getPickStatus() && StatusConstants.ORDER_STATUS_NEW.equals(order.getStatus())) {
+    	if (StatusConstants.PICK_STATUS_PARTLY_PICKED == order.getPickStatus() && StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus())) {
     		order.setStatus(StatusConstants.ORDER_STATUS_STARTED);
     	}
     	if (StatusConstants.PICK_STATUS_FULLY_PICKED == order.getPickStatus()) {
@@ -144,7 +144,7 @@ public class OrderPickImportService {
     		if (!manualRegistrationLeft) {
     			order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE); // Kanske setStatusByProgress
     		}
-    		if (manualRegistrationLeft && StatusConstants.ORDER_STATUS_NEW.equals(order.getStatus())) {
+    		if (manualRegistrationLeft && StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus())) {
     			order.setStatus(StatusConstants.ORDER_STATUS_STARTED);
     		}
     	}

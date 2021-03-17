@@ -25,7 +25,7 @@ public class OrderComment {
 	
 	public OrderComment() {
 		super();
-		this.status = StatusConstants.ORDER_STATUS_NEW;
+		this.status = StatusConstants.ORDER_COMMENT_STATUS_NEW;
 		this.creationDate = new Date();
 	}
 	@Id

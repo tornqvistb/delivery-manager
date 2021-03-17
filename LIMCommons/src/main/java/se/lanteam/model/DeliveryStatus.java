@@ -14,6 +14,12 @@ public class DeliveryStatus {
 	public static final String STATUS_ERR_MISSING_DESC = "Fel - saknas";
 	public static final String STATUS_ERR_NO_PICKUP_DESC = "Fel - bomkörning";
 	
+	public static final String[][] DELIVERY_STATUS_MATRIX = {{STATUS_DELIVERED, STATUS_DELIVERED_DESC},
+			  {STATUS_ERR_BROKEN, STATUS_ERR_BROKEN_DESC},
+			  {STATUS_ERR_MISSING, STATUS_ERR_MISSING_DESC},
+			  {STATUS_ERR_NO_PICKUP, STATUS_ERR_NO_PICKUP_DESC}
+			  };
+	
 	private String status;
 	private String description;
 	

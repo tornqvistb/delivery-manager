@@ -166,16 +166,36 @@ $( function() {
       modal: true,
       closeText: "Stäng",
       dialogClass: "lim-modal",
-      resizable: false
+      resizable: false,
+      open: function(event, ui) { $('#stealingid').focus(); }
     });
- 
-    //$('.selector').dialog({ position: 'top' });
-    //dialog.dialog('option', 'position', 'center');
-    
+     
     $(".update-equipment-link").click(function(){
     	console.log($(this).data('snr'));
     	$("#serienr").val($(this).data('snr'));
     	$("#order-line-id").val($(this).data('olid'));
-      dialog.dialog( "open" );
+        dialog.dialog( "open" );        
     });
 });
+
+$(document).ready(function(){
+    var dialog = $( "#update-equipment" ).dialog({
+        title: "Komplettera informationen på utrustningen",
+        autoOpen: false,
+        height: 400,
+        width: 350,
+        modal: true,
+        closeText: "Stäng",
+        dialogClass: "lim-modal",
+        resizable: false,
+        open: function(event, ui) { $('#stealingid').focus(); }
+      });
+    
+    if(nextOrderlineToUpdate !== null && nextOrderlineToUpdate !== '') {
+		$("#serienr").val(nextSerialToUpdate);
+		$("#order-line-id").val(nextOrderlineToUpdate);
+	    dialog.dialog( "open" );
+    }
+    
+});
+

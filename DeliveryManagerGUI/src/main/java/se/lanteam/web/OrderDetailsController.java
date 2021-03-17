@@ -28,7 +28,6 @@ import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.DeliveryDay;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
-import se.lanteam.repository.DeliveryAreaRepository;
 
 @Controller
 public class OrderDetailsController extends BaseController{
@@ -184,7 +183,11 @@ public class OrderDetailsController extends BaseController{
 			if (order.getUnCompletedOrderLines().size() == 0) {
 				order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);
 			} else {
-				order.setStatus(StatusConstants.ORDER_STATUS_NEW);
+				if (order.getPickStatus() == StatusConstants.PICK_STATUS_NOT_PICKED) {
+					order.setStatus(StatusConstants.ORDER_STATUS_NOT_PICKED);
+				} else {
+					order.setStatus(StatusConstants.ORDER_STATUS_STARTED);
+				}				
 			}
 		} else {
 			order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);

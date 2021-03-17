@@ -33,7 +33,7 @@
 		</form>
 		<!-- Ny sektion -->
 		<div th:if="${not #lists.isEmpty(deliveryForm.plannedOrders)}">
-			<h5>Leveransplanerade ordrar</h5>
+			<h5>Ruttplanerade ordrar idag</h5>
 			<table class="table">
 				<thead>
 					<tr>
@@ -70,7 +70,9 @@
 					</tr>
 				</tbody>
 			</table>
-			<a th:href="@{/delivery-mobile/to-confirmation/} + ${deliveryForm.orderNumbersConcat}" class="btn btn-primary" th:utext="${'Gå vidare >>'}"></a>
+			<div class="lim-fixed-bottom">
+				<a th:href="@{/delivery-mobile/to-confirmation/} + ${deliveryForm.orderNumbersConcat}" class="btn btn-primary" th:utext="${'Gå vidare >>'}"></a>
+			</div>
 		</div>
 
 	</div>

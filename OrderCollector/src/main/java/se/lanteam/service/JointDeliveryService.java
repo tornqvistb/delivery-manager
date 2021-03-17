@@ -30,11 +30,11 @@ public class JointDeliveryService {
     private OrderCustomFieldRepository orderCustomFieldRepo;
         
     public void addJointDeliveryInfo() {
-    	List<OrderHeader> unJoinedOrders = orderRepo.findOrdersJointDeliveryUnjoined(StatusConstants.ORDER_STATUS_NEW);
+    	List<OrderHeader> unJoinedOrders = orderRepo.findOrdersJointDeliveryUnjoined(StatusConstants.ORDER_STATUS_NOT_PICKED);
     	for (OrderHeader order : unJoinedOrders) {
     		if (CustomFieldConstants.VALUE_SAMLEVERANS_MASTER.equalsIgnoreCase(order.getJointDelivery())) {
     			// Master order
-				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDeliveryAndStatus(order.getNetsetOrderNumber(), StatusConstants.ORDER_STATUS_NEW);
+				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDeliveryAndStatus(order.getNetsetOrderNumber(), StatusConstants.ORDER_STATUS_NOT_PICKED);
 				if (childOrders.size() > 0) {
 					StringBuffer orders = new StringBuffer();
 					boolean first = true;
@@ -50,14 +50,18 @@ public class JointDeliveryService {
 				}
     		} else {
     			// Child order
-    			List<OrderHeader> masterOrders = orderRepo.findOrdersByNetsetOrderNumberAndStatus(order.getJointDelivery(), StatusConstants.ORDER_STATUS_NEW);
+    			List<OrderHeader> masterOrders = orderRepo.findOrdersByNetsetOrderNumberAndStatus(order.getJointDelivery(), StatusConstants.ORDER_STATUS_NOT_PICKED);
     			if (masterOrders.size() > 0) {
+    				    				
     				LOG.debug("child, master-order-id: " + masterOrders.get(0).getId());
+    				    				
     				OrderHeader masterOrder = orderRepo.findOne(masterOrders.get(0).getId());
     				String masterOrderNr = masterOrder.getOrderNumber();
 					order.setJointDeliveryText(String.format(CustomFieldConstants.TEXT_SAMLEVERANS_CHILD, masterOrderNr));
 					order.setJointDeliveryOrders(masterOrderNr);
 					order.setExcludeFromList(true);
+					orderRepo.save(order);
+					/*
 					for (OrderCustomField field : order.getOrderCustomFields()) {
 						orderCustomFieldRepo.delete(field.getId());
 					}
@@ -75,7 +79,7 @@ public class JointDeliveryService {
 					order.setContact1Email(masterOrder.getContact1Email());
 					order.setContact1Name(masterOrder.getContact1Name());
 					order.setContact1Phone(masterOrder.getContact1Phone());
-					orderRepo.save(order);
+					*/
     			}
     		}    		
     	}    	

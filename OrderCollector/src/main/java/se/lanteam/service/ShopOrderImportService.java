@@ -38,6 +38,7 @@ import se.lanteam.constants.SLAConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.ErrorRecord;
+import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
@@ -82,7 +83,8 @@ public class ShopOrderImportService {
 	private static final String FILE_ENDING_SHOP = ".xml";
 	private static final String SHOP_STATUS_CANCEL_ORDER = "600";
 	private static final String EXTRINSIC_FIELD_RESTRICTION_CODE = "VLCdata";
-    
+	private static final String THANK_YOU_MESSAGE_COMMENT = "Tack för din beställning!";
+	
     public void importFiles() throws IOException  {
 	    String fileSourceFolder = propService.getString(PropertyConstants.FILE_INCOMING_SHOP_FOLDER);	    
 	    String fileDestFolder = propService.getString(PropertyConstants.FILE_PROCESSED_SHOP_FOLDER);	    
@@ -158,7 +160,7 @@ public class ShopOrderImportService {
     		orderHeader.setCustomerOrderNumber(getTagValue(e,"CustomerPO"));
     		orderHeader.setCustomerSalesOrder(getTagValue(e,"CustomerPO"));
     		orderHeader.setPartnerId("");                                                                            // Alltid tomt i tidigare Visma-filer
-			orderHeader.setContact1Name(getTagValue(e,"ContactInformation/Name"));
+			orderHeader.setContact1Name(getTagValue(e,"ContactInformation/Contact"));
 			orderHeader.setContact1Email(getTagValue(e,"ContactInformation/Email"));
 			orderHeader.setContact1Phone(getTagValue(e,"ContactInformation/Phone"));
     		orderHeader.setContact2Name(getTagValue(e,"InvoiceContactInformation/Name"));
@@ -170,8 +172,8 @@ public class ShopOrderImportService {
     		List<String> articleNumbers = new ArrayList<>();
     		Set<OrderLine> orderLines = new HashSet<>();
     		if (orderLineNodes.getLength() > 0) {
-    			e = (Element) orderLineNodes.item(0);
-    			NodeList productLines = e.getElementsByTagName("ProductLine");
+    			Element orderLinesEl = (Element) orderLineNodes.item(0);
+    			NodeList productLines = orderLinesEl.getElementsByTagName("ProductLine");
     			for (int i = 0; i < productLines.getLength(); i++) {    				
     				Element lineEl = (Element) productLines.item(i);
     				OrderLine orderLine = new OrderLine();
@@ -192,12 +194,12 @@ public class ShopOrderImportService {
     			}
     		}
     		orderHeader.setOrderLines(orderLines);
-    		// Add extra fields
-    		addCustomFields(orderHeader, e);
+    		addCustomFields(orderHeader, doc);
     		orderHeader.setSlaDays(getSlaDays(orderHeader));
     		orderHeader.setArticleNumbers(formatArticleNumbers(articleNumbers));
     		orderHeader.setReceivedFromERP(true);
     		orderHeader.setReceivedFromWebshop(true);
+    		addOrderComment(orderHeader);
     		if (validate(orderHeader, file.getName())) {
     			orderRepo.save(orderHeader);
     		}
@@ -331,22 +333,24 @@ public class ShopOrderImportService {
         	builder.append(element + ";");
         } 
         return builder.toString(); 
-    } 
+    }
 	
-	private void addCustomFields(OrderHeader orderHeader, Element orderElement)  {
+	private void addCustomFields(OrderHeader orderHeader, Document doc)  {
 		
-		NodeList customFieldData = orderElement.getElementsByTagName("CustomFieldData");
+		NodeList customFieldData = doc.getElementsByTagName("CustomFieldData");
 		Set<OrderCustomField> orderCustomFields = new HashSet<OrderCustomField>();
 		if (customFieldData.getLength() > 0) {
 			Element custDataEl = (Element) customFieldData.item(0);
 			NodeList fields = custDataEl.getElementsByTagName("Field");
-			for (int i = 0; i < fields.getLength(); i++) {    				
+			for (int i = 0; i < fields.getLength(); i++) {
 				Element field = (Element) fields.item(i);
 				OrderCustomField orderCustomField = new OrderCustomField();
-				orderCustomField.setCustomField(customFieldRepo.findOne(Long.valueOf(field.getAttribute("id"))));				
+				orderCustomField.setCustomField(customFieldRepo.findOne(Long.valueOf(field.getAttribute("id"))));
 				orderCustomField.setValue(getTagValue(field, "Value"));
-				orderCustomField.setOrderHeader(orderHeader);
-				orderCustomFields.add(orderCustomField);
+				if (!StringUtils.isEmpty(orderCustomField.getValue())){
+					orderCustomField.setOrderHeader(orderHeader);
+					orderCustomFields.add(orderCustomField);
+				}
 				if (orderHeader.getCustomerGroup().getGetContactInfoFromNetset()) {
 					checkForMatchingField(orderHeader, orderCustomField);
 				}
@@ -355,19 +359,28 @@ public class ShopOrderImportService {
 			orderHeader.setOrderCustomFields(orderCustomFields);
 		}
 	}
-	
+
+	private void addOrderComment(OrderHeader orderHeader)  {
+		OrderComment comment = new OrderComment();
+		comment.setMessage(THANK_YOU_MESSAGE_COMMENT);
+		comment.setOrderLine("0");
+		comment.setOrderHeader(orderHeader);
+		orderHeader.setOrderComments(new HashSet<OrderComment>());
+		orderHeader.getOrderComments().add(comment);
+	}
+
 	 private void checkForMatchingField(OrderHeader order, OrderCustomField customField) {
-    	if (customField.getId() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_NAME) {
+    	if (customField.getCustomField().getIdentification() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_NAME) {
     		order.setContact1Name(customField.getValue());
-    	} else if (customField.getId() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_EMAIL) {
+    	} else if (customField.getCustomField().getIdentification() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_EMAIL) {
     		order.setContact1Email(customField.getValue());
-    	} else if (customField.getId() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_PHONE) {
+    	} else if (customField.getCustomField().getIdentification() == CustomFieldConstants.CUSTOM_FIELD_CONTACT_PHONE) {
         	order.setContact1Phone(customField.getValue());
     	}
     }
 
     private void checkForJointDelivery(OrderHeader order, OrderCustomField customField) {
-    	if (customField.getId() == CustomFieldConstants.CUSTOM_FIELD_JOINT_DELIVERY) {
+    	if (customField.getCustomField().getIdentification() == CustomFieldConstants.CUSTOM_FIELD_JOINT_DELIVERY) {
     		order.setJointDelivery(customField.getValue());
     		if (CustomFieldConstants.VALUE_SAMLEVERANS_MASTER.equalsIgnoreCase(customField.getValue())) {
     			order.setJointDelivery(CustomFieldConstants.VALUE_SAMLEVERANS_MASTER);

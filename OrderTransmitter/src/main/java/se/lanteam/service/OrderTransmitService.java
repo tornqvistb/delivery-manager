@@ -187,7 +187,7 @@ public class OrderTransmitService {
 	
 	public void transmitOrderComments() {
         LOG.info("Looking for order comments to transmit!");
-        List<OrderComment> orderComments = orderCommentRepo.findOrderCommentsByStatus(StatusConstants.ORDER_STATUS_NEW);
+        List<OrderComment> orderComments = orderCommentRepo.findOrderCommentsByStatus(StatusConstants.ORDER_COMMENT_STATUS_NEW);
 		
 		WSClient wsClient = new WSClient();
         if (orderComments != null && orderComments.size() > 0) {

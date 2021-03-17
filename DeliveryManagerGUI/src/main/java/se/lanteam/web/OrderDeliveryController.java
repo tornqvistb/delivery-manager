@@ -52,19 +52,26 @@ public class OrderDeliveryController extends BaseController {
 		stati.add(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);
 		stati.add(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);
 		List<OrderHeader> plannedOrdersToday = orderRepo.findOrdersByPlanDateAndStatus(stati, DateUtil.getTodayAtMidnight(), sessionBean.getCustomerGroup().getId());
-		if (!ListUtils.isEmpty(selectedOrders)) {
-			Iterator<OrderHeader> it = plannedOrdersToday.iterator();
-			while (it.hasNext()) {
-				OrderHeader oh = it.next();
+
+		
+		
+		Iterator<OrderHeader> it = plannedOrdersToday.iterator();
+		while (it.hasNext()) {
+			OrderHeader oh = it.next();
+			// Visa inte underordrar i samleverans
+			if (oh.isChildOrderInJoint()) {
+				   it.remove();
+			}
+			if (!ListUtils.isEmpty(selectedOrders)) {
 				for (String selectedOrder : selectedOrders) {
 					if (oh.getOrderNumber().equals(selectedOrder)) {
 					   it.remove();
 					   break;
 					}
 				}
-				
-			}			
-		}
+			}
+			
+		}			
 		return plannedOrdersToday;
 	}
 	
@@ -84,16 +91,32 @@ public class OrderDeliveryController extends BaseController {
 		}
 		if (form.getOrderNumbersConcat().contains(order.getOrderNumber())) {
 			return toSearchWithError(form, "Ordern är redan tillagd i listan.");
-		}		
-		// All OK
-		form.setOrderNumber(order.getOrderNumber());
-		form.addOrderNumber(order.getOrderNumber());
+		}
+		if (order.isChildOrderInJoint()) {
+			String mainOrder = order.getJointDelivery();
+			if (form.getOrderNumbersConcat().contains(mainOrder)) {
+				return toSearchWithError(form, "Order " + order.getOrderNumber() 
+				+ " ingår i samleverans för order "+ mainOrder + " som redan är tillagd i listan.");
+			} else {
+				return toSearchWithSuccess(mainOrder, form, "Order " + order.getOrderNumber() 
+				+ " ingår i samleverans för order "+ mainOrder + ". Huvudorder tillagd.");
+			}
+		}
+		
+		// Allt OK
+		return toSearchWithSuccess(order.getOrderNumber(), form, "Order " + order.getOrderNumber() 
+		+ " hittades och lades till i listan.");
+	}
+
+	private String toSearchWithSuccess(String orderNumber, DeliveryForm form, String msg) {
+		form.setOrderNumber(orderNumber);
+		form.addOrderNumber(orderNumber);
 		form.setPlannedOrders(getPlannedOrders(form.getOrdersAsList()));
-		form.setInfoMessage("Ordern hittades och lades till i listan.");
+		form.setInfoMessage(msg);
 		form.setQuery("");
 		return DELIVERY_SEARCH_VIEW;
 	}
-
+	
 	private String toSearchWithError(DeliveryForm form, String msg) {
 		form.setPlannedOrders(getPlannedOrders(form.getOrdersAsList()));
 		form.setErrorMessage(msg);
@@ -177,6 +200,7 @@ public class OrderDeliveryController extends BaseController {
 		logger.debug("form: " + form.toString());
 		logger.debug("size signature: " + form.getSignature().length());
 		//Loopa igenom ordrar
+		/*
 		for (String order : form.getOrdersAsList()) {
 			List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(order);
 			if (!orderList.isEmpty()) {
@@ -205,6 +229,34 @@ public class OrderDeliveryController extends BaseController {
 				orderRepo.save(oh);
 			}			 
 		}
+		*/
+		
+		List<OrderHeader> ordersToDeliver = getOrdersToDeliverIncludingSubOrders(form.getOrdersAsList());
+		for (OrderHeader oh : ordersToDeliver) {
+			oh.setDeliveryStatus(form.getDeliveryStatus());
+			if (DeliveryStatus.STATUS_DELIVERED.equals(form.getDeliveryStatus())) {
+				oh.setDeliverySignature(form.getSignature());
+				if (DeliveryForm.OTHER_PERSON.equals(form.getReceiver())) {
+					oh.setDeliveryReceiverName(form.getNameClarification());
+				} else {
+					oh.setDeliveryReceiverName(form.getReceiver());
+				}
+				oh.setStatus(StatusConstants.ORDER_STATUS_SENT);
+			} else {
+				oh.setStatus(StatusConstants.ORDER_STATUS_DELIVERY_ERROR);
+				oh.setDeliveryComment(form.getComment());
+			}
+			if (multipartFile != null) {
+				Attachment attachment = new Attachment();
+				attachment.setOrderHeader(oh);
+				attachment.setFileContent(multipartFile.getBytes());
+				attachment.setFileName(multipartFile.getOriginalFilename());
+				attachment.setFileSize(multipartFile.getSize());
+				attachment.setContentType("image/jpeg");
+				oh.setAttachment(attachment);
+			}
+			orderRepo.save(oh);
+		}
 		//
 		form = new DeliveryForm();
 		form.setInfoMessage("Leverans OK");
@@ -212,7 +264,26 @@ public class OrderDeliveryController extends BaseController {
 		model.put(DELIVERY_FORM_BEAN, form);
 		return DELIVERY_SEARCH_VIEW;
 	}
-			
+		
+	private List<OrderHeader> getOrdersToDeliverIncludingSubOrders(List<String> orderNumbers) {
+		List<OrderHeader> orders = new ArrayList<>();
+		for (String orderNumber : orderNumbers) {
+			List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(orderNumber);
+			if (!orderList.isEmpty()) {
+				OrderHeader oh = orderList.get(0);
+				orders.add(oh);
+				for (String childOrder : oh.getJoinedOrdersAsList()) {
+					orderList = orderRepo.findOrdersByOrderNumber(childOrder);
+					if (!orderList.isEmpty()) {
+						oh = orderList.get(0);
+						orders.add(oh);
+					}
+				}
+			}
+		}
+		return orders;
+	}
+	
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {
 		this.sessionBean = sessionBean;

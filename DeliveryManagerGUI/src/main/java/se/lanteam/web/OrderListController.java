@@ -26,7 +26,6 @@ import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.OrderListSearchBean;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
-import se.lanteam.repository.DeliveryAreaRepository;
 import se.lanteam.services.PropertyService;
 
 @Controller

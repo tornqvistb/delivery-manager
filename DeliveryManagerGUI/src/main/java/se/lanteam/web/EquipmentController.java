@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,7 +103,7 @@ public class EquipmentController extends BaseController {
 			if (valResult.equals(RESULT_OK)) {
 				orderLine.getEquipments().add(equipment);
 				orderLine.updateEquipmentCounters();
-				orderLineRepo.save(orderLine);
+				orderLineRepo.save(orderLine);				 
 			}
 		} else {
 			valResult = validateEquipmentNoSN(reqAttr.getTotal(), orderLine);
@@ -121,6 +122,12 @@ public class EquipmentController extends BaseController {
 			orderRepo.save(order);
 			updateRelatedOrders(order, workToDoOnRelatedOrders);
 			reqAttr = new RequestAttributes();
+			// Om uppdatewring av utrustning kvarstår, hitta nästa
+			Equipment eq = getNextEquipmentToUpdate(order);
+			if (eq != null) {
+				reqAttr.setOrderLineIdToUpdate(eq.getOrderLine().getId());
+				reqAttr.setSerialNoToUpdate(eq.getSerialNo());
+			}			
 		}
 		model.put("order", order);
 		if (reqAttr.isUpdateEquipment()) {
@@ -137,6 +144,17 @@ public class EquipmentController extends BaseController {
 		return "order-details";
 	}
 
+	private Equipment getNextEquipmentToUpdate(OrderHeader order) {
+		for (OrderLine ol : order.getOrderLines()) {
+			for (Equipment eq : ol.getEquipments()) {
+				if (StringUtils.isEmpty(eq.getStealingTag())) {
+					return eq;
+				}
+			}
+		}
+		return null;
+	}
+	
 	private Equipment getEquipmentRecord(RequestAttributes reqAttr) {
 		Equipment eq;
 		if (reqAttr.isUpdateEquipment()) {

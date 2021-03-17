@@ -128,7 +128,7 @@ public class NetsetOrderRepository {
 		}
 		order.setContactInfoFromNetset(customerGroup.getGetContactInfoFromNetset());
 		order.setReceivedFromWebshop(true);
-		order.setReceivingStatus();
+		//order.setReceivingStatus();
 		if (order.getOrderDate() == null) {
 			order.setOrderDate(new Date());
 		}		

@@ -306,7 +306,15 @@ public class OrderHeader implements Cloneable {
 	}
 	@Transient
 	public String getStatusDisplay() {
-		return StatusUtil.getOrderStatusDisplay(this.status);
+		if (StatusConstants.ORDER_STATUS_DELIVERY_ERROR.equals(this.status)) {
+			return StatusUtil.getOrderStatusDisplay(this.status) + " (" + getDeliveryStatusDisplay() + ")";
+		} else {
+			return StatusUtil.getOrderStatusDisplay(this.status);
+		}
+	}
+	@Transient
+	public String getDeliveryStatusDisplay() {
+		return StatusUtil.getDeliveryStatusDisplay(this.deliveryStatus);
 	}
 	@Transient
 	public String getOrderDateAsString() {
@@ -319,6 +327,13 @@ public class OrderHeader implements Cloneable {
 		for (OrderLine ol : this.orderLines) {
 			if (ol.getRemaining() > 0) {
 				result.add(ol);
+			} else {
+				for (Equipment eq : ol.getEquipments()) {
+					if (StringUtils.isEmpty(eq.getStealingTag())) {
+						result.add(ol);
+						break;
+					}
+				}
 			}
 		}
 		return result;
@@ -343,7 +358,7 @@ public class OrderHeader implements Cloneable {
 			this.status = StatusConstants.ORDER_STATUS_STARTED;
 		} else if (!workToDoOnRelatedOrders) {
 			if (this.attachment == null) {
-				if (this.customerGroup.getBookOrderBeforeRegistration()) {
+				if (this.customerGroup.getBookOrderBeforeRegistration() || this.getDeliveryPlan() != null) {
 					this.status = StatusConstants.ORDER_STATUS_ROUTE_PLANNED;
 				} else {
 					this.status = StatusConstants.ORDER_STATUS_REGISTRATION_DONE;
@@ -405,7 +420,8 @@ public class OrderHeader implements Cloneable {
 	public Boolean getPlannable() {
 		Boolean result = false;
 		if (StatusConstants.ORDER_STATUS_REGISTRATION_DONE.equals(status) || StatusConstants.ORDER_STATUS_ROUTE_PLANNED.equals(status)
-				|| (StatusConstants.ORDER_STATUS_NEW.equals(status) && this.customerGroup.getBookOrderBeforeRegistration())) {
+				|| ((StatusConstants.ORDER_STATUS_NOT_PICKED.equals(status) || StatusConstants.ORDER_STATUS_STARTED.equals(status)	|| StatusConstants.ORDER_STATUS_BOOKED.equals(status)) 
+						&& this.customerGroup.getBookOrderBeforeRegistration())) {
 			result = true;			
 		}
 		return result;
@@ -413,9 +429,7 @@ public class OrderHeader implements Cloneable {
 	@Transient
 	public String getOrderSummary() {
 		StringBuilder result = new StringBuilder();
-		if (this.status.equals(StatusConstants.ORDER_STATUS_RECEIVING)) {
-			result.append("Ordern är delvis mottagen i LIM. Registrering kan påbörjas först när ordern har tagit emot information från samtliga system.");
-		} else if (this.status.equals(StatusConstants.ORDER_STATUS_NEW)) {
+		if (this.status.equals(StatusConstants.ORDER_STATUS_NOT_PICKED)) {
 			result.append("Registrering ej påbörjad. Inväntar plockinfo från lagersystem.");
 			if (this.getCustomerGroup().getBookOrderBeforeRegistration()) {
 				result.append("<br>Ordern måste bokas innan registrering kan påbörjas. Bokning sker genom ruttplanering.");
@@ -435,7 +449,11 @@ public class OrderHeader implements Cloneable {
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_TRANSFERED)) {
 			result.append("Leveransrapportering klar och överförd till kund.");			
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_BOOKED)) {
-			result.append("Ordern är bokad. Registrering av utrustning kan nu påbörjas.");
+			if (this.pickStatus == StatusConstants.PICK_STATUS_NOT_PICKED) {
+				result.append("Ordern är bokad. Inväntar plockinfo från lagersystem.");
+			} else {
+				result.append("Ordern är bokad. Registrering av utrustning kan nu påbörjas.");
+			}
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_ROUTE_PLANNED)) {
 			result.append("Ordern är ruttplanerad och inväntar nu leveransdokument.");
 		} else if (this.status.equals(StatusConstants.ORDER_STATUS_NOT_ACCEPTED)) {
@@ -618,14 +636,6 @@ public class OrderHeader implements Cloneable {
 	@Transient
 	public void setCustomFieldsInDeliveryNote(List<OrderCustomField> customFieldsInDeliveryNote) {
 		this.customFieldsInDeliveryNote = customFieldsInDeliveryNote;
-	}
-	@Transient
-	public void setReceivingStatus() {
-		if (this.receivedFromERP && this.receivedFromWebshop) {
-			this.status = StatusConstants.ORDER_STATUS_NEW;
-		} else {
-			this.status = StatusConstants.ORDER_STATUS_RECEIVING;
-		}
 	}
 	@Transient
 	public Boolean getOkToRegister() {
@@ -846,5 +856,12 @@ public class OrderHeader implements Cloneable {
 				+ deliveryStatus + ", pickStatus=" + pickStatus + ", customFieldsInDeliveryNote="
 				+ customFieldsInDeliveryNote + "]";
 	}
-	
+	@Transient
+	public List<String> getJoinedOrdersAsList() {
+		List<String> orders = new ArrayList<>();
+		if (!StringUtils.isEmpty(this.getJointDeliveryOrders())) {
+			orders = Arrays.asList(this.getJointDeliveryOrders().split(","));
+		}
+		return orders;
+	}
 }

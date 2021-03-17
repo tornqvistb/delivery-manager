@@ -1,4 +1,4 @@
-package se.lanteam.service;
+/*package se.lanteam.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,9 +36,9 @@ import se.lanteam.repository.OrderCustomFieldRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
 
-/**
+*//**
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
- */
+ *//*
 @Service
 public class OrderImportService {
 
@@ -141,7 +141,7 @@ public class OrderImportService {
 						comment.setOrderHeader(orderHeader);
 						orderHeader.setOrderComments(new HashSet<OrderComment>());
 						orderHeader.getOrderComments().add(comment);
-						orderHeader.setReceivingStatus();
+						//orderHeader.setReceivingStatus();
 						orderHeader = fillEmptyRestrictionCodes(orderHeader);
 						orderHeader = checkIfSNOrderThatShouldBeJoined(orderHeader); 
 						orderHeader = commonOrderService.doAutoRegistrationIfNeeded(orderHeader);
@@ -408,3 +408,4 @@ public class OrderImportService {
 	}	
 
 }
+*/
