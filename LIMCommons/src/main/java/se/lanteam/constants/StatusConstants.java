@@ -8,6 +8,7 @@ public class StatusConstants {
 	
 	public static final String ORDER_COMMENT_STATUS_NEW = "new";
 
+	public static final String ORDER_STATUS_NOT_HANDLED = "not_handled";
 	public static final String ORDER_STATUS_NOT_PICKED = "not_picked";
 	public static final String ORDER_STATUS_BOOKED = "booked";
 	public static final String ORDER_STATUS_STARTED = "started";

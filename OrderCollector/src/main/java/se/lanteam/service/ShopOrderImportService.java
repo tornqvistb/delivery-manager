@@ -170,7 +170,6 @@ public class ShopOrderImportService {
     		orderHeader.setContact2Name(getTagValue(e,"InvoiceContactInformation/Name"));
     		orderHeader.setContact2Email(getTagValue(e,"InvoiceContactInformation/Email"));
     		orderHeader.setContact2Phone(getTagValue(e,"InvoiceContactInformation/Phone"));
-    		orderHeader.setStatus(StatusConstants.ORDER_STATUS_NOT_PICKED);
     		
     		NodeList orderLineNodes = doc.getElementsByTagName("OrderLines");
     		List<String> articleNumbers = new ArrayList<>();
@@ -203,6 +202,12 @@ public class ShopOrderImportService {
     		orderHeader.setArticleNumbers(formatArticleNumbers(articleNumbers));
     		orderHeader.setReceivedFromERP(true);
     		orderHeader.setReceivedFromWebshop(true);
+    		if (anyRestrictionCode(orderHeader.getOrderLines())) {
+    			orderHeader.setStatus(StatusConstants.ORDER_STATUS_NOT_PICKED);
+    		} else {
+    			orderHeader.setStatus(StatusConstants.ORDER_STATUS_NOT_HANDLED);
+    		}
+
     		addOrderComment(orderHeader);
     		if (validate(orderHeader, file.getName())) {
     			orderRepo.save(orderHeader);
@@ -405,10 +410,12 @@ public class ShopOrderImportService {
 			saveError(ERROR_NO_ORDER_LINES + fileName);
 			return false;
 		} 
+		/* Vi skall acceptera alla ordrar, även dem som saknar restriktionskod
 		if (!anyRestrictionCode(orderHeader.getOrderLines())) {
 			saveError(ERROR_NO_ORDER_LINES + fileName);
 			return false;			
 		}
+		*/
 		return true;
 	}
 	
