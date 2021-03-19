@@ -342,6 +342,16 @@ public class OrderHeader implements Cloneable {
 	}
 
 	@Transient
+	public boolean isRested() {
+		for (OrderLine ol : this.orderLines) {
+			if (ol.isRested()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Transient
 	public List<OrderLine> getOrderLinesToRegister() {
 		List<OrderLine> result = new ArrayList<OrderLine>();
 		for (OrderLine ol : this.orderLines) {
@@ -423,7 +433,8 @@ public class OrderHeader implements Cloneable {
 		Boolean result = false;
 		if (StatusConstants.ORDER_STATUS_REGISTRATION_DONE.equals(status) 
 				|| StatusConstants.ORDER_STATUS_ROUTE_PLANNED.equals(status)
-				|| (StatusConstants.ORDER_STATUS_DELIVERY_ERROR.equals(status) && DeliveryStatus.STATUS_ERR_NO_PICKUP.equals(deliveryStatus))
+				|| (StatusConstants.ORDER_STATUS_DELIVERY_ERROR.equals(status) 
+						&& (DeliveryStatus.STATUS_ERR_NO_PICKUP.equals(deliveryStatus) || this.customerGroup.getBookOrderBeforeRegistration()))
 				|| ((StatusConstants.ORDER_STATUS_NOT_PICKED.equals(status) || StatusConstants.ORDER_STATUS_STARTED.equals(status)	|| StatusConstants.ORDER_STATUS_BOOKED.equals(status)) 
 						&& this.customerGroup.getBookOrderBeforeRegistration())) {
 			result = true;			

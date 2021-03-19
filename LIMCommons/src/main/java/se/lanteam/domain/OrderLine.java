@@ -240,7 +240,7 @@ public class OrderLine implements Cloneable{
 		this.registered = this.registered + serialNos.size();
 		this.remaining = this.remaining - serialNos.size();
 	}
-
+	
 	public boolean isRested() {
 		return rested;
 	}

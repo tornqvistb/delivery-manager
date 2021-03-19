@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
+import se.lanteam.domain.Equipment;
 import se.lanteam.domain.ErrorRecord;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
@@ -78,6 +80,9 @@ public class OrderPickImportService {
 					} catch (PickImportException e) {
 						errorRepo.save(new ErrorRecord(e.getMessage()));
 						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
+					} catch (Exception e) {
+						errorRepo.save(new ErrorRecord(e.getMessage()));
+						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					}
 				}
 			}
@@ -109,7 +114,11 @@ public class OrderPickImportService {
     						if (pickedLine.getSerialNumbers().isEmpty()) {
     							line.addPickedQuantity(pickedLine.getAmount());
     						} else {
-    							line.addPickedSerialNumbers(pickedLine.getSerialNumbers());
+    							if (pickedLine.getAmount() > 0) {
+    								line.addPickedSerialNumbers(pickedLine.getSerialNumbers());
+    							} else {
+    								removeEquipments(line, pickedLine.getSerialNumbers());
+    							}
     						}
     						break;
     					}
@@ -123,8 +132,21 @@ public class OrderPickImportService {
     	}    	
     }
     
+    private void removeEquipments(OrderLine line, List<String> serialNumbers) {
+		for (Iterator<Equipment> iterator = line.getEquipments().iterator(); iterator.hasNext();) {			
+			Equipment equipment = iterator.next();
+			if (serialNumbers.contains(equipment.getSerialNo())) {
+				equipment.setOrderLine(null);
+				iterator.remove();
+				line.updateEquipmentCounters();
+			}
+		}
+    }
+
+    
     private void updateOrderStatusByPickStatus(OrderHeader order) {
-    	if (StatusConstants.PICK_STATUS_PARTLY_PICKED == order.getPickStatus() && StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus())) {
+    	if (StatusConstants.PICK_STATUS_PARTLY_PICKED == order.getPickStatus() 
+    			&& (StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus()) || StatusConstants.ORDER_STATUS_DELIVERY_ERROR.equals(order.getStatus()))) {
     		order.setStatus(StatusConstants.ORDER_STATUS_STARTED);
     	}
     	if (StatusConstants.PICK_STATUS_FULLY_PICKED == order.getPickStatus()) {
@@ -144,7 +166,8 @@ public class OrderPickImportService {
     		if (!manualRegistrationLeft) {
     			order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE); // Kanske setStatusByProgress
     		}
-    		if (manualRegistrationLeft && StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus())) {
+    		if (manualRegistrationLeft 
+    				&& (StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus()) || StatusConstants.ORDER_STATUS_DELIVERY_ERROR.equals(order.getStatus()))) {
     			order.setStatus(StatusConstants.ORDER_STATUS_STARTED);
     		}
     	}
@@ -160,7 +183,7 @@ public class OrderPickImportService {
 					if (fields.length >= 3) {
 						pickingInfo.setOrderNumber(fields[1]);
 						pickingInfo.setStatus(Integer.parseInt(fields[2]));
-						if (fields.length >= 4) {
+						if (fields.length >= 4 && !"0".equals(fields[3])) {
 							pickingInfo.setOriginalOrderNumber(fields[3]);
 						}
 					}
@@ -171,10 +194,9 @@ public class OrderPickImportService {
 					}					
 					line.setLineId(Integer.parseInt(fields[1]));
 					line.setArticleId(fields[2]);
+					line.setAmount(Integer.parseInt(fields[3]));
 					if (fields.length > 4 && !StringUtils.isEmpty(fields[4])) {
 						line.getSerialNumbers().add(fields[4]);
-					} else {
-						line.setAmount(Integer.parseInt(fields[3]));
 					}
 					orderLines = updateList(orderLines, line);
 				}
