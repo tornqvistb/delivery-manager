@@ -158,7 +158,7 @@ public class ShopOrderImportService {
     		orderHeader.setPostalAddress2(getTagValue(e,"AddressingInformation/BillToAddress/Address2"));
     		orderHeader.setPostalCode(getTagValue(e,"AddressingInformation/BillToAddress/Zip"));
     		orderHeader.setCity(getTagValue(e,"AddressingInformation/BillToAddress/City"));
-    		orderHeader.setDeliveryAddressName(getTagValue(e,"AddressingInformation/ShipToAddress/AddressName"));
+    		orderHeader.setDeliveryAddressName(getTagValue(e,"AddressingInformation/ShipToAddress/Company"));
     		orderHeader.setDeliveryPostalAddress1(getTagValue(e,"AddressingInformation/ShipToAddress/Address1"));
     		orderHeader.setDeliveryPostalAddress2(getTagValue(e,"AddressingInformation/ShipToAddress/Address2"));
     		orderHeader.setDeliveryPostalCode(getTagValue(e,"AddressingInformation/ShipToAddress/Zip"));

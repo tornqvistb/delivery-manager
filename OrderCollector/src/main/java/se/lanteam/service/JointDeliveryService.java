@@ -1,8 +1,6 @@
 package se.lanteam.service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.constants.StatusConstants;
-import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.repository.OrderCustomFieldRepository;
 import se.lanteam.repository.OrderRepository;
