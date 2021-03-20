@@ -53,6 +53,8 @@ public class OrderPickImportService {
     private PropertyService propService;
 
 	private static final String FILE_ENDING_WH = ".txt";
+	private final static String ERROR_WHEN_RECEIVNING_PICKING_FILE = "Fel uppstod vid inläsning av fil från Lexit: ";
+	private final static String ERROR_UNKNOWN_ORDER = ERROR_WHEN_RECEIVNING_PICKING_FILE + "Order finns ej i LIM: ";
 	
 	@Transactional
     public void importFiles() throws IOException{
@@ -81,7 +83,7 @@ public class OrderPickImportService {
 						errorRepo.save(new ErrorRecord(e.getMessage()));
 						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					} catch (Exception e) {
-						errorRepo.save(new ErrorRecord(e.getMessage()));
+						errorRepo.save(new ErrorRecord(ERROR_WHEN_RECEIVNING_PICKING_FILE + fileEntry.getName()));						
 						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					}
 				}
@@ -102,7 +104,7 @@ public class OrderPickImportService {
     	}    	
     }	
 	
-    private void updateOrder(OrderPickingInfo pickingInfo) {
+    private void updateOrder(OrderPickingInfo pickingInfo) throws PickImportException {
     	List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(pickingInfo.getOrderNumber());
     	if (!orderList.isEmpty()) {
     		OrderHeader order = orderList.get(0);
@@ -126,10 +128,11 @@ public class OrderPickImportService {
     			}
     		}
     		order.setPickStatus(pickingInfo.getStatus());
-    		//TODO Change logic for setting order status later
     		updateOrderStatusByPickStatus(order);
     		orderRepo.save(order);
-    	}    	
+    	} else {
+    		throw new PickImportException(ERROR_UNKNOWN_ORDER + pickingInfo.getOrderNumber());
+    	}
     }
     
     private void removeEquipments(OrderLine line, List<String> serialNumbers) {
@@ -204,7 +207,7 @@ public class OrderPickImportService {
 			pickingInfo.setPickedLines(orderLines);
 			return pickingInfo;
 		} catch (Exception e) {
-			throw new PickImportException("Fel uppstod vid inläsning av fil från Lexit: " + fileName);
+			throw new PickImportException(ERROR_WHEN_RECEIVNING_PICKING_FILE + fileName);
 		}
     }
 

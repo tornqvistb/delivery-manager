@@ -69,17 +69,16 @@ public class ShopOrderImportService {
     @Autowired
     private CustomerGroupRepository customerGroupRepo;
     @Autowired
-    private PropertyRepository propertyRepo;
-    @Autowired
     private CustomFieldRepository customFieldRepo;
         
     private static final String ERROR_LOG_GENERAL_MESSAGE = "Fel vid mottagande av order från Netset, ";
     private static final String ERROR_UNKNOWN_CUSTOMER_GROUP = "Okänd kundgrupp: ";
     
-	private static final String GENERAL_FILE_ERROR = "Fel vid inläsning av fil. ";
+	private static final String GENERAL_FILE_ERROR = "Fel vid inläsning av fil från Netset. ";
 	private static final String ERROR_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Ordernummer saknas i fil: ";
 	private static final String ERROR_CUSTOMER_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Kundens ordernummer saknas i fil: ";
 	private static final String ERROR_NO_ORDER_LINES = GENERAL_FILE_ERROR + "Inga orderrader att leveransrapportera (kundradnummer eller restriktionskod saknas) i fil: ";
+	private static final String ERROR_COULD_NOT_PARSE_FILE = GENERAL_FILE_ERROR + "Filnamn: ";
 	private static final String FILE_ENDING_SHOP = ".xml";
 	private static final String SHOP_STATUS_CANCEL_ORDER = "600";
 	private static final String EXTRINSIC_FIELD_RESTRICTION_CODE = "VLCdata";
@@ -105,17 +104,21 @@ public class ShopOrderImportService {
 						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
 					} catch (SAXException e) {
 						LOG.error("SAXException", e);
+						saveError(ERROR_COULD_NOT_PARSE_FILE + fileEntry.getName());						
 						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					} catch (ParserConfigurationException e) {
 						LOG.error("ParserConfigurationException", e);
+						saveError(ERROR_COULD_NOT_PARSE_FILE + fileEntry.getName());
 						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					} catch (ReceiveOrderException e) {
 						LOG.error("ReceiveOrderException", e);
-						saveError(e.getMessage());
+						if (e.isLoggErrorInDb()) {
+							saveError(e.getMessage());
+						}
 						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					} catch (Exception e) {
 						LOG.error("Exception", e);
-						saveError(e.getMessage());
+						saveError(ERROR_COULD_NOT_PARSE_FILE + fileEntry.getName());
 						Files.move(source, errorTarget, StandardCopyOption.REPLACE_EXISTING);
 					}
 				}
@@ -214,7 +217,7 @@ public class ShopOrderImportService {
     		}
             LOG.debug("Netset order: " + orderHeader.toString());        	
         } else {
-        	throw new ReceiveOrderException("0", "No order in file");
+        	throw new ReceiveOrderException("0", "No order in file", true);
         }
     }
     
@@ -290,7 +293,7 @@ public class ShopOrderImportService {
     	if (customerGroup != null) {
     		return customerGroup;
     	} else {
-    		throw new ReceiveOrderException(orderNumber, ERROR_LOG_GENERAL_MESSAGE + ERROR_UNKNOWN_CUSTOMER_GROUP + customerGroupName);
+    		throw new ReceiveOrderException(orderNumber, ERROR_LOG_GENERAL_MESSAGE + ERROR_UNKNOWN_CUSTOMER_GROUP + customerGroupName, false);
     	}
     }
     

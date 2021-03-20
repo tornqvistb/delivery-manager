@@ -38,9 +38,10 @@ public class OrderImportJob implements Job {
         	pickService.importFiles();
 		} catch (IOException e) {
 			LOG.error(e.getMessage(), e);
-			errorRepo.save(new ErrorRecord("IOException vid inläsning av filer från Visma."));
+			//errorRepo.save(new ErrorRecord("IOException vid inläsning av filer från Netset/Lexit."));
 		} catch (Exception e) {
-			errorRepo.save(new ErrorRecord("Exception vid inläsning av fil."));
+			LOG.error(e.getMessage(), e);
+			//errorRepo.save(new ErrorRecord("Exception vid inläsning av fil."));
 		}
     }
 }

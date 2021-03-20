@@ -10,10 +10,17 @@ public class ReceiveOrderException extends Exception {
 	private String orderNumber;
 	private String netsetOrderNumber;
 	private String conflictingOrderNumber;
+	private boolean loggErrorInDb = false;
 	
-	public ReceiveOrderException(String orderNumber, String message) {
+	public ReceiveOrderException(String message, boolean loggInDb) {
+		super(message);
+		this.loggErrorInDb = loggInDb;
+	}
+	
+	public ReceiveOrderException(String orderNumber, String message, boolean loggInDb) {
 		super(message);
 		this.orderNumber = orderNumber;
+		this.loggErrorInDb = loggInDb;
 	}
 
 	public ReceiveOrderException(String orderNumber, String netsetOrderNumber, String conflictingOrderNumber, String message) {
@@ -34,5 +41,9 @@ public class ReceiveOrderException extends Exception {
 			message = message + ". Redan mottagen order = " + conflictingOrderNumber;
 		}
 		return message;
+	}
+
+	public boolean isLoggErrorInDb() {
+		return loggErrorInDb;
 	}
 }
