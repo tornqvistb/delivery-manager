@@ -35,6 +35,7 @@ import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.RestrictionCodes;
 import se.lanteam.constants.SLAConstants;
+import se.lanteam.constants.ShopOrderlineTypes;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.ErrorRecord;
@@ -180,13 +181,19 @@ public class ShopOrderImportService {
     		if (orderLineNodes.getLength() > 0) {
     			Element orderLinesEl = (Element) orderLineNodes.item(0);
     			NodeList productLines = orderLinesEl.getElementsByTagName("ProductLine");
+    			int customerRowNumber = 1;
     			for (int i = 0; i < productLines.getLength(); i++) {    				
     				Element lineEl = (Element) productLines.item(i);
     				OrderLine orderLine = new OrderLine();
+    				
+    				orderLine.setShopType(lineEl.getAttribute("type"));
+    				orderLine.setShopId(lineEl.getAttribute("id"));
+    				orderLine.setShopGroupId(lineEl.getAttribute("groupid"));
+    				
     				orderLine.setArticleNumber(getTagValue(lineEl,"ManufacturerArticleNo"));    
     				orderLine.setArticleDescription(getTagValue(lineEl,"Label"));
     				orderLine.setRowNumber(Integer.valueOf(getTagValue(lineEl,"LineId")));
-    				orderLine.setCustomerRowNumber(Integer.valueOf(getTagValue(lineEl,"LineId")));
+    				orderLine.setCustomerRowNumber(0);
     				int quantity = new Double(getTagValue(lineEl,"Quantity")).intValue();
     				orderLine.setTotal(quantity);
     				orderLine.setRemaining(quantity);
@@ -196,7 +203,11 @@ public class ShopOrderImportService {
     				orderLine.setOrderHeader(orderHeader);
     				orderLines.add(orderLine);
     				articleNumbers.add(orderLine.getArticleNumber());
-    				
+    				autoRegisterIfNeeded(orderLine);
+    				if (orderLine.isCustomerOrderLine()) {
+    					orderLine.setCustomerRowNumber(customerRowNumber);
+    					customerRowNumber++;
+    				}
     			}
     		}
     		orderHeader.setOrderLines(orderLines);
@@ -219,6 +230,16 @@ public class ShopOrderImportService {
         } else {
         	throw new ReceiveOrderException("0", "No order in file", true);
         }
+    }
+    
+    private void autoRegisterIfNeeded(OrderLine orderLine) {
+    	if (StringUtils.isEmpty(orderLine.getRestrictionCode()) || ShopOrderlineTypes.PACKAGE_ARTICLE.equals(orderLine.getShopType())) {
+    		orderLine.setRegistered(orderLine.getTotal());
+    		orderLine.setRemaining(0);
+    	}
+    	if (ShopOrderlineTypes.PACKAGE_ARTICLE.equals(orderLine.getShopType())) {
+    		orderLine.setAutoRegistered(true);
+    	}
     }
     
     private String getRestrictionCode(Element lineElement)  {

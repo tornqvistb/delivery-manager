@@ -50,6 +50,10 @@
     background-color : #ccffcc;
 }
 
+#service-portal .distributed-row {
+    background-color : #ffff99;
+}
+
 #service-portal .link-padding {
 	padding-left: 10px;
 }

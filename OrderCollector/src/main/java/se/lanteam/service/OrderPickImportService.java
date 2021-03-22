@@ -112,11 +112,12 @@ public class OrderPickImportService {
     		if (order.getEditable()) {
     			for (OrderLine line : order.getOrderLines()) {
     				for (PickedOrderLine pickedLine : pickingInfo.getPickedLines()) {
-    					if (line.getRowNumber() == pickedLine.getLineId()) {
-    						if (pickedLine.getSerialNumbers().isEmpty()) {
+    					//if (line.getRowNumber() == pickedLine.getLineId()) {
+    					if (line.getArticleNumber().equals(pickedLine.getArticleId())) {
+    						if (pickedLine.getSerialNumbers().isEmpty() && !line.isFullyRefistered()) {
     							line.addPickedQuantity(pickedLine.getAmount());
     						} else {
-    							if (pickedLine.getAmount() > 0) {
+    							if (pickedLine.getAmount() > 0  && !line.isFullyRefistered()) {
     								line.addPickedSerialNumbers(pickedLine.getSerialNumbers());
     							} else {
     								removeEquipments(line, pickedLine.getSerialNumbers());

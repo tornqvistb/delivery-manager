@@ -40,6 +40,9 @@ public class OrderLine implements Cloneable{
 	private String requestItemNumber;
 	private boolean autoRegistered = false;
 	private boolean rested = false;
+	private String shopGroupId;
+	private String shopId;
+	private String shopType;
 	
 	@Override
 	@Transient
@@ -151,6 +154,9 @@ public class OrderLine implements Cloneable{
 		String result = "";
 		if (getRemaining() == 0) {
 			result = "completed-row";
+			if (isDistArticle()) {
+				result = "distributed-row";
+			}
 		}
 		return result;
 	}
@@ -175,6 +181,12 @@ public class OrderLine implements Cloneable{
 		return false;
 	}
 
+	@Transient
+	public Boolean isFullyRefistered() {
+		return registered >= total;
+	}
+
+	
 	public Integer getCustomerRowNumber() {
 		return customerRowNumber;
 	}
@@ -228,6 +240,17 @@ public class OrderLine implements Cloneable{
 		this.registered = this.registered + qty;
 		this.remaining = this.remaining - qty;
 	}
+
+	@Transient
+	public boolean isCustomerOrderLine() {
+		return !StringUtils.isEmpty(shopId) && !StringUtils.isEmpty(shopGroupId) && shopId.equals(shopGroupId);
+	}
+
+	@Transient
+	public boolean isDistArticle() {
+		return StringUtils.isEmpty(restrictionCode);
+	}
+	
 	@Transient
 	public void addPickedSerialNumbers(List<String> serialNos) {
 		for (String serialNo : serialNos) {
@@ -247,5 +270,29 @@ public class OrderLine implements Cloneable{
 
 	public void setRested(boolean rested) {
 		this.rested = rested;
+	}
+
+	public String getShopGroupId() {
+		return shopGroupId;
+	}
+
+	public void setShopGroupId(String shopGroupId) {
+		this.shopGroupId = shopGroupId;
+	}
+
+	public String getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(String shopId) {
+		this.shopId = shopId;
+	}
+
+	public String getShopType() {
+		return shopType;
+	}
+
+	public void setShopType(String shopType) {
+		this.shopType = shopType;
 	}
 }
