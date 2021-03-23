@@ -2,20 +2,20 @@ package se.lanteam.ws;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 
-import org.codehaus.groovy.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import antlr.StringUtils;
 import se.goteborg.generated.ws.client.servicenow.levavisering.GBCA003AExtLeveransAvisering;
 import se.goteborg.generated.ws.client.servicenow.levavisering.Header;
 import se.goteborg.generated.ws.client.servicenow.levavisering.IVirtualInterface;
-import se.goteborg.generated.ws.client.servicenow.levavisering.ObjectFactory;
 import se.goteborg.generated.ws.client.servicenow.levavisering.LanTeam03LeveransAviseringSOAP;
+import se.goteborg.generated.ws.client.servicenow.levavisering.ObjectFactory;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
@@ -77,9 +77,9 @@ public class LevAviseringServiceNowClient {
 			boolean hasRITM = orderLine.getRequestItemNumber() != null && orderLine.getRequestItemNumber().length() > 0;
 			if (hasCustomerRowNumber || hasRITM) {
 				line = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLine();
-				line.setLineId(String.valueOf(orderLine.getRowNumber()));
+				line.setLineId(String.valueOf(orderLine.getCustomerRowNumber()));
 				line.setLineStatus("");
-				line.setYourOrderLine(String.valueOf(orderLine.getRowNumber()));
+				line.setYourOrderLine(String.valueOf(orderLine.getCustomerRowNumber()));
 				line.setItemId(orderLine.getArticleNumber());
 				line.setQty(String.valueOf(orderLine.getTotal()));
 				line.setPrice("");
@@ -98,7 +98,7 @@ public class LevAviseringServiceNowClient {
 				}
 				line.setOrderLineComment(olc); // SN 2.1			
 				
-				for (Equipment equipment : orderLine.getEquipments()) {
+				for (Equipment equipment : getEquipmentList(orderHeader, orderLine.getRowNumber())) {
 					info = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLineInfo();
 					info.setInvNo(equipment.getStealingTag());
 					info.setSerialNo(equipment.getSerialNo());
@@ -122,6 +122,26 @@ public class LevAviseringServiceNowClient {
 		return toCommonHeader(port.lanTeam03LeveransAvisering(delivery));
 
 	}
+	// Hämta eventuell utrsutningslista på rad som följer efter paketartikel, men före nästa kundorderrad
+	private Set<Equipment> getEquipmentList(OrderHeader order, int currentRowNumber) {
+		
+		for (OrderLine ol : order.getOrderLines()) {
+			if (ol.getRowNumber() == currentRowNumber && ol.getEquipments() != null && ol.getEquipments().size() > 0) {
+				return ol.getEquipments();
+			}
+			if (ol.getRowNumber() > currentRowNumber) {
+				if (ol.getCustomerRowNumber() > 0) {
+					break;
+				}
+				if (ol.getEquipments() != null && ol.getEquipments().size() > 0) {
+					return ol.getEquipments();
+				}
+			}
+		}
+		
+		return new HashSet<Equipment>();
+	}
+	
 	private se.lanteam.ws.Header toCommonHeader(Header header){
 		return new se.lanteam.ws.Header(header.getKod(), header.getText());
 	}	

@@ -321,24 +321,28 @@ public class ShopOrderImportService {
     private OrderLine getInstallationAndFinancialInfo(OrderLine line, String comment) {
     	if (!StringUtils.isEmpty(comment)) {
     		String[] installationArr = comment.split(";");
-    		if (installationArr.length >= 3) {
-    			line.setOrganisationUnit(installationArr[0]);
-    			line.setInstallationType(installationArr[1]);
-    			line.setOperatingSystem(installationArr[2]);
-    		}
-    		if (installationArr.length > 3) {
-    			String[] financeInfoArr = installationArr[3].split("/");
+    		if (installationArr.length >= 1) {
+    			String[] financeInfoArr = installationArr[0].split("/");
     			if (financeInfoArr.length > 0) {
     				line.setLeasingNumber(financeInfoArr[0]);    				
     			}
     			if (financeInfoArr.length > 1) {
     				line.setRequestItemNumber(financeInfoArr[1]);    				
-    			}
+    			}    			
+    		}
+    		if (installationArr.length >= 2) {
+    			line.setOrganisationUnit(installationArr[1]);
+    		}
+    		if (installationArr.length >= 3) {
+    			line.setInstallationType(installationArr[2]);
+    		}
+    		if (installationArr.length >= 4) {
+    			line.setOperatingSystem(installationArr[3]);
     		}
     	}
     	return line;
     }
-	
+    
     private Integer getSlaDays(OrderHeader order) {
 		Integer slaDays = SLAConstants.SLA_LONG;
 		for (OrderLine ol : order.getOrderLines()) {

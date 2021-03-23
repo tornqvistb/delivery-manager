@@ -2,6 +2,8 @@ package se.lanteam.ws;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -64,9 +66,9 @@ public class LevAviseringHamsterClient {
 		for (OrderLine orderLine : orderHeader.getOrderLines()) {
 			if (orderLine.getCustomerRowNumber() != null && orderLine.getCustomerRowNumber() > 0) {
 				line = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLine();
-				line.setLineId(String.valueOf(orderLine.getRowNumber()));
+				line.setLineId(String.valueOf(orderLine.getCustomerRowNumber()));
 				line.setLineStatus("");
-				line.setYourOrderLine(String.valueOf(orderLine.getRowNumber()));
+				line.setYourOrderLine(String.valueOf(orderLine.getCustomerRowNumber()));
 				line.setItemId(orderLine.getArticleNumber());
 				line.setQty(String.valueOf(orderLine.getTotal()));
 				line.setPrice("");
@@ -81,7 +83,8 @@ public class LevAviseringHamsterClient {
 				line.setActualDelDate(""); // Värde här? finns från Atea - Datumet när detta skickas
 				line.setOrderLineComment("");			
 				
-				for (Equipment equipment : orderLine.getEquipments()) {
+				for (Equipment equipment : getEquipmentList(orderHeader, orderLine.getRowNumber())) {
+	
 					info = factory.createGBCA003AExtLeveransAviseringBodyLeveransAviseringLineInfo();
 					info.setInvNo(equipment.getStealingTag());
 					info.setSerialNo(equipment.getSerialNo());
@@ -107,6 +110,27 @@ public class LevAviseringHamsterClient {
 		return toCommonHeader(port.gbca003ALeveransAvisering(delivery));
 		
 	}
+	
+	// Hämta eventuell utrsutningslista på rad som följer efter paketartikel, men före nästa kundorderrad
+	private Set<Equipment> getEquipmentList(OrderHeader order, int currentRowNumber) {
+		
+		for (OrderLine ol : order.getOrderLines()) {
+			if (ol.getRowNumber() == currentRowNumber && ol.getEquipments() != null && ol.getEquipments().size() > 0) {
+				return ol.getEquipments();
+			}
+			if (ol.getRowNumber() > currentRowNumber) {
+				if (ol.getCustomerRowNumber() > 0) {
+					break;
+				}
+				if (ol.getEquipments() != null && ol.getEquipments().size() > 0) {
+					return ol.getEquipments();
+				}
+			}
+		}
+		
+		return new HashSet<Equipment>();
+	}
+
 	
 	private se.lanteam.ws.Header toCommonHeader(Header header){
 		return new se.lanteam.ws.Header(header.getKod(), header.getText());
