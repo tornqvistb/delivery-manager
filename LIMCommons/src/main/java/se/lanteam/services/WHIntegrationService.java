@@ -32,7 +32,7 @@ public class WHIntegrationService {
 		String fileTransmitFolder = propService.getString(FILE_OUTGOING_WH_FOLDER);
 		String fileTransmitCopyFolder = propService.getString(FILE_OUTGOING_COPY_FOLDER);
 		
-		String fileData = "H;" + order.getOrderNumber() + ";";
+		String fileData = order.getOrderNumber();
 		
 		try {
 			Path path = Paths.get(fileTransmitFolder + "/" + order.getOrderNumber() + FILE_ENDING);
