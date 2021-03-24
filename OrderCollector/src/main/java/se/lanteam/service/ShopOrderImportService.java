@@ -149,7 +149,8 @@ public class ShopOrderImportService {
         		cancelOrderIfNeeded(orderNumber, getTagValue(e, "Status"));
         		return;
         	}
-        	orderHeader.setCustomerGroup(getCustomerGroup(getTagValue(e,"CustomerGroupName"), orderNumber));
+        	CustomerGroup customerGroup = getCustomerGroup(getTagValue(e,"CustomerGroupName"), orderNumber);
+        	orderHeader.setCustomerGroup(customerGroup);
         	orderHeader.setOrderNumber(orderNumber);
     		orderHeader.setNetsetOrderNumber(orderNumber);
     		orderHeader.setOrderDate(rawDateToDate(getTagValue(e,"OrderDate", "raw")));
@@ -203,7 +204,7 @@ public class ShopOrderImportService {
     				orderLine.setOrderHeader(orderHeader);
     				orderLines.add(orderLine);
     				articleNumbers.add(orderLine.getArticleNumber());
-    				autoRegisterIfNeeded(orderLine);
+    				autoRegisterIfNeeded(orderLine, customerGroup.getAllowDistArticlesOnOrder());
     				if (orderLine.isCustomerOrderLine()) {
     					orderLine.setCustomerRowNumber(customerRowNumber);
     					customerRowNumber++;
@@ -232,7 +233,7 @@ public class ShopOrderImportService {
         }
     }
     
-    private void autoRegisterIfNeeded(OrderLine orderLine) {
+    private void autoRegisterIfNeeded(OrderLine orderLine, boolean distArticlesAllowed) {
     	if (StringUtils.isEmpty(orderLine.getRestrictionCode()) || ShopOrderlineTypes.PACKAGE_ARTICLE.equals(orderLine.getShopType())) {
     		orderLine.setRegistered(orderLine.getTotal());
     		orderLine.setRemaining(0);
@@ -240,6 +241,10 @@ public class ShopOrderImportService {
     	if (ShopOrderlineTypes.PACKAGE_ARTICLE.equals(orderLine.getShopType())) {
     		orderLine.setAutoRegistered(true);
     	}
+    	if (StringUtils.isEmpty(orderLine.getRestrictionCode()) && !distArticlesAllowed) {
+    		orderLine.setAutoRegistered(true);
+    	}
+
     }
     
     private String getRestrictionCode(Element lineElement)  {

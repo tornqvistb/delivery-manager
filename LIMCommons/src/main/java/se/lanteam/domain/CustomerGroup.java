@@ -39,6 +39,7 @@ public class CustomerGroup {
 	private Set<CustomerNumber> customerNumbers = new HashSet<CustomerNumber>();
 	private Integer serialNumberPosition;
 	private String serialNumberSeparator;
+	private Boolean allowDistArticlesOnOrder;
 	
 	public String getDeliveryEmailAddress() {
 		return deliveryEmailAddress;
@@ -212,6 +213,14 @@ public class CustomerGroup {
 			}
 		}
 		return result;
+	}
+
+	public Boolean getAllowDistArticlesOnOrder() {
+		return allowDistArticlesOnOrder;
+	}
+
+	public void setAllowDistArticlesOnOrder(Boolean allowDistArticlesOnOrder) {
+		this.allowDistArticlesOnOrder = allowDistArticlesOnOrder;
 	}
 	
 }

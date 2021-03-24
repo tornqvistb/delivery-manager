@@ -102,6 +102,10 @@
 															<td><input type="checkbox" name="allowPreDeliveryInfo" th:field="${customerGroup.allowPreDeliveryInfo}" th:checked="${customerGroup.allowPreDeliveryInfo}" /></td>
 														</tr>
 														<tr>
+															<th scope="row">Visa distributionsartiklar på order</th>
+															<td><input type="checkbox" name="allowDistArticlesOnOrder" th:field="${customerGroup.allowDistArticlesOnOrder}" th:checked="${customerGroup.allowDistArticlesOnOrder}" /></td>
+														</tr>
+														<tr>
 															<th scope="row">Epost-adress för leveransmeddelande</th>
 															<td><input class="large-field" th:field="${customerGroup.deliveryEmailAddress}"
 																type="text" id="deliveryEmailAddress" /></td>

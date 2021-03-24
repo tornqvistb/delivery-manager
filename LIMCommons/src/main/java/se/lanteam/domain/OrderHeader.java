@@ -28,6 +28,7 @@ import org.thymeleaf.util.ArrayUtils;
 import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.LimStringUtil;
+import se.lanteam.constants.RestrictionCodes;
 import se.lanteam.constants.SLAConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.constants.StatusUtil;
@@ -331,7 +332,9 @@ public class OrderHeader implements Cloneable {
 				result.add(ol);
 			} else {
 				for (Equipment eq : ol.getEquipments()) {
-					if (StringUtils.isEmpty(eq.getStealingTag())) {
+					
+					if (StringUtils.isEmpty(eq.getStealingTag())
+							&& !RestrictionCodes.NO_SLA_SERIALN0_NO_STEALING_TAG.equals(ol.getRestrictionCode())) {
 						result.add(ol);
 						break;
 					}

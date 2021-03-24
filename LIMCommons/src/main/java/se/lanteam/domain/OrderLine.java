@@ -16,8 +16,10 @@ import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import org.springframework.util.StringUtils;
+import org.thymeleaf.util.ArrayUtils;
 
 import se.lanteam.constants.RestrictionCodes;
+import se.lanteam.constants.StatusConstants;
 
 @Entity
 public class OrderLine implements Cloneable{
@@ -185,7 +187,11 @@ public class OrderLine implements Cloneable{
 	public Boolean isFullyRefistered() {
 		return registered >= total;
 	}
-
+	
+	@Transient
+	public Boolean getEditable() {
+		return this.orderHeader.getEditable() && !RestrictionCodes.NO_SLA_SERIALN0_NO_STEALING_TAG.equals(this.restrictionCode);
+	}
 	
 	public Integer getCustomerRowNumber() {
 		return customerRowNumber;

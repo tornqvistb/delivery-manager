@@ -6,6 +6,7 @@ import static se.lanteam.model.OrderPickingInfo.ROW_TYPE_LINE;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -71,7 +72,7 @@ public class OrderPickImportService {
 					Path target = Paths.get(fileDestFolder + "/" + fileEntry.getName());
 					Path errorTarget = Paths.get(fileErrorFolder + "/" + fileEntry.getName());
 					try {
-						List<String> rows = Files.readAllLines(source);
+						List<String> rows = Files.readAllLines(source, StandardCharsets.ISO_8859_1);
 						OrderPickingInfo pickingInfo = getPickingInfo(rows, fileEntry.getName());
 						if (!StringUtils.isEmpty(pickingInfo.getOriginalOrderNumber())) {
 							createRestOrder(pickingInfo);

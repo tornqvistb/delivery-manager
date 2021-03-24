@@ -219,7 +219,7 @@
 																				<th style="width:20%;">Registrerad av</th>
 																				<th style="width:20%;">Tidpunkt</th>
 																				<!-- <th style="width:15%;" th:if="${order.editable}">Ta bort</th> -->
-																				<th style="width:15%;" th:if="${order.editable}">Komplettera</th>
+																				<th style="width:15%;" th:if="${orderLine.editable}">Komplettera</th>
 																			</tr>
 																		</thead>
 																		<tbody>
@@ -231,7 +231,7 @@
 																				<!-- <td th:if="${order.editable}"><a
 																					th:href="@{/order-list/view/deleq/} + ${order.id} + '/' + ${orderLine.id} + '/' + ${equipment.id} + '#registration-area'">Ta
 																						bort</a></td> -->
-																				<td th:if="${order.editable}"><a th:attr="data-snr=${equipment.serialNo},data-olid=${orderLine.id}" href="#" class="update-equipment-link" >Komplettera</a></td>
+																				<td th:if="${orderLine.editable}"><a th:attr="data-snr=${equipment.serialNo},data-olid=${orderLine.id}" href="#" class="update-equipment-link" >Komplettera</a></td>
 																			</tr>
 																		</tbody>
 																	</table>
