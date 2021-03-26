@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.lanteam.domain.ErrorRecord;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.service.JointDeliveryService;
+import se.lanteam.service.OrderImportService;
 import se.lanteam.service.OrderPickImportService;
 import se.lanteam.service.ShopOrderImportService;
 
@@ -36,6 +36,7 @@ public class OrderImportJob implements Job {
         	shopService.importFiles();
         	jointDeliveryService.addJointDeliveryInfo();
         	pickService.importFiles();
+        	
 		} catch (IOException e) {
 			LOG.error(e.getMessage(), e);
 			//errorRepo.save(new ErrorRecord("IOException vid inläsning av filer från Netset/Lexit."));

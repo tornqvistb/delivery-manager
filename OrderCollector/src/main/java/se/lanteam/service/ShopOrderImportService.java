@@ -77,7 +77,7 @@ public class ShopOrderImportService {
     
 	private static final String GENERAL_FILE_ERROR = "Fel vid inläsning av fil från Netset. ";
 	private static final String ERROR_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Ordernummer saknas i fil: ";
-	private static final String ERROR_CUSTOMER_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Kundens ordernummer saknas i fil: ";
+	private static final String ERROR_CUSTOMER_ORDER_NUMBER_MISSING = GENERAL_FILE_ERROR + "Ordern sparas i LIM, men kundens ordernummer saknas i fil: ";
 	private static final String ERROR_NO_ORDER_LINES = GENERAL_FILE_ERROR + "Inga orderrader att leveransrapportera (kundradnummer eller restriktionskod saknas) i fil: ";
 	private static final String ERROR_COULD_NOT_PARSE_FILE = GENERAL_FILE_ERROR + "Filnamn: ";
 	private static final String FILE_ENDING_SHOP = ".xml";
@@ -437,18 +437,11 @@ public class ShopOrderImportService {
 		}
 		if (StringUtils.isEmpty(orderHeader.getCustomerOrderNumber())) {
 			saveError(ERROR_CUSTOMER_ORDER_NUMBER_MISSING + fileName);
-			return false;
 		}
 		if (orderHeader.getOrderLines().isEmpty()) {
 			saveError(ERROR_NO_ORDER_LINES + fileName);
 			return false;
 		} 
-		/* Vi skall acceptera alla ordrar, även dem som saknar restriktionskod
-		if (!anyRestrictionCode(orderHeader.getOrderLines())) {
-			saveError(ERROR_NO_ORDER_LINES + fileName);
-			return false;			
-		}
-		*/
 		return true;
 	}
 	

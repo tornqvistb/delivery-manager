@@ -1,4 +1,4 @@
-/*package se.lanteam.service;
+package se.lanteam.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,9 +36,9 @@ import se.lanteam.repository.OrderCustomFieldRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
 
-*//**
+/**
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
- *//*
+ */
 @Service
 public class OrderImportService {
 
@@ -63,11 +63,11 @@ public class OrderImportService {
     private CommonOrderService commonOrderService;
     
     public void addJointDeliveryInfo() {
-    	List<OrderHeader> unJoinedOrders = orderRepo.findOrdersJointDeliveryUnjoined(StatusConstants.ORDER_STATUS_NEW);
+    	List<OrderHeader> unJoinedOrders = orderRepo.findOrdersJointDeliveryUnjoined(StatusConstants.ORDER_STATUS_NOT_PICKED);
     	for (OrderHeader order : unJoinedOrders) {
     		if (CustomFieldConstants.VALUE_SAMLEVERANS_MASTER.equalsIgnoreCase(order.getJointDelivery())) {
     			// Master order
-				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDeliveryAndStatus(order.getNetsetOrderNumber(), StatusConstants.ORDER_STATUS_NEW);
+				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDeliveryAndStatus(order.getNetsetOrderNumber(), StatusConstants.ORDER_STATUS_NOT_PICKED);
 				if (childOrders.size() > 0) {
 					StringBuffer orders = new StringBuffer();
 					boolean first = true;
@@ -83,7 +83,7 @@ public class OrderImportService {
 				}
     		} else {
     			// Child order
-    			List<OrderHeader> masterOrders = orderRepo.findOrdersByNetsetOrderNumberAndStatus(order.getJointDelivery(), StatusConstants.ORDER_STATUS_NEW);
+    			List<OrderHeader> masterOrders = orderRepo.findOrdersByNetsetOrderNumberAndStatus(order.getJointDelivery(), StatusConstants.ORDER_STATUS_NOT_PICKED);
     			if (masterOrders.size() > 0) {
     				LOG.debug("child, master-order-id: " + masterOrders.get(0).getId());
     				OrderHeader masterOrder = orderRepo.findOne(masterOrders.get(0).getId());
@@ -205,7 +205,7 @@ public class OrderImportService {
 		String orderNumber = String.valueOf(jsonOrder.optInt("Ordernummer"));
 		List<OrderHeader> orderHeaderList = orderRepo.findOrdersByOrderNumber(orderNumber);
 		if (!orderHeaderList.isEmpty()) {
-			throw new ReceiveOrderException(orderNumber, ERROR_ORDER_ALREADY_RECEIVED);
+			throw new ReceiveOrderException(orderNumber, ERROR_ORDER_ALREADY_RECEIVED, false);
 		} else {
 			String netetOrderNumber = String.valueOf(jsonOrder.optInt("Netset_ordernummer"));
 			orderHeaderList = orderRepo.findOrdersByNetsetOrderNumber(netetOrderNumber);
@@ -253,7 +253,7 @@ public class OrderImportService {
 		orderHeader.setContact2Name(jsonOrder.optString("Kontakt2_namn"));
 		orderHeader.setContact2Email(jsonOrder.optString("Kontakt2_epost"));
 		orderHeader.setContact2Phone(jsonOrder.optString("Kontakt2_telefon"));
-		orderHeader.setStatus(StatusConstants.ORDER_STATUS_NEW);
+		orderHeader.setStatus(StatusConstants.ORDER_STATUS_NOT_PICKED);
 		JSONArray jsonOrderLines = jsonOrder.getJSONArray("Orderrader");
 		List<String> articleNumbers = new ArrayList<String>();
 		for (int i = 0; i < jsonOrderLines.length(); i++) {			
@@ -408,4 +408,3 @@ public class OrderImportService {
 	}	
 
 }
-*/

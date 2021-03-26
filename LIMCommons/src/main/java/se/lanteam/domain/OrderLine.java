@@ -176,7 +176,7 @@ public class OrderLine implements Cloneable{
 	@Transient
 	public Boolean isManualRegistrationLeft() {
 		for (Equipment equip : equipments) {
-			if (StringUtils.isEmpty(equip.getStealingTag())) {
+			if (StringUtils.isEmpty(equip.getStealingTag()) && !RestrictionCodes.NO_SLA_SERIALN0_NO_STEALING_TAG.equals(this.restrictionCode)) {
 				return true;
 			}
 		}
@@ -184,7 +184,7 @@ public class OrderLine implements Cloneable{
 	}
 
 	@Transient
-	public Boolean isFullyRefistered() {
+	public Boolean isFullyRegistered() {
 		return registered >= total;
 	}
 	

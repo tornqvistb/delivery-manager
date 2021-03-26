@@ -111,6 +111,13 @@ public class OrderPickImportService {
     		OrderHeader order = orderList.get(0);
     		//Check status, maybe change this condition later!!
     		if (order.getEditable()) {
+    			
+    			for (PickedOrderLine pickedLine : pickingInfo.getPickedLines()) {
+    				updateFirstMatchingOrderLine(order, pickedLine);
+    			}
+    			
+    			
+    			/*
     			for (OrderLine line : order.getOrderLines()) {
     				for (PickedOrderLine pickedLine : pickingInfo.getPickedLines()) {
     					//if (line.getRowNumber() == pickedLine.getLineId()) {
@@ -122,7 +129,63 @@ public class OrderPickImportService {
     								line.addPickedSerialNumbers(pickedLine.getSerialNumbers());
     							} else {
     								removeEquipments(line, pickedLine.getSerialNumbers());
-    							}
+    							} 
+    						}
+    						break;
+    					}
+    				}
+    			}
+    			*/
+    		}
+    		order.setPickStatus(pickingInfo.getStatus());
+    		updateOrderStatusByPickStatus(order);
+    		orderRepo.save(order);
+    	} else {
+    		throw new PickImportException(ERROR_UNKNOWN_ORDER + pickingInfo.getOrderNumber());
+    	}
+    }
+    
+    private void updateFirstMatchingOrderLine(OrderHeader order, PickedOrderLine pickedLine) {
+    	for (OrderLine line : order.getOrderLines()) {
+    		if (line.getArticleNumber().equals(pickedLine.getArticleId())) {
+    			if (line.isFullyRegistered() && pickedLine.getAmount() > 0) {
+    				continue;
+    			}
+    			if (pickedLine.getSerialNumbers().isEmpty() && !line.isFullyRegistered()) {
+    				line.addPickedQuantity(pickedLine.getAmount());
+    				break;
+    			} else {
+    				if (pickedLine.getAmount() > 0 && !line.isFullyRegistered()) {
+						line.addPickedSerialNumbers(pickedLine.getSerialNumbers());
+						break;
+					} else {
+						if (removeEquipments(line, pickedLine.getSerialNumbers())) {
+							break;
+						}
+					}    				
+    			}
+    		}
+    	}
+    }
+
+    private void updateOrder_ORIG(OrderPickingInfo pickingInfo) throws PickImportException {
+    	List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(pickingInfo.getOrderNumber());
+    	if (!orderList.isEmpty()) {
+    		OrderHeader order = orderList.get(0);
+    		//Check status, maybe change this condition later!!
+    		if (order.getEditable()) {
+    			for (OrderLine line : order.getOrderLines()) {
+    				for (PickedOrderLine pickedLine : pickingInfo.getPickedLines()) {
+    					//if (line.getRowNumber() == pickedLine.getLineId()) {
+    					if (line.getArticleNumber().equals(pickedLine.getArticleId())) {
+    						if (pickedLine.getSerialNumbers().isEmpty() && !line.isFullyRegistered()) {
+    							line.addPickedQuantity(pickedLine.getAmount());
+    						} else {
+    							if (pickedLine.getAmount() > 0  && !line.isFullyRegistered()) {
+    								line.addPickedSerialNumbers(pickedLine.getSerialNumbers());
+    							} else {
+    								removeEquipments(line, pickedLine.getSerialNumbers());
+    							} 
     						}
     						break;
     					}
@@ -136,16 +199,20 @@ public class OrderPickImportService {
     		throw new PickImportException(ERROR_UNKNOWN_ORDER + pickingInfo.getOrderNumber());
     	}
     }
+
     
-    private void removeEquipments(OrderLine line, List<String> serialNumbers) {
-		for (Iterator<Equipment> iterator = line.getEquipments().iterator(); iterator.hasNext();) {			
+    private boolean removeEquipments(OrderLine line, List<String> serialNumbers) {
+    	boolean anyRemoved = false;
+		for (Iterator<Equipment> iterator = line.getEquipments().iterator(); iterator.hasNext();) {					
 			Equipment equipment = iterator.next();
 			if (serialNumbers.contains(equipment.getSerialNo())) {
 				equipment.setOrderLine(null);
 				iterator.remove();
 				line.updateEquipmentCounters();
+				anyRemoved = true;
 			}
 		}
+		return anyRemoved;
     }
 
     
@@ -169,7 +236,11 @@ public class OrderPickImportService {
     			}
     		}
     		if (!manualRegistrationLeft) {
-    			order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE); // Kanske setStatusByProgress
+    			if (StatusConstants.ORDER_STATUS_BOOKED.equals(order.getStatus())) {
+    				order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);
+    			} else {
+    				order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);
+    			}
     		}
     		if (manualRegistrationLeft 
     				&& (StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus()) || StatusConstants.ORDER_STATUS_DELIVERY_ERROR.equals(order.getStatus()))) {
