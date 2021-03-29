@@ -114,28 +114,7 @@ public class OrderPickImportService {
     			
     			for (PickedOrderLine pickedLine : pickingInfo.getPickedLines()) {
     				updateFirstMatchingOrderLine(order, pickedLine);
-    			}
-    			
-    			
-    			/*
-    			for (OrderLine line : order.getOrderLines()) {
-    				for (PickedOrderLine pickedLine : pickingInfo.getPickedLines()) {
-    					//if (line.getRowNumber() == pickedLine.getLineId()) {
-    					if (line.getArticleNumber().equals(pickedLine.getArticleId())) {
-    						if (pickedLine.getSerialNumbers().isEmpty() && !line.isFullyRefistered()) {
-    							line.addPickedQuantity(pickedLine.getAmount());
-    						} else {
-    							if (pickedLine.getAmount() > 0  && !line.isFullyRefistered()) {
-    								line.addPickedSerialNumbers(pickedLine.getSerialNumbers());
-    							} else {
-    								removeEquipments(line, pickedLine.getSerialNumbers());
-    							} 
-    						}
-    						break;
-    					}
-    				}
-    			}
-    			*/
+    			}    			
     		}
     		order.setPickStatus(pickingInfo.getStatus());
     		updateOrderStatusByPickStatus(order);
@@ -168,39 +147,6 @@ public class OrderPickImportService {
     	}
     }
 
-    private void updateOrder_ORIG(OrderPickingInfo pickingInfo) throws PickImportException {
-    	List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(pickingInfo.getOrderNumber());
-    	if (!orderList.isEmpty()) {
-    		OrderHeader order = orderList.get(0);
-    		//Check status, maybe change this condition later!!
-    		if (order.getEditable()) {
-    			for (OrderLine line : order.getOrderLines()) {
-    				for (PickedOrderLine pickedLine : pickingInfo.getPickedLines()) {
-    					//if (line.getRowNumber() == pickedLine.getLineId()) {
-    					if (line.getArticleNumber().equals(pickedLine.getArticleId())) {
-    						if (pickedLine.getSerialNumbers().isEmpty() && !line.isFullyRegistered()) {
-    							line.addPickedQuantity(pickedLine.getAmount());
-    						} else {
-    							if (pickedLine.getAmount() > 0  && !line.isFullyRegistered()) {
-    								line.addPickedSerialNumbers(pickedLine.getSerialNumbers());
-    							} else {
-    								removeEquipments(line, pickedLine.getSerialNumbers());
-    							} 
-    						}
-    						break;
-    					}
-    				}
-    			}
-    		}
-    		order.setPickStatus(pickingInfo.getStatus());
-    		updateOrderStatusByPickStatus(order);
-    		orderRepo.save(order);
-    	} else {
-    		throw new PickImportException(ERROR_UNKNOWN_ORDER + pickingInfo.getOrderNumber());
-    	}
-    }
-
-    
     private boolean removeEquipments(OrderLine line, List<String> serialNumbers) {
     	boolean anyRemoved = false;
 		for (Iterator<Equipment> iterator = line.getEquipments().iterator(); iterator.hasNext();) {					
@@ -270,7 +216,7 @@ public class OrderPickImportService {
 					}					
 					line.setLineId(Integer.parseInt(fields[1]));
 					line.setArticleId(fields[2]);
-					line.setAmount(Integer.parseInt(fields[3]));
+					line.setAmount(Integer.parseInt(fields[3]) + line.getAmount());
 					if (fields.length > 4 && !StringUtils.isEmpty(fields[4])) {
 						line.getSerialNumbers().add(fields[4]);
 					}
