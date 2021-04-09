@@ -19,6 +19,20 @@ public class DeliveryReportField {
 	private Long columnNumber;	
 	private Long originColumnNumber;
 		
+	public DeliveryReportField() {
+		super();
+	}
+	
+	public DeliveryReportField(ReportsConfig reportsConfig, String fieldName, String label, Boolean showInReport,
+			Long columnNumber, Long originColumnNumber) {
+		super();
+		this.reportsConfig = reportsConfig;
+		this.fieldName = fieldName;
+		this.label = label;
+		this.showInReport = showInReport;
+		this.columnNumber = columnNumber;
+		this.originColumnNumber = originColumnNumber;
+	}
 	@Id
 	@GeneratedValue
 	public Long getId() {

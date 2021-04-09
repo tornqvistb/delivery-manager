@@ -24,6 +24,7 @@ import se.lanteam.domain.CustomerGroup;
 import se.lanteam.domain.DeliveryReportField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.RegistrationConfig;
+import se.lanteam.domain.ReportsConfig;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
 import se.lanteam.repository.CustomFieldRepository;
@@ -151,6 +152,11 @@ public class CustomerGroupController extends BaseController{
 				customerCustomField.setCustomerGroup(customerGroup);
 				customerCustomField.setCustomField(customFieldRepo.getOne(customerCustomField.getCustomField().getIdentification()));
 			}
+			// if no delivery reports configuration, add a new one
+			if (customerGroup.getReportsConfig().getReportFields().isEmpty()) {
+				customerGroup.getReportsConfig().setReportFields(getDeliveryReportFields(customerGroup.getReportsConfig()));
+				customerGroup.getReportsConfig().setSortColumnDeliverReport("ohOrderNumber");
+			}			
 			
 			customerRepo.save(customerGroup);
 			sessionBean.setCustomerGroup(customerGroup);
@@ -165,6 +171,74 @@ public class CustomerGroupController extends BaseController{
 		return "customer-groups";
 	}
 
+	private Set<DeliveryReportField> getDeliveryReportFields(ReportsConfig config) {
+		Set<DeliveryReportField> fields = new HashSet<>();
+		
+		Long l = 1L;
+		
+		fields.add(new DeliveryReportField(config, "ohOrderNumber", "Ordernummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomerOrderNumber", "Kundens ordernummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomerSalesOrder", "Kundens säljnummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohNetsetOrderNumber", "Web-ordernummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohLeasingNumber", "Orderhuvud leasingnummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomerName", "Kundens namn", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomerNumber", "Kundnummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohDeliveryAddress", "Leveransadress", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohDeliveryCity", "Leveransort", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohDeliveryDate", "Leveransdatum", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohDeliveryPostalAddress1", "Leveransadress 1", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohDeliveryPostalAddress2", "Leveransadress 2", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohDeliveryPostalCode", "Leverans postnummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCity", "Postort", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohPostalAddress1", "Postadress 1", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohPostalAddress2", "Postadress 2", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohPostalCode", "Postnummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohContact1Email", "Kontaktperson 1 epost", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohContact1Name", "Kontaktperson 1 namn", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohContact1Phone", "Kontaktperson 1 telefon", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohContact2Email", "Kontaktperson 2 epost", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohContact2Name", "Kontaktperson 2 namn", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohContact2Phone", "Kontaktperson 2 telefon", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohStatus", "Orderstatus", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohJointDelivery", "Samleverans", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohOrderDate", "Orderdatum", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohTransferDate", "Datum för leveransavisering", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomField1", "Order extrafält 1", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomField2", "Order extrafält 2", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomField3", "Order extrafält 3", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomField4", "Order extrafält 4", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomField5", "Order extrafält 5", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomField6", "Order extrafält 6", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomField7", "Order extrafält 7", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomField8", "Order extrafält 8", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomField9", "Order extrafält 9", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "ohCustomField10", "Order extrafält 10", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olArticleNumber", "Artikelnummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olArticleDescription", "Artikelbeskrivning", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olRowNumber", "Radnummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olCustomerRowNumber", "Kundens radnummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olInstallationType", "Installationstyp", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olOperatingSystem", "Operativsystem", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olOrganisationUnit", "OU", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olRegistered", "Registrerat antal", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olRemaining", "Kvarvarande antal", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olTotal", "Totalt antal", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olLeasingNumber", "Leasingnummer orderrad", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "olRITM", "RITM-nummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "eqSerialNo", "Serienummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "eqStealingTag", "Stöldskyddsnummer", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "eqCustomAttribute1", "Kundattribut 1", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "eqCustomAttribute2", "Kundattribut 2", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "eqCustomAttribute3", "Kundattribut 3", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "eqCustomAttribute4", "Kundattribut 4", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "eqCustomAttribute5", "Kundattribut 5", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "eqCustomAttribute6", "Kundattribut 6", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "eqCustomAttribute7", "Kundattribut 7", true, l, l));l++;
+		fields.add(new DeliveryReportField(config, "eqCustomAttribute8", "Kundattribut 8", true, l, l));		
+		
+		return fields;
+	}
+	
 	@RequestMapping(value = "customer-groups/save-delivery-report-settings", method = RequestMethod.POST)
 	public String saveDeliveryReportSettings(@ModelAttribute RequestAttributes reqAttr,
 			ModelMap model) {

@@ -140,7 +140,7 @@ public class EquipmentValidator {
 		// - stealing tag not registered on current order
 		for (OrderLine line : order.getOrderLines()) {
 			for (Equipment equip : line.getEquipments()) {
-				if (equip.getId() != equipment.getId() && equip.getStealingTag().equals(equipment.getStealingTag())) {
+				if (equip.getId() != equipment.getId() && equip.getStealingTag() != null && equip.getStealingTag().equals(equipment.getStealingTag())) {
 					return STEALING_TAG_ON_CURRENT_ORDER + " (" + equipment.getStealingTag() + ")";
 				}
 			}
