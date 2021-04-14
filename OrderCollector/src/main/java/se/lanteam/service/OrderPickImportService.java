@@ -210,17 +210,25 @@ public class OrderPickImportService {
 						}
 					}
 				} else if (row.startsWith(ROW_TYPE_LINE)) {
+					/*
 					PickedOrderLine line = getLineById(orderLines, row);
 					if (line == null) {
 						line = new PickedOrderLine();
-					}					
-					line.setLineId(Integer.parseInt(fields[1]));
+					}
+					*/					
+					PickedOrderLine line = new PickedOrderLine();
+					try {
+						line.setLineId(Integer.parseInt(fields[1]));
+					} catch (Exception e) {
+						line.setLineId(-1);
+					}
 					line.setArticleId(fields[2]);
 					line.setAmount(Integer.parseInt(fields[3]) + line.getAmount());
 					if (fields.length > 4 && !StringUtils.isEmpty(fields[4])) {
 						line.getSerialNumbers().add(fields[4]);
 					}
-					orderLines = updateList(orderLines, line);
+					//orderLines = updateList(orderLines, line);
+					orderLines.add(line);
 				}
 			}
 			pickingInfo.setPickedLines(orderLines);
