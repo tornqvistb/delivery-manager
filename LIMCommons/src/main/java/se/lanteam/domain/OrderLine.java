@@ -18,6 +18,7 @@ import javax.persistence.Transient;
 import org.springframework.util.StringUtils;
 import org.thymeleaf.util.ArrayUtils;
 
+import se.lanteam.constants.RegistrationMethods;
 import se.lanteam.constants.RestrictionCodes;
 import se.lanteam.constants.StatusConstants;
 
@@ -186,6 +187,11 @@ public class OrderLine implements Cloneable{
 	@Transient
 	public Boolean isFullyRegistered() {
 		return registered >= total;
+	}
+
+	@Transient
+	public Boolean getUpdateEquipmentAllowed() {
+		return getEditable() && this.orderHeader.getRegistrationMethod() == RegistrationMethods.DEFAULT;
 	}
 	
 	@Transient

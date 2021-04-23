@@ -28,6 +28,7 @@ import org.thymeleaf.util.ArrayUtils;
 import se.lanteam.constants.CustomFieldConstants;
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.LimStringUtil;
+import se.lanteam.constants.RegistrationMethods;
 import se.lanteam.constants.RestrictionCodes;
 import se.lanteam.constants.SLAConstants;
 import se.lanteam.constants.StatusConstants;
@@ -89,7 +90,9 @@ public class OrderHeader implements Cloneable {
 	private String deliveryReceiverName;
 	private String deliveryStatus;
 	private int pickStatus;
-	private int noPickUpCount = 0;
+	private int noPickUpCount = 0;	
+	private int registrationMethod = RegistrationMethods.DEFAULT;
+	
 	@Transient
 	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
 	
@@ -894,4 +897,13 @@ public class OrderHeader implements Cloneable {
 	public void increaseNoPickUpCount() {
 		this.noPickUpCount++;
 	}
+
+	public int getRegistrationMethod() {
+		return registrationMethod;
+	}
+
+	public void setRegistrationMethod(int registrationMethod) {
+		this.registrationMethod = registrationMethod;
+	}
+
 }

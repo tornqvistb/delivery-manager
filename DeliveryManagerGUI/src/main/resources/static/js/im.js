@@ -195,6 +195,11 @@ $(document).ready(function(){
 		$("#serienr").val(nextSerialToUpdate);
 		$("#order-line-id").val(nextOrderlineToUpdate);
 	    dialog.dialog( "open" );
+    } else {
+    	var serialInput = document.getElementById("serienr");
+        if(serialInput){
+        	$('#serienr').focus();
+        }
     }
     
 });

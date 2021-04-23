@@ -38,6 +38,7 @@ import se.lanteam.services.MailComposer;
 public class EquipmentController extends BaseController {
 
 	private static String RESULT_OK = "";
+	private static String SERIAL_NUMBER_NOT_ON_THIS_ORDER = "Det serienummer du har angett finns inte plockat på denna order.";
 	private static String TOO_MANY_REGISTERED = "Du har angett ett större antal än vad som är kvar att registrera";
 	private static String RESULT_CORRECTION_COMPLETED = "Korrigering av utrustning genomförd.";
 	private static String RESULT_CORRECTION_COMPLETED_WITH_MAIL = "Korrigering av utrustning genomförd, kund informerad via epost.";
@@ -305,6 +306,14 @@ public class EquipmentController extends BaseController {
 	public String updateEquipment(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
 			ModelMap model) {
 		LOG.info("Uppdatering - serienummer: " + reqAttr.getSerialNo());
+		if (reqAttr.getOrderLineId() == 0L || reqAttr.getOrderLineId() == null) {
+			List<Equipment> eqs = equipmentRepo.findBySerialNo(reqAttr.getSerialNo());
+			if (eqs.size() > 0) {
+				reqAttr.setOrderLineId(eqs.get(0).getOrderLine().getId());
+			} else {
+				
+			}
+		}
 		reqAttr.setUpdateEquipment(true);		
 		return registerEquipment(reqAttr, orderId, model);
 	}

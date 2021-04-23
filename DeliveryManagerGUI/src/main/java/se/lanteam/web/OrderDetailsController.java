@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -25,6 +27,7 @@ import se.lanteam.domain.DeliveryPlan;
 import se.lanteam.domain.DeliveryWeekDay;
 import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.domain.OrderLine;
 import se.lanteam.model.DeliveryDay;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
@@ -178,6 +181,46 @@ public class OrderDetailsController extends BaseController{
 		return "redirect:/order-list/view/{orderId}";
 	}
 
+	@RequestMapping(value = "order-list/generate-rows/{orderId}", method = RequestMethod.POST)
+	public String generateRows(@PathVariable Long orderId) {		
+		OrderHeader order = orderRepo.findOne(orderId);
+		order.setOrderLines(null);
+		Set<OrderLine> orderLines = new HashSet<>();
+		for (int i = 1; i < 1001; i++) {
+			OrderLine line = new OrderLine();
+			line.setTotal(1);
+			line.setRemaining(1);
+			line.setRegistered(0);
+			List<String> serialNumbers = new ArrayList<>();
+			serialNumbers.add("SERIAL_" + i);
+			line.addPickedSerialNumbers(serialNumbers);
+			line.setArticleNumber("TEST_ARTICLE");
+			line.setArticleDescription("Desc testarticle");
+			line.setRowNumber(i);
+			line.setAutoRegistered(false);
+			line.setCustomerRowNumber(i);
+			line.setOrderHeader(order);
+			line.setRestrictionCode("1");
+			orderLines.add(line);
+		}
+		order.setOrderLines(orderLines);
+		orderRepo.save(order);
+		return "redirect:/order-list/view/{orderId}";
+	}
+
+	@RequestMapping(value = "order-list/registration-method/{orderId}", method = RequestMethod.POST)
+	public String changeRegistrationMethod(@ModelAttribute OrderHeader orderAttr, @PathVariable Long orderId,
+			ModelMap model) {
+		return updateRegistrationMethod(orderId, orderAttr.getRegistrationMethod());
+	}	
+	
+	private String updateRegistrationMethod(Long orderId, int newValue) {
+		OrderHeader order = orderRepo.findOne(orderId);
+		order.setRegistrationMethod(newValue);
+		orderRepo.save(order);
+		return "redirect:/order-list/view/{orderId}";		
+	}
+	
 	private void unPlanOrder(OrderHeader order) {
 		if (order.getCustomerGroup().getBookOrderBeforeRegistration()) {
 			if (order.getUnCompletedOrderLines().size() == 0) {

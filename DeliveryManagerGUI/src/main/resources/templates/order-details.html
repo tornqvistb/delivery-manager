@@ -63,6 +63,115 @@
 											</div>
 											<div class="form-section">
 												<!-- Show registration section only if there are things left to register -->
+												
+												<!-- TEST -->
+												<!--											
+												<h3>SKAPA 1000 TEST-ORDERRADER</h3>
+												<form
+													th:action="@{/order-list/generate-rows/} + ${order.id}"
+													th:object="${reqAttr}" method="post"
+													onsubmit="return confirm('Vill du verkligen skapa 1000 orderrader?');">	
+													<div class="row cf action-area">
+														<input class="backend-operation" type="submit"
+															value="Skapa 1000 rader" name="create1000Rows" id="create1000Rows" />
+													</div>
+												</form>
+												-->
+												<!-- END TEST -->
+												<h3>Metod för registrering</h3>
+												<form
+													th:action="@{/order-list/registration-method/} + ${order.id}"
+													th:object="${order}" method="post">	
+													<fieldset>													
+														<div class="radio alt">
+															<input th:field="${order.registrationMethod}" type="radio"
+																id="InputRegistrationMethodDefault" name="InputRegistrationMethod"
+																value="0" onchange="this.form.submit()"/> <label for="InputRegistrationMethodDefault">Sekventiell registrering</label>
+														</div>
+														<div class="radio alt">
+															<input th:field="${order.registrationMethod}" type="radio"
+																id="InputRegistrationMethodFlexible" name="InputRegistrationMethod"
+																value="1" onchange="this.form.submit()"/> <label for="InputRegistrationMethodFlexible">Registrering i valfri ordning</label>
+														</div>
+													</fieldset>
+												</form>
+												<div
+													th:if="${order.registrationMethod} == 1"
+													th:remove="tag">
+													<form
+														th:action="@{/order-list/view/registerEquipment/} + ${order.id}"
+														th:object="${reqAttr}" method="post" id="reg-equipment">
+														<table id="with-serial-no">
+															<colgroup>
+																<col style="width: 20%" />
+																<col style="width: 80%" />
+															</colgroup>
+															<tbody>
+																<tr>
+																	<th scope="row">Serienummer</th>
+																	<td><input th:field="${reqAttr.serialNo}"
+																		type="text" id="serienr" value="" /></td>
+																</tr>
+																<tr id="input-stealing-id">
+																	<th scope="row">Stöld-ID</th>
+																	<td><input th:field="${reqAttr.stealingTag}"
+																		type="text" id="stealingid" name="stealingid" value=""/></td>
+																</tr>
+																<tr th:if="${regConfig.useAttribute1}">
+																	<th scope="row" th:text="${regConfig.labelAttribute1}">Attribut 1</th>
+																	<td><input th:field="${reqAttr.customAttribute1}"
+																		type="text" id="customAttribute1" name="customAttribute1" value=""/></td>
+																</tr>
+																<tr th:if="${regConfig.useAttribute2}">
+																	<th scope="row" th:text="${regConfig.labelAttribute2}">Attribut 2</th>
+																	<td><input th:field="${reqAttr.customAttribute2}"
+																		type="text" id="customAttribute2" name="customAttribute2" value=""/></td>
+																</tr>
+																<tr th:if="${regConfig.useAttribute3}">
+																	<th scope="row" th:text="${regConfig.labelAttribute3}">Attribut 3</th>
+																	<td><input th:field="${reqAttr.customAttribute3}"
+																		type="text" id="customAttribute3" name="customAttribute3" value=""/></td>
+																</tr>
+																<tr th:if="${regConfig.useAttribute4}">
+																	<th scope="row" th:text="${regConfig.labelAttribute4}">Attribut 4</th>
+																	<td><input th:field="${reqAttr.customAttribute4}"
+																		type="text" id="customAttribute4" name="customAttribute4" value=""/></td>
+																</tr>
+																<tr th:if="${regConfig.useAttribute5}">
+																	<th scope="row" th:text="${regConfig.labelAttribute5}">Attribut 5</th>
+																	<td><input th:field="${reqAttr.customAttribute5}"
+																		type="text" id="customAttribute5" name="customAttribute5" value=""/></td>
+																</tr>
+																<tr th:if="${regConfig.useAttribute6}">
+																	<th scope="row" th:text="${regConfig.labelAttribute6}">Attribut 6</th>
+																	<td><input th:field="${reqAttr.customAttribute6}"
+																		type="text" id="customAttribute6" name="customAttribute6" value=""/></td>
+																</tr>
+																<tr th:if="${regConfig.useAttribute7}">
+																	<th scope="row" th:text="${regConfig.labelAttribute7}">Attribut 7</th>
+																	<td><input th:field="${reqAttr.customAttribute7}"
+																		type="text" id="customAttribute7" name="customAttribute7" value=""/></td>
+																</tr>
+																<tr th:if="${regConfig.useAttribute8}">
+																	<th scope="row" th:text="${regConfig.labelAttribute8}">Attribut 8</th>
+																	<td><input th:field="${reqAttr.customAttribute8}"
+																		type="text" id="customAttribute8" name="customAttribute8" value=""/></td>
+																</tr>
+																
+																<tr>
+																	<th scope="row">Registrerad av</th>
+																	<td><input th:field="${reqAttr.registeredBy}"
+																		type="text" id="registeredby" name="registeredby" value="" class="trig-enter"/></td>
+																</tr>
+															</tbody>
+														</table>
+														<div class="row cf action-area">
+															<input class="backend-operation" type="submit"
+																value="Spara" name="storeequipment" id="storeequipment" />
+														</div>
+													</form>
+												</div>
+												
 												<div
 													th:if="${order.okToRegister} == true"
 													th:remove="tag">
@@ -218,8 +327,7 @@
 																				<th style="width:13%;">Stöld-ID</th>
 																				<th style="width:20%;">Registrerad av</th>
 																				<th style="width:20%;">Tidpunkt</th>
-																				<!-- <th style="width:15%;" th:if="${order.editable}">Ta bort</th> -->
-																				<th style="width:15%;" th:if="${orderLine.editable}">Komplettera</th>
+																				<th style="width:15%;" th:if="${orderLine.updateEquipmentAllowed}">Komplettera</th>
 																			</tr>
 																		</thead>
 																		<tbody>
@@ -228,10 +336,7 @@
 																				<td th:text="${equipment.stealingTag}">5</td>
 																				<td th:text="${equipment.registeredBy}">Kalle</td>
 																				<td th:text="${equipment.creationDateDisplay}">2014-01-01</td>
-																				<!-- <td th:if="${order.editable}"><a
-																					th:href="@{/order-list/view/deleq/} + ${order.id} + '/' + ${orderLine.id} + '/' + ${equipment.id} + '#registration-area'">Ta
-																						bort</a></td> -->
-																				<td th:if="${orderLine.editable}"><a th:attr="data-snr=${equipment.serialNo},data-olid=${orderLine.id}" href="#" class="update-equipment-link" >Komplettera</a></td>
+																				<td th:if="${orderLine.updateEquipmentAllowed}"><a th:attr="data-snr=${equipment.serialNo},data-olid=${orderLine.id}" href="#" class="update-equipment-link" >Komplettera</a></td>
 																			</tr>
 																		</tbody>
 																	</table>
