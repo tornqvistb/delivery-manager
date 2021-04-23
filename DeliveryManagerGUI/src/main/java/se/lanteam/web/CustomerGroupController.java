@@ -153,7 +153,8 @@ public class CustomerGroupController extends BaseController{
 				customerCustomField.setCustomField(customFieldRepo.getOne(customerCustomField.getCustomField().getIdentification()));
 			}
 			// if no delivery reports configuration, add a new one
-			if (customerGroup.getReportsConfig().getReportFields().isEmpty()) {
+			boolean newGroup = (customerRepo.findByName(customerGroup.getName()) == null);
+			if (newGroup) {
 				customerGroup.getReportsConfig().setReportFields(getDeliveryReportFields(customerGroup.getReportsConfig()));
 				customerGroup.getReportsConfig().setSortColumnDeliverReport("ohOrderNumber");
 			}			
