@@ -86,12 +86,12 @@
 														<div class="radio alt">
 															<input th:field="${order.registrationMethod}" type="radio"
 																id="InputRegistrationMethodDefault" name="InputRegistrationMethod"
-																value="0" onchange="this.form.submit()"/> <label for="InputRegistrationMethodDefault">Sekventiell registrering</label>
+																value="0" onchange="this.form.submit()"/> <label for="InputRegistrationMethodDefault">Välj serienummer och komplettera</label>
 														</div>
 														<div class="radio alt">
 															<input th:field="${order.registrationMethod}" type="radio"
 																id="InputRegistrationMethodFlexible" name="InputRegistrationMethod"
-																value="1" onchange="this.form.submit()"/> <label for="InputRegistrationMethodFlexible">Registrering i valfri ordning</label>
+																value="1" onchange="this.form.submit()"/> <label for="InputRegistrationMethodFlexible">Skanna serienummer</label>
 														</div>
 													</fieldset>
 												</form>
@@ -687,7 +687,8 @@
 												<div class="cf">
 													<a class="button" th:href="@{/generate-work-order/} + ${order.id}" target="_blank">Skapa arbetsorder/plocklista</a>
 													<a class="button" th:href="@{/generate-delivery-note/} + ${order.id}" target="_blank">Skapa följesedel</a>
-													<a th:if="${order.okToSendDeliveryReport}" class="button" th:href="@{/order-list/send-delivery-info/} + ${order.id}" target="_blank">Skicka leveransavisering till kund</a>
+													<a th:if="${order.okToSendDeliveryReport}" class="button" th:href="@{/order-list/send-delivery-info/} + ${order.id}" target="_blank">Skicka leveransavisering till kund </a>
+													<a class="button" href="#" onclick="return confirm('Vill du verkligen klarmarkera ordern?');">Sätt registrering klar</a>
 												</div>
 											</div>
 										</div>
