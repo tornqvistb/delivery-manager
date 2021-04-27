@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.util.ListUtils;
 
 import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.StatusConstants;
@@ -25,6 +26,7 @@ import se.lanteam.domain.DeliveryPlan;
 import se.lanteam.domain.DeliveryWeekDay;
 import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderHeader;
+import se.lanteam.domain.OrderLine;
 import se.lanteam.model.DeliveryDay;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
@@ -35,6 +37,7 @@ public class OrderDetailsController extends BaseController{
 	private static final String STATUS_MSG_OK = "Statusmeddelande skickat.";
 	private static final String STATUS_MSG_COMMENT_MISSING = "Du måste skriva ett meddelande.";
 	private static final String STATUS_MSG_ORDER_CANCELLED = "Följande order har makulerats: ";
+	private static final String STATUS_MSG_ORDER_FINISHED = "Följande order har klarmarkerats: ";
 	private static final String STATUS_ROUTE_PLAN_OK = "Order har ruttplanerats.";
 	private static final String STATUS_ROUTE_PLAN_NOK = "Ruttplanering av ordern misslyckades. Alla obligatoriska fält ej ifyllda.";
 
@@ -89,6 +92,60 @@ public class OrderDetailsController extends BaseController{
 		return "order-list";
 	}
 
+	@RequestMapping(value = "order-list/view/finishOrder/{orderId}", method = RequestMethod.POST)
+	public String finishOrder(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
+			ModelMap model) {
+		OrderHeader order = orderRepo.findOne(orderId);
+		String orderNumber = order.getOrderNumber();
+		if (StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus())
+				|| StatusConstants.ORDER_STATUS_STARTED.equals(order.getStatus())) {
+			order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);
+		} else if (StatusConstants.ORDER_STATUS_BOOKED.equals(order.getStatus())) {
+			order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);
+		}
+		for (OrderLine ol : order.getUnCompletedOrderLines()) {
+			ol.setRested(true);
+		}
+		if (order.isChildOrderInJoint()) {
+			String mainOrderNo = order.getJointDelivery();
+			order.clearJointDelivery();
+			orderRepo.save(order);
+			List<OrderHeader> mainOrders = orderRepo.findOrdersByOrderNumber(mainOrderNo);
+			if (!ListUtils.isEmpty(mainOrders)) {
+				OrderHeader mainOrder = mainOrders.get(0);
+				List<String> childOrders = mainOrder.getJoinedOrdersAsList();
+				if (childOrders.size() == 1) {
+					mainOrder.clearJointDelivery();
+				} else if (childOrders.size() > 1) {
+					String jdOrders = mainOrder.getJointDeliveryOrders().replace(order.getOrderNumber(), "");
+					mainOrder.setJointDeliveryOrders(jdOrders);
+					String jdOrderText = mainOrder.getJointDeliveryText().replace(order.getOrderNumber(), "");
+					mainOrder.setJointDeliveryText(jdOrderText);
+				}
+				orderRepo.save(mainOrder);
+			}
+		} else if (order.isMainOrderInJoint()) {
+			List<String> childOrders = order.getJoinedOrdersAsList();
+			order.clearJointDelivery();
+			orderRepo.save(order);
+			for (String child : childOrders) {
+				List<OrderHeader> childs = orderRepo.findOrdersByOrderNumber(child);
+				if (childs.size() == 1) {
+					OrderHeader childOrder = childs.get(0);
+					childOrder.clearJointDelivery();
+					orderRepo.save(childOrder);					
+				}
+			}
+		} else {
+			orderRepo.save(order);
+		}
+		reqAttr = new RequestAttributes();
+		reqAttr.setThanksMessage(STATUS_MSG_ORDER_FINISHED + orderNumber);
+		model.put("reqAttr", reqAttr);
+
+		return "order-list";
+	}
+	
 	@RequestMapping(value = "order-list/view/getdaybyarea/{areaId}", method = RequestMethod.POST)
 	public @ResponseBody String getDaysByArea(@PathVariable Long areaId) {
 		if (areaId == 0) {
