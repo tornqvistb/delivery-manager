@@ -687,8 +687,14 @@
 												<div class="cf">
 													<a class="button" th:href="@{/generate-work-order/} + ${order.id}" target="_blank">Skapa arbetsorder/plocklista</a>
 													<a class="button" th:href="@{/generate-delivery-note/} + ${order.id}" target="_blank">Skapa följesedel</a>
-													<a th:if="${order.okToSendDeliveryReport}" class="button" th:href="@{/order-list/send-delivery-info/} + ${order.id}" target="_blank">Skicka leveransavisering till kund </a>
-													<a class="button" href="#" onclick="return confirm('Vill du verkligen klarmarkera ordern?');">Sätt registrering klar</a>
+													<a th:if="${order.okToSendDeliveryReport}" class="button" th:href="@{/order-list/send-delivery-info/} + ${order.id}" target="_blank">Skicka leveransavisering till kund</a>
+													<form th:if="${order.okToCompleteUnfinished}"
+														th:action="@{/order-list/view/finishOrder/} + ${order.id}"
+														th:object="${reqAttr}" method="post"
+														onsubmit="return confirm('Vill du verkligen sätta ordern till färdigregistrerad?');">	
+															<input class="backend-operation" type="submit"
+																value="Sätt ordern färdigregistrerad" name="finishorder" id="finishorder" />
+													</form>													
 												</div>
 											</div>
 										</div>

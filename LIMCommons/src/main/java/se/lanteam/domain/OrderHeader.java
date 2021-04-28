@@ -906,4 +906,20 @@ public class OrderHeader implements Cloneable {
 		this.registrationMethod = registrationMethod;
 	}
 
+	@Transient
+	// Lägg till villkor att detta inte är OK på en rest-order
+	public boolean getOkToCompleteUnfinished() {
+		return 	(this.status.equals(StatusConstants.ORDER_STATUS_NOT_PICKED)
+				|| this.status.equals(StatusConstants.ORDER_STATUS_STARTED)
+				|| this.status.equals(StatusConstants.ORDER_STATUS_BOOKED));
+	}
+
+	@Transient
+	public void clearJointDelivery() {
+		this.jointDelivery = "";
+		this.jointDeliveryOrders = "";
+		this.jointDeliveryText = "";
+		this.excludeFromList = false;
+	}
+
 }
