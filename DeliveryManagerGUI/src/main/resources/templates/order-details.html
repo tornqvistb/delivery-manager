@@ -99,9 +99,9 @@
 													th:if="${order.registrationMethod} == 1"
 													th:remove="tag">
 													<form
-														th:action="@{/order-list/view/registerEquipment/} + ${order.id}"
+														th:action="@{/order-list/view/updateEquipmentBySnr/} + ${order.id}"
 														th:object="${reqAttr}" method="post" id="reg-equipment">
-														<table id="with-serial-no">
+														<table id="reg-method-flexible">
 															<colgroup>
 																<col style="width: 20%" />
 																<col style="width: 80%" />
@@ -171,7 +171,7 @@
 														</div>
 													</form>
 												</div>
-												
+												<!-- 
 												<div
 													th:if="${order.okToRegister} == true"
 													th:remove="tag">
@@ -288,6 +288,7 @@
 														</div>
 													</form>
 												</div>
+												-->
 												<h3>Orderrader</h3>
 												<div th:if="${not #strings.isEmpty(reqAttr.updateEquipmentResult)}"
 													class="system-info error-message">

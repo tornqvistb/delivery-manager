@@ -298,8 +298,28 @@ public class EquipmentController extends BaseController {
 		}
 		return reqAttr;
 	}
-	
+		
+	@Transactional
+	@RequestMapping(value = "order-list/view/updateEquipmentBySnr/{orderId}", method = RequestMethod.POST)
+	public String updateEquipmentBySnr(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
+			ModelMap model) {
+		LOG.info("Uppdatering - serienummer: " + reqAttr.getSerialNo());
+		
+		equipmentRepo.findBySerialNo(serialNo)
+		List<Equipment> eqs = equipmentRepo.findBySerialNo(reqAttr.getSerialNo());
+		if (eqs.size() > 0) {
+			reqAttr.setOrderLineId(eqs.get(0).getOrderLine().getId());
+		} else {
+			
+		}
+		reqAttr.setUpdateEquipment(true);		
+		return registerEquipment(reqAttr, orderId, model);
+	}
 
+	private String validate() {
+		
+		return "";
+	}
 	
 	@Transactional
 	@RequestMapping(value = "order-list/view/updateEquipment/{orderId}", method = RequestMethod.POST)
@@ -317,7 +337,6 @@ public class EquipmentController extends BaseController {
 		reqAttr.setUpdateEquipment(true);		
 		return registerEquipment(reqAttr, orderId, model);
 	}
-
 
 	@Autowired
 	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
