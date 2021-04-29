@@ -46,9 +46,8 @@ public class OrderLine implements Cloneable{
 	private String shopId;
 	private String shopType;
 	
-	@Override
 	@Transient
-    public OrderLine clone() {		
+    public OrderLine cloneToRestOrderLine() {		
 		try {
 			OrderLine clone = (OrderLine) super.clone();
 			clone.setId(null);
@@ -56,6 +55,8 @@ public class OrderLine implements Cloneable{
 			clone.setRegistered(0);
 			clone.setRemaining(this.getRemaining());
 			clone.setOrderHeader(null);
+			clone.setRested(false);
+			clone.setAutoRegistered(false);
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			return null;

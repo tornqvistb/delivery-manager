@@ -19,12 +19,14 @@ public class OrderPickingInfo {
 	public void setOrderNumber(String orderNumber) {
 		this.orderNumber = orderNumber;
 	}
+	/*
 	public String getOriginalOrderNumber() {
 		return originalOrderNumber;
 	}
 	public void setOriginalOrderNumber(String restOrderNumber) {
 		this.originalOrderNumber = restOrderNumber;
 	}
+	*/
 	public List<PickedOrderLine> getPickedLines() {
 		return pickedLines;
 	}
