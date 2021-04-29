@@ -388,7 +388,7 @@ public class OrderHeader implements Cloneable {
 			this.status = StatusConstants.ORDER_STATUS_STARTED;
 		} else if (!workToDoOnRelatedOrders) {
 			if (this.attachment == null) {
-				if (this.customerGroup.getBookOrderBeforeRegistration() || this.getDeliveryPlan() != null) {
+				if (this.getDeliveryPlan() != null) {
 					this.status = StatusConstants.ORDER_STATUS_ROUTE_PLANNED;
 				} else {
 					this.status = StatusConstants.ORDER_STATUS_REGISTRATION_DONE;
