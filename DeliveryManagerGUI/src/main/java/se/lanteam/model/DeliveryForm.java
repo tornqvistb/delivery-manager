@@ -165,7 +165,7 @@ public class DeliveryForm {
 		if (!StringUtils.isEmpty(order.getContact1Name())) {
 			receivers.add(order.getContact1Name());
 		}
-		if (!StringUtils.isEmpty(order.getContact2Name()) && !order.getContact1Name().equals(order.getContact2Name())) {
+		if (!StringUtils.isEmpty(order.getContact2Name()) && !order.getContact2Name().equals(order.getContact1Name())) {
 			receivers.add(order.getContact2Name());
 		}
 		
