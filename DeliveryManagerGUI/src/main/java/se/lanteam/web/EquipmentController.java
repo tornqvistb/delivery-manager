@@ -304,16 +304,14 @@ public class EquipmentController extends BaseController {
 	public String updateEquipmentBySnr(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
 			ModelMap model) {
 		LOG.info("Uppdatering - serienummer: " + reqAttr.getSerialNo());
-		
-		equipmentRepo.findBySerialNo(serialNo)
 		List<Equipment> eqs = equipmentRepo.findBySerialNo(reqAttr.getSerialNo());
 		if (eqs.size() > 0) {
 			reqAttr.setOrderLineId(eqs.get(0).getOrderLine().getId());
+			reqAttr.setUpdateEquipment(true);		
+			return registerEquipment(reqAttr, orderId, model);
 		} else {
 			
 		}
-		reqAttr.setUpdateEquipment(true);		
-		return registerEquipment(reqAttr, orderId, model);
 	}
 
 	private String validate() {
