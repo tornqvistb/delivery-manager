@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Equipment;
@@ -35,6 +37,7 @@ import se.lanteam.model.OrderPickingInfo;
 import se.lanteam.model.PickedOrderLine;
 import se.lanteam.model.RestOrder;
 import se.lanteam.model.RestOrderLine;
+import se.lanteam.repository.EquipmentRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
@@ -54,12 +57,18 @@ public class OrderPickImportService {
     private ErrorRepository errorRepo;
 	@Autowired
     private PropertyService propService;
+	@Autowired
+    private EquipmentRepository equipmentRepo;
 
 	private static final String FILE_ENDING_WH = ".txt";
-	private final static String ERROR_WHEN_RECEIVNING_PICKING_FILE = "Fel uppstod vid inläsning av plock-fil från Lexit: ";
-	private final static String ERROR_WHEN_RECEIVNING_RESTORDER_FILE = "Fel uppstod vid inläsning av restorder-fil från Lexit: ";
-	private final static String ERROR_UNKNOWN_ORDER = ERROR_WHEN_RECEIVNING_PICKING_FILE + "Order finns ej i LIM: ";
-	private final static String PREFIX_REST_ORDER = "RO_";
+	private static final String ERROR_WHEN_RECEIVNING_PICKING_FILE = "Fel uppstod vid inläsning av plock-fil från Lexit: ";
+	private static final String ERROR_WHEN_RECEIVNING_RESTORDER_FILE = "Fel uppstod vid inläsning av restorder-fil från Lexit: ";
+	private static final String ERROR_WHEN_RECEIVNING_DELETE_SERIAL_FILE = "Fel uppstod vid inläsning av delete-serial-fil från Lexit: ";
+	private static final String ERROR_SERIAL_DOES_NOT_EXIST = " - Serienummer finns ej i LIM: ";
+	private static final String ERROR_UNKNOWN_ORDER = ERROR_WHEN_RECEIVNING_PICKING_FILE + "Order finns ej i LIM: ";
+	private static final String PREFIX_REST_ORDER = "RO_";
+	private static final String PREFIX_DELETE_SERIAL = "DS_";
+	private static final String DELETED_SERIAL_SUFFIX = "_ÅTER_";
 	
 	@Transactional
     public void importFiles() throws IOException{
@@ -77,7 +86,10 @@ public class OrderPickImportService {
 					Path errorTarget = Paths.get(fileErrorFolder + "/" + fileEntry.getName());
 					try {
 						List<String> rows = Files.readAllLines(source, StandardCharsets.ISO_8859_1);
-						if (fileEntry.getName().startsWith(PREFIX_REST_ORDER)) {
+						
+						if (fileEntry.getName().startsWith(PREFIX_DELETE_SERIAL)) {
+							deleteSerial(rows, fileEntry.getName());
+						} else if (fileEntry.getName().startsWith(PREFIX_REST_ORDER)) {
 							RestOrder restOrder = getRestOrder(rows, fileEntry.getName());
 							createRestOrder(restOrder);
 						} else {
@@ -222,6 +234,29 @@ public class OrderPickImportService {
 			return restOrder;
 		} catch (Exception e) {
 			throw new PickImportException(ERROR_WHEN_RECEIVNING_RESTORDER_FILE + fileName);
+		}
+    }
+
+    
+    private void deleteSerial(List<String> rows, String fileName) throws PickImportException{
+    	try {
+			for (String row : rows) {
+				String[] fields = row.split(FIELD_SEPARATOR);
+				String serialNo = fields[0];
+				List<Equipment> eqs = equipmentRepo.findBySerialNo(serialNo);
+				if (!eqs.isEmpty()) {
+					Equipment eq = eqs.get(0);
+					eq.setSerialNo(serialNo + DELETED_SERIAL_SUFFIX + DateUtil.dateToTime(new Date()));
+					equipmentRepo.save(eq);
+				} else {
+					throw new PickImportException(ERROR_WHEN_RECEIVNING_DELETE_SERIAL_FILE + fileName
+							+ ERROR_SERIAL_DOES_NOT_EXIST + serialNo);
+				}
+			}
+		} catch (PickImportException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new PickImportException(ERROR_WHEN_RECEIVNING_DELETE_SERIAL_FILE + fileName);
 		}
     }
 

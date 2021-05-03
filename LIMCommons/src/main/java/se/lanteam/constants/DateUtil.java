@@ -92,6 +92,17 @@ public class DateUtil {
 	    return dateStr;
 		
 	}
+
+	public static String dateToTime(Date date) {
+		
+		if (date == null) return ""; 
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateStr = formatter.format(date);
+	    
+	    return dateStr;
+		
+	}
 	
 	public static Date getStartDateForInactiveOrders(int daysBack) {
 		Calendar cal = Calendar.getInstance();
