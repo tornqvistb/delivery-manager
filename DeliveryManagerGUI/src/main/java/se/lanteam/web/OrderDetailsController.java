@@ -99,11 +99,13 @@ public class OrderDetailsController extends BaseController{
 			ModelMap model) {
 		OrderHeader order = orderRepo.findOne(orderId);
 		String orderNumber = order.getOrderNumber();
-		if (StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus())
-				|| StatusConstants.ORDER_STATUS_STARTED.equals(order.getStatus())) {
-			order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);
-		} else if (StatusConstants.ORDER_STATUS_BOOKED.equals(order.getStatus())) {
+		
+		if (StatusConstants.ORDER_STATUS_BOOKED.equals(order.getStatus()) || !StringUtils.isEmpty(order.getRoutePlanSummary())) {
 			order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);
+			order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);
+		} else if (StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus())
+				|| StatusConstants.ORDER_STATUS_STARTED.equals(order.getStatus())){
+			order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);			
 		}
 		for (OrderLine ol : order.getUnCompletedOrderLines()) {
 			ol.setRested(true);

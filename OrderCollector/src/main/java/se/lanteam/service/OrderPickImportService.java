@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import se.lanteam.constants.DateUtil;
 import se.lanteam.constants.PropertyConstants;
 import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.Equipment;
@@ -33,6 +35,9 @@ import se.lanteam.exceptions.PickImportException;
 import se.lanteam.helpers.OrderCloneHelper;
 import se.lanteam.model.OrderPickingInfo;
 import se.lanteam.model.PickedOrderLine;
+import se.lanteam.model.RestOrder;
+import se.lanteam.model.RestOrderLine;
+import se.lanteam.repository.EquipmentRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
 import se.lanteam.services.PropertyService;
@@ -52,10 +57,18 @@ public class OrderPickImportService {
     private ErrorRepository errorRepo;
 	@Autowired
     private PropertyService propService;
+	@Autowired
+    private EquipmentRepository equipmentRepo;
 
 	private static final String FILE_ENDING_WH = ".txt";
-	private final static String ERROR_WHEN_RECEIVNING_PICKING_FILE = "Fel uppstod vid inläsning av fil från Lexit: ";
-	private final static String ERROR_UNKNOWN_ORDER = ERROR_WHEN_RECEIVNING_PICKING_FILE + "Order finns ej i LIM: ";
+	private static final String ERROR_WHEN_RECEIVNING_PICKING_FILE = "Fel uppstod vid inläsning av plock-fil från Lexit: ";
+	private static final String ERROR_WHEN_RECEIVNING_RESTORDER_FILE = "Fel uppstod vid inläsning av restorder-fil från Lexit: ";
+	private static final String ERROR_WHEN_RECEIVNING_DELETE_SERIAL_FILE = "Fel uppstod vid inläsning av delete-serial-fil från Lexit: ";
+	private static final String ERROR_SERIAL_DOES_NOT_EXIST = " - Serienummer finns ej i LIM: ";
+	private static final String ERROR_UNKNOWN_ORDER = ERROR_WHEN_RECEIVNING_PICKING_FILE + "Order finns ej i LIM: ";
+	private static final String PREFIX_REST_ORDER = "RO_";
+	private static final String PREFIX_DELETE_SERIAL = "DS_";
+	private static final String DELETED_SERIAL_SUFFIX = "_ÅTER_";
 	
 	@Transactional
     public void importFiles() throws IOException{
@@ -73,12 +86,17 @@ public class OrderPickImportService {
 					Path errorTarget = Paths.get(fileErrorFolder + "/" + fileEntry.getName());
 					try {
 						List<String> rows = Files.readAllLines(source, StandardCharsets.ISO_8859_1);
-						OrderPickingInfo pickingInfo = getPickingInfo(rows, fileEntry.getName());
-						if (!StringUtils.isEmpty(pickingInfo.getOriginalOrderNumber())) {
-							createRestOrder(pickingInfo);
+						
+						if (fileEntry.getName().startsWith(PREFIX_DELETE_SERIAL)) {
+							deleteSerial(rows, fileEntry.getName());
+						} else if (fileEntry.getName().startsWith(PREFIX_REST_ORDER)) {
+							RestOrder restOrder = getRestOrder(rows, fileEntry.getName());
+							createRestOrder(restOrder);
+						} else {
+							OrderPickingInfo pickingInfo = getPickingInfo(rows, fileEntry.getName());						
+							updateOrder(pickingInfo);						
+							logger.info(pickingInfo.toString());
 						}
-						updateOrder(pickingInfo);						
-						logger.info(pickingInfo.toString());
 						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
 					} catch (PickImportException e) {
 						errorRepo.save(new ErrorRecord(e.getMessage()));
@@ -96,12 +114,12 @@ public class OrderPickImportService {
     	return fileName != null && fileName.endsWith(FILE_ENDING_WH);
     }
 	
-    private void createRestOrder(OrderPickingInfo pickingInfo) {
-    	List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(pickingInfo.getOriginalOrderNumber());
+    private void createRestOrder(RestOrder restOrder) {
+    	List<OrderHeader> orderList = orderRepo.findOrdersByOrderNumber(restOrder.getOriginalOrderNumber());
     	if (!orderList.isEmpty()) {
     		OrderHeader originalOrder = orderList.get(0);
-    		OrderHeader restOrder = OrderCloneHelper.cloneOrder(originalOrder, pickingInfo);
-    		orderRepo.save(restOrder);
+    		OrderHeader restOrderEntity = OrderCloneHelper.cloneOrder(originalOrder, restOrder);
+    		orderRepo.save(restOrderEntity);
     	}    	
     }	
 	
@@ -194,6 +212,54 @@ public class OrderPickImportService {
     		}
     	}
     }
+ 
+    private RestOrder getRestOrder(List<String> rows, String fileName) throws PickImportException{
+    	try {
+    		RestOrder restOrder = new RestOrder();
+			List<RestOrderLine> orderLines = new ArrayList<RestOrderLine>();
+			for (String row : rows) {
+				String[] fields = row.split(FIELD_SEPARATOR);
+				if (row.startsWith(RestOrder.ROW_TYPE_HEADER)) {					
+					restOrder.setOrderNumber(fields[1]);
+					restOrder.setOriginalOrderNumber(fields[2]);
+				} else if (row.startsWith(RestOrder.ROW_TYPE_LINE)) {
+					RestOrderLine line = new RestOrderLine();
+					line.setLineId(Integer.parseInt(fields[1]));
+					line.setArticleId(fields[2]);
+					line.setTotal(Integer.parseInt(fields[3]));
+					orderLines.add(line);
+				}
+			}
+			restOrder.setOrderLines(orderLines);
+			return restOrder;
+		} catch (Exception e) {
+			throw new PickImportException(ERROR_WHEN_RECEIVNING_RESTORDER_FILE + fileName);
+		}
+    }
+
+    
+    private void deleteSerial(List<String> rows, String fileName) throws PickImportException{
+    	try {
+			for (String row : rows) {
+				String[] fields = row.split(FIELD_SEPARATOR);
+				String serialNo = fields[0];
+				List<Equipment> eqs = equipmentRepo.findBySerialNo(serialNo);
+				if (!eqs.isEmpty()) {
+					Equipment eq = eqs.get(0);
+					eq.setSerialNo(serialNo + DELETED_SERIAL_SUFFIX + DateUtil.dateToTime(new Date()));
+					equipmentRepo.save(eq);
+				} else {
+					throw new PickImportException(ERROR_WHEN_RECEIVNING_DELETE_SERIAL_FILE + fileName
+							+ ERROR_SERIAL_DOES_NOT_EXIST + serialNo);
+				}
+			}
+		} catch (PickImportException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new PickImportException(ERROR_WHEN_RECEIVNING_DELETE_SERIAL_FILE + fileName);
+		}
+    }
+
     
     private OrderPickingInfo getPickingInfo(List<String> rows, String fileName) throws PickImportException{
     	try {
@@ -205,17 +271,8 @@ public class OrderPickImportService {
 					if (fields.length >= 3) {
 						pickingInfo.setOrderNumber(fields[1]);
 						pickingInfo.setStatus(Integer.parseInt(fields[2]));
-						if (fields.length >= 4 && !"0".equals(fields[3])) {
-							pickingInfo.setOriginalOrderNumber(fields[3]);
-						}
 					}
 				} else if (row.startsWith(ROW_TYPE_LINE)) {
-					/*
-					PickedOrderLine line = getLineById(orderLines, row);
-					if (line == null) {
-						line = new PickedOrderLine();
-					}
-					*/					
 					PickedOrderLine line = new PickedOrderLine();
 					try {
 						line.setLineId(Integer.parseInt(fields[1]));
@@ -227,7 +284,6 @@ public class OrderPickImportService {
 					if (fields.length > 4 && !StringUtils.isEmpty(fields[4])) {
 						line.getSerialNumbers().add(fields[4]);
 					}
-					//orderLines = updateList(orderLines, line);
 					orderLines.add(line);
 				}
 			}
@@ -237,27 +293,4 @@ public class OrderPickImportService {
 			throw new PickImportException(ERROR_WHEN_RECEIVNING_PICKING_FILE + fileName);
 		}
     }
-
-    private List<PickedOrderLine> updateList(List<PickedOrderLine> lines, PickedOrderLine line) {
-    	for (PickedOrderLine currLine : lines) {
-    		if (currLine.getLineId() == line.getLineId()) {
-    			currLine = line;
-    			return lines;
-    		}
-    	}
-    	lines.add(line);
-    	return lines;
-    }
-    
-    private PickedOrderLine getLineById(List<PickedOrderLine> orderLines, String line) {
-    	int lineId = Integer.parseInt(line.split(FIELD_SEPARATOR)[1]);
-    	for (PickedOrderLine orderLine : orderLines) {
-    		if (orderLine.getLineId() == lineId) {
-    			return orderLine;
-    		}
-    	}
-    	return null;
-    	
-    }
-    
 }

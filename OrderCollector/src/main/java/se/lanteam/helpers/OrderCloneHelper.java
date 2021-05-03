@@ -4,33 +4,34 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import se.lanteam.constants.StatusConstants;
 import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
-import se.lanteam.model.OrderPickingInfo;
-import se.lanteam.model.PickedOrderLine;
+import se.lanteam.model.RestOrder;
+import se.lanteam.model.RestOrderLine;
 
 public class OrderCloneHelper {
 	
-	public static OrderHeader cloneOrder(OrderHeader originalOrder, OrderPickingInfo pickingInfo) {
+	public static OrderHeader cloneOrder(OrderHeader originalOrder, RestOrder restOrder) {
 		
-		OrderHeader clone = originalOrder.clone();
+		OrderHeader clone = originalOrder.cloneToRestOrder();
 		
-		clone.setOrderNumber(pickingInfo.getOrderNumber());
-		
-		clone.setStatus(StatusConstants.ORDER_STATUS_NOT_PICKED);
-		clone.setPickStatus(StatusConstants.PICK_STATUS_NOT_PICKED);
+		clone.setOrderNumber(restOrder.getOrderNumber());
 		
 		Set<OrderLine> orderLines = new HashSet<OrderLine>();
-		for (OrderLine line : originalOrder.getOrderLines()) {
-			if (lineInPickingInfo(line, pickingInfo)) {
-				OrderLine newLine = line.clone();
+		
+		for (RestOrderLine restLine : restOrder.getOrderLines()) {			
+			OrderLine orderLine = getLineFromOriginal(originalOrder, restLine.getArticleId());
+			if (orderLine != null) {
+				OrderLine newLine = orderLine.cloneToRestOrderLine();
+				newLine.setTotal(restLine.getTotal());
+				newLine.setRemaining(restLine.getTotal());
+				newLine.setCustomerRowNumber(restLine.getLineId());
+				newLine.setRowNumber(restLine.getLineId());
 				newLine.setOrderHeader(clone);
 				orderLines.add(newLine);
 			}
 		}
-		
 		clone.setOrderLines(orderLines);
 		
 		Set<OrderCustomField> customFields = new HashSet<OrderCustomField>();
@@ -40,6 +41,7 @@ public class OrderCloneHelper {
 			newField.setCustomField(customField.getCustomField());
 			newField.setOrderHeader(clone);
 			newField.setValue(customField.getValue());
+			newField.setOrderHeader(clone);
 			customFields.add(newField);
 		}
 		
@@ -48,14 +50,13 @@ public class OrderCloneHelper {
 		return clone;
 	}
 	
-	private static boolean lineInPickingInfo(OrderLine line, OrderPickingInfo pickingInfo) {
-		
-		for (PickedOrderLine pickedLine : pickingInfo.getPickedLines()) {
-			if (line.getRowNumber() == pickedLine.getLineId()) {
-				return true;
+	private static OrderLine getLineFromOriginal(OrderHeader originalOrder, String articleId) {
+		for (OrderLine line : originalOrder.getOrderLines()) {
+			if (line.getArticleNumber().equals(articleId)) {
+				return line;
 			}
 		}
-		return false;
+		return null;
 	}
-	
+		
 }

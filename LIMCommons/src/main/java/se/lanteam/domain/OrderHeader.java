@@ -96,9 +96,8 @@ public class OrderHeader implements Cloneable {
 	@Transient
 	private List<OrderCustomField> customFieldsInDeliveryNote = new ArrayList<OrderCustomField>();
 	
-	@Override
 	@Transient
-    public OrderHeader clone() {		
+    public OrderHeader cloneToRestOrder() {		
 		try {
 			OrderHeader clone = (OrderHeader) super.clone();
 			clone.setId(null);
@@ -115,7 +114,23 @@ public class OrderHeader implements Cloneable {
 			clone.setDeliverySignature(null);
 			clone.setDeliveryComment(null);
 			clone.setDeliveryReceiverName(null);
-			clone.setDeliveryStatus(null);			
+			clone.setDeliveryStatus(null);
+			clone.setArticleNumbers("");
+			clone.setAttachment(null);
+			clone.setCreationDate(new Date());
+			clone.setExcludeFromList(false);
+			clone.setJointDelivery("");
+			clone.setJointDeliveryOrders("");
+			clone.setJointDeliveryText("");
+			clone.setJointInvoicing(0);
+			clone.setNoPickUpCount(0);
+			clone.setOrderDate(new Date());
+			clone.setToBeArchived(false);
+			clone.setTransferDate(null);
+			clone.setTransmitErrorMessage("");
+			clone.setStatus(StatusConstants.ORDER_STATUS_NOT_PICKED);
+			clone.setPickStatus(StatusConstants.PICK_STATUS_NOT_PICKED);
+
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			return null;
@@ -376,7 +391,7 @@ public class OrderHeader implements Cloneable {
 			this.status = StatusConstants.ORDER_STATUS_STARTED;
 		} else if (!workToDoOnRelatedOrders) {
 			if (this.attachment == null) {
-				if (this.customerGroup.getBookOrderBeforeRegistration() || this.getDeliveryPlan() != null) {
+				if (this.getDeliveryPlan() != null) {
 					this.status = StatusConstants.ORDER_STATUS_ROUTE_PLANNED;
 				} else {
 					this.status = StatusConstants.ORDER_STATUS_REGISTRATION_DONE;
