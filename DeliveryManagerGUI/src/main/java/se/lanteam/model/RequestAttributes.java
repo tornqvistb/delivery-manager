@@ -15,6 +15,7 @@ import se.lanteam.domain.SystemProperty;
 public class RequestAttributes {
 
 	private Long orderLineId;
+	private Long orderHeaderId;
 	private String stealingTag;
 	private String serialNo;
 	private Integer total;
@@ -587,6 +588,14 @@ public class RequestAttributes {
 
 	public void setSerialNoToUpdate(String serialNoToUpdate) {
 		this.serialNoToUpdate = serialNoToUpdate;
+	}
+
+	public Long getOrderHeaderId() {
+		return orderHeaderId;
+	}
+
+	public void setOrderHeaderId(Long orderHeaderId) {
+		this.orderHeaderId = orderHeaderId;
 	}
 
 

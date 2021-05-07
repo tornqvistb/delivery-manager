@@ -30,20 +30,12 @@ $(function() { // Makes sure the code contained doesn't run until
 			$(this).load(file);
 		});
 	});
-	/*
-	if ($("#serienr").length) {
-		$("#serienr").focus();
-		 $('html, body').animate({
-             scrollTop: $("#registration-area").offset().top
-         }, 500);
-	}
-	*/
 	$('input.trig-enter').keydown(function(e) {
 	    var code = e.keyCode || e.which;
 
 	    if (code === 9) {  
 	        e.preventDefault();
-	        $('form#reg-equipment').submit();
+	        $(this).closest("form").submit();
 	    }
 	});
 	
@@ -121,9 +113,7 @@ $(function() {
 
 $(function () {
     $("#customerGroupId").change(function () {
-    	//if ($(this).val() > 0){
-    		location.href = "/DeliveryManagerGUI/reports/delivery/changecustomer/" + $(this).val();
-    	//}
+   		location.href = "/DeliveryManagerGUI/reports/delivery/changecustomer/" + $(this).val();
     })
 });
 

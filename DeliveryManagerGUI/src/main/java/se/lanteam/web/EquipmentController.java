@@ -1,7 +1,6 @@
 package se.lanteam.web;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,52 +15,40 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import se.lanteam.constants.CustomFieldConstants;
-import se.lanteam.constants.StatusConstants;
+import se.lanteam.constants.RegistrationMethods;
 import se.lanteam.domain.Equipment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
 import se.lanteam.domain.RegistrationConfig;
-import se.lanteam.model.CorrectionMailInfo;
-import se.lanteam.model.ReqOrderLine;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
 import se.lanteam.repository.DeliveryAreaRepository;
 import se.lanteam.repository.EquipmentRepository;
 import se.lanteam.repository.OrderLineRepository;
 import se.lanteam.services.EquipmentValidator;
-import se.lanteam.services.MailComposer;
 
 @Controller
 public class EquipmentController extends BaseController {
 
-	private static String RESULT_OK = "";
-	private static String SERIAL_NUMBER_NOT_ON_THIS_ORDER = "Det serienummer du har angett finns inte plockat på denna order.";
-	private static String TOO_MANY_REGISTERED = "Du har angett ett större antal än vad som är kvar att registrera";
-	private static String RESULT_CORRECTION_COMPLETED = "Korrigering av utrustning genomförd.";
-	private static String RESULT_CORRECTION_COMPLETED_WITH_MAIL = "Korrigering av utrustning genomförd, kund informerad via epost.";
-	private static String RESULT_CORRECTION_COMPLETED_NEW_DELIVERY = "Korrigering av utrustning genomförd, ny leveransavisering skickad till kund.";
-
-	//private OrderRepository orderRepo;
+	private static final String RESULT_OK = "";
+	private static final String SERIAL_NUMBER_NOT_ON_THIS_ORDER = "Det serienummer du har angett finns inte plockat på denna order.";
 	private OrderLineRepository orderLineRepo;
 	private EquipmentRepository equipmentRepo;
-	private DeliveryAreaRepository deliveryAreaRepo;
 	private EquipmentValidator equipmentValidator;
-	private MailComposer mailComposer;
 	private SessionBean sessionBean;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(EquipmentController.class);
 	
+	
 	@Transactional
-	@RequestMapping(value = "order-list/view/registerEquipment/{orderId}", method = RequestMethod.POST)
-	public String registerEquipment(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
-			ModelMap model) {
-		String valResult = "";
-		OrderLine orderLine = orderLineRepo.findOne(reqAttr.getOrderLineId());
-		if (orderLine.getHasSerialNo()) {
-			Equipment equipment = getEquipmentRecord(reqAttr);
+	private String updateEquipment(RequestAttributes reqAttr, ModelMap model) {
+		String valResult = RESULT_OK;
+		Long orderId = reqAttr.getOrderHeaderId();
+		Equipment equipment = getEquipmentFromCurrentOrder(orderId, reqAttr.getSerialNo());
+		if (equipment != null) {
+			OrderLine orderLine = orderLineRepo.findOne(equipment.getOrderLine().getId());
 			equipment.setCreationDate(new Date());
 			equipment.setOrderLine(orderLine);
 			equipment.setSerialNo(reqAttr.getSerialNo());
@@ -107,12 +94,7 @@ public class EquipmentController extends BaseController {
 				orderLineRepo.save(orderLine);				 
 			}
 		} else {
-			valResult = validateEquipmentNoSN(reqAttr.getTotal(), orderLine);
-			if (valResult.equals(RESULT_OK)) {
-				orderLine.setRegistered(orderLine.getRegistered() + reqAttr.getTotal());
-				orderLine.setRemaining(orderLine.getRemaining() - reqAttr.getTotal());
-				orderLineRepo.save(orderLine);
-			}
+			valResult = SERIAL_NUMBER_NOT_ON_THIS_ORDER;
 		}
 		OrderHeader order = orderRepo.findOne(orderId);
 		
@@ -123,28 +105,37 @@ public class EquipmentController extends BaseController {
 			orderRepo.save(order);
 			updateRelatedOrders(order, workToDoOnRelatedOrders);
 			reqAttr = new RequestAttributes();
-			// Om uppdatewring av utrustning kvarstår, hitta nästa
-			Equipment eq = getNextEquipmentToUpdate(order);
-			if (eq != null) {
-				reqAttr.setOrderLineIdToUpdate(eq.getOrderLine().getId());
-				reqAttr.setSerialNoToUpdate(eq.getSerialNo());
-			}			
+			// Om uppdatering av utrustning kvarstår, hitta nästa om moteoden är DEFAULT.
+			if (RegistrationMethods.DEFAULT == order.getRegistrationMethod()) {
+				Equipment eq = getNextEquipmentToUpdate(order);
+				if (eq != null) {
+					reqAttr.setOrderLineIdToUpdate(eq.getOrderLine().getId());
+					reqAttr.setSerialNoToUpdate(eq.getSerialNo());
+				}			
+			}
 		}
 		model.put("order", order);
-		if (reqAttr.isUpdateEquipment()) {
-			reqAttr.setUpdateEquipmentResult(valResult);
-		} else {
-			reqAttr.setRegEquipmentResult(valResult);
-		}
+		reqAttr.setUpdateEquipmentResult(valResult);
 		reqAttr = addRelatedOrders(reqAttr, order);
-		reqAttr = setInfoMessageForRelatedOrders(reqAttr, order, workToDoOnRelatedOrders);
+		setInfoMessageForRelatedOrders(reqAttr, order, workToDoOnRelatedOrders);
 		
 		model.put("reqAttr", reqAttr);
 		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
 		model.put("deliveryAreas", deliveryAreaRepo.findAll(new Sort(Sort.Direction.ASC, "name")));
 		return "order-details";
 	}
-
+		
+	private Equipment getEquipmentFromCurrentOrder (Long orderId, String serialNo) {
+		List<Equipment> eqs = equipmentRepo.findBySerialNo(serialNo);
+		if (!eqs.isEmpty()) {
+			OrderLine orderLine = eqs.get(0).getOrderLine();
+			if (orderLine.getOrderHeader().getId().equals(orderId)) {
+				return eqs.get(0);
+			}
+		}
+		return null;
+	}
+	
 	private Equipment getNextEquipmentToUpdate(OrderHeader order) {
 		for (OrderLine ol : order.getOrderLines()) {
 			for (Equipment eq : ol.getEquipments()) {
@@ -155,125 +146,12 @@ public class EquipmentController extends BaseController {
 		}
 		return null;
 	}
-	
-	private Equipment getEquipmentRecord(RequestAttributes reqAttr) {
-		Equipment eq;
-		if (reqAttr.isUpdateEquipment()) {
-			eq = equipmentRepo.findBySerialNo(reqAttr.getSerialNo()).get(0);
-		} else {
-			eq = new Equipment();
-		}
-		return eq;
-	}
 
-	@RequestMapping(value = "order-list/view/deleq/{orderId}/{orderLineId}/{equipmentId}", method = RequestMethod.GET)
-	public String deleteEquipment(@PathVariable Long orderId, @PathVariable Long orderLineId,
-			@PathVariable Long equipmentId, ModelMap model) {
-		LOG.debug("equipmentId: " + equipmentId + " ,orderId: " + orderId);
-		OrderLine orderLine = orderLineRepo.findOne(orderLineId);
-		for (Iterator<Equipment> iterator = orderLine.getEquipments().iterator(); iterator.hasNext();) {			
-			Equipment equipment = iterator.next();
-			LOG.debug("in loop, equipmentId: " + equipment.getId());
-			if (equipment.getId().equals(equipmentId)) {
-				LOG.debug("in loop, going to remove equipment: " + equipment.getId());
-				equipment.setOrderLine(null);
-				iterator.remove();
-				orderLine.updateEquipmentCounters();
-				LOG.debug("Order line updated: " + orderLine.getId());
-			}
-		}
-		orderLineRepo.save(orderLine);
-		OrderHeader order = orderRepo.findOne(orderId);
-		order.setOrderStatusByProgress(false);
-		orderRepo.save(order);
-		model.put("order", order);
-		RequestAttributes reqAttr = new RequestAttributes(order);
-		reqAttr = addRelatedOrders(reqAttr, order);
-		model.put("reqAttr", reqAttr);
-		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
-		return "order-details";
-	}
-
-	@RequestMapping(value="order-list/correct/confirm/{orderId}", method=RequestMethod.POST)
-	public String confirmCorrection(@PathVariable Long orderId, ModelMap model, @ModelAttribute RequestAttributes reqAttr, @RequestParam(value="action", required=true) String action) {
-					
-		LOG.debug("In confirmCorrection");
-		System.out.println("action:" + action);
-		OrderHeader order = orderRepo.findOne(orderId);
-		// Check every modified equipment
-		Boolean validationOk = true;
-		String result = "";
-		String message = "";
-		String returnPage = "order-details";
-		CorrectionMailInfo mailInfo = new CorrectionMailInfo(order);
-		for (ReqOrderLine line : reqAttr.getReqOrderLines()) {			
-			for (Equipment equipReq : line.getEquipments()) {
-				LOG.debug("equipment: " + equipReq.toString());
-				if (equipReq.getId() != null) {
-					String valResult = equipmentValidator.validateEquipmentOnCorrection(equipReq, order);
-					if (!valResult.equals(RESULT_OK)) {
-						validationOk = false;
-						result = equipReq.getSerialNo() + " / " + equipReq.getStealingTag() + " - " + valResult;
-						break;
-					}
-				}
-			}
-		}
-		if (validationOk) {
-			for (ReqOrderLine line : reqAttr.getReqOrderLines()) {
-				for (Equipment equipReq : line.getEquipments()) {
-					if (equipReq.getId() != null) {
-						Equipment equipDb = equipmentRepo.findOne(equipReq.getId());
-						equipDb.setPreviousSerialNo(equipDb.getSerialNo());
-						equipDb.setPreviousStealingTag(equipDb.getStealingTag());						
-						equipDb.setSerialNo(equipReq.getSerialNo());
-						equipDb.setStealingTag(equipReq.getStealingTag());
-						equipDb.setRegisteredBy(equipReq.getRegisteredBy());
-						equipDb.setToCorrect(false);
-						equipmentRepo.save(equipDb);
-						mailInfo.getModifiedEquipment().add(equipDb);
-					}
-				}
-			}
-			message = RESULT_CORRECTION_COMPLETED;
-			if (action.equals(reqAttr.getInformByEmail())) {
-				mailComposer.createMail(mailInfo);
-				order.setStatus(StatusConstants.ORDER_STATUS_TRANSFERED);
-				message = RESULT_CORRECTION_COMPLETED_WITH_MAIL;
-			} else if (action.equals(reqAttr.getDoNewDelivery())) {
-				order.setTransmitErrorMessage("");
-				order.setStatus(StatusConstants.ORDER_STATUS_SENT);
-				message = RESULT_CORRECTION_COMPLETED_NEW_DELIVERY;
-			}
-			orderRepo.save(order);
-		} else {
-			returnPage = "correct-order";
-		}		
-		order = orderRepo.findOne(orderId);
-		model.put("order", order);
-		reqAttr = new RequestAttributes(order);
-		reqAttr.setRegEquipmentResult(result);
-		reqAttr.setThanksMessage(message);
-		reqAttr = addRelatedOrders(reqAttr, order);
-		
-		model.put("reqAttr", reqAttr);
-		model.put("regConfig", sessionBean.getCustomerGroup().getRegistrationConfig());
-		return returnPage;
-	}
-	
-	private String validateEquipmentNoSN(Integer count, OrderLine orderLine) {
-		String result = RESULT_OK;
-		if (count > orderLine.getRemaining()) {
-			result = TOO_MANY_REGISTERED;
-		}
-		return result;
-	}
-	
 	private boolean workToDoOnRelatedOrders(OrderHeader order) {
 		boolean result = false;
 		List<OrderHeader> relatedOrders = getRelatedOrders(order);
 		for (OrderHeader relatedOrder : relatedOrders) {
-			if (relatedOrder.getUnCompletedOrderLines().size() > 0) {
+			if (!relatedOrder.getUnCompletedOrderLines().isEmpty()) {
 				result = true;
 				break;
 			}
@@ -293,49 +171,21 @@ public class EquipmentController extends BaseController {
 	}
 
 	private RequestAttributes setInfoMessageForRelatedOrders(RequestAttributes reqAttr, OrderHeader order, boolean workToDoOnRelatedOrders) {
-		if (order.getUnCompletedOrderLines().size() == 0 && workToDoOnRelatedOrders) {
+		if (!order.getUnCompletedOrderLines().isEmpty() && workToDoOnRelatedOrders) {
 			reqAttr.setInfoMessage(CustomFieldConstants.TEXT_SAMLEVERANS);
 		}
 		return reqAttr;
 	}
 		
 	@Transactional
-	@RequestMapping(value = "order-list/view/updateEquipmentBySnr/{orderId}", method = RequestMethod.POST)
-	public String updateEquipmentBySnr(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
-			ModelMap model) {
-		LOG.info("Uppdatering - serienummer: " + reqAttr.getSerialNo());
-		List<Equipment> eqs = equipmentRepo.findBySerialNo(reqAttr.getSerialNo());
-		if (eqs.size() > 0) {
-			reqAttr.setOrderLineId(eqs.get(0).getOrderLine().getId());
-			reqAttr.setUpdateEquipment(true);		
-			return registerEquipment(reqAttr, orderId, model);
-		} else {
-			
-		}
-	}
-
-	private String validate() {
-		
-		return "";
-	}
-	
-	@Transactional
 	@RequestMapping(value = "order-list/view/updateEquipment/{orderId}", method = RequestMethod.POST)
 	public String updateEquipment(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
 			ModelMap model) {
 		LOG.info("Uppdatering - serienummer: " + reqAttr.getSerialNo());
-		if (reqAttr.getOrderLineId() == 0L || reqAttr.getOrderLineId() == null) {
-			List<Equipment> eqs = equipmentRepo.findBySerialNo(reqAttr.getSerialNo());
-			if (eqs.size() > 0) {
-				reqAttr.setOrderLineId(eqs.get(0).getOrderLine().getId());
-			} else {
-				
-			}
-		}
-		reqAttr.setUpdateEquipment(true);		
-		return registerEquipment(reqAttr, orderId, model);
+		reqAttr.setOrderHeaderId(orderId);
+		return updateEquipment(reqAttr, model);
 	}
-
+	
 	@Autowired
 	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
 		this.deliveryAreaRepo = deliveryAreaRepo;
@@ -351,10 +201,6 @@ public class EquipmentController extends BaseController {
 	@Autowired
 	public void setEquipmentValidator(EquipmentValidator equipmentValidator) {
 		this.equipmentValidator = equipmentValidator;
-	}
-	@Autowired
-	public void setMailComposer(MailComposer mailComposer) {
-		this.mailComposer = mailComposer;
 	}
 	@Autowired
 	public void setSessionBean(SessionBean sessionBean) {
