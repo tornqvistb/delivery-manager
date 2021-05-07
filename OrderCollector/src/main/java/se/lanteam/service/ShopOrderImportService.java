@@ -436,7 +436,7 @@ public class ShopOrderImportService {
 			return false;
 		}
 		if (StringUtils.isEmpty(orderHeader.getCustomerOrderNumber())) {
-			saveError(ERROR_CUSTOMER_ORDER_NUMBER_MISSING + fileName);
+			LOG.warn(ERROR_CUSTOMER_ORDER_NUMBER_MISSING + fileName);
 		}
 		if (orderHeader.getOrderLines().isEmpty()) {
 			saveError(ERROR_NO_ORDER_LINES + fileName);
