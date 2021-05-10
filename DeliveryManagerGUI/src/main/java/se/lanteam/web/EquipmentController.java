@@ -3,8 +3,6 @@ package se.lanteam.web;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -24,7 +22,6 @@ import se.lanteam.domain.OrderLine;
 import se.lanteam.domain.RegistrationConfig;
 import se.lanteam.model.RequestAttributes;
 import se.lanteam.model.SessionBean;
-import se.lanteam.repository.DeliveryAreaRepository;
 import se.lanteam.repository.EquipmentRepository;
 import se.lanteam.repository.OrderLineRepository;
 import se.lanteam.services.EquipmentValidator;
@@ -38,10 +35,7 @@ public class EquipmentController extends BaseController {
 	private EquipmentRepository equipmentRepo;
 	private EquipmentValidator equipmentValidator;
 	private SessionBean sessionBean;
-	
-	private static final Logger LOG = LoggerFactory.getLogger(EquipmentController.class);
-	
-	
+		
 	@Transactional
 	private String updateEquipment(RequestAttributes reqAttr, ModelMap model) {
 		String valResult = RESULT_OK;
@@ -87,7 +81,7 @@ public class EquipmentController extends BaseController {
 				equipment.setCustomAttribute8(reqAttr.getCustomAttribute8());
 				equipment.setCustomAttribute8Label(regConfig.getLabelAttribute8());
 			}
-			valResult = equipmentValidator.validateEquipment(equipment, orderRepo.findOne(orderId), orderLine.getRestrictionCode(), reqAttr.isUpdateEquipment());
+			valResult = equipmentValidator.validateEquipment(equipment, orderRepo.findOne(orderId), orderLine.getRestrictionCode());
 			if (valResult.equals(RESULT_OK)) {
 				orderLine.getEquipments().add(equipment);
 				orderLine.updateEquipmentCounters();
@@ -186,10 +180,6 @@ public class EquipmentController extends BaseController {
 		return updateEquipment(reqAttr, model);
 	}
 	
-	@Autowired
-	public void setDeliveryAreaRepo(DeliveryAreaRepository deliveryAreaRepo) {
-		this.deliveryAreaRepo = deliveryAreaRepo;
-	}
 	@Autowired
 	public void setEquipmentRepo(EquipmentRepository equipmentRepo) {
 		this.equipmentRepo = equipmentRepo;

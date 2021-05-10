@@ -28,8 +28,8 @@ public class RequestAttributes {
 	private String orderStatus;
 	private String errorStatus;
 	private String thanksMessage;
-	private List<ReqOrderLine> reqOrderLines= new ArrayList<ReqOrderLine>();	
-	private List<SystemProperty> systemProperties= new ArrayList<SystemProperty>();
+	private List<ReqOrderLine> reqOrderLines= new ArrayList<>();	
+	private List<SystemProperty> systemProperties= new ArrayList<>();
 	private String query;
 	private String errorMessage;
 	private String infoMessage;
@@ -59,8 +59,8 @@ public class RequestAttributes {
 	private String planDate;
 	private String resultNotEmptyMsg;
 	private String resultEmptyMsg;
-	private List<CustomerCustomField> customerCustomFields = new ArrayList<CustomerCustomField>();
-	private List<OrderHeader> relatedOrders= new ArrayList<OrderHeader>();
+	private List<CustomerCustomField> customerCustomFields = new ArrayList<>();
+	private List<OrderHeader> relatedOrders= new ArrayList<>();
 	private String informByEmail = "Spara ändringarna och informera kunden via epost";
 	private String doNewDelivery = "Spara ändringarna och anropa leveransaviseringstjänst hos kund på nytt";
 	private String saveOrder = "Spara ändringarna";
@@ -73,7 +73,7 @@ public class RequestAttributes {
 	private String listValues;
 	private String sortByColumn;	
 	private String customerNumber;
-	private List<CustomerNumber> customerNumbers = new ArrayList<CustomerNumber>();
+	private List<CustomerNumber> customerNumbers = new ArrayList<>();
 	private String emptyValue = "";
 	private boolean updateEquipment = false;
 	private String updateEquipmentResult;
@@ -91,7 +91,7 @@ public class RequestAttributes {
 
 	public RequestAttributes(OrderHeader orderHeader) {
 		super();
-		List<ReqOrderLine> orderLines = new ArrayList<ReqOrderLine>();
+		List<ReqOrderLine> orderLines = new ArrayList<>();
 		for (OrderLine line : orderHeader.getOrderLines()) {
 			ReqOrderLine reqLine = new ReqOrderLine();
 			for (Equipment equip : line.getEquipments()) {

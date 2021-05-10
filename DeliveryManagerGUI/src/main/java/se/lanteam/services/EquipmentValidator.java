@@ -45,7 +45,7 @@ public class EquipmentValidator {
 	}
 	
 	
-	public String validateEquipment(Equipment equipment, OrderHeader order, String restrictionCode, boolean isUpdate) {
+	public String validateEquipment(Equipment equipment, OrderHeader order, String restrictionCode) {
 				
 		String result = RESULT_OK;
 		
@@ -100,7 +100,7 @@ public class EquipmentValidator {
 		}		
 		// - stealing tag not registered on other order
 		List<Equipment> equipments = equipmentRepo.findByStealingTag(equipment.getStealingTag());
-		if (equipments != null && equipments.size() > 0) {
+		if (equipments != null && !equipments.isEmpty()) {
 			Equipment equip = equipments.get(0);
 			if (equip.getOrderLine() != null && equip.getOrderLine().getOrderHeader() != null && equip.getOrderLine().getOrderHeader().getId() != order.getId()) {
 				return STEALING_TAG_ON_OTHER_ORDER + equip.getOrderLine().getOrderHeader().getOrderNumber() + " (" + equipment.getStealingTag() + ")";

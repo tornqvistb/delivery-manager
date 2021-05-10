@@ -54,7 +54,7 @@ public class BaseController {
 		
 	protected List<OrderHeader> getRelatedOrders(OrderHeader order) {
 		List<String> orderNumbers = getRelatedOrderNumbers(order);
-		List<OrderHeader> relatedOrders = new ArrayList<OrderHeader>();
+		List<OrderHeader> relatedOrders = new ArrayList<>();
 		for (String orderNumber : orderNumbers) {
 			List<OrderHeader> orders = orderRepo.findOrdersByOrderNumber(orderNumber);
 			if (!orders.isEmpty()) {
@@ -65,7 +65,7 @@ public class BaseController {
 	}
 
 	private List<String> getRelatedOrderNumbers(OrderHeader order) {
-		List<String> otherOrdersInDelivery = new ArrayList<String>();
+		List<String> otherOrdersInDelivery = new ArrayList<>();
 		if (order.isPartOfJointdelivery()) {
 			if (order.isMainOrderInJoint()) {
 				List<OrderHeader> childOrders = orderRepo.findOrdersByJointDelivery(order.getNetsetOrderNumber());
@@ -96,7 +96,7 @@ public class BaseController {
 	}
 
 	protected List<CustomerCustomField> getCustomerCustomFields(String report) {
-		List<CustomerCustomField> result = new ArrayList<CustomerCustomField>();
+		List<CustomerCustomField> result = new ArrayList<>();
 		if (searchBean.getCustomerGroupId() > 0) {
 			CustomerGroup custGroup = customerRepo.findOne(searchBean.getCustomerGroupId());
 			for (CustomerCustomField field : custGroup.getCustomerCustomFields()) {
@@ -136,8 +136,7 @@ public class BaseController {
 	protected List<DeliveryDay> getDeliveryDaysForArea(Long areaId) {
 	
 		DeliveryArea area = deliveryAreaRepo.getOne(areaId);
-		StringBuffer sb = new StringBuffer();
-		List<DeliveryDay> deliveryDays = new ArrayList<DeliveryDay>();
+		List<DeliveryDay> deliveryDays = new ArrayList<>();
 		for (DeliveryWeekDay day : area.getDeliveryWeekDays()) {
 			Date lastDate = new Date();
 			for (int i = 0; i < 10; i++) {

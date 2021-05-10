@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -43,13 +42,11 @@ import se.lanteam.domain.OrderComment;
 import se.lanteam.domain.OrderCustomField;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.domain.OrderLine;
-import se.lanteam.domain.SystemProperty;
 import se.lanteam.exceptions.ReceiveOrderException;
 import se.lanteam.repository.CustomFieldRepository;
 import se.lanteam.repository.CustomerGroupRepository;
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.repository.OrderRepository;
-import se.lanteam.repository.PropertyRepository;
 import se.lanteam.services.PropertyService;
 
 /**
@@ -380,7 +377,7 @@ public class ShopOrderImportService {
 	private void addCustomFields(OrderHeader orderHeader, Document doc)  {
 		
 		NodeList customFieldData = doc.getElementsByTagName("CustomFieldData");
-		Set<OrderCustomField> orderCustomFields = new HashSet<OrderCustomField>();
+		Set<OrderCustomField> orderCustomFields = new HashSet<>();
 		if (customFieldData.getLength() > 0) {
 			Element custDataEl = (Element) customFieldData.item(0);
 			NodeList fields = custDataEl.getElementsByTagName("Field");

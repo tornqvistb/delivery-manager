@@ -216,7 +216,7 @@ public class OrderPickImportService {
     private RestOrder getRestOrder(List<String> rows, String fileName) throws PickImportException{
     	try {
     		RestOrder restOrder = new RestOrder();
-			List<RestOrderLine> orderLines = new ArrayList<RestOrderLine>();
+			List<RestOrderLine> orderLines = new ArrayList<>();
 			for (String row : rows) {
 				String[] fields = row.split(FIELD_SEPARATOR);
 				if (row.startsWith(RestOrder.ROW_TYPE_HEADER)) {					
@@ -264,7 +264,7 @@ public class OrderPickImportService {
     private OrderPickingInfo getPickingInfo(List<String> rows, String fileName) throws PickImportException{
     	try {
 			OrderPickingInfo pickingInfo = new OrderPickingInfo();
-			List<PickedOrderLine> orderLines = new ArrayList<PickedOrderLine>();
+			List<PickedOrderLine> orderLines = new ArrayList<>();
 			for (String row : rows) {
 				String[] fields = row.split(FIELD_SEPARATOR);
 				if (row.startsWith(ROW_TYPE_HEADER)) {					
