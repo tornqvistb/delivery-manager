@@ -78,6 +78,7 @@
 												</form>
 												-->
 												<!-- END TEST -->
+												<div th:remove="tag" th:if="${order.okToChangeRegMethod}">
 												<h3>Metod för registrering</h3>
 												<form
 													th:action="@{/order-list/registration-method/} + ${order.id}"
@@ -170,6 +171,7 @@
 																value="Spara" name="storeequipment" id="storeequipment" />
 														</div>
 													</form>
+												</div>
 												</div>
 												<h3>Orderrader</h3>
 												<div th:if="${not #strings.isEmpty(reqAttr.updateEquipmentResult)}"
@@ -571,14 +573,21 @@
 													<a class="button" th:href="@{/generate-work-order/} + ${order.id}" target="_blank">Skapa arbetsorder/plocklista</a>
 													<a class="button" th:href="@{/generate-delivery-note/} + ${order.id}" target="_blank">Skapa följesedel</a>
 													<a th:if="${order.okToSendDeliveryReport}" class="button" th:href="@{/order-list/send-delivery-info/} + ${order.id}" target="_blank">Skicka leveransavisering till kund</a>
-													<form th:if="${order.okToCompleteUnfinished}"
-														th:action="@{/order-list/view/finishOrder/} + ${order.id}"
-														th:object="${reqAttr}" method="post"
-														onsubmit="return confirm('Vill du verkligen sätta ordern till färdigregistrerad?');">	
-															<input class="backend-operation" type="submit"
-																value="Sätt ordern färdigregistrerad" name="finishorder" id="finishorder" />
-													</form>													
 												</div>
+												<form class="line-form" th:if="${order.okToCompleteUnfinished}"
+													th:action="@{/order-list/view/finishOrder/} + ${order.id}"
+													th:object="${reqAttr}" method="post"
+													onsubmit="return confirm('Vill du verkligen sätta ordern till färdigregistrerad? Om ordern ingår i en samleverans kommer ingående ordrar att splittas.');">	
+														<input class="backend-operation" type="submit"
+															value="Sätt ordern färdigregistrerad" name="finishorder" id="finishorder" />
+												</form>													
+												<form class="line-form" th:if="${order.okToSplitJoint}"
+													th:action="@{/order-list/view/splitOrder/} + ${order.id}"
+													th:object="${reqAttr}" method="post"
+													onsubmit="return confirm('Vill du verkligen splitta denna samlevarans?');">	
+														<input class="backend-operation" type="submit"
+															value="Splitta samleverans" name="splitorder" id="splitorder" />
+												</form>													
 											</div>
 										</div>
 									</div>

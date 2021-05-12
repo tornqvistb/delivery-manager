@@ -143,3 +143,6 @@
 .lim-modal {
 	position: fixed;
 }
+.line-form {
+    display: inline-block;
+}

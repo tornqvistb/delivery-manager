@@ -40,6 +40,7 @@ public class OrderDetailsController extends BaseController{
 	private static final String STATUS_MSG_COMMENT_MISSING = "Du måste skriva ett meddelande.";
 	private static final String STATUS_MSG_ORDER_CANCELLED = "Följande order har makulerats: ";
 	private static final String STATUS_MSG_ORDER_FINISHED = "Följande order har klarmarkerats: ";
+	private static final String STATUS_MSG_ORDER_SPLITTED = "Följande order har separerats från sin sam-leverans: ";
 	private static final String STATUS_ROUTE_PLAN_OK = "Order har ruttplanerats.";
 	private static final String STATUS_ROUTE_PLAN_NOK = "Ruttplanering av ordern misslyckades. Alla obligatoriska fält ej ifyllda.";
 
@@ -94,6 +95,20 @@ public class OrderDetailsController extends BaseController{
 		return "order-list";
 	}
 
+	@RequestMapping(value = "order-list/view/splitOrder/{orderId}", method = RequestMethod.POST)
+	public String splitOrder(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
+			ModelMap model) {
+		OrderHeader order = orderRepo.findOne(orderId);
+		String orderNumber = order.getOrderNumber();
+		splitAndSaveOrder(order);
+		RequestAttributes attr = new RequestAttributes();
+		attr.setThanksMessage(STATUS_MSG_ORDER_SPLITTED + orderNumber);
+		model.put("reqAttr", attr);
+
+		return "order-list";
+	}
+	
+	
 	@RequestMapping(value = "order-list/view/finishOrder/{orderId}", method = RequestMethod.POST)
 	public String finishOrder(@ModelAttribute RequestAttributes reqAttr, @PathVariable Long orderId,
 			ModelMap model) {
@@ -102,7 +117,6 @@ public class OrderDetailsController extends BaseController{
 		
 		if (StatusConstants.ORDER_STATUS_BOOKED.equals(order.getStatus()) || !StringUtils.isEmpty(order.getRoutePlanSummary())) {
 			order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);
-			order.setStatus(StatusConstants.ORDER_STATUS_ROUTE_PLANNED);
 		} else if (StatusConstants.ORDER_STATUS_NOT_PICKED.equals(order.getStatus())
 				|| StatusConstants.ORDER_STATUS_STARTED.equals(order.getStatus())){
 			order.setStatus(StatusConstants.ORDER_STATUS_REGISTRATION_DONE);			
@@ -110,6 +124,8 @@ public class OrderDetailsController extends BaseController{
 		for (OrderLine ol : order.getUnCompletedOrderLines()) {
 			ol.setRested(true);
 		}
+		splitAndSaveOrder(order);
+		/*
 		if (order.isChildOrderInJoint()) {
 			String mainOrderNo = order.getJointDelivery();
 			order.clearJointDelivery();
@@ -143,11 +159,48 @@ public class OrderDetailsController extends BaseController{
 		} else {
 			orderRepo.save(order);
 		}
-		reqAttr = new RequestAttributes();
-		reqAttr.setThanksMessage(STATUS_MSG_ORDER_FINISHED + orderNumber);
-		model.put("reqAttr", reqAttr);
+		*/
+		RequestAttributes attr = new RequestAttributes();
+		attr.setThanksMessage(STATUS_MSG_ORDER_FINISHED + orderNumber);
+		model.put("reqAttr", attr);
 
 		return "order-list";
+	}
+
+	private void splitAndSaveOrder(OrderHeader order) {
+		if (order.isChildOrderInJoint()) {
+			String mainOrderNo = order.getJointDelivery();
+			order.clearJointDelivery();
+			orderRepo.save(order);
+			List<OrderHeader> mainOrders = orderRepo.findOrdersByOrderNumber(mainOrderNo);
+			if (!ListUtils.isEmpty(mainOrders)) {
+				OrderHeader mainOrder = mainOrders.get(0);
+				List<String> childOrders = mainOrder.getJoinedOrdersAsList();
+				if (childOrders.size() == 1) {
+					mainOrder.clearJointDelivery();
+				} else if (childOrders.size() > 1) {
+					String jdOrders = mainOrder.getJointDeliveryOrders().replace(order.getOrderNumber(), "");
+					mainOrder.setJointDeliveryOrders(jdOrders);
+					String jdOrderText = mainOrder.getJointDeliveryText().replace(order.getOrderNumber(), "");
+					mainOrder.setJointDeliveryText(jdOrderText);
+				}
+				orderRepo.save(mainOrder);
+			}
+		} else if (order.isMainOrderInJoint()) {
+			List<String> childOrders = order.getJoinedOrdersAsList();
+			order.clearJointDelivery();
+			orderRepo.save(order);
+			for (String child : childOrders) {
+				List<OrderHeader> childs = orderRepo.findOrdersByOrderNumber(child);
+				if (childs.size() == 1) {
+					OrderHeader childOrder = childs.get(0);
+					childOrder.clearJointDelivery();
+					orderRepo.save(childOrder);					
+				}
+			}
+		} else {
+			orderRepo.save(order);
+		}
 	}
 	
 	@RequestMapping(value = "order-list/view/getdaybyarea/{areaId}", method = RequestMethod.POST)

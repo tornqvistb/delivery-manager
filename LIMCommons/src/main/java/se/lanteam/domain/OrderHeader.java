@@ -930,6 +930,22 @@ public class OrderHeader implements Cloneable {
 	}
 
 	@Transient
+	public boolean getOkToSplitJoint() {
+		return this.isPartOfJointdelivery() && (this.status.equals(StatusConstants.ORDER_STATUS_NOT_PICKED)
+				|| this.status.equals(StatusConstants.ORDER_STATUS_STARTED)
+				|| this.status.equals(StatusConstants.ORDER_STATUS_BOOKED)
+				|| this.status.equals(StatusConstants.ORDER_STATUS_REGISTRATION_DONE));
+	}
+
+	@Transient
+	// Lägg till villkor att detta inte är OK på en rest-order
+	public boolean getOkToChangeRegMethod() {
+		return 	(this.status.equals(StatusConstants.ORDER_STATUS_STARTED)
+				|| this.status.equals(StatusConstants.ORDER_STATUS_BOOKED)
+				|| this.status.equals(StatusConstants.ORDER_STATUS_REGISTRATION_DONE));
+	}
+	
+	@Transient
 	public void clearJointDelivery() {
 		this.jointDelivery = "";
 		this.jointDeliveryOrders = "";
