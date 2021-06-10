@@ -9,10 +9,6 @@ public class PropertyConstants {
 	public static final String FILE_IMAGE_FOLDER = "file-image-folder";
 	public static final String MAIL_SMTPS_HOST = "mail-smtps-host";	
 	public static final String ORDERJOB_FREQUENCY = "orderjob-frequency";
-	public static final String FILE_INCOMING_FOLDER = "file-incoming-folder";
-	public static final String FILE_PROCESSED_FOLDER = "file-processed-folder";
-	public static final String FILE_ERROR_FOLDER = "file-error-folder";
-	public static final String FILE_OUTGOING_FOLDER = "file-outgoing-folder";
 	
 	public static final String FILE_INCOMING_WH_FOLDER = "file-incoming-wh-folder";
 	public static final String FILE_PROCESSED_WH_FOLDER = "file-processed-wh-folder";
@@ -22,7 +18,6 @@ public class PropertyConstants {
 	public static final String FILE_INCOMING_SHOP_FOLDER = "file-incoming-shop-folder";
 	public static final String FILE_PROCESSED_SHOP_FOLDER = "file-processed-shop-folder";
 	public static final String FILE_ERROR_SHOP_FOLDER = "file-error-shop-folder";
-	public static final String FILE_OUTGOING_SHOP_FOLDER = "file-outgoing-shop-folder";	
 	
 	public static final String ORDER_TRANSMITJOB_FREQUENCY = "order-transmitjob-frequency";
 	public static final String WS_ENDPOINT_ORDER_DELIVERY = "ws-endpoint-order-delivery";
@@ -38,7 +33,6 @@ public class PropertyConstants {
 	public static final String JOINT_INVOICING_CUST_NUMBERS = "joint-invoicing-cust-numbers";
 	public static final String MAIL_REPLY_TO_ADDRESS = "mail-reply-to-address";
 	public static final String CUSTOMER_GROUP_INTRASERVICE = "customer-group-intraservice";
-	public static final String NETSET_FILES_BASEDIR = "netset-files-basedir";
 	public static final String WS_ENDPOINT_ORDER_DELIVERY_SN = "ws-endpoint-order-delivery-sn";
 	public static final String WS_ENDPOINT_ORDER_COMMENT_SN = "ws-endpoint-order-comment-sn";
 	public static final String WS_USERNAME_SN = "ws-username-sn";

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import se.lanteam.repository.ErrorRepository;
 import se.lanteam.service.JointDeliveryService;
-import se.lanteam.service.OrderImportService;
 import se.lanteam.service.OrderPickImportService;
 import se.lanteam.service.ShopOrderImportService;
 
@@ -18,8 +17,6 @@ import se.lanteam.service.ShopOrderImportService;
  * Created by Björn Törnqvist, ArctiSys AB, 2016-02
  */
 public class OrderImportJob implements Job {
-    @Autowired
-    private ErrorRepository errorRepo;
     @Autowired
     private OrderPickImportService pickService;
     @Autowired
@@ -39,10 +36,8 @@ public class OrderImportJob implements Job {
         	
 		} catch (IOException e) {
 			LOG.error(e.getMessage(), e);
-			//errorRepo.save(new ErrorRecord("IOException vid inläsning av filer från Netset/Lexit."));
 		} catch (Exception e) {
 			LOG.error(e.getMessage(), e);
-			//errorRepo.save(new ErrorRecord("Exception vid inläsning av fil."));
 		}
     }
 }

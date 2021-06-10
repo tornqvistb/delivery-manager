@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import se.lanteam.domain.Attachment;
 import se.lanteam.domain.OrderHeader;
 import se.lanteam.model.RequestAttributes;
-import se.lanteam.services.ERPIntegrationService;
 
 @Controller
 public class FileController extends BaseController {
@@ -30,7 +28,6 @@ public class FileController extends BaseController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 	
-	private ERPIntegrationService erpService;
 
 	@RequestMapping(value = "order-list/view/attachFile/{orderId}", method = RequestMethod.POST)
 	public String attachFile(@RequestParam("attachment") MultipartFile attachment, @PathVariable Long orderId,
@@ -39,9 +36,6 @@ public class FileController extends BaseController {
 		RequestAttributes reqAttr = new RequestAttributes();
 		if (!attachment.isEmpty()) {
 			try {
-				if (order.getTransferringToCustomer()) {
-					erpService.createFileToBusinessSystem(order);
-				}
 				Attachment attEntity = new Attachment();
 				attEntity.setOrderHeader(order);
 				attEntity.setFileContent(attachment.getBytes());
@@ -98,8 +92,4 @@ public class FileController extends BaseController {
 		return order.getDeliverySignature().getBytes();
 	}
 
-	@Autowired
-	public void setERPService(ERPIntegrationService erpService) {
-		this.erpService = erpService;
-	}
 }
